@@ -50,7 +50,7 @@ Fichier unifié : un tableau de 60 outils (plus d'éventuels outils retirés). C
 | `source` | Statut du code source : `"libre"` (licence libre, code public), `"partiel"` (édition communautaire libre mais édition complète ou services propriétaires, « open core »), `"source-disponible"` (code visible, licence non libre) ou `"proprietaire"` |
 | `licence` | Licence du logiciel (identifiant SPDX si possible); `null` pour un logiciel propriétaire ou si elle est inconnue |
 | `repo` | URL du dépôt de code source, sur n'importe quelle forge (GitHub, GitLab, Codeberg, Framagit…); `null` si aucun ou inconnu |
-| `evaluation_enrichie` | Second avis du modèle sur la souveraineté de l'outil, avec trois sous-champs : `score` (nombre de critères satisfaits, de 0 à 3, égal à `criteres.length`), `criteres` (identifiants de `criteres.json`) et `confiance` (`"élevée"`, `"moyenne"` ou `"faible"`). À comparer au `score` du répertoire et au `criteres` déduit par `classify.ts` |
+| `evaluation_enrichie` | Second avis du modèle sur la souveraineté de l'outil, avec trois sous-champs : `score` (nombre de critères satisfaits, de 0 à 3, égal à `criteres.length`), `criteres` (identifiants de `criteres.json`) et `confiance` (`"élevée"`, `"moyenne"` ou `"faible"`). À comparer au `score` du répertoire et au `criteres` déduit par `classify.ts`. Un quatrième sous-champ, `ecart`, n'existe que lorsque l'évaluation diffère du répertoire : une explication en français de l'écart |
 
 La page n'affiche qu'une seule date pour toute la note. `derniere_modification` est donc la date de la page au moment où l'outil a été ajouté ou a changé, et non la date exacte du changement de cet outil.
 
@@ -114,12 +114,17 @@ Les outils nouveaux, modifiés, retirés ou de retour reçoivent la date de modi
 
 - Le script télécharge la page (`lien`) de l'outil, en extrait le texte et les liens vers des forges de code, puis les envoie avec la description courante à l'API OpenAI (Responses API, sortie JSON structurée). Les tags sont limités au vocabulaire de `tags.json`.
 - Réponse validée avant d'être écrite : 1 à 5 tags connus, URL de dépôt valide, aucun repo ni licence pour un logiciel propriétaire, description longue sans image Markdown, sans HTML (balises, entités, liens entre chevrons), sans tiret cadratin et sans émoji ni émoticône, évaluation cohérente (score égal au nombre de critères). Une réponse invalide est redemandée une fois, avec la raison du rejet, puis consignée comme échec.
-- **Évaluation indépendante** : le modèle reçoit la description des trois critères mais pas le score ni les critères du répertoire, pour ne pas simplement les confirmer. Les écarts avec le répertoire sont affichés à la fin de l'exécution (le `score` et les `criteres` du répertoire ne sont jamais modifiés).
+- **Évaluation indépendante** : le modèle reçoit la description des trois critères mais pas le score ni les critères du répertoire, pour ne pas simplement les confirmer. Quand l'évaluation diffère du répertoire (score différent ou critères différents), un second appel à l'API explique l'écart en 2 à 4 phrases (sans prétendre savoir laquelle des deux est correcte, et en rappelant que les critères du répertoire sont eux-mêmes déduits) et l'inscrit dans `evaluation_enrichie.ecart`. Cette explication suit les mêmes interdits typographiques que la description longue. Si elle échoue après une nouvelle tentative, l'outil n'est pas modifié et sera retenté à la prochaine exécution. Les écarts sont aussi résumés à la fin de l'exécution; le `score` et les `criteres` du répertoire ne sont jamais modifiés.
+- **Progression** : une barre de progression (`progress.ts`) et le journal vont sur stderr, de sorte que stdout reste propre. Le nom de l'outil en cours s'affiche à droite de la barre (en terminal) ou sur une ligne `Enrichissement de <outil>...` (hors terminal). Hors terminal (CI, redirection), une ligne de pourcentage est écrite par tranche de 10 %.
 - `outils.json` est écrit après chaque outil : une interruption ne perd rien, et une relance reprend où on s'est arrêté.
 - `--nouveaux-tags` autorise le modèle à proposer de nouveaux tags (justification obligatoire); ils sont ajoutés à `tags.json`.
 - `--limite=N` n'enrichit pas plus de N outils par exécution.
 - `--dry-run` liste les outils concernés sans appeler l'API.
 - Configuration : `OPENAI_API_KEY` dans `.env` (voir `.env.example`; `.env` est ignoré par Git), et `OPENAI_MODEL` pour changer le modèle (`gpt-6-astra` par défaut). Chaque outil enrichi envoie son nom, sa description et un extrait de sa page publique à OpenAI.
+
+### `progress.ts`
+
+Barre de progression minimale sur une ligne, sans dépendance : `createProgress(total, options)` retourne `update(valeur, étiquette?)` (l'étiquette, par exemple l'outil en cours, s'affiche après le pourcentage), `message(texte)` (écrit une ligne au-dessus de la barre sans l'abîmer) et `end()`. Écrit sur stderr par défaut.
 
 ### `enrichir.ts`
 
@@ -136,7 +141,8 @@ Lancés avec `node:test` via `nub` :
 - `classify.test.ts` : cas de classification connus, et un nombre de critères égal au score pour les 60 outils.
 - `extract.test.ts` : conversion de date, cohérence de `criteres.json` et `outils.json`, rejet d'une page sans date.
 - `update.test.ts` : nouveau, modification, retrait, comeback, conservation des dates des outils inchangés et des champs d'enrichissement.
-- `enrichir.test.ts` : vocabulaire `tags.json`, validation (maximum 5 tags, nouveaux tags justifiés, propriétaire sans licence), extraction de la page, enrichissement une seule fois, limite, reprise et échecs, avec un faux générateur.
+- `enrichir.test.ts` : vocabulaire `tags.json`, validation (maximum 5 tags, nouveaux tags justifiés, propriétaire sans licence, Markdown permis et interdit, évaluation), explication des écarts, extraction de la page, enrichissement une seule fois, limite, reprise et échecs, avec de faux générateurs.
+- `progress.test.ts` : barre en terminal et hors terminal, bornes, `end()` idempotent, `message()`.
 
 ## Classification
 
@@ -157,7 +163,7 @@ C'est une heuristique, pas une vérité : un critère retenu avec une confiance 
 | `nub run build` | `extract` puis `classify` : reconstruit `outils.json` depuis le `.html` local. **Efface** l'historique des `changement` et des `removed` |
 | `nub run update` | `nub update.ts` : synchronise `outils.json` avec la page en ligne (ajouter `-- --dry-run` pour simuler) |
 | `nub run enrichir` | `nub update.ts --enrichir` : synchronise, puis enrichit les outils sans description longue (ajouter `-- --limite=5`, `-- --nouveaux-tags` ou `-- --dry-run`) |
-| `nub run test` | Lance les quatre fichiers de tests |
+| `nub run test` | Lance les cinq fichiers de tests |
 | `nub run typecheck` | `tsrs -p .` : vérifie les types avec [tsrs](https://www.npmjs.com/package/tsrs), un portage en Rust de `tsc` |
 
 ## Utiliser les données

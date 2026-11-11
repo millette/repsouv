@@ -13,7 +13,9 @@
 // Option --enrichir (clé OPENAI_API_KEY dans .env; modèle: OPENAI_MODEL):
 //   génère UNE SEULE FOIS, pour chaque outil qui n'a pas encore de description_longue, une description
 //   longue en français (Markdown), de 1 à 5 tags de tags.json, source/licence/repo pour les logiciels libres
-//   et une évaluation indépendante des critères et du score (evaluation_enrichie).
+//   et une évaluation indépendante des critères et du score (evaluation_enrichie, avec un sous-champ
+//   `ecart` qui explique la différence quand elle ne concorde pas avec le répertoire).
+//   Une barre de progression et le journal vont sur stderr.
 //   Un outil déjà enrichi n'est jamais régénéré. Avec --dry-run, liste seulement les outils concernés.
 //   --nouveaux-tags : le modèle peut proposer de nouveaux tags (justification obligatoire, ajoutés à tags.json).
 //   --limite=N      : n'enrichit pas plus de N outils par exécution.
@@ -21,9 +23,10 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { classer, type OutilClasse } from "./classify.ts";
 import {
-  aEnrichir, chargerCriteres, chargerTags, enrichirOutils, generateurOpenAI, MODELE_PAR_DEFAUT, sauverTags,
+  aEnrichir, chargerCriteres, chargerTags, enrichirOutils, expliqueurOpenAI, generateurOpenAI, MODELE_PAR_DEFAUT, sauverTags,
 } from "./enrichir.ts";
 import { extraire, type Changement, type Outil } from "./extract.ts";
+import { createProgress } from "./progress.ts";
 
 export const URL_REPERTOIRE = "https://praxis.encommun.io/n/voRYZbuBYZKLejs8JyNkc5C4o7s/";
 
@@ -126,18 +129,27 @@ if (import.meta.main) {
       const tags = chargerTags(fichierTags);
       const criteres = chargerCriteres(join(dirname(fichier), "criteres.json"));
       const nbTags = tags.length;
+      const modele = process.env.OPENAI_MODEL || MODELE_PAR_DEFAUT;
+      const progression = createProgress(prevus.length, { logWhenNotTTY: true });
+      let traites = 0;
       const resultat = await enrichirOutils(outils, {
         tags,
         criteres,
-        generer: generateurOpenAI(cle, process.env.OPENAI_MODEL || MODELE_PAR_DEFAUT),
+        generer: generateurOpenAI(cle, modele),
+        expliquer: expliqueurOpenAI(cle, modele),
         autoriserNouveauxTags: nouveauxTags,
         ...(limite !== undefined && { limite }),
         apresChaque: (os, ts) => {
           writeFileSync(fichier, JSON.stringify(os, null, 2));
           if (ts.length !== nbTags) sauverTags(fichierTags, ts);
         },
-        journal: console.log,
+        // En terminal, le nom de l'outil en cours s'affiche sur la barre; sinon, sur une ligne de journal.
+        debut: (nom) =>
+          process.stderr.isTTY ? progression.update(traites, nom) : progression.message(`Enrichissement de ${nom}...`),
+        progression: (n) => progression.update((traites = n)),
+        journal: (message) => progression.message(message),
       });
+      progression.end();
       console.log(`Enrichis: ${resultat.enrichis.length}; échecs: ${resultat.erreurs.length}`);
       if (resultat.ecarts.length) console.log(`Évaluation différente du répertoire: ${resultat.ecarts.join(", ")}`);
       if (tags.length > nbTags) console.log(`Nouveaux tags: ${tags.slice(nbTags).map((t) => t.id).join(", ")}`);

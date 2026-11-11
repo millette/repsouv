@@ -14,6 +14,8 @@ export interface EvaluationEnrichie {
   score: number;
   criteres: CritereId[];
   confiance: ConfianceEvaluation;
+  /** Explication de l'écart avec `score`/`criteres` du répertoire; présent seulement quand ils diffèrent. */
+  ecart?: string;
 }
 
 export type Changement = "nouveau" | "modification" | "retrait" | "comeback";

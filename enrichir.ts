@@ -263,41 +263,115 @@ Tags disponibles:
 ${liste}`;
 }
 
+/** Appelle l'API Responses d'OpenAI avec une sortie JSON structurée et retourne l'objet JSON parsé. */
+async function appelerOpenAI(
+  cle: string,
+  modele: string,
+  requete: { nom: string; schema: unknown; instructions: string; messages: string[]; maxTokens: number },
+): Promise<unknown> {
+  const reponse = await fetch("https://api.openai.com/v1/responses", {
+    method: "POST",
+    headers: { authorization: `Bearer ${cle}`, "content-type": "application/json" },
+    signal: AbortSignal.timeout(180_000),
+    body: JSON.stringify({
+      model: modele,
+      input: [
+        { role: "developer", content: requete.instructions },
+        ...requete.messages.map((content) => ({ role: "user", content })),
+      ],
+      text: { format: { type: "json_schema", name: requete.nom, strict: true, schema: requete.schema } },
+      max_output_tokens: requete.maxTokens,
+    }),
+  });
+  const corps = (await reponse.json().catch(() => ({}))) as Record<string, any>;
+  if (!reponse.ok) throw new Error(`OpenAI HTTP ${reponse.status}: ${corps.error?.message ?? "erreur inconnue"}`);
+  if (corps.status === "incomplete") throw new Error(`réponse incomplète (${corps.incomplete_details?.reason})`);
+  const contenuMessage = (corps.output ?? []).filter((o: any) => o.type === "message").flatMap((o: any) => o.content ?? []);
+  const refus = contenuMessage.find((c: any) => c.type === "refusal");
+  if (refus) throw new Error(`refus du modèle: ${refus.refusal}`);
+  const texte = contenuMessage.find((c: any) => c.type === "output_text")?.text;
+  if (typeof texte !== "string") throw new Error("réponse sans texte");
+  return JSON.parse(texte);
+}
+
+const messageRappel = (rappel: string) => `Ta tentative précédente a été rejetée: ${rappel}. Corrige ce problème.`;
+
+const resumePage = (outil: Outil, contenu: Contenu | null) => ({
+  nom: outil.nom,
+  categorie: outil.categorie,
+  lien: outil.lien,
+  description_actuelle: outil.description,
+  page: contenu ?? "inaccessible",
+  liens_depot: contenu?.liens_depot ?? [],
+});
+
 export function generateurOpenAI(cle: string, modele: string): Generateur {
-  return async (outil, contenu, { tags, criteres, autoriserNouveauxTags: autoriser, rappel }) => {
-    const entree = {
-      nom: outil.nom,
-      categorie: outil.categorie,
-      lien: outil.lien,
-      description_actuelle: outil.description,
-      page: contenu ?? "inaccessible",
-      liens_depot: contenu?.liens_depot ?? [],
-    };
-    const reponse = await fetch("https://api.openai.com/v1/responses", {
-      method: "POST",
-      headers: { authorization: `Bearer ${cle}`, "content-type": "application/json" },
-      signal: AbortSignal.timeout(180_000),
-      body: JSON.stringify({
-        model: modele,
-        input: [
-          { role: "developer", content: instructions(tags, criteres, autoriser) },
-          { role: "user", content: JSON.stringify(entree) },
-          ...(rappel ? [{ role: "user", content: `Ta tentative précédente a été rejetée: ${rappel}. Corrige ce problème.` }] : []),
-        ],
-        text: { format: { type: "json_schema", name: "fiche_outil", strict: true, schema: schemaReponse(tags, autoriser) } },
-        max_output_tokens: 4000,
-      }),
+  return (outil, contenu, { tags, criteres, autoriserNouveauxTags, rappel }) =>
+    appelerOpenAI(cle, modele, {
+      nom: "fiche_outil",
+      schema: schemaReponse(tags, autoriserNouveauxTags),
+      instructions: instructions(tags, criteres, autoriserNouveauxTags),
+      messages: [JSON.stringify(resumePage(outil, contenu)), ...(rappel ? [messageRappel(rappel)] : [])],
+      maxTokens: 4000,
     });
-    const corps = (await reponse.json().catch(() => ({}))) as Record<string, any>;
-    if (!reponse.ok) throw new Error(`OpenAI HTTP ${reponse.status}: ${corps.error?.message ?? "erreur inconnue"}`);
-    if (corps.status === "incomplete") throw new Error(`réponse incomplète (${corps.incomplete_details?.reason})`);
-    const contenuMessage = (corps.output ?? []).filter((o: any) => o.type === "message").flatMap((o: any) => o.content ?? []);
-    const refus = contenuMessage.find((c: any) => c.type === "refusal");
-    if (refus) throw new Error(`refus du modèle: ${refus.refusal}`);
-    const texte = contenuMessage.find((c: any) => c.type === "output_text")?.text;
-    if (typeof texte !== "string") throw new Error("réponse sans texte");
-    return JSON.parse(texte);
-  };
+}
+
+// ---------- explication des écarts ----------
+
+/** Ce que le répertoire retient d'un outil, à comparer à son évaluation enrichie. */
+export interface EvaluationRepertoire {
+  score: number;
+  criteres: readonly string[];
+  /** Fiabilité de la déduction des critères par classify.ts, si connue. */
+  confiance?: string | undefined;
+}
+
+/** Produit une explication brute (non validée) de l'écart entre le répertoire et l'évaluation enrichie. */
+export type Expliqueur = (
+  outil: Outil,
+  contenu: Contenu | null,
+  comparaison: { repertoire: EvaluationRepertoire; enrichie: EvaluationEnrichie; criteres: Critere[]; rappel?: string },
+) => Promise<unknown>;
+
+/** Valide l'explication; elle suit les mêmes interdits typographiques que la description longue. */
+export function validerEcart(brut: unknown): string {
+  const ecart = (brut as { ecart?: unknown } | null)?.ecart;
+  if (!nonVide(ecart)) throw new Error("ecart vide ou absent");
+  const problemes = problemesMarkdown(ecart);
+  if (problemes.length) throw new Error(`ecart: ${problemes.join("; ")}`);
+  return ecart.trim();
+}
+
+export function instructionsEcart(criteres: Critere[]): string {
+  const listeCriteres = criteres.map((c) => `- ${c.id}: ${c.titre} ${c.description}`).join("\n");
+  return `Tu travailles sur un répertoire d'outils numériques pour des OSBL des arts et de la culture du Canada français. Chaque outil y a un score de souveraineté numérique (0 à 3 étoiles, un critère satisfait = une étoile), publié par les auteur·trices du répertoire. Les critères précis derrière ces étoiles ne sont pas publiés: ils ont été DÉDUITS automatiquement des descriptions (avec un niveau de confiance), ce sont donc des hypothèses. Une autre évaluation indépendante, faite à partir de la page de l'outil, diffère du répertoire.
+
+Tu reçois en JSON l'outil, un extrait de sa page, l'évaluation du répertoire et l'évaluation enrichie. Explique l'écart: quels critères diffèrent et pourquoi (par exemple information absente ou ambiguë sur l'hébergement, nationalité de l'entreprise, dépendance à des infrastructures étrangères, critères du répertoire simplement déduits). Ne prétends pas savoir laquelle des deux est correcte; indique plutôt ce qui permettrait de trancher.
+Réponds en français, en 2 à 4 phrases, texte simple (sans titres ni listes). Interdits: images, HTML, tiret cadratin (utilise une virgule, un deux-points, des parenthèses ou un point), émojis et émoticônes.
+
+Critères:
+${listeCriteres}`;
+}
+
+export const schemaEcart = {
+  type: "object",
+  properties: { ecart: { type: "string", description: "Explication de l'écart, 2 à 4 phrases en français." } },
+  required: ["ecart"],
+  additionalProperties: false,
+};
+
+export function expliqueurOpenAI(cle: string, modele: string): Expliqueur {
+  return (outil, contenu, { repertoire, enrichie, criteres, rappel }) =>
+    appelerOpenAI(cle, modele, {
+      nom: "ecart_evaluation",
+      schema: schemaEcart,
+      instructions: instructionsEcart(criteres),
+      messages: [
+        JSON.stringify({ ...resumePage(outil, contenu), evaluation_repertoire: repertoire, evaluation_enrichie: enrichie }),
+        ...(rappel ? [messageRappel(rappel)] : []),
+      ],
+      maxTokens: 1000,
+    });
 }
 
 // ---------- orchestration ----------
@@ -305,7 +379,7 @@ export function generateurOpenAI(cle: string, modele: string): Generateur {
 export const aEnrichir = (o: Outil) => !o.removed && !o.description_longue;
 
 /** Un outil, avec les critères déduits par classify.ts quand il en a. */
-type OutilARevoir = Outil & { criteres?: readonly string[] };
+type OutilARevoir = Outil & { criteres?: readonly string[]; confiance?: string };
 
 const memesCriteres = (a: readonly string[], b: readonly string[] = []) =>
   a.length === b.length && [...a].sort().join() === [...b].sort().join();
@@ -315,12 +389,18 @@ export interface OptionsEnrichissement {
   /** Critères de souveraineté (criteres.json), décrits au modèle pour son évaluation. */
   criteres: Critere[];
   generer: Generateur;
+  /** Explique l'écart quand l'évaluation enrichie diffère du répertoire (voir evaluation_enrichie.ecart). */
+  expliquer: Expliqueur;
   /** Contenu de la page de l'outil; par défaut, téléchargé. */
   lire?: (url: string) => Promise<Contenu | null>;
   autoriserNouveauxTags?: boolean;
   limite?: number;
   /** Appelé après chaque outil enrichi pour persister l'état (outils.json, tags.json). */
   apresChaque?: (outils: OutilARevoir[], tags: Tag[]) => void;
+  /** Appelé au début du traitement de chaque outil, avec son nom. */
+  debut?: (nom: string) => void;
+  /** Appelé après chaque outil traité (enrichi ou en échec), avec le nombre d'outils traités jusqu'ici. */
+  progression?: (traites: number) => void;
   journal?: (message: string) => void;
 }
 
@@ -334,45 +414,75 @@ export interface ResultatEnrichissement {
 const TENTATIVES = 2;
 
 /**
+ * Demande une réponse au modèle jusqu'à TENTATIVES fois; à chaque rejet, la raison est
+ * transmise à la tentative suivante. Lève la dernière erreur si aucune réponse n'est valide.
+ */
+async function obtenirValide<T>(
+  produire: (rappel?: string) => Promise<unknown>,
+  valider: (brut: unknown) => T,
+  rejet: (raison: string) => void,
+): Promise<T> {
+  let rappel: string | undefined;
+  for (let essai = 1; ; essai++) {
+    try {
+      return valider(await produire(rappel));
+    } catch (e) {
+      if (essai >= TENTATIVES) throw e;
+      rappel = (e as Error).message;
+      rejet(rappel);
+    }
+  }
+}
+
+/**
  * Enrichit, EN PLACE, les outils qui n'ont pas encore de description longue (jamais ceux qui en
  * ont une, ni les outils retirés). Les nouveaux tags validés sont ajoutés à `tags`.
+ * Un outil n'est modifié que si TOUT son enrichissement, explication d'écart comprise, a réussi.
  */
 export async function enrichirOutils(outils: OutilARevoir[], options: OptionsEnrichissement): Promise<ResultatEnrichissement> {
-  const { tags, criteres, generer, autoriserNouveauxTags = false, limite = Infinity, lire = lireContenu, journal = () => {} } = options;
+  const { tags, criteres, generer, expliquer, autoriserNouveauxTags = false, limite = Infinity, lire = lireContenu } = options;
+  const journal = options.journal ?? (() => {});
   const resultat: ResultatEnrichissement = { enrichis: [], erreurs: [], ecarts: [] };
+  let traites = 0;
 
   for (const [i, outil] of outils.entries()) {
     if (!aEnrichir(outil)) continue;
     if (resultat.enrichis.length >= limite) break;
+    options.debut?.(outil.nom);
     try {
       const contenu = await lire(outil.lien);
-      let proposition: Proposition | undefined;
-      let rappel: string | undefined;
-      for (let essai = 1; !proposition; essai++) {
-        try {
-          const contexte = { tags, criteres, autoriserNouveauxTags, ...(rappel && { rappel }) };
-          proposition = validerProposition(await generer(outil, contenu, contexte), tags, autoriserNouveauxTags);
-        } catch (e) {
-          if (essai >= TENTATIVES) throw e;
-          rappel = (e as Error).message;
-          journal(`  ${outil.nom}: réponse rejetée (${rappel}), nouvel essai`);
-        }
-      }
+      const proposition = await obtenirValide(
+        (rappel) => generer(outil, contenu, { tags, criteres, autoriserNouveauxTags, ...(rappel && { rappel }) }),
+        (brut) => validerProposition(brut, tags, autoriserNouveauxTags),
+        (raison) => journal(`  ${outil.nom}: réponse rejetée (${raison}), nouvel essai`),
+      );
       const { nouveaux_tags, ...champs } = proposition;
+
+      const ev = champs.evaluation_enrichie;
+      const repertoire: EvaluationRepertoire = { score: outil.score, criteres: outil.criteres ?? [], confiance: outil.confiance };
+      const different = ev.score !== outil.score || !memesCriteres(ev.criteres, outil.criteres);
+      if (different) {
+        ev.ecart = await obtenirValide(
+          (rappel) => expliquer(outil, contenu, { repertoire, enrichie: ev, criteres, ...(rappel && { rappel }) }),
+          validerEcart,
+          (raison) => journal(`  ${outil.nom}: explication de l'écart rejetée (${raison}), nouvel essai`),
+        );
+      }
+
       for (const n of nouveaux_tags) tags.push({ ...n, propose_pour: outil.nom });
       outils[i] = { ...outil, ...champs };
       resultat.enrichis.push(outil.nom);
       journal(`  ${outil.nom}: ${champs.tags.join(", ")} (${champs.source})`);
-      const ev = champs.evaluation_enrichie;
-      if (ev.score !== outil.score || !memesCriteres(ev.criteres, outil.criteres)) {
+      if (different) {
         resultat.ecarts.push(outil.nom);
         journal(`    évaluation différente du répertoire: ${ev.score}/3 [${ev.criteres.join(", ")}] (confiance ${ev.confiance}) contre ${outil.score}/3`);
       }
       options.apresChaque?.(outils, tags);
     } catch (e) {
       resultat.erreurs.push({ nom: outil.nom, message: (e as Error).message });
-      journal(`  ${outil.nom}: ÉCHEC — ${(e as Error).message}`);
+      journal(`  ${outil.nom}: ÉCHEC: ${(e as Error).message}`);
     }
+    options.progression?.(++traites);
   }
   return resultat;
 }
