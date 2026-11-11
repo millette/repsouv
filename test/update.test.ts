@@ -3,7 +3,8 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { classer, type OutilClasse } from "../classify.ts";
-import { mettreAJour } from "../update.ts";
+import { creerCouleurs } from "../couleurs.ts";
+import { ligneJournal, lignesResume, mettreAJour } from "../update.ts";
 
 const base = (nom: string, extra: Partial<OutilClasse> = {}): OutilClasse => {
   const o = {
@@ -83,4 +84,52 @@ test("comeback: les champs d'enrichissement sont conservés", () => {
   const { outils } = mettreAJour([retire], [base("a")], NOUVELLE);
   assert.equal(outils[0]!.changement, "comeback");
   assert.equal(outils[0]!.description_longue, "Longue.");
+});
+
+// ---------- présentation ----------
+
+const SANS = creerCouleurs(false);
+const AVEC = creerCouleurs(true);
+const sansCodes = (s: string) => s.replace(/\x1b\[\d+m/g, "");
+const RESUME = { nouveau: ["A", "B"], modification: ["C"], retrait: [], comeback: ["D"] };
+
+test("lignesResume sans couleurs: le texte d'origine", () => {
+  assert.deepEqual(lignesResume(RESUME, "2026-11-05T09:53:00-05:00", SANS), [
+    "Page modifiée le 2026-11-05T09:53:00-05:00: 4 changement(s)",
+    "  nouveau: A, B",
+    "  modification: C",
+    "  comeback: D",
+  ]);
+});
+test("lignesResume sans changement: une seule ligne", () => {
+  assert.deepEqual(lignesResume({ nouveau: [], modification: [], retrait: [], comeback: [] }, "d", SANS), ["Page modifiée le d: 0 changement(s)"]);
+});
+test("lignesResume avec couleurs: même texte une fois les codes retirés, et chaque type a sa couleur", () => {
+  const lignes = lignesResume({ ...RESUME, retrait: ["E"] }, "2026-11-05T09:53:00-05:00", AVEC);
+  assert.deepEqual(lignes.map(sansCodes), lignesResume({ ...RESUME, retrait: ["E"] }, "2026-11-05T09:53:00-05:00", SANS));
+  assert.match(lignes[0]!, /\x1b\[36m2026-11-05T09:53:00-05:00\x1b\[39m/); // date en cyan
+  assert.match(lignes[0]!, /\x1b\[33m.*5 changement\(s\)/); // total en jaune (gras)
+  assert.match(lignes.find((l) => l.includes("nouveau"))!, /\x1b\[32mnouveau/); // vert
+  assert.match(lignes.find((l) => l.includes("modification"))!, /\x1b\[33mmodification/); // jaune
+  assert.match(lignes.find((l) => l.includes("retrait"))!, /\x1b\[31mretrait/); // rouge
+  assert.match(lignes.find((l) => l.includes("comeback"))!, /\x1b\[35mcomeback/); // magenta
+});
+test("lignesResume avec couleurs: zéro changement en vert", () => {
+  assert.match(lignesResume({ nouveau: [], modification: [], retrait: [], comeback: [] }, "d", AVEC)[0]!, /\x1b\[32m0 changement\(s\)/);
+});
+
+const NIVEAUX = ["info", "succes", "avertissement", "erreur"] as const;
+const MESSAGES = ["  Matomo: rapports-analytique, auto-hebergeable (partiel)", "    évaluation différente du répertoire: 1/3 [controle] contre 2/3", "  Zeffy: ÉCHEC: page inaccessible (HTTP 403); outil non enrichi", "Sans deux-points ici"];
+test("ligneJournal sans couleurs: le message d'origine, quel que soit le niveau", () => {
+  for (const m of MESSAGES) for (const n of NIVEAUX) assert.equal(ligneJournal(m, n, SANS), m, `${n}: ${m}`);
+});
+test("ligneJournal avec couleurs: même texte une fois les codes retirés", () => {
+  for (const m of MESSAGES) for (const n of NIVEAUX) assert.equal(sansCodes(ligneJournal(m, n, AVEC)), m, `${n}: ${m}`);
+});
+test("ligneJournal: succès en vert (nom en gras), avertissement en jaune, erreur en rouge, info atténuée", () => {
+  assert.match(ligneJournal("  Matomo: tags", "succes", AVEC), /^  \x1b\[1m\x1b\[32mMatomo\x1b\[39m\x1b\[22m: tags$/);
+  assert.match(ligneJournal("  Matomo: page vide", "avertissement", AVEC), /^  \x1b\[33mMatomo: page vide\x1b\[39m$/);
+  assert.match(ligneJournal("  Matomo: ÉCHEC", "erreur", AVEC), /^  \x1b\[1m\x1b\[31mMatomo\x1b\[39m\x1b\[22m: \x1b\[31mÉCHEC\x1b\[39m$/);
+  assert.equal(ligneJournal("Fin", "info", AVEC), "\x1b[2mFin\x1b[22m");
+  assert.equal(ligneJournal("Pas de nom", "erreur", AVEC), "\x1b[31mPas de nom\x1b[39m");
 });

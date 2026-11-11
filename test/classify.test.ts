@@ -71,3 +71,13 @@ test("CLI: un fichier au mauvais format (simple tableau) est refusé avec un mes
   assert.match(r.stderr, /^Erreur: .*format invalide/);
   assert.equal(readFileSync(f, "utf8"), JSON.stringify([{ nom: "a" }]));
 });
+test("CLI: « Erreur: » est en rouge dans un terminal forcé (FORCE_COLOR), et reste sans code avec NO_COLOR ou hors terminal", () => {
+  const f = copie();
+  const lancer = (env: Record<string, string>) =>
+    spawnSync("nub", [classifyTs, f, "--bogus"], { encoding: "utf8", env: { PATH: process.env.PATH ?? "", HOME: process.env.HOME ?? "", ...env } });
+  assert.match(lancer({ FORCE_COLOR: "1" }).stderr, /^\x1b\[1m\x1b\[31mErreur:\x1b\[39m\x1b\[22m Option inconnue/);
+  assert.match(lancer({ FORCE_COLOR: "1", NO_COLOR: "1" }).stderr, /^Erreur: Option inconnue/);
+  assert.match(lancer({}).stderr, /^Erreur: Option inconnue/);
+  const sans = spawnSync("nub", [classifyTs, f, "--sans-couleur"], { encoding: "utf8", env: { PATH: process.env.PATH ?? "", HOME: process.env.HOME ?? "", FORCE_COLOR: "1" } });
+  assert.match(sans.stderr, /^Erreur: Option inconnue: --sans-couleur/); // --sans-couleur désactive aussi la couleur de « Erreur: »
+});

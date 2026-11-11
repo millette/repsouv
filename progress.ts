@@ -9,6 +9,8 @@ export interface ProgressOptions {
   logWhenNotTTY?: boolean;
   /** Minimum milliseconds between redraws. */
   intervalMs?: number;
+  /** Optional painters for the parts of the bar (ANSI colors); omit for a plain bar. */
+  paint?: { filled?: (text: string) => string; empty?: (text: string) => string; label?: (text: string) => string };
 }
 
 export interface Progress {
@@ -26,6 +28,7 @@ export interface Progress {
 
 export function createProgress(total: number, options: ProgressOptions = {}): Progress {
   const { stream = process.stderr, logWhenNotTTY = false, intervalMs = 100 } = options;
+  const paint = { filled: (t: string) => t, empty: (t: string) => t, label: (t: string) => t, ...options.paint };
 
   if (!Number.isFinite(total) || total <= 0) {
     throw new RangeError("total must be positive and finite");
@@ -66,13 +69,12 @@ export function createProgress(total: number, options: ProgressOptions = {}): Pr
     // "[" + bar + "] " + "100%" = width + 7; keep one spare column to avoid wrapping.
     const width = Math.max(0, Math.min(30, columns - 8));
     const filled = Math.floor(ratio() * width);
-    let line =
-      width > 0
-        ? `[${"#".repeat(filled)}${"-".repeat(width - filled)}] ${pct}`
-        : pct.slice(0, columns - 1);
+    // Lengths are computed on the plain text: the painters only add invisible escape codes.
+    const plain = width > 0 ? `[${"#".repeat(filled)}${"-".repeat(width - filled)}] ${pct}` : pct.slice(0, columns - 1);
+    let line = width > 0 ? `[${paint.filled("#".repeat(filled))}${paint.empty("-".repeat(width - filled))}] ${pct}` : plain;
     // Append the label if at least a few columns remain (one is kept spare to avoid wrapping).
-    const room = columns - 1 - line.length - 1;
-    if (label && room >= 4) line += ` ${label.length > room ? `${label.slice(0, room - 1)}…` : label}`;
+    const room = columns - 1 - plain.length - 1;
+    if (label && room >= 4) line += ` ${paint.label(label.length > room ? `${label.slice(0, room - 1)}…` : label)}`;
 
     // \r returns to column 0; \x1b[K clears leftovers from a longer previous line.
     stream.write(`\r${line}\x1b[K`);

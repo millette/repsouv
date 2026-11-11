@@ -85,3 +85,28 @@ test("étiquette: absente hors TTY (lignes de pourcentage seulement)", () => {
   createProgress(2, { stream, logWhenNotTTY: true }).update(1, "Matomo");
   assert.deepEqual(sortie, ["50%\n"]);
 });
+test("couleurs: la barre peut être peinte sans changer sa largeur visible ni le texte", () => {
+  const sans = faux(true, 50);
+  const avec = faux(true, 50);
+  const peint = {
+    filled: (t: string) => `\x1b[32m${t}\x1b[39m`,
+    empty: (t: string) => `\x1b[2m${t}\x1b[22m`,
+    label: (t: string) => `\x1b[36m${t}\x1b[39m`,
+  };
+  const a = createProgress(4, { stream: sans.stream, intervalMs: 0 });
+  const b = createProgress(4, { stream: avec.stream, intervalMs: 0, paint: peint });
+  a.update(1, "Matomo");
+  b.update(1, "Matomo");
+  const visible = (s: string) => s.replace(/\x1b\[\d+m/g, "");
+  assert.equal(visible(avec.sortie.at(-1)!), sans.sortie.at(-1));
+  assert.match(avec.sortie.at(-1)!, /\x1b\[32m#+\x1b\[39m\x1b\[2m-+\x1b\[22m\] 25% \x1b\[36mMatomo\x1b\[39m/);
+  assert.equal(sans.sortie.at(-1)!.includes("\x1b[3"), false);
+});
+test("couleurs: une étiquette trop longue est tronquée sur sa largeur visible, pas avec les codes", () => {
+  const { stream, sortie } = faux(true, 50);
+  const p = createProgress(4, { stream, intervalMs: 0, paint: { label: (t) => `\x1b[36m${t}\x1b[39m` } });
+  p.update(1, "Un nom d'outil vraiment beaucoup trop long pour l'écran");
+  const ligne = sortie.at(-1)!.replace(/^\r|\x1b\[K$/g, "").replace(/\x1b\[\d+m/g, "");
+  assert.ok(ligne.length <= 49, ligne);
+  assert.match(ligne, /…$/);
+});

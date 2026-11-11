@@ -433,6 +433,8 @@ type OutilARevoir = Outil & { criteres?: readonly string[]; confiance?: string }
 const memesCriteres = (a: readonly string[], b: readonly string[] = []) =>
   a.length === b.length && [...a].sort().join() === [...b].sort().join();
 
+export type NiveauJournal = "info" | "succes" | "avertissement" | "erreur";
+
 export interface OptionsEnrichissement {
   tags: Tag[];
   /** Critères de souveraineté (criteres.json), décrits au modèle pour son évaluation. */
@@ -458,7 +460,8 @@ export interface OptionsEnrichissement {
   debut?: (nom: string) => void;
   /** Appelé après chaque outil traité (enrichi ou en échec), avec le nombre d'outils traités jusqu'ici. */
   progression?: (traites: number) => void;
-  journal?: (message: string) => void;
+  /** Messages de suivi; `niveau` indique leur nature (pour les colorer). */
+  journal?: (message: string, niveau?: NiveauJournal) => void;
 }
 
 export interface ResultatEnrichissement {
@@ -511,7 +514,7 @@ export async function enrichirOutils(outils: OutilARevoir[], options: OptionsEnr
     try {
       const { contenu, probleme } = await obtenirPage(outil.lien, lire);
       if (probleme) {
-        journal(`  ${outil.nom}: AVERTISSEMENT: ${probleme}`);
+        journal(`  ${outil.nom}: AVERTISSEMENT: ${probleme}`, "avertissement");
         if (!accepterSansPage) {
           throw new Error(`${probleme}; outil non enrichi, il sera retenté à la prochaine exécution (ou utiliser --sans-page pour l'enrichir à partir de sa description seule)`);
         }
@@ -519,7 +522,7 @@ export async function enrichirOutils(outils: OutilARevoir[], options: OptionsEnr
       const proposition = await obtenirValide(
         (rappel) => generer(outil, contenu, { tags, criteres, autoriserNouveauxTags, ...(rappel && { rappel }) }),
         (brut) => validerProposition(brut, tags, autoriserNouveauxTags),
-        (raison) => journal(`  ${outil.nom}: réponse rejetée (${raison}), nouvel essai`),
+        (raison) => journal(`  ${outil.nom}: réponse rejetée (${raison}), nouvel essai`, "avertissement"),
       );
       const { nouveaux_tags, ...champs } = proposition;
 
@@ -530,7 +533,7 @@ export async function enrichirOutils(outils: OutilARevoir[], options: OptionsEnr
         ev.ecart = await obtenirValide(
           (rappel) => expliquer(outil, contenu, { repertoire, enrichie: ev, criteres, ...(rappel && { rappel }) }),
           validerEcart,
-          (raison) => journal(`  ${outil.nom}: explication de l'écart rejetée (${raison}), nouvel essai`),
+          (raison) => journal(`  ${outil.nom}: explication de l'écart rejetée (${raison}), nouvel essai`, "avertissement"),
         );
       }
 
@@ -538,15 +541,15 @@ export async function enrichirOutils(outils: OutilARevoir[], options: OptionsEnr
       outils[i] = { ...outil, ...champs, page_lue: !probleme, enrichi_le: horloge() };
       resultat.enrichis.push(outil.nom);
       if (probleme) resultat.sansPage.push(outil.nom);
-      journal(`  ${outil.nom}: ${champs.tags.join(", ")} (${champs.source})`);
+      journal(`  ${outil.nom}: ${champs.tags.join(", ")} (${champs.source})`, "succes");
       if (different) {
         resultat.ecarts.push(outil.nom);
-        journal(`    évaluation différente du répertoire: ${ev.score}/3 [${ev.criteres.join(", ")}] (confiance ${ev.confiance}) contre ${outil.score}/3`);
+        journal(`    évaluation différente du répertoire: ${ev.score}/3 [${ev.criteres.join(", ")}] (confiance ${ev.confiance}) contre ${outil.score}/3`, "avertissement");
       }
       options.apresChaque?.(outils, tags);
     } catch (e) {
       resultat.erreurs.push({ nom: outil.nom, message: (e as Error).message });
-      journal(`  ${outil.nom}: ÉCHEC: ${(e as Error).message}`);
+      journal(`  ${outil.nom}: ÉCHEC: ${(e as Error).message}`, "erreur");
     }
     options.progression?.(++traites);
   }

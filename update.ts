@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Met à jour outils.json depuis le répertoire en ligne.
-// Usage: nub update.ts [--dry-run] [--enrichir [--nouveaux-tags] [--sans-page] [--limite=N]] [outils.json] [url]
+// Usage: nub update.ts [--dry-run] [--sans-couleur] [--enrichir [--nouveaux-tags] [--sans-page] [--limite=N]] [outils.json] [url]
 //
 // Pour chaque outil, selon la comparaison avec la page en ligne:
 //   - absent du fichier → changement "nouveau"
@@ -24,10 +24,16 @@
 //   --sans-page     : enrichit quand même, à partir de la description seule; l'outil porte alors page_lue: false.
 //   --nouveaux-tags : le modèle peut proposer de nouveaux tags (justification obligatoire, ajoutés à tags.json).
 //   --limite=N      : n'enrichit pas plus de N outils par exécution.
+//
+// Couleurs (terminal seulement): résumé sur stdout, journal et barre sur stderr; chaque flux est coloré
+// s'il est un terminal. NO_COLOR ou --sans-couleur les désactive, FORCE_COLOR les impose. Hors terminal,
+// le texte est identique, sans aucun code de couleur.
 import { dirname, join } from "node:path";
+import { couleursActives, creerCouleurs, type Couleurs } from "./couleurs.ts";
 import { classer, type OutilClasse } from "./classify.ts";
 import {
   aEnrichir, chargerCriteres, chargerTags, enrichirOutils, expliqueurOpenAI, generateurOpenAI, MODELE_PAR_DEFAUT, sauverTags,
+  type NiveauJournal,
 } from "./enrichir.ts";
 import { lancer } from "./cli.ts";
 import { ecrireFichier, lireFichier, type Lu } from "./fichiers.ts";
@@ -92,6 +98,36 @@ export function mettreAJour(
   return { outils, resume };
 }
 
+// ---------- présentation (couleurs) ----------
+
+/** Les lignes du résumé de la synchronisation: la date de la page, le nombre de changements, puis chaque type. */
+export function lignesResume(resume: Resume, modification: string, c: Couleurs): string[] {
+  const total = Object.values(resume).reduce((n, noms) => n + noms.length, 0);
+  const compte = total ? c.gras(c.jaune(`${total} changement(s)`)) : c.vert(`${total} changement(s)`);
+  const couleurs: Record<keyof Resume, (t: string) => string> = { nouveau: c.vert, modification: c.jaune, retrait: c.rouge, comeback: c.magenta };
+  const lignes = [`Page modifiée le ${c.cyan(modification)}: ${compte}`];
+  for (const [type, noms] of Object.entries(resume) as [keyof Resume, string[]][]) {
+    if (noms.length) lignes.push(`  ${couleurs[type](type)}: ${noms.join(", ")}`);
+  }
+  return lignes;
+}
+
+/** Une ligne du journal de l'enrichissement, colorée selon sa nature: « Nom: suite ». */
+export function ligneJournal(message: string, niveau: NiveauJournal, c: Couleurs): string {
+  const m = /^(\s*)([^:]+): (.*)$/s.exec(message);
+  const [indent, nom, suite] = m ? [m[1]!, m[2]!, m[3]!] : ["", "", message];
+  switch (niveau) {
+    case "succes":
+      return m ? `${indent}${c.gras(c.vert(nom))}: ${suite}` : c.vert(message);
+    case "avertissement":
+      return m ? `${indent}${c.jaune(`${nom}: ${suite}`)}` : c.jaune(message);
+    case "erreur":
+      return m ? `${indent}${c.gras(c.rouge(nom))}: ${c.rouge(suite)}` : c.rouge(message);
+    default:
+      return c.attenue(message);
+  }
+}
+
 if (import.meta.main) {
   await lancer(async () => {
     const args = process.argv.slice(2);
@@ -101,12 +137,17 @@ if (import.meta.main) {
     const sansPage = args.includes("--sans-page");
     const limiteArg = args.find((a) => a.startsWith("--limite="));
     const limite = limiteArg ? Number(limiteArg.slice("--limite=".length)) : undefined;
-    const connues = ["--dry-run", "--enrichir", "--nouveaux-tags", "--sans-page", "--limite"];
+    const sansCouleur = args.includes("--sans-couleur");
+    const connues = ["--dry-run", "--sans-couleur", "--enrichir", "--nouveaux-tags", "--sans-page", "--limite"];
     const inconnue = args.find((a) => a.startsWith("--") && !connues.some((o) => a === o || a.startsWith(`${o}=`)));
     if (inconnue) throw new Error(`Option inconnue: ${inconnue}`);
     if ((nouveauxTags || sansPage) && !enrichir) throw new Error("--nouveaux-tags et --sans-page nécessitent --enrichir");
     if (limite !== undefined && !(Number.isInteger(limite) && limite > 0)) throw new Error("--limite=N: entier positif attendu");
     const [fichier = "outils.json", url] = args.filter((a) => !a.startsWith("--"));
+
+    // Le résumé va sur stdout et le journal sur stderr: chaque flux a ses propres couleurs.
+    const sortie = creerCouleurs(couleursActives(process.stdout, process.env, sansCouleur));
+    const suivi = creerCouleurs(couleursActives(process.stderr, process.env, sansCouleur));
 
     const { outils: page, modification } = await telechargerRepertoire(url);
     // Fichier de départ, puis dernier état écrit: les métadonnées (updated_at) sont maintenues par ecrireFichier.
@@ -115,22 +156,20 @@ if (import.meta.main) {
 
     const { outils, resume } = mettreAJour(existants, page, modification);
     const total = Object.values(resume).reduce((n, noms) => n + noms.length, 0);
-    console.log(`Page modifiée le ${modification}: ${total} changement(s)`);
-    for (const [type, noms] of Object.entries(resume)) {
-      if (noms.length) console.log(`  ${type}: ${noms.join(", ")}`);
-    }
+    for (const ligne of lignesResume(resume, modification, sortie)) console.log(ligne);
+    if (dryRun) console.log(sortie.attenue("Simulation (--dry-run): rien n'est écrit"));
     if (total && !dryRun) {
       courant = ecrireFichier(fichier, "outils", outils, courant);
-      console.log(`${fichier} mis à jour`);
+      console.log(`${sortie.vert(fichier)} mis à jour`);
     }
 
     if (enrichir) {
       const fichierTags = join(dirname(fichier), "tags.json");
       const aFaire = outils.filter(aEnrichir);
       const prevus = limite ? aFaire.slice(0, limite) : aFaire;
-      console.log(`Enrichissement: ${aFaire.length} outil(s) sans description longue`);
+      console.log(`${sortie.gras("Enrichissement")}: ${aFaire.length ? sortie.jaune(String(aFaire.length)) : sortie.vert("0")} outil(s) sans description longue`);
       if (dryRun) {
-        if (prevus.length) console.log(`  à enrichir (${prevus.length}): ${prevus.map((o) => o.nom).join(", ")}`);
+        if (prevus.length) console.log(`  à enrichir (${prevus.length}): ${sortie.cyan(prevus.map((o) => o.nom).join(", "))}`);
       } else if (aFaire.length) {
         const cle = process.env.OPENAI_API_KEY;
         if (!cle) throw new Error("OPENAI_API_KEY absente (voir .env.example)");
@@ -138,7 +177,10 @@ if (import.meta.main) {
         const criteres = chargerCriteres(join(dirname(fichier), "criteres.json"));
         const nbTags = tags.length;
         const modele = process.env.OPENAI_MODEL || MODELE_PAR_DEFAUT;
-        const progression = createProgress(prevus.length, { logWhenNotTTY: true });
+        const progression = createProgress(prevus.length, {
+          logWhenNotTTY: true,
+          paint: { filled: suivi.vert, empty: suivi.attenue, label: suivi.cyan },
+        });
         let traites = 0;
         const resultat = await enrichirOutils(outils, {
           tags,
@@ -154,15 +196,17 @@ if (import.meta.main) {
           },
           // En terminal, le nom de l'outil en cours s'affiche sur la barre; sinon, sur une ligne de journal.
           debut: (nom) =>
-            process.stderr.isTTY ? progression.update(traites, nom) : progression.message(`Enrichissement de ${nom}...`),
+            process.stderr.isTTY ? progression.update(traites, nom) : progression.message(suivi.attenue(`Enrichissement de ${nom}...`)),
           progression: (n) => progression.update((traites = n)),
-          journal: (message) => progression.message(message),
+          journal: (message, niveau = "info") => progression.message(ligneJournal(message, niveau, suivi)),
         });
         progression.end();
-        console.log(`Enrichis: ${resultat.enrichis.length}; échecs: ${resultat.erreurs.length}`);
-        if (resultat.ecarts.length) console.log(`Évaluation différente du répertoire: ${resultat.ecarts.join(", ")}`);
-        if (resultat.sansPage.length) console.log(`Enrichis sans page lisible (page_lue: false): ${resultat.sansPage.join(", ")}`);
-        if (tags.length > nbTags) console.log(`Nouveaux tags: ${tags.slice(nbTags).map((t) => t.id).join(", ")}`);
+        const enrichis = resultat.enrichis.length ? sortie.gras(sortie.vert(String(resultat.enrichis.length))) : "0";
+        const echecs = resultat.erreurs.length ? sortie.gras(sortie.rouge(String(resultat.erreurs.length))) : sortie.vert("0");
+        console.log(`Enrichis: ${enrichis}; échecs: ${echecs}`);
+        if (resultat.ecarts.length) console.log(`${sortie.jaune("Évaluation différente du répertoire")}: ${resultat.ecarts.join(", ")}`);
+        if (resultat.sansPage.length) console.log(`${sortie.jaune("Enrichis sans page lisible (page_lue: false)")}: ${resultat.sansPage.join(", ")}`);
+        if (tags.length > nbTags) console.log(`${sortie.cyan("Nouveaux tags")}: ${tags.slice(nbTags).map((t) => t.id).join(", ")}`);
         if (resultat.erreurs.length) process.exitCode = 1;
       }
     }

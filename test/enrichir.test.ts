@@ -507,3 +507,22 @@ test("enrichi_le: sans horloge fournie, c'est l'heure actuelle de Toronto", asyn
   await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer: async () => valide(), lire: pageOk });
   assert.match(outils[0]!.enrichi_le!, /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}-0[45]:00$/);
 });
+
+test("journal: chaque message porte son niveau (succès, avertissement, erreur), pour la couleur", async () => {
+  const vus: [string, string | undefined][] = [];
+  const journal = (m: string, n?: string) => vus.push([m, n]);
+  const lire = async (url: string) => (url.includes("//b.") ? null : pageOk());
+  const outils = [outil("a", { score: 2, criteres: ["donnees", "controle"] } as never), outil("b")];
+  await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer: async () => valide(), lire, journal });
+  const niveau = (re: RegExp) => vus.find(([m]) => re.test(m))?.[1];
+  assert.equal(niveau(/a: chiffrement|a: gratuit/), "succes");
+  assert.equal(niveau(/évaluation différente/), "avertissement");
+  assert.equal(niveau(/b: AVERTISSEMENT/), "avertissement");
+  assert.equal(niveau(/b: ÉCHEC/), "erreur");
+});
+test("journal: une réponse rejetée est un avertissement", async () => {
+  const vus: [string, string | undefined][] = [];
+  const reponses = [valide({ tags: [] }), valide()];
+  await enrichirOutils([outil("a")], { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer: async () => reponses.shift(), lire: pageOk, journal: (m, n) => vus.push([m, n]) });
+  assert.equal(vus.find(([m]) => m.includes("réponse rejetée"))?.[1], "avertissement");
+});
