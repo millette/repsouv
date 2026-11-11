@@ -102,14 +102,14 @@ Les trois fichiers de données ont la même structure : un objet dont le champ `
 
 | Champ | Description |
 |---|---|
-| `meta.data_license` | Licence des données, toujours `CC-BY-SA-4.0` (identifiant SPDX). Les scripts la rétablissent si un fichier en porte une autre ou aucune |
+| `meta.data_license` | Licence des données, toujours `CC-BY-SA-4.0` (identifiant SPDX). Si un fichier en porte une autre, les scripts la rétablissent à l'écriture (un fichier sans `data_license` est refusé) |
 | `meta.created_at` | Date et heure de création du fichier. Fixée une fois, puis conservée par tous les scripts, même quand `extract` remplace le contenu |
 | `meta.updated_at` | Date et heure de la dernière modification du **contenu**. Un script qui réécrit le même contenu ne la change pas |
 | `outils`, `criteres` ou `tags` | Le tableau de données, nommé d'après le fichier |
 
 **Toutes les dates et heures sont locales, en heure de Toronto** (`America/Toronto`, heure d'été comprise), au format ISO 8601 avec le décalage : `-05:00` en hiver, `-04:00` en été. C'est le cas de `meta.created_at` et `meta.updated_at`, et aussi de `derniere_modification` de chaque outil. Cette dernière est la date affichée par la page d'origine, qui donne l'heure de l'Est (Toronto), à laquelle on ajoute le décalage de la saison; elle ne se confond pas avec `meta.updated_at`, qui date des écritures du fichier.
 
-Le format est **strict** : un fichier de données qui n'a pas cette structure (sans `meta`, simple tableau, dates de `meta` sans décalage) est refusé avec un message clair. Pour le recréer depuis la page en ligne, voir [Importer ou réimporter depuis le web](#importer-ou-réimporter-depuis-le-web).
+Le format est **strict** : un fichier de données qui n'a pas cette structure (sans `meta` complet, simple tableau, dates de `meta` sans décalage) est refusé avec un message clair. Pour le recréer depuis la page en ligne, voir [Importer ou réimporter depuis le web](#importer-ou-réimporter-depuis-le-web).
 
 ### `outils.json`
 
@@ -165,7 +165,7 @@ De nouveaux tags peuvent s'ajouter après cette première phase, avec `--enrichi
 
 ## Scripts
 
-Tous sont en TypeScript et se lancent avec `nub`. Les fonctions principales sont exportées pour être réutilisables; le code de ligne de commande ne s'exécute que lorsque le script est lancé directement.
+Les trois scripts (`extract.ts`, `classify.ts` et `update.ts`) se lancent avec `nub`; les autres fichiers sont des modules, utilisés par les scripts et par les tests. Tout est en TypeScript. Les fonctions principales sont exportées pour être réutilisables; le code de ligne de commande ne s'exécute que lorsque le script est lancé directement.
 
 ### `extract.ts`
 
@@ -203,7 +203,7 @@ Télécharge la page en ligne (`[url]`, par défaut celle du répertoire; le mê
 
 Les outils nouveaux, modifiés, retirés ou de retour reçoivent la date de modification de la page; les nouveaux, modifiés et de retour sont reclassés. Les champs d'enrichissement d'un outil survivent à une modification ou à un retour. Le fichier n'est réécrit que s'il y a au moins un changement; `meta.updated_at` est alors mis à jour, et `tags.json` aussi quand de nouveaux tags s'ajoutent.
 
-Avec `--enrichir`, la synchronisation est suivie de l'[enrichissement](#enrichissement-par-ia). Une option inconnue est refusée.
+Avec `--enrichir`, la synchronisation est suivie de l'[enrichissement](#enrichissement-par-ia), qui lit `tags.json` et `criteres.json` dans le même dossier que `outils.json`. Une option inconnue est refusée, de même que `--nouveaux-tags` ou `--sans-page` sans `--enrichir`.
 
 ### `enrichir.ts`
 
@@ -264,7 +264,7 @@ C'est une heuristique, pas une vérité : un critère retenu avec une confiance 
 
 **Configuration :** `OPENAI_API_KEY` dans `.env` (voir `.env.example`), et `OPENAI_MODEL` pour changer le modèle (`gpt-6-astra` par défaut). Compter environ 20 secondes par outil (mesuré sur quelques outils).
 
-**Confidentialité :** pour chaque outil, le script télécharge la page publique (`lien`), en extrait le texte et les liens vers des forges de code, puis envoie à l'API OpenAI (Responses API, sortie JSON structurée) le nom, la catégorie, le lien, la description et cet extrait. Quand l'évaluation diffère du répertoire, le second appel y ajoute les deux évaluations. Les tags sont limités au vocabulaire de `tags.json`. La page est lue d'abord : voir [Pages inaccessibles ou presque vides](#pages-inaccessibles-ou-presque-vides).
+**Confidentialité :** pour chaque outil, le script télécharge la page publique (`lien`), en extrait le texte (limité à 6 000 caractères) et les liens vers des forges de code, puis envoie à l'API OpenAI (Responses API, sortie JSON structurée) le nom, la catégorie, le lien, la description et cet extrait. Quand l'évaluation diffère du répertoire, le second appel y ajoute les deux évaluations. Les tags sont limités au vocabulaire de `tags.json`. La page est lue d'abord : voir [Pages inaccessibles ou presque vides](#pages-inaccessibles-ou-presque-vides).
 
 **Validation :** chaque réponse est vérifiée avant d'être écrite :
 
@@ -302,7 +302,7 @@ jaq '.outils |= map(if .page_lue == false then del(.description_longue, .tags, .
 
 `extract` et `build` servent à **construire `outils.json` depuis zéro** à partir de la page en ligne :
 
-- `nub run extract` télécharge la page et **réécrit `outils.json` en entier**, avec seulement les champs de la source. Il ne fusionne rien : le contenu est remplacé. Les seuls fichiers qu'il lit sont ses fichiers de **sortie** (`outils.json` et, s'il est donné, `criteres.json`), s'ils existent déjà : `outils.json` pour le garde-fou ci-dessous et pour conserver `meta.created_at`, `criteres.json` pour conserver `meta.created_at`. Il ne lit ni n'écrit **jamais de fichier HTML** : la page est téléchargée en mémoire à chaque exécution.
+- `nub run extract` télécharge la page et **réécrit `outils.json` en entier**, avec seulement les champs de la source. Il ne fusionne rien : le contenu est remplacé. Les seuls fichiers qu'il lit sont ses fichiers de **sortie** (`outils.json` et, s'il est donné, `criteres.json`), s'ils existent déjà : pour conserver leur `meta.created_at` et, pour `outils.json`, appliquer le garde-fou ci-dessous. Il ne lit ni n'écrit **jamais de fichier HTML** : la page est téléchargée en mémoire à chaque exécution.
 - `nub run build` enchaîne `extract` puis `classify` : le fichier produit est complet, avec `criteres` et `confiance`.
 
 C'est la voie de l'import initial. Ensuite, `update` fait la synchronisation courante : il télécharge la même page, mais compare, détecte les changements, conserve les dates des outils inchangés et ne touche jamais à l'enrichissement.
@@ -354,6 +354,17 @@ Dans `test/`, avec `node:test` lancé par `nub` :
 - `temps.test.ts` : heure de Toronto (hiver, été, minuit, passage à l'heure d'été), décalage ajouté à une date locale.
 - `fichiers.test.ts` : structure et `meta` des fichiers de données (création, contenu inchangé ou modifié, licence rétablie, refus des formats invalides), et conformité des trois fichiers du dépôt.
 - `en-tetes.test.ts` : chaque fichier `.ts` porte les en-têtes SPDX, la licence du code est la même dans `package.json`, et les deux textes de licence sont présents.
+
+## Dépannage
+
+| Message | Cause et remède |
+|---|---|
+| `Refus d'écraser: …` | `extract` (ou `build`) a trouvé dans `outils.json` un enrichissement, un historique de changement, ou un format inattendu. Pour suivre la page sans rien perdre, utiliser `nub run update`; pour tout remplacer quand même, `nub run build:force` |
+| `… format invalide …` ou `« meta » invalide …` | Un fichier de données n'a pas la structure décrite dans [Fichiers JSON](#fichiers-json). Le restaurer depuis Git (`git checkout outils.json`) ou, pour `outils.json`, le recréer avec `nub run build:force` |
+| `Téléchargement impossible (url): …` | Réseau, délai de 30 secondes dépassé ou erreur HTTP en téléchargeant le répertoire. Rien n'a été écrit : réessayer |
+| `OPENAI_API_KEY absente` | Il y a des outils à enrichir, mais `.env` n'a pas la clé. La synchronisation, elle, a déjà été écrite |
+| `page inaccessible …` ou `page presque vide …`, `outil non enrichi` | La page de l'outil n'a pas pu être lue : réessayer plus tard, ou enrichir à partir de la description seule avec `--sans-page`. Voir [Pages inaccessibles](#pages-inaccessibles-ou-presque-vides) |
+| `Option inconnue: …` | Option mal orthographiée. Les options valides sont décrites dans la section de chaque script |
 
 ## Utiliser les données
 
