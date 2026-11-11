@@ -1,20 +1,20 @@
 # Sommaire du répertoire d'outils favorisant la souveraineté numérique
 
-Généré le 2026-11-11T17:37:07-05:00 par `sommaire.ts` d'après `outils.json` (données sous licence CC-BY-SA-4.0, créées le 2026-11-11T16:43:11-05:00 et modifiées pour la dernière fois le 2026-11-11T17:35:34-05:00). Ne pas modifier ce fichier à la main : relancer `nub run sommaire`.
+Généré le 2026-11-11T17:45:29-05:00 par `sommaire.ts` d'après `outils.json` (données sous licence CC-BY-SA-4.0, créées le 2026-11-11T16:43:11-05:00 et modifiées pour la dernière fois le 2026-11-11T17:43:31-05:00). Ne pas modifier ce fichier à la main : relancer `nub run sommaire`.
 
 Sauf indication contraire, les pourcentages sont calculés sur les 60 outils du répertoire. Les statistiques sur le statut du code source, les licences, les forges et les tags ne portent que sur les 57 outils déjà enrichis.
 
 ## Résumé
 
-Ce répertoire rassemble 60 outils numériques pour aider les OSBL des arts et de la culture du Canada français à orienter leurs choix vers davantage de souveraineté numérique. Il est structuré par catégories et repose sur trois critères : où peuvent rester les données, qui contrôle l’outil et de qui celui-ci dépend pour fonctionner. Le nombre de critères satisfaits détermine un score de 0 à 3 étoiles. Les scores inscrits au répertoire sont de 2 étoiles pour 52 outils et de 3 étoiles pour 8 outils, avec une moyenne de 2,13. Les catégories les plus fournies sont la bureautique et la collaboration, avec 8 outils, la sécurité et la gestion des accès, avec 6 outils, ainsi que le stockage, l’infonuagique et la sauvegarde, avec 5 outils. Le répertoire couvre aussi des besoins propres au secteur, notamment les collections culturelles, la billetterie, les dons et les subventions.
+Ce répertoire rassemble 60 outils numériques pour aider les OSBL des arts et de la culture du Canada français à repérer des solutions favorisant leur souveraineté numérique. Les fiches sont organisées par catégories et présentent des descriptions, des étiquettes d’usage et, lorsque ces renseignements sont disponibles, le statut du code, la licence et le dépôt de développement. L’évaluation repose sur trois critères : où peuvent rester les données, qui contrôle l’outil et de qui il dépend pour fonctionner. Le score, de 0 à 3 étoiles, indique le nombre de critères satisfaits. Dans le répertoire, 52 outils obtiennent 2 étoiles et 8 obtiennent 3 étoiles, pour une moyenne de 2,13. Le critère relatif aux données est attribué à 60 outils, celui du contrôle à 29 et celui des dépendances à 39.
 
-L’enrichissement porte sur 57 outils : 24 sont classés comme libres, 6 comme partiellement libres, 1 comme ayant son code source disponible et 26 comme propriétaires. Les licences renseignées relèvent principalement du copyleft fort, avec 14 occurrences dans les familles GPL et AGPL, contre 5 pour les licences permissives et 4 pour le copyleft faible. Certaines licences restent non renseignées, y compris pour des outils classés libres ou partiellement libres. GitHub domine parmi les forges de code recensées, aux côtés de Framagit, git.jami.net, hg.mozilla.org et kolaente.dev. Les étiquettes les plus fréquentes signalent l’auto-hébergement pour 25 outils, les API ou intégrations pour 24, une offre gratuite pour 21 et la protection de la vie privée pour 16. Elles permettent de distinguer des caractéristiques pratiques que le score seul ne résume pas.
+La classification enrichie distingue 24 logiciels libres, 6 partiellement libres, 1 à code source disponible et 26 propriétaires, tandis que 3 outils ne sont pas encore enrichis. Parmi les licences renseignées, le copyleft fort, associé aux familles GPL et AGPL, concerne 14 outils, les licences permissives en concernent 5 et le copyleft faible, 4. Une licence précise reste toutefois non renseignée pour certains logiciels, y compris des outils classés libres ou partiellement libres. Les dépôts de code indiqués se trouvent principalement sur GitHub, mais aussi sur Framagit, git.jami.net, hg.mozilla.org et kolaente.dev. Aucun dépôt n’est renseigné pour La Digitale. Ces informations permettent de distinguer la disponibilité du code, les conditions de licence et les lieux de développement, sans les confondre avec le score de souveraineté.
 
-Pour un organisme, le répertoire sert à repérer des solutions puis à comparer leurs fonctions et leurs modalités d’utilisation selon ses besoins, ses capacités techniques et le niveau de maîtrise des données recherché. Il permet, par exemple, d’examiner CiviCRM pour les membres et donateurs, Omeka S pour les collections numériques ou Nextcloud pour le partage de fichiers. Les indications sur l’auto-hébergement, le fonctionnement hors ligne, le chiffrement et les intégrations aident à comparer des façons différentes de conserver cette maîtrise. Les mentions de gratuité, de tarification pour les OSBL et de disponibilité linguistique peuvent également orienter une présélection, sans remplacer la vérification des conditions applicables à l’organisme.
+Les catégories les plus représentées sont la bureautique et la collaboration avec 8 outils, la sécurité et la gestion des accès avec 6, puis le stockage, l’infonuagique et la sauvegarde avec 5. Le répertoire couvre également des besoins propres aux organismes culturels, notamment les collections, la billetterie, les dons et les subventions. Les étiquettes les plus fréquentes signalent l’auto-hébergement pour 25 outils, les API ou intégrations pour 24, une offre gratuite pour 21 et la protection de la vie privée pour 16. Un organisme peut ainsi repérer des solutions par fonction, puis comparer leurs modalités d’utilisation selon ses besoins et le niveau de maîtrise des données recherché. Omeka S permet par exemple de gérer et publier des collections numériques en auto-hébergement, tandis que CiviCRM répond à des besoins de gestion des membres, des donateurs et des événements.
 
-Ces repères décrivent une souveraineté parfois partielle, et non une garantie globale d’indépendance. Dans les critères inscrits au répertoire, 60 outils satisfont le critère relatif aux données, 29 celui du contrôle et 39 celui de la dépendance. L’évaluation issue de l’enrichissement en retient respectivement 47, 19 et 34 parmi les 57 outils enrichis : ces résultats doivent donc être distingués des scores affichés. Les déductions automatiques restent indicatives et les écarts demandent une vérification. Par ailleurs, 3 outils ne sont pas encore enrichis, ce qui empêche de généraliser les constats détaillés à l’ensemble. Avant de choisir, il convient de confirmer les licences, l’hébergement effectif, les dépendances techniques, les possibilités d’exportation, les tarifs et la prise en charge du français.
+Le répertoire constitue une aide au choix, non une garantie de souveraineté complète. La Réserve illustre une souveraineté partielle : conserver des sauvegardes au Canada ne supprime pas la dépendance aux plateformes d’origine. L’enrichissement porte sur 57 outils et ne doit pas être extrapolé aux fiches restantes. Il fait aussi apparaître des écarts avec l’évaluation du répertoire : les critères relatifs aux données, au contrôle et aux dépendances y sont respectivement retenus pour 47, 19 et 34 outils. Les déductions automatiques doivent donc rester des indications à confirmer. Avant de choisir, il convient de vérifier les licences, les conditions de gratuité, la disponibilité du français, les modalités réelles d’hébergement, les possibilités d’exportation et les dépendances techniques, en tenant compte de la capacité de l’organisme à exploiter la solution retenue.
 
-*Résumé rédigé par un modèle d'IA (gpt-6-astra) le 2026-11-11T17:37:07-05:00, à partir des statistiques ci-dessous et de la liste des outils. À relire avant de le diffuser.*
+*Résumé rédigé par un modèle d'IA (gpt-6-astra) le 2026-11-11T17:45:29-05:00, à partir des statistiques ci-dessous et de la liste des outils. À relire avant de le diffuser.*
 
 ## Chiffres clés
 
@@ -43,14 +43,14 @@ La page du répertoire n'affiche qu'une date pour toute la note : la date d'un o
 
 ### Enrichissement
 
-- 57 outils enrichis, dont 16 avec une date d'enrichissement enregistrée et **41 sans date** (enrichis avant que cette date soit enregistrée).
-- **Premier enrichissement** : 2026-11-11T17:29:24-05:00 (1Password).
+- 57 outils enrichis, dont 57 avec une date d'enrichissement enregistrée.
+- **Premier enrichissement** : 2026-11-11T17:29:24-05:00 (1Password, Antidote, Cakemail, CanaDon, cDox et 37 autre(s)).
 - **Dernier enrichissement** : 2026-11-11T17:36:13-05:00 (Wallabag).
-- Dernière écriture du fichier de données : 2026-11-11T17:35:34-05:00.
+- Dernière écriture du fichier de données : 2026-11-11T17:43:31-05:00.
 
 | Jour | Outils enrichis |
 |---|---|
-| 2026-11-11 | 16 |
+| 2026-11-11 | 57 |
 
 ## Catégories
 

@@ -2,7 +2,7 @@
   "meta": {
     "data_license": "CC-BY-SA-4.0",
     "created_at": "2026-11-11T16:43:11-05:00",
-    "updated_at": "2026-11-11T17:35:34-05:00"
+    "updated_at": "2026-11-11T17:43:31-05:00"
   },
   "outils": [
     {
@@ -40,7 +40,8 @@
         ],
         "confiance": "élevée"
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Analyse et mesure",
@@ -76,7 +77,8 @@
         "confiance": "moyenne",
         "ecart": "L’écart entre les deux scores porte sur la conservation des données au Canada : ce critère est attribué au répertoire par déduction, avec une confiance faible, mais n’est pas retenu par l’évaluation enrichie. L’extrait ne précise ni le lieu d’hébergement, ni la possibilité de choisir le Canada ou d’auto-héberger l’outil, ce qui ne permet pas de trancher. Les deux évaluations retiennent le contrôle canadien et ne retiennent pas l’indépendance technologique, sans que l’extrait confirme ces points : les intégrations à Google ou Microsoft ne prouvent pas à elles seules une dépendance indispensable. Une documentation sur les options de résidence des données, la propriété de l’entreprise et ses fournisseurs d’infrastructure permettrait de vérifier ces hypothèses."
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Bureautique et collaboration",
@@ -115,7 +117,8 @@
         "confiance": "moyenne",
         "ecart": "L’écart entre les trois étoiles du répertoire et les deux de l’évaluation enrichie porte uniquement sur le contrôle canadien : le qualificatif « outil canadien » a pu conduire à retenir ce critère, mais l’extrait ne précise ni la propriété ni le contrôle de l’organisation qui exploite cDox. Les deux évaluations retiennent l’hébergement au Canada et l’absence de dépendance étrangère importante, en s’appuyant notamment sur les serveurs indépendants à Montréal et les sauvegardes à Toronto. Les critères attribués au répertoire restent toutefois des hypothèses déduites automatiquement, même avec une confiance élevée : une confirmation de ses critères réels et des renseignements sur la propriété de cDox permettraient de trancher cet écart."
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Bureautique et collaboration",
@@ -154,7 +157,8 @@
         ],
         "confiance": "moyenne"
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Bureautique et collaboration",
@@ -191,7 +195,8 @@
         ],
         "confiance": "élevée"
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Bureautique et collaboration",
@@ -228,7 +233,8 @@
         ],
         "confiance": "élevée"
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Bureautique et collaboration",
@@ -264,7 +270,8 @@
         ],
         "confiance": "élevée"
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Bureautique et collaboration",
@@ -301,7 +308,8 @@
         ],
         "confiance": "moyenne"
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Bureautique et collaboration",
@@ -338,7 +346,8 @@
         ],
         "confiance": "moyenne"
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Bureautique et collaboration",
@@ -375,7 +384,8 @@
         ],
         "confiance": "élevée"
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Communication et collaboration d’équipe",
@@ -414,7 +424,8 @@
         ],
         "confiance": "élevée"
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Communication et collaboration d’équipe",
@@ -451,7 +462,8 @@
         ],
         "confiance": "élevée"
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Communication et collaboration d’équipe",
@@ -487,7 +499,8 @@
         ],
         "confiance": "élevée"
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Communautés, réseaux et partage des connaissances",
@@ -537,7 +550,8 @@
         ],
         "confiance": "élevée"
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Communautés, réseaux et partage des connaissances",
@@ -573,7 +587,8 @@
         ],
         "confiance": "élevée"
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Comptabilité et finances",
@@ -610,7 +625,8 @@
         "confiance": "moyenne",
         "ecart": "L’écart porte sur le critère « donnees » : le répertoire est interprété comme accordant une étoile pour la conservation des données au Canada, contrairement à l’évaluation enrichie. L’extrait mentionne le chiffrement et les sauvegardes, mais ne précise ni leur localisation ni une option d’hébergement canadien ou d’auto-hébergement. Les deux évaluations retiennent le contrôle canadien et ne retiennent pas l’absence de dépendances étrangères, mais les critères attribués au répertoire restent des hypothèses déduites avec une confiance moyenne. Une confirmation du fournisseur sur les lieux d’hébergement et de sauvegarde, ainsi que sur les options offertes, permettrait de trancher l’écart."
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Financement, subventions et dons",
@@ -643,7 +659,8 @@
         "confiance": "faible",
         "ecart": "L’écart entre les 2 étoiles du répertoire et les 0 de l’évaluation enrichie porte sur les critères « donnees » et « controle », attribués au répertoire par déduction avec une confiance moyenne, et non selon des critères publiés. La description présente Elodia comme québécoise, mais l’extrait ne confirme ni le contrôle canadien de l’entreprise ni la possibilité de conserver les données au Canada. Aucune évaluation ne retient le critère « dependance » : les fournisseurs d’IA et d’infrastructure ne sont pas précisés, ce qui ne prouve pas une dépendance étrangère. Pour trancher, il faudrait documenter la propriété de l’entreprise, les lieux d’hébergement et de traitement des données ainsi que les prestataires techniques, le score enrichi étant lui-même de faible confiance."
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Financement, subventions et dons",
@@ -679,7 +696,8 @@
         "confiance": "moyenne",
         "ecart": "L’écart entre les deux étoiles du répertoire et l’étoile de l’évaluation enrichie porte sur le critère « donnees », retenu uniquement dans le répertoire selon une déduction automatique de confiance moyenne. La description présente Zeffy comme une plateforme québécoise, mais l’extrait ne précise pas où les données sont hébergées ni si leur conservation au Canada est possible. Les deux évaluations retiennent le contrôle canadien et ne retiennent pas l’absence de dépendances étrangères, sans que l’extrait suffise à confirmer ces conclusions. Une documentation sur les lieux d’hébergement et les options offertes permettrait de trancher l’écart, tandis que la structure de propriété et la liste des fournisseurs essentiels permettraient de vérifier les autres critères."
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Financement, subventions et dons",
@@ -713,7 +731,8 @@
         "confiance": "moyenne",
         "ecart": "L’écart entre les deux étoiles du répertoire et l’étoile de l’évaluation enrichie porte sur le critère des données, attribué au répertoire par déduction automatique avec une confiance moyenne, et non confirmé par ses auteur·trices. L’extrait présente CanaDon comme canadien, ce qui appuie le contrôle canadien retenu dans les deux évaluations, mais ne précise ni le lieu d’hébergement ni une possibilité de conserver les données au Canada. Aucune des deux évaluations ne retient l’absence de dépendance importante à des infrastructures étrangères, sans que l’extrait permette de vérifier ce point. Une documentation sur l’hébergement et les sous-traitants, ainsi que les critères réellement appliqués par le répertoire, permettraient de trancher cet écart."
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Création et gestion de contenus numériques",
@@ -750,7 +769,8 @@
         "confiance": "élevée",
         "ecart": "L’écart entre les trois étoiles du répertoire et les deux de l’évaluation enrichie porte uniquement sur le critère « dependance », retenu dans le premier cas et non dans le second. La page affirme une propriété et une exploitation canadiennes ainsi que des serveurs au Canada, mais les offres Wix et la mention de Plesk soulèvent la question des dépendances technologiques étrangères sans établir leur importance pour chaque service. Les critères attribués au répertoire restent des hypothèses déduites automatiquement, même avec une confiance élevée : pour trancher, il faudrait connaître la justification des étoiles et vérifier quels services peuvent fonctionner sans ces fournisseurs étrangers."
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Création et gestion de contenus numériques",
@@ -787,7 +807,8 @@
         ],
         "confiance": "élevée"
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Gestion de collections et de contenus culturels",
@@ -822,7 +843,8 @@
         ],
         "confiance": "moyenne"
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Gestion de collections et de contenus culturels",
@@ -858,7 +880,8 @@
         ],
         "confiance": "moyenne"
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Gestion de projets et des tâches",
@@ -895,7 +918,8 @@
         ],
         "confiance": "moyenne"
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Gestion de projets et des tâches",
@@ -932,7 +956,8 @@
         ],
         "confiance": "élevée"
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Gestion de projets et des tâches",
@@ -968,7 +993,8 @@
         ],
         "confiance": "élevée"
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Gestion de projets et des tâches",
@@ -1003,7 +1029,8 @@
         ],
         "confiance": "élevée"
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Gestion de la relation, des membres et CRM",
@@ -1038,7 +1065,8 @@
         "confiance": "moyenne",
         "ecart": "L’écart entre les 2 étoiles du répertoire et les 0 étoile de l’évaluation enrichie porte sur les critères « donnees » et « controle », attribués au répertoire par déduction automatique avec une faible confiance. La description présente Member365 comme canadien, mais l’extrait ne précise ni les possibilités d’hébergement au Canada ni la propriété de l’entreprise, ce qui peut expliquer leur non-validation dans l’évaluation enrichie sans démontrer qu’ils ne sont pas satisfaits. Aucune évaluation ne retient le critère « dependance » : la connexion facultative à QuickBooks Online ne suffit toutefois pas à établir une dépendance importante à une infrastructure étrangère. Pour trancher, il faudrait vérifier les engagements d’hébergement, le contrôle effectif de l’entreprise et les fournisseurs indispensables au fonctionnement du service."
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Gestion de la relation, des membres et CRM",
@@ -1075,7 +1103,8 @@
         ],
         "confiance": "élevée"
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Gestion d’événements et billetterie",
@@ -1108,7 +1137,8 @@
         "confiance": "faible",
         "ecart": "L’écart entre les 2 étoiles du répertoire et les 0 étoile de l’évaluation enrichie porte sur la conservation des données au Canada et le contrôle canadien, deux critères attribués au répertoire par déduction automatique avec une confiance moyenne, et non publiés par ses auteur·trices. La description présente une solution québécoise, mais l’extrait de la page ne précise ni les lieux d’hébergement possibles ni la propriété de l’entreprise, ce qui peut expliquer leur non-validation dans l’évaluation enrichie, de confiance faible, sans démontrer qu’ils ne sont pas satisfaits. L’absence de dépendance importante à des infrastructures étrangères n’est retenue dans aucune des deux évaluations. Pour trancher, il faudrait obtenir des garanties sur la localisation des données, vérifier le contrôle effectif de l’entreprise et confirmer les critères réellement appliqués par le répertoire."
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Gestion d’événements et billetterie",
@@ -1144,7 +1174,8 @@
         ],
         "confiance": "élevée"
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Gestion documentaire et signature électronique",
@@ -1180,7 +1211,8 @@
         ],
         "confiance": "moyenne"
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Gestion documentaire et signature électronique",
@@ -1232,7 +1264,8 @@
         ],
         "confiance": "moyenne"
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Marketing par courriel",
@@ -1270,7 +1303,8 @@
         "confiance": "moyenne",
         "ecart": "L’écart entre les trois étoiles du répertoire et les deux de l’évaluation enrichie porte uniquement sur l’indépendance envers les fournisseurs ou infrastructures technologiques étrangers. Le titre de la page annonce des données au Canada et la présentation décrit Envoke comme canadien, mais ces indications ne démontrent pas l’absence de dépendances étrangères importantes. Les critères attribués au répertoire restent des hypothèses déduites automatiquement, même avec une confiance élevée, et l’extrait ne permet pas de trancher ce troisième critère. Une documentation sur les hébergeurs, les sous-traitants et les services indispensables au fonctionnement permettrait de vérifier cette indépendance."
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Marketing par courriel",
@@ -1307,7 +1341,8 @@
         "confiance": "moyenne",
         "ecart": "L’écart entre les deux évaluations porte sur le contrôle canadien, retenu dans les critères déduits du répertoire avec une confiance moyenne, mais pas dans l’évaluation enrichie. La présentation de Cyberimpact comme outil québécois ou plateforme canadienne ne suffit pas à établir qui contrôle l’entreprise : il faudrait vérifier son actionnariat et son éventuelle société mère. Les deux évaluations retiennent le critère des données, la page affirmant que les données de contacts sont hébergées exclusivement sur des serveurs canadiens. Aucune ne retient l’indépendance technologique, que l’extrait ne permet pas d’établir sans précisions sur les fournisseurs et infrastructures indispensables au fonctionnement."
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Marketing par courriel",
@@ -1344,7 +1379,8 @@
         "confiance": "moyenne",
         "ecart": "L’écart entre les deux évaluations porte sur le critère « donnees » : le répertoire est interprété comme l’accordant, contrairement à l’évaluation enrichie, alors que toutes deux retiennent le contrôle canadien et n’accordent pas le critère d’indépendance technologique. Les critères attribués au répertoire sont toutefois des hypothèses déduites automatiquement avec une confiance moyenne, et la description de « solution québécoise » ne suffit pas à établir où les données sont hébergées. L’extrait fourni ne précise ni la possibilité de conserver les données au Canada, ni la propriété de l’entreprise, ni ses fournisseurs technologiques essentiels. Des engagements contractuels sur la localisation des données permettraient de trancher l’écart, tandis que des renseignements sur la propriété et les infrastructures permettraient de vérifier les deux critères communs."
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Marketing par courriel",
@@ -1381,7 +1417,8 @@
         ],
         "confiance": "moyenne"
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Messagerie électronique",
@@ -1418,7 +1455,8 @@
         ],
         "confiance": "élevée"
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Navigation Web",
@@ -1455,7 +1493,8 @@
         ],
         "confiance": "élevée"
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Ressources humaines et gestion du temps",
@@ -1491,7 +1530,8 @@
         ],
         "confiance": "moyenne"
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Ressources humaines et gestion du temps",
@@ -1526,7 +1566,8 @@
         "confiance": "moyenne",
         "ecart": "L’écart entre les 2 étoiles du répertoire et les 0 étoile de l’évaluation enrichie porte sur les critères « donnees » et « controle », attribués au répertoire par déduction automatique avec une confiance moyenne, et non selon des critères publiés. La conception au Québec et le ciblage des PME canadiennes ne prouvent ni que les données peuvent rester au Canada ni que l’entreprise est sous contrôle canadien, et l’extrait ne précise pas ces éléments. Le critère « dependance » n’est retenu dans aucune des deux évaluations, sans que cela démontre une dépendance étrangère importante. Pour trancher, il faudrait vérifier les engagements d’hébergement, la propriété actuelle de l’entreprise et ses fournisseurs technologiques essentiels, ainsi que les motifs des étoiles du répertoire."
       },
-      "page_lue": true
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Sécurité et gestion des accès",
