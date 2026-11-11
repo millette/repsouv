@@ -199,17 +199,42 @@ export function extraireContenu(html: string, base: string): Contenu {
   };
 }
 
-/** Télécharge la page de l'outil; null si elle est inaccessible (l'outil est alors décrit sans elle). */
-export async function lireContenu(url: string): Promise<Contenu | null> {
+/** Sous ce nombre de caractères de texte, une page est jugée presque vide (souvent générée par JavaScript). */
+export const MIN_EXTRAIT = 200;
+
+/** Télécharge la page de l'outil. Lève une erreur dont le message donne la raison si elle est inaccessible. */
+export async function lireContenu(url: string): Promise<Contenu> {
+  let r: Response;
   try {
-    const r = await fetch(url, {
+    r = await fetch(url, {
       signal: AbortSignal.timeout(20_000),
       headers: { "user-agent": "outils-souverainete-numerique", accept: "text/html" },
     });
-    if (!r.ok) return null;
-    return extraireContenu(await r.text(), r.url || url);
-  } catch {
-    return null;
+  } catch (e) {
+    const cause = (e as { cause?: { message?: string } }).cause?.message ?? (e as Error).message;
+    throw new Error(cause);
+  }
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  return extraireContenu(await r.text(), r.url || url);
+}
+
+/**
+ * Lit la page d'un outil et signale un problème si elle est inaccessible (réseau, délai, HTTP) ou
+ * presque vide. `contenu` est null quand il n'y a rien à transmettre au modèle.
+ */
+export async function obtenirPage(
+  url: string,
+  lire: (url: string) => Promise<Contenu | null>,
+): Promise<{ contenu: Contenu | null; probleme?: string }> {
+  try {
+    const contenu = await lire(url);
+    if (!contenu) return { contenu: null, probleme: "page inaccessible" };
+    if (contenu.extrait.length < MIN_EXTRAIT) {
+      return { contenu, probleme: `page presque vide (${contenu.extrait.length} caractères, probablement générée par JavaScript)` };
+    }
+    return { contenu };
+  } catch (e) {
+    return { contenu: null, probleme: `page inaccessible (${(e as Error).message})` };
   }
 }
 
@@ -272,6 +297,7 @@ Tu reçois en JSON le nom d'un outil, sa description actuelle et un extrait de s
 - licence: UNIQUEMENT une expression de licence SPDX valide, avec les identifiants exacts de la liste SPDX et leur casse (ex. AGPL-3.0-or-later, MIT, Apache-2.0, « MIT OR Apache-2.0 »). Écris -only ou -or-later (jamais GPL-3.0 ni GPL-2.0+). Jamais le nom en toutes lettres ni un LicenseRef. null si le logiciel est propriétaire, si tu n'es pas certain, ou si aucun identifiant SPDX ne convient.
 - custom_license et custom_license_url: pour une licence réelle qui n'a PAS d'identifiant SPDX (licence maison ou propre à l'éditeur, par exemple pour un logiciel à code source disponible), « licence » reste null et « custom_license » donne le nom ou l'identifiant de cette licence tel que l'éditeur l'écrit; « custom_license_url » donne l'URL de son texte, seulement si tu la connais ou la trouves dans le contenu fourni (sinon null). Si « licence » est une expression SPDX, ou si le logiciel est propriétaire, les deux sont null.
 - repo: URL du dépôt de code source principal, sur n'importe quelle forge (GitHub, GitLab, Codeberg, Framagit, etc.). Privilégie un lien de « liens_depot ». null si propriétaire ou inconnu.
+Si « page » vaut « inaccessible » ou est presque vide, tu n'as que la description actuelle: reste prudent, réponds null pour la licence, le repo et les licences maison à moins d'en être certain, et indique une confiance faible dans l'évaluation.
 En cas de doute sur la source, la licence ou le repo, réponds null plutôt que de deviner. Un logiciel propriétaire a licence, custom_license et repo à null.
 - evaluation_enrichie: ton évaluation INDÉPENDANTE de la souveraineté numérique de l'outil, pour une organisation canadienne, d'après le contenu fourni et ce qui est solidement établi. « criteres » liste les critères satisfaits parmi les suivants; « score » est leur nombre (0 à 3); « confiance » (élevée, moyenne ou faible) dit à quel point l'information disponible est claire. Un critère n'est satisfait que si l'information est claire; sinon ne le compte pas.
 ${listeCriteres}
@@ -411,6 +437,12 @@ export interface OptionsEnrichissement {
   /** Contenu de la page de l'outil; par défaut, téléchargé. */
   lire?: (url: string) => Promise<Contenu | null>;
   autoriserNouveauxTags?: boolean;
+  /**
+   * Par défaut, un outil dont la page est inaccessible ou presque vide n'est pas enrichi (échec
+   * consigné, retenté plus tard). Avec cette option, il l'est à partir de sa seule description et
+   * porte `page_lue: false`.
+   */
+  accepterSansPage?: boolean;
   limite?: number;
   /** Appelé après chaque outil enrichi pour persister l'état (outils.json, tags.json). */
   apresChaque?: (outils: OutilARevoir[], tags: Tag[]) => void;
@@ -426,6 +458,8 @@ export interface ResultatEnrichissement {
   erreurs: { nom: string; message: string }[];
   /** Outils dont evaluation_enrichie diffère de score/criteres du répertoire. */
   ecarts: string[];
+  /** Outils enrichis sans page lisible (page_lue: false). */
+  sansPage: string[];
 }
 
 const TENTATIVES = 2;
@@ -457,9 +491,9 @@ async function obtenirValide<T>(
  * Un outil n'est modifié que si TOUT son enrichissement, explication d'écart comprise, a réussi.
  */
 export async function enrichirOutils(outils: OutilARevoir[], options: OptionsEnrichissement): Promise<ResultatEnrichissement> {
-  const { tags, criteres, generer, expliquer, autoriserNouveauxTags = false, limite = Infinity, lire = lireContenu } = options;
+  const { tags, criteres, generer, expliquer, autoriserNouveauxTags = false, limite = Infinity, lire = lireContenu, accepterSansPage = false } = options;
   const journal = options.journal ?? (() => {});
-  const resultat: ResultatEnrichissement = { enrichis: [], erreurs: [], ecarts: [] };
+  const resultat: ResultatEnrichissement = { enrichis: [], erreurs: [], ecarts: [], sansPage: [] };
   let traites = 0;
 
   for (const [i, outil] of outils.entries()) {
@@ -467,7 +501,13 @@ export async function enrichirOutils(outils: OutilARevoir[], options: OptionsEnr
     if (resultat.enrichis.length >= limite) break;
     options.debut?.(outil.nom);
     try {
-      const contenu = await lire(outil.lien);
+      const { contenu, probleme } = await obtenirPage(outil.lien, lire);
+      if (probleme) {
+        journal(`  ${outil.nom}: AVERTISSEMENT: ${probleme}`);
+        if (!accepterSansPage) {
+          throw new Error(`${probleme}; outil non enrichi, il sera retenté à la prochaine exécution (ou utiliser --sans-page pour l'enrichir à partir de sa description seule)`);
+        }
+      }
       const proposition = await obtenirValide(
         (rappel) => generer(outil, contenu, { tags, criteres, autoriserNouveauxTags, ...(rappel && { rappel }) }),
         (brut) => validerProposition(brut, tags, autoriserNouveauxTags),
@@ -487,8 +527,9 @@ export async function enrichirOutils(outils: OutilARevoir[], options: OptionsEnr
       }
 
       for (const n of nouveaux_tags) tags.push({ ...n, propose_pour: outil.nom });
-      outils[i] = { ...outil, ...champs };
+      outils[i] = { ...outil, ...champs, page_lue: !probleme };
       resultat.enrichis.push(outil.nom);
+      if (probleme) resultat.sansPage.push(outil.nom);
       journal(`  ${outil.nom}: ${champs.tags.join(", ")} (${champs.source})`);
       if (different) {
         resultat.ecarts.push(outil.nom);

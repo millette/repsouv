@@ -1,5 +1,5 @@
 // Met à jour outils.json depuis le répertoire en ligne.
-// Usage: nub update.ts [--dry-run] [--enrichir [--nouveaux-tags] [--limite=N]] [outils.json] [url]
+// Usage: nub update.ts [--dry-run] [--enrichir [--nouveaux-tags] [--sans-page] [--limite=N]] [outils.json] [url]
 //
 // Pour chaque outil, selon la comparaison avec la page en ligne:
 //   - absent du fichier → changement "nouveau"
@@ -17,6 +17,9 @@
 //   `ecart` qui explique la différence quand elle ne concorde pas avec le répertoire).
 //   Une barre de progression et le journal vont sur stderr.
 //   Un outil déjà enrichi n'est jamais régénéré. Avec --dry-run, liste seulement les outils concernés.
+//   Si la page de l'outil est inaccessible ou presque vide, un avertissement est affiché et l'outil n'est PAS
+//   enrichi (échec consigné, retenté à la prochaine exécution) pour ne pas figer un résultat peu fiable.
+//   --sans-page     : enrichit quand même, à partir de la description seule; l'outil porte alors page_lue: false.
 //   --nouveaux-tags : le modèle peut proposer de nouveaux tags (justification obligatoire, ajoutés à tags.json).
 //   --limite=N      : n'enrichit pas plus de N outils par exécution.
 import { readFileSync, writeFileSync } from "node:fs";
@@ -26,13 +29,10 @@ import {
   aEnrichir, chargerCriteres, chargerTags, enrichirOutils, expliqueurOpenAI, generateurOpenAI, MODELE_PAR_DEFAUT, sauverTags,
 } from "./enrichir.ts";
 import { lancer } from "./cli.ts";
-import { telechargerRepertoire, type Changement, type Outil } from "./extract.ts";
+import { CHAMPS_ENRICHIS, telechargerRepertoire, type Changement, type Outil } from "./extract.ts";
 import { createProgress } from "./progress.ts";
 
 const CHAMPS_COMPARES = ["categorie", "icone", "score", "lien", "description"] as const;
-const CHAMPS_ENRICHIS = [
-  "description_longue", "tags", "source", "licence", "custom_license", "custom_license_url", "repo", "evaluation_enrichie",
-] as const;
 
 /** Les champs d'enrichissement d'un outil existant, à reporter sur sa version à jour de la page. */
 const enrichissementDe = (o: OutilClasse): Partial<Outil> =>
@@ -96,9 +96,13 @@ if (import.meta.main) {
     const dryRun = args.includes("--dry-run");
     const enrichir = args.includes("--enrichir");
     const nouveauxTags = args.includes("--nouveaux-tags");
+    const sansPage = args.includes("--sans-page");
     const limiteArg = args.find((a) => a.startsWith("--limite="));
     const limite = limiteArg ? Number(limiteArg.slice("--limite=".length)) : undefined;
-    if (nouveauxTags && !enrichir) throw new Error("--nouveaux-tags nécessite --enrichir");
+    const connues = ["--dry-run", "--enrichir", "--nouveaux-tags", "--sans-page", "--limite"];
+    const inconnue = args.find((a) => a.startsWith("--") && !connues.some((o) => a === o || a.startsWith(`${o}=`)));
+    if (inconnue) throw new Error(`Option inconnue: ${inconnue}`);
+    if ((nouveauxTags || sansPage) && !enrichir) throw new Error("--nouveaux-tags et --sans-page nécessitent --enrichir");
     if (limite !== undefined && !(Number.isInteger(limite) && limite > 0)) throw new Error("--limite=N: entier positif attendu");
     const [fichier = "outils.json", url] = args.filter((a) => !a.startsWith("--"));
 
@@ -138,6 +142,7 @@ if (import.meta.main) {
           generer: generateurOpenAI(cle, modele),
           expliquer: expliqueurOpenAI(cle, modele),
           autoriserNouveauxTags: nouveauxTags,
+          accepterSansPage: sansPage,
           ...(limite !== undefined && { limite }),
           apresChaque: (os, ts) => {
             writeFileSync(fichier, JSON.stringify(os, null, 2));
@@ -152,6 +157,7 @@ if (import.meta.main) {
         progression.end();
         console.log(`Enrichis: ${resultat.enrichis.length}; échecs: ${resultat.erreurs.length}`);
         if (resultat.ecarts.length) console.log(`Évaluation différente du répertoire: ${resultat.ecarts.join(", ")}`);
+        if (resultat.sansPage.length) console.log(`Enrichis sans page lisible (page_lue: false): ${resultat.sansPage.join(", ")}`);
         if (tags.length > nbTags) console.log(`Nouveaux tags: ${tags.slice(nbTags).map((t) => t.id).join(", ")}`);
         if (resultat.erreurs.length) process.exitCode = 1;
       }

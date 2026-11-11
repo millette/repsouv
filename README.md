@@ -94,6 +94,7 @@ Champs ajoutés par l'[enrichissement](#enrichissement-par-ia), absents tant que
 | `custom_license` | Nom ou identifiant d'une licence absente de la liste SPDX (licence maison ou propre à l'éditeur), tel que l'éditeur l'écrit. Exclusif avec `licence`; `null` si la licence est SPDX, si le logiciel est propriétaire ou si elle est inconnue |
 | `custom_license_url` | URL du texte de la licence maison, quand elle est disponible; `null` sinon. Exige `custom_license` |
 | `repo` | URL du dépôt de code source, sur n'importe quelle forge (GitHub, GitLab, Codeberg, Framagit…); `null` si aucun ou inconnu |
+| `page_lue` | `true` si la page de l'outil a servi à l'enrichissement; `false` si l'outil a été enrichi sans page lisible (option `--sans-page`), à partir de sa seule description : résultat moins fiable, voir [Pages inaccessibles](#pages-inaccessibles-ou-presque-vides) |
 | `evaluation_enrichie` | Second avis du modèle sur la souveraineté de l'outil : `score` (nombre de critères satisfaits, de 0 à 3, égal à `criteres.length`), `criteres` (identifiants de `criteres.json`) et `confiance` (`"élevée"`, `"moyenne"` ou `"faible"`). S'y ajoute `ecart`, une explication en français de la différence, seulement quand cette évaluation diffère du `score` et des `criteres` du répertoire |
 
 La page n'affiche qu'une seule date pour toute la note. `derniere_modification` est donc la date de la page au moment où l'outil a été ajouté ou a changé, et non la date exacte du changement de cet outil.
@@ -143,7 +144,7 @@ Ajoute `criteres` et `confiance` à chaque outil (réécrit `outils.json` en pla
 ### `update.ts`
 
 ```sh
-nub update.ts [--dry-run] [--enrichir [--nouveaux-tags] [--limite=N]] [outils.json] [url]
+nub update.ts [--dry-run] [--enrichir [--nouveaux-tags] [--sans-page] [--limite=N]] [outils.json] [url]
 ```
 
 Télécharge la page en ligne (`[url]`, par défaut celle du répertoire; le même téléchargement qu'`extract.ts`), la compare à `outils.json` (par défaut `./outils.json`, qui doit exister : pour un premier import, utiliser `nub run build`) et met le fichier à jour. `--dry-run` affiche les changements sans écrire. Pour chaque outil :
@@ -156,7 +157,7 @@ Télécharge la page en ligne (`[url]`, par défaut celle du répertoire; le mê
 
 Les outils nouveaux, modifiés, retirés ou de retour reçoivent la date de modification de la page; les nouveaux, modifiés et de retour sont reclassés. Les champs d'enrichissement d'un outil survivent à une modification ou à un retour. Le fichier n'est réécrit que s'il y a au moins un changement.
 
-Avec `--enrichir`, la synchronisation est suivie de l'[enrichissement](#enrichissement-par-ia).
+Avec `--enrichir`, la synchronisation est suivie de l'[enrichissement](#enrichissement-par-ia). Une option inconnue est refusée.
 
 ### `enrichir.ts`
 
@@ -203,12 +204,13 @@ C'est une heuristique, pas une vérité : un critère retenu avec une confiance 
 |---|---|
 | `--enrichir` | Active l'enrichissement après la synchronisation |
 | `--limite=N` | N'enrichit pas plus de N outils par exécution. Seuls les succès comptent : un outil en échec ne compte pas dans la limite, mais n'est essayé qu'une fois par exécution |
+| `--sans-page` | Enrichit aussi les outils dont la page est inaccessible ou presque vide, à partir de leur seule description (ils portent alors `page_lue: false`). Voir [Pages inaccessibles](#pages-inaccessibles-ou-presque-vides) |
 | `--nouveaux-tags` | Autorise le modèle à proposer de nouveaux tags (justification obligatoire); ils sont ajoutés à `tags.json` |
 | `--dry-run` | Liste les outils concernés sans appeler l'API |
 
 **Configuration :** `OPENAI_API_KEY` dans `.env` (voir `.env.example`), et `OPENAI_MODEL` pour changer le modèle (`gpt-6-astra` par défaut). Compter environ 20 secondes par outil (mesuré sur quelques outils).
 
-**Confidentialité :** pour chaque outil, le script télécharge la page publique (`lien`), en extrait le texte et les liens vers des forges de code, puis envoie à l'API OpenAI (Responses API, sortie JSON structurée) le nom, la catégorie, le lien, la description et cet extrait. Quand l'évaluation diffère du répertoire, le second appel y ajoute les deux évaluations. Les tags sont limités au vocabulaire de `tags.json`. Si la page de l'outil est inaccessible, l'enrichissement se fait quand même à partir de la description seule et des connaissances du modèle, donc avec moins de fiabilité.
+**Confidentialité :** pour chaque outil, le script télécharge la page publique (`lien`), en extrait le texte et les liens vers des forges de code, puis envoie à l'API OpenAI (Responses API, sortie JSON structurée) le nom, la catégorie, le lien, la description et cet extrait. Quand l'évaluation diffère du répertoire, le second appel y ajoute les deux évaluations. Les tags sont limités au vocabulaire de `tags.json`. La page est lue d'abord : voir [Pages inaccessibles ou presque vides](#pages-inaccessibles-ou-presque-vides).
 
 **Validation :** chaque réponse est vérifiée avant d'être écrite :
 
@@ -225,7 +227,22 @@ Une réponse invalide est redemandée une fois, avec la raison du rejet, puis co
 
 **Progression :** la barre de progression et le journal vont sur stderr; les résumés (changements, nombre d'outils enrichis, écarts, nouveaux tags) restent sur stdout. Le nom de l'outil en cours s'affiche à droite de la barre (en terminal) ou sur une ligne `Enrichissement de <outil>...` (hors terminal, où une ligne de pourcentage est aussi écrite par tranche de 10 %).
 
-**Reprise :** `outils.json` est écrit après chaque outil, donc une interruption ne perd rien et une relance reprend où on s'est arrêté. Le code de sortie est 1 si au moins un outil a échoué.
+**Reprise :** `outils.json` est écrit après chaque outil, donc une interruption ne perd rien et une relance reprend où on s'est arrêté. Le code de sortie est 1 si au moins un outil a échoué (page inaccessible comprise).
+
+### Pages inaccessibles ou presque vides
+
+La page de chaque outil est lue avant tout appel à l'API. Elle est jugée inutilisable si elle est inaccessible (erreur réseau, délai de 20 secondes dépassé, réponse HTTP non réussie comme un 403 de blocage anti-robot) ou presque vide (moins de 200 caractères de texte, par exemple un site rendu par JavaScript). Dans ce cas :
+
+- un **avertissement** est affiché dans le journal, avec la raison;
+- **par défaut**, l'outil n'est **pas enrichi** : aucun appel à l'API n'est fait, l'échec est consigné (code de sortie 1) et l'outil sera retenté à la prochaine exécution. Un résultat bâti sur la seule description serait moins fiable (licence et dépôt tirés de la mémoire du modèle, description générique), et comme un outil enrichi n'est jamais régénéré, il serait figé;
+- avec **`--sans-page`**, l'outil est enrichi quand même, à partir de la description seule. Le modèle est alors invité à la prudence (`null` pour la licence et le dépôt dans le doute, confiance faible). Le champ **`page_lue: false`** signale cet état, et le script liste ces outils à la fin de l'exécution.
+
+Les outils enrichis avec une page lisible portent `page_lue: true`. Pour refaire plus tard les outils enrichis sans page (une fois leur page redevenue accessible, ou après avoir changé de stratégie), supprimer leurs champs d'enrichissement, puis relancer `nub run enrichir` :
+
+```sh
+# à faire après un commit de outils.json
+jaq 'map(if .page_lue == false then del(.description_longue, .tags, .source, .licence, .custom_license, .custom_license_url, .repo, .evaluation_enrichie, .page_lue) else . end)' outils.json > /tmp/outils.json && mv /tmp/outils.json outils.json
+```
 
 ## Importer ou réimporter depuis le web
 
@@ -276,7 +293,7 @@ Dans `test/`, avec `node:test` lancé par `nub` :
 - `classify.test.ts` : cas de classification connus, un nombre de critères égal au score pour les 60 outils, et les options de la ligne de commande.
 - `extract.test.ts` : conversion de date, cohérence de `criteres.json` et `outils.json`, rejet d'une page sans date, téléchargement (sur un serveur local, sans réseau), erreurs de téléchargement, et le garde-fou contre l'écrasement (avec et sans `--force`).
 - `update.test.ts` : nouveau, modification, retrait, comeback, conservation des dates des outils inchangés et des champs d'enrichissement.
-- `enrichir.test.ts` : vocabulaire de `tags.json`, validation (tags, Markdown permis et interdit, licences SPDX et maison, évaluation), explication des écarts, extraction de la page, enrichissement une seule fois, limite, reprise et échecs, avec de faux générateurs.
+- `enrichir.test.ts` : vocabulaire de `tags.json`, validation (tags, Markdown permis et interdit, licences SPDX et maison, évaluation), explication des écarts, extraction de la page, pages inaccessibles ou presque vides (avertissement, refus par défaut, `--sans-page`), enrichissement une seule fois, limite, reprise et échecs, avec de faux générateurs.
 - `spdx.test.ts` : licences SPDX valides et refusées.
 - `progress.test.ts` : barre en terminal et hors terminal, bornes, étiquette, `end()` idempotent, `message()`.
 
@@ -290,6 +307,9 @@ jaq '[.[] | select(.removed | not)]' outils.json
 
 # logiciels libres enrichis, avec leur licence et leur dépôt
 jaq '.[] | select(.source == "libre" or .source == "partiel") | {nom, licence, custom_license, repo}' outils.json
+
+# outils enrichis sans page lisible (résultat moins fiable)
+jaq '.[] | select(.page_lue == false) | .nom' outils.json
 
 # outils portant un tag
 jaq '.[] | select((.tags // []) | index("chiffrement")) | .nom' outils.json

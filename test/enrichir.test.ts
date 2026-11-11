@@ -1,7 +1,9 @@
 import assert from "node:assert/strict";
+import { createServer } from "node:http";
+import type { AddressInfo } from "node:net";
 import { test } from "node:test";
 import {
-  aEnrichir, chargerCriteres, chargerTags, enrichirOutils, extraireContenu, instructions, instructionsEcart, MAX_TAGS, problemesMarkdown,
+  aEnrichir, chargerCriteres, chargerTags, enrichirOutils, extraireContenu, instructions, instructionsEcart, lireContenu, MAX_TAGS, MIN_EXTRAIT, obtenirPage, problemesMarkdown,
   schemaReponse, validerEcart, validerProposition, type Expliqueur, type Generateur, type Tag,
 } from "../enrichir.ts";
 import type { Outil } from "../extract.ts";
@@ -23,6 +25,7 @@ const outil = (nom: string, extra: Partial<Outil> = {}): Outil => ({
   description: "d", derniere_modification: "2026-11-05T09:53", changement: null, ...extra,
 });
 const sansPage = async () => null;
+const pageOk = async () => ({ titre: "T", meta_description: "", extrait: "x".repeat(MIN_EXTRAIT), liens_depot: [] });
 const expliquerOk: Expliqueur = async () => ({ ecart: "Le répertoire ne précise pas l'hébergement." });
 
 test("tags.json: ids uniques, en kebab-case, avec description française non vide", () => {
@@ -99,7 +102,7 @@ test("enrichir: ne touche jamais un outil qui a déjà une description longue ni
   const outils = [outil("a", { description_longue: "existante" }), outil("b", { removed: true }), outil("c")];
   let appels = 0;
   const generer: Generateur = async () => (appels++, valide());
-  const r = await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer, lire: sansPage });
+  const r = await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer, lire: pageOk });
   assert.deepEqual(r.enrichis, ["c"]);
   assert.equal(appels, 1);
   assert.equal(outils[0]!.description_longue, "existante");
@@ -109,15 +112,15 @@ test("enrichir: un second passage n'appelle plus le générateur", async () => {
   const outils = [outil("a")];
   let appels = 0;
   const generer: Generateur = async () => (appels++, valide());
-  await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer, lire: sansPage });
-  await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer, lire: sansPage });
+  await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer, lire: pageOk });
+  await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer, lire: pageOk });
   assert.equal(appels, 1);
 });
 test("enrichir: respecte la limite et sauvegarde après chaque outil", async () => {
   const outils = [outil("a"), outil("b"), outil("c")];
   let sauvegardes = 0;
   const r = await enrichirOutils(outils, {
-    tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer: async () => valide(), lire: sansPage, limite: 2, apresChaque: () => sauvegardes++,
+    tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer: async () => valide(), lire: pageOk, limite: 2, apresChaque: () => sauvegardes++,
   });
   assert.deepEqual(r.enrichis, ["a", "b"]);
   assert.equal(sauvegardes, 2);
@@ -125,14 +128,14 @@ test("enrichir: respecte la limite et sauvegarde après chaque outil", async () 
 });
 test("enrichir: un second essai suit une réponse invalide", async () => {
   const reponses = [valide({ tags: [] }), valide()];
-  const r = await enrichirOutils([outil("a")], { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer: async () => reponses.shift(), lire: sansPage });
+  const r = await enrichirOutils([outil("a")], { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer: async () => reponses.shift(), lire: pageOk });
   assert.deepEqual(r.enrichis, ["a"]);
 });
 test("enrichir: deux réponses invalides = échec consigné, l'outil reste sans description longue", async () => {
   const outils = [outil("a"), outil("b")];
   let n = 0;
   const generer: Generateur = async () => (++n <= 2 ? valide({ tags: [] }) : valide());
-  const r = await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer, lire: sansPage });
+  const r = await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer, lire: pageOk });
   assert.deepEqual(r.enrichis, ["b"]);
   assert.equal(r.erreurs[0]!.nom, "a");
   assert.equal(outils[0]!.description_longue, undefined);
@@ -142,7 +145,7 @@ test("enrichir: les nouveaux tags validés rejoignent le vocabulaire avec leur j
   const nt = { id: "nouveau", description: "d", justification: "Aucun tag existant ne convient." };
   const outils = [outil("a")];
   await enrichirOutils(outils, {
-    tags, criteres: CRITERES, expliquer: expliquerOk, lire: sansPage, autoriserNouveauxTags: true,
+    tags, criteres: CRITERES, expliquer: expliquerOk, lire: pageOk, autoriserNouveauxTags: true,
     generer: async () => valide({ tags: ["gratuit", "nouveau"], nouveaux_tags: [nt] }),
   });
   assert.equal(tags.at(-1)!.id, "nouveau");
@@ -208,7 +211,7 @@ test("enrichir: la raison du rejet est transmise au modèle à l'essai suivant",
   const rappels: (string | undefined)[] = [];
   const reponses = [valide({ description_longue: "Un tiret \u2014 interdit" }), valide()];
   const generer: Generateur = async (_o, _c, ctx) => (rappels.push(ctx.rappel), reponses.shift());
-  await enrichirOutils([outil("a")], { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer, lire: sansPage });
+  await enrichirOutils([outil("a")], { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer, lire: pageOk });
   assert.equal(rappels[0], undefined);
   assert.match(rappels[1]!, /cadratin/);
 });
@@ -217,7 +220,7 @@ test("enrichir: l'évaluation est enregistrée et les écarts avec le répertoir
     { ...outil("a", { score: 2 }), criteres: ["donnees", "dependance"] },
     { ...outil("b", { score: 2 }), criteres: ["donnees", "controle"] },
   ];
-  const r = await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer: async () => valide(), lire: sansPage });
+  const r = await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer: async () => valide(), lire: pageOk });
   assert.deepEqual(outils[0]!.evaluation_enrichie, { score: 2, criteres: ["donnees", "dependance"], confiance: "moyenne" });
   assert.deepEqual(r.ecarts, ["b"]);
 });
@@ -241,14 +244,14 @@ test("écart: expliqué et enregistré dans evaluation_enrichie.ecart seulement 
     assert.deepEqual(comparaison.enrichie.criteres, ["donnees", "dependance"]);
     return { ecart: "Le contrôle n'est pas établi par la page." };
   };
-  await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer, generer: async () => valide(), lire: sansPage });
+  await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer, generer: async () => valide(), lire: pageOk });
   assert.equal("ecart" in outils[0]!.evaluation_enrichie!, false);
   assert.equal(outils[1]!.evaluation_enrichie!.ecart, "Le contrôle n'est pas établi par la page.");
   assert.deepEqual(appels, ["b"]);
 });
 test("écart: un score différent à critères équivalents compte aussi comme un écart", async () => {
   const outils = [{ ...outil("a", { score: 3 }), criteres: ["donnees", "controle", "dependance"] }];
-  await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer: async () => valide(), lire: sansPage });
+  await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer: async () => valide(), lire: pageOk });
   assert.ok(outils[0]!.evaluation_enrichie!.ecart);
 });
 test("écart: une explication refusée est redemandée avec la raison, puis acceptée", async () => {
@@ -256,7 +259,7 @@ test("écart: une explication refusée est redemandée avec la raison, puis acce
   const rappels: (string | undefined)[] = [];
   const reponses = [{ ecart: "Un tiret \u2014 interdit" }, { ecart: "Corrigée." }];
   const expliquer: Expliqueur = async (_o, _c, ctx) => (rappels.push(ctx.rappel), reponses.shift());
-  const r = await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer, generer: async () => valide(), lire: sansPage });
+  const r = await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer, generer: async () => valide(), lire: pageOk });
   assert.deepEqual(r.enrichis, ["a"]);
   assert.match(rappels[1]!, /cadratin/);
   assert.equal(outils[0]!.evaluation_enrichie!.ecart, "Corrigée.");
@@ -266,7 +269,7 @@ test("écart: si l'explication échoue, l'outil n'est PAS modifié (il sera rete
   const nt = { id: "nouveau", description: "d", justification: "Aucun tag existant ne convient." };
   const outils = [{ ...outil("a", { score: 2 }), criteres: ["donnees", "controle"] }];
   const r = await enrichirOutils(outils, {
-    tags, criteres: CRITERES, lire: sansPage, autoriserNouveauxTags: true,
+    tags, criteres: CRITERES, lire: pageOk, autoriserNouveauxTags: true,
     generer: async () => valide({ tags: ["gratuit", "nouveau"], nouveaux_tags: [nt] }),
     expliquer: async () => ({ ecart: "" }),
   });
@@ -284,7 +287,7 @@ test("progression: appelée après chaque outil traité, succès comme échec", 
   let n = 0;
   const generer: Generateur = async () => (++n === 1 ? { vide: true } : valide());
   await enrichirOutils([outil("a"), outil("b"), outil("c")], {
-    tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer, lire: sansPage, progression: (k) => vus.push(k),
+    tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer, lire: pageOk, progression: (k) => vus.push(k),
   });
   assert.deepEqual(vus.slice(-2), [2, 3]);
   assert.equal(vus.length, 3);
@@ -292,7 +295,7 @@ test("progression: appelée après chaque outil traité, succès comme échec", 
 test("début: annonce le nom de chaque outil traité, dans l'ordre, sans annoncer ceux déjà enrichis", async () => {
   const vus: string[] = [];
   const outils = [outil("a"), outil("b", { description_longue: "existante" }), outil("c")];
-  await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer: async () => valide(), lire: sansPage, debut: (n) => vus.push(n) });
+  await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer: async () => valide(), lire: pageOk, debut: (n) => vus.push(n) });
   assert.deepEqual(vus, ["a", "c"]);
 });
 
@@ -320,7 +323,7 @@ test("licence: un nom en toutes lettres est redemandé avec la raison, puis acce
   const reponses = [valide({ licence: "GNU Affero General Public License v3.0" }), valide({ licence: "AGPL-3.0-only" })];
   const generer: Generateur = async (_o, _c, ctx) => (rappels.push(ctx.rappel), reponses.shift());
   const outils = [outil("a")];
-  await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer, lire: sansPage });
+  await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer, lire: pageOk });
   assert.match(rappels[1]!, /SPDX/);
   assert.equal(outils[0]!.licence, "AGPL-3.0-only");
 });
@@ -363,8 +366,104 @@ test("licence maison: un LicenseRef dans licence est redemandé avec la consigne
   const reponses = [valide({ source: "source-disponible", licence: "LicenseRef-Maison" }), maison()];
   const generer: Generateur = async (_o, _c, ctx) => (rappels.push(ctx.rappel), reponses.shift());
   const outils = [outil("a")];
-  await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer, lire: sansPage });
+  await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer, lire: pageOk });
   assert.match(rappels[1]!, /custom_license/);
   assert.equal(outils[0]!.custom_license, "Sustainable Use License");
   assert.equal(outils[0]!.licence, null);
+});
+
+// ---------- page de l'outil inaccessible ou presque vide ----------
+
+const pageVide = async () => ({ titre: "T", meta_description: "", extrait: "x".repeat(MIN_EXTRAIT - 1), liens_depot: [] });
+const pageQuiPlante = async () => {
+  throw new Error("HTTP 403");
+};
+const unOutilAvecGenerateur = () => {
+  let appels = 0;
+  const generer: Generateur = async () => (appels++, valide());
+  return { generer, appels: () => appels };
+};
+
+test("page: une page normale donne page_lue: true, sans avertissement", async () => {
+  const g = unOutilAvecGenerateur();
+  const journal: string[] = [];
+  const outils = [outil("a")];
+  const r = await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer: g.generer, lire: pageOk, journal: (m) => journal.push(m) });
+  assert.equal(outils[0]!.page_lue, true);
+  assert.deepEqual(r.sansPage, []);
+  assert.equal(journal.some((m) => m.includes("AVERTISSEMENT")), false);
+});
+for (const [cas, lire, raison] of [
+  ["introuvable (null)", sansPage, /page inaccessible/],
+  ["erreur réseau ou HTTP", pageQuiPlante, /HTTP 403/],
+  ["presque vide", pageVide, /presque vide/],
+] as const) {
+  test(`page ${cas}: avertissement, aucun appel à l'API, outil non enrichi et retenté plus tard`, async () => {
+    const g = unOutilAvecGenerateur();
+    const journal: string[] = [];
+    const outils = [outil("a")];
+    const r = await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer: g.generer, lire, journal: (m) => journal.push(m) });
+    assert.equal(g.appels(), 0);
+    assert.deepEqual(r.enrichis, []);
+    assert.match(r.erreurs[0]!.message, raison);
+    assert.match(r.erreurs[0]!.message, /--sans-page/);
+    assert.ok(journal.some((m) => m.includes("AVERTISSEMENT") && raison.test(m)));
+    assert.equal(outils[0]!.description_longue, undefined);
+    assert.equal(outils[0]!.page_lue, undefined);
+    assert.equal(aEnrichir(outils[0]!), true);
+  });
+  test(`page ${cas}, avec accepterSansPage: enrichi à partir de la description seule et marqué page_lue: false`, async () => {
+    const g = unOutilAvecGenerateur();
+    const outils = [outil("a")];
+    const r = await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer: g.generer, lire, accepterSansPage: true });
+    assert.equal(g.appels(), 1);
+    assert.deepEqual(r.enrichis, ["a"]);
+    assert.deepEqual(r.sansPage, ["a"]);
+    assert.equal(outils[0]!.page_lue, false);
+    assert.ok(outils[0]!.description_longue);
+  });
+}
+test("page: sans page lisible, le modèle reçoit « inaccessible » et aucun lien de dépôt", async () => {
+  let recu: unknown = "non appelé";
+  const generer: Generateur = async (_o, contenu) => ((recu = contenu), valide());
+  await enrichirOutils([outil("a")], { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer, lire: sansPage, accepterSansPage: true });
+  assert.equal(recu, null);
+});
+test("page: un outil dont la page est inaccessible n'empêche pas les autres d'être enrichis", async () => {
+  const outils = [outil("a"), outil("b")];
+  const lire = async (url: string) => (url.includes("//a.") ? null : pageOk());
+  const r = await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer: async () => valide(), lire });
+  assert.deepEqual(r.enrichis, ["b"]);
+  assert.equal(r.erreurs[0]!.nom, "a");
+});
+test("page: les instructions demandent la prudence sans page lisible", () => {
+  assert.match(instructions(VOCAB, CRITERES, false), /inaccessible/);
+});
+test("obtenirPage: distingue page normale, vide, absente et en erreur", async () => {
+  assert.equal((await obtenirPage("u", pageOk)).probleme, undefined);
+  assert.match((await obtenirPage("u", pageVide)).probleme!, /presque vide \(199 caractères/);
+  assert.equal((await obtenirPage("u", sansPage)).contenu, null);
+  assert.match((await obtenirPage("u", pageQuiPlante)).probleme!, /inaccessible \(HTTP 403\)/);
+});
+
+async function avecServeur<T>(statut: number, corps: string, f: (url: string) => Promise<T>): Promise<T> {
+  const serveur = createServer((_q, r) => {
+    r.writeHead(statut, { "content-type": "text/html; charset=utf-8" });
+    r.end(corps);
+  });
+  await new Promise<void>((ok) => serveur.listen(0, "127.0.0.1", ok));
+  try {
+    return await f(`http://127.0.0.1:${(serveur.address() as AddressInfo).port}/`);
+  } finally {
+    serveur.close();
+  }
+}
+test("lireContenu: lit une page, et lève une erreur avec la raison sinon", async () => {
+  const html = `<html><head><title>Titre</title></head><body><p>${"mot ".repeat(100)}</p><a href="https://github.com/a/b">d</a></body></html>`;
+  const c = await avecServeur(200, html, (url) => lireContenu(url));
+  assert.equal(c.titre, "Titre");
+  assert.deepEqual(c.liens_depot, ["https://github.com/a/b"]);
+  assert.ok(c.extrait.length >= MIN_EXTRAIT);
+  await avecServeur(403, "interdit", (url) => assert.rejects(lireContenu(url), /HTTP 403/));
+  await assert.rejects(lireContenu("http://127.0.0.1:1/"), /./);
 });

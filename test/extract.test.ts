@@ -37,11 +37,12 @@ test("travailAPerdre: l'enrichissement et l'historique sont signalés", () => {
   const perte = travailAPerdre([
     { nom: "a", description_longue: "Longue." },
     { nom: "b", licence: null },
+    { nom: "e", page_lue: true },
     { nom: "c", changement: "modification" },
     { nom: "d", removed: true },
   ]);
   assert.equal(perte.length, 2);
-  assert.match(perte[0]!, /2 outil\(s\) enrichi/);
+  assert.match(perte[0]!, /3 outil\(s\) enrichi/);
   assert.match(perte[1]!, /2 outil\(s\) avec un historique/);
 });
 
