@@ -67,7 +67,6 @@ export interface Classement {
   /** Identifiants (voir criteres.json) des critères que les étoiles représentent. */
   criteres: Critere[];
   confiance: Confiance;
-  evidences: Evidences;
 }
 
 export function classer(description: string, score?: number): Classement {
@@ -79,7 +78,6 @@ export function classer(description: string, score?: number): Classement {
     return {
       criteres: parOrdre(classement.filter((c) => ev[c] >= SEUIL)),
       confiance: "indéterminée",
-      evidences: ev,
     };
   }
   const retenus = classement.slice(0, score);
@@ -88,7 +86,7 @@ export function classer(description: string, score?: number): Classement {
     const ecart = ev[classement[score - 1]!] - ev[classement[score]!];
     confiance = ecart >= 2 ? "élevée" : ecart >= 1 ? "moyenne" : "faible";
   }
-  return { criteres: parOrdre(retenus), confiance, evidences: ev };
+  return { criteres: parOrdre(retenus), confiance };
 }
 
 if (import.meta.main) {

@@ -12,12 +12,7 @@
       "donnees",
       "dependance"
     ],
-    "confiance": "élevée",
-    "evidences": {
-      "donnees": 6,
-      "controle": -3,
-      "dependance": 1
-    }
+    "confiance": "élevée"
   },
   {
     "categorie": "Analyse et mesure",
@@ -32,12 +27,7 @@
       "donnees",
       "controle"
     ],
-    "confiance": "faible",
-    "evidences": {
-      "donnees": 0,
-      "controle": 0,
-      "dependance": 0
-    }
+    "confiance": "faible"
   },
   {
     "categorie": "Bureautique et collaboration",
@@ -53,12 +43,7 @@
       "controle",
       "dependance"
     ],
-    "confiance": "élevée",
-    "evidences": {
-      "donnees": 4.5,
-      "controle": 3,
-      "dependance": 3
-    }
+    "confiance": "élevée"
   },
   {
     "categorie": "Bureautique et collaboration",
@@ -74,12 +59,7 @@
       "controle",
       "dependance"
     ],
-    "confiance": "élevée",
-    "evidences": {
-      "donnees": 1.5,
-      "controle": 3,
-      "dependance": 0
-    }
+    "confiance": "élevée"
   },
   {
     "categorie": "Bureautique et collaboration",
@@ -94,12 +74,7 @@
       "donnees",
       "dependance"
     ],
-    "confiance": "élevée",
-    "evidences": {
-      "donnees": 6,
-      "controle": 0,
-      "dependance": 2
-    }
+    "confiance": "élevée"
   },
   {
     "categorie": "Bureautique et collaboration",
@@ -114,12 +89,7 @@
       "donnees",
       "dependance"
     ],
-    "confiance": "élevée",
-    "evidences": {
-      "donnees": 3,
-      "controle": -3,
-      "dependance": 2
-    }
+    "confiance": "élevée"
   },
   {
     "categorie": "Bureautique et collaboration",
@@ -134,12 +104,7 @@
       "donnees",
       "dependance"
     ],
-    "confiance": "élevée",
-    "evidences": {
-      "donnees": 3,
-      "controle": -3,
-      "dependance": 2
-    }
+    "confiance": "élevée"
   },
   {
     "categorie": "Bureautique et collaboration",
@@ -154,12 +119,7 @@
       "donnees",
       "dependance"
     ],
-    "confiance": "élevée",
-    "evidences": {
-      "donnees": 6,
-      "controle": -3,
-      "dependance": 2
-    }
+    "confiance": "élevée"
   },
   {
     "categorie": "Bureautique et collaboration",
@@ -174,12 +134,7 @@
       "donnees",
       "dependance"
     ],
-    "confiance": "élevée",
-    "evidences": {
-      "donnees": 6,
-      "controle": -3,
-      "dependance": 2
-    }
+    "confiance": "élevée"
   },
   {
     "categorie": "Bureautique et collaboration",
@@ -194,12 +149,7 @@
       "donnees",
       "dependance"
     ],
-    "confiance": "élevée",
-    "evidences": {
-      "donnees": 6,
-      "controle": -3,
-      "dependance": 1
-    }
+    "confiance": "élevée"
   },
   {
     "categorie": "Communication et collaboration d’équipe",
@@ -215,12 +165,7 @@
       "controle",
       "dependance"
     ],
-    "confiance": "élevée",
-    "evidences": {
-      "donnees": 4.5,
-      "controle": 3,
-      "dependance": 3
-    }
+    "confiance": "élevée"
   },
   {
     "categorie": "Communication et collaboration d’équipe",
@@ -235,12 +180,7 @@
       "donnees",
       "dependance"
     ],
-    "confiance": "élevée",
-    "evidences": {
-      "donnees": 3,
-      "controle": -3,
-      "dependance": 5
-    }
+    "confiance": "élevée"
   },
   {
     "categorie": "Communication et collaboration d’équipe",
@@ -255,12 +195,7 @@
       "donnees",
       "dependance"
     ],
-    "confiance": "élevée",
-    "evidences": {
-      "donnees": 6,
-      "controle": -3,
-      "dependance": 3
-    }
+    "confiance": "élevée"
   },
   {
     "categorie": "Communautés, réseaux et partage des connaissances",
@@ -275,12 +210,7 @@
       "donnees",
       "controle"
     ],
-    "confiance": "moyenne",
-    "evidences": {
-      "donnees": 1.5,
-      "controle": 3,
-      "dependance": 0
-    }
+    "confiance": "moyenne"
   },
   {
     "categorie": "Communautés, réseaux et partage des connaissances",
@@ -295,12 +225,7 @@
       "donnees",
       "dependance"
     ],
-    "confiance": "élevée",
-    "evidences": {
-      "donnees": 3,
-      "controle": -3,
-      "dependance": 4
-    }
+    "confiance": "élevée"
   },
   {
     "categorie": "Communautés, réseaux et partage des connaissances",
@@ -315,12 +240,7 @@
       "donnees",
       "dependance"
     ],
-    "confiance": "élevée",
-    "evidences": {
-      "donnees": 3,
-      "controle": -3,
-      "dependance": 2
-    }
+    "confiance": "élevée"
   },
   {
     "categorie": "Comptabilité et finances",
@@ -335,12 +255,7 @@
       "donnees",
       "controle"
     ],
-    "confiance": "moyenne",
-    "evidences": {
-      "donnees": 1.5,
-      "controle": 3,
-      "dependance": 0
-    }
+    "confiance": "moyenne"
   },
   {
     "categorie": "Financement, subventions et dons",
@@ -355,12 +270,7 @@
       "donnees",
       "controle"
     ],
-    "confiance": "moyenne",
-    "evidences": {
-      "donnees": 1.5,
-      "controle": 3,
-      "dependance": 0
-    }
+    "confiance": "moyenne"
   },
   {
     "categorie": "Financement, subventions et dons",
@@ -375,12 +285,7 @@
       "donnees",
       "controle"
     ],
-    "confiance": "moyenne",
-    "evidences": {
-      "donnees": 1.5,
-      "controle": 3,
-      "dependance": 0
-    }
+    "confiance": "moyenne"
   },
   {
     "categorie": "Financement, subventions et dons",
@@ -395,12 +300,7 @@
       "donnees",
       "controle"
     ],
-    "confiance": "moyenne",
-    "evidences": {
-      "donnees": 1.5,
-      "controle": 3,
-      "dependance": 0
-    }
+    "confiance": "moyenne"
   },
   {
     "categorie": "Création et gestion de contenus numériques",
@@ -416,12 +316,7 @@
       "controle",
       "dependance"
     ],
-    "confiance": "élevée",
-    "evidences": {
-      "donnees": 1.5,
-      "controle": 3,
-      "dependance": 0
-    }
+    "confiance": "élevée"
   },
   {
     "categorie": "Création et gestion de contenus numériques",
@@ -436,12 +331,7 @@
       "donnees",
       "dependance"
     ],
-    "confiance": "élevée",
-    "evidences": {
-      "donnees": 3,
-      "controle": -3,
-      "dependance": 2
-    }
+    "confiance": "élevée"
   },
   {
     "categorie": "Gestion de collections et de contenus culturels",
@@ -456,12 +346,7 @@
       "donnees",
       "controle"
     ],
-    "confiance": "moyenne",
-    "evidences": {
-      "donnees": 1.5,
-      "controle": 3,
-      "dependance": 0
-    }
+    "confiance": "moyenne"
   },
   {
     "categorie": "Gestion de collections et de contenus culturels",
@@ -476,12 +361,7 @@
       "donnees",
       "dependance"
     ],
-    "confiance": "élevée",
-    "evidences": {
-      "donnees": 3,
-      "controle": -3,
-      "dependance": 2
-    }
+    "confiance": "élevée"
   },
   {
     "categorie": "Gestion de projets et des tâches",
@@ -496,12 +376,7 @@
       "donnees",
       "dependance"
     ],
-    "confiance": "élevée",
-    "evidences": {
-      "donnees": 3,
-      "controle": -3,
-      "dependance": 2
-    }
+    "confiance": "élevée"
   },
   {
     "categorie": "Gestion de projets et des tâches",
@@ -516,12 +391,7 @@
       "donnees",
       "dependance"
     ],
-    "confiance": "élevée",
-    "evidences": {
-      "donnees": 6,
-      "controle": -3,
-      "dependance": 2
-    }
+    "confiance": "élevée"
   },
   {
     "categorie": "Gestion de projets et des tâches",
@@ -536,12 +406,7 @@
       "donnees",
       "dependance"
     ],
-    "confiance": "élevée",
-    "evidences": {
-      "donnees": 3,
-      "controle": -3,
-      "dependance": 2
-    }
+    "confiance": "élevée"
   },
   {
     "categorie": "Gestion de projets et des tâches",
@@ -556,12 +421,7 @@
       "donnees",
       "dependance"
     ],
-    "confiance": "élevée",
-    "evidences": {
-      "donnees": 3,
-      "controle": -3,
-      "dependance": 2
-    }
+    "confiance": "élevée"
   },
   {
     "categorie": "Gestion de la relation, des membres et CRM",
@@ -576,12 +436,7 @@
       "donnees",
       "controle"
     ],
-    "confiance": "faible",
-    "evidences": {
-      "donnees": 1.5,
-      "controle": 3,
-      "dependance": 1
-    }
+    "confiance": "faible"
   },
   {
     "categorie": "Gestion de la relation, des membres et CRM",
@@ -596,12 +451,7 @@
       "donnees",
       "dependance"
     ],
-    "confiance": "élevée",
-    "evidences": {
-      "donnees": 3,
-      "controle": -3,
-      "dependance": 2
-    }
+    "confiance": "élevée"
   },
   {
     "categorie": "Gestion d’événements et billetterie",
@@ -616,12 +466,7 @@
       "donnees",
       "controle"
     ],
-    "confiance": "moyenne",
-    "evidences": {
-      "donnees": 1.5,
-      "controle": 3,
-      "dependance": 0
-    }
+    "confiance": "moyenne"
   },
   {
     "categorie": "Gestion d’événements et billetterie",
@@ -636,12 +481,7 @@
       "donnees",
       "dependance"
     ],
-    "confiance": "élevée",
-    "evidences": {
-      "donnees": 0,
-      "controle": -3,
-      "dependance": 3
-    }
+    "confiance": "élevée"
   },
   {
     "categorie": "Gestion documentaire et signature électronique",
@@ -656,12 +496,7 @@
       "donnees",
       "controle"
     ],
-    "confiance": "moyenne",
-    "evidences": {
-      "donnees": 1.5,
-      "controle": 3,
-      "dependance": 0
-    }
+    "confiance": "moyenne"
   },
   {
     "categorie": "Gestion documentaire et signature électronique",
@@ -676,12 +511,7 @@
       "donnees",
       "dependance"
     ],
-    "confiance": "élevée",
-    "evidences": {
-      "donnees": 3,
-      "controle": -3,
-      "dependance": 2
-    }
+    "confiance": "élevée"
   },
   {
     "categorie": "Gestion documentaire et signature électronique",
@@ -696,12 +526,7 @@
       "donnees",
       "dependance"
     ],
-    "confiance": "élevée",
-    "evidences": {
-      "donnees": 3,
-      "controle": -3,
-      "dependance": 2
-    }
+    "confiance": "élevée"
   },
   {
     "categorie": "Marketing par courriel",
@@ -717,12 +542,7 @@
       "controle",
       "dependance"
     ],
-    "confiance": "élevée",
-    "evidences": {
-      "donnees": 1.5,
-      "controle": 3,
-      "dependance": 0
-    }
+    "confiance": "élevée"
   },
   {
     "categorie": "Marketing par courriel",
@@ -737,12 +557,7 @@
       "donnees",
       "controle"
     ],
-    "confiance": "moyenne",
-    "evidences": {
-      "donnees": 1.5,
-      "controle": 3,
-      "dependance": 0
-    }
+    "confiance": "moyenne"
   },
   {
     "categorie": "Marketing par courriel",
@@ -757,12 +572,7 @@
       "donnees",
       "controle"
     ],
-    "confiance": "moyenne",
-    "evidences": {
-      "donnees": 1.5,
-      "controle": 3,
-      "dependance": 0
-    }
+    "confiance": "moyenne"
   },
   {
     "categorie": "Marketing par courriel",
@@ -777,12 +587,7 @@
       "donnees",
       "controle"
     ],
-    "confiance": "moyenne",
-    "evidences": {
-      "donnees": 1.5,
-      "controle": 3,
-      "dependance": 0
-    }
+    "confiance": "moyenne"
   },
   {
     "categorie": "Messagerie électronique",
@@ -797,12 +602,7 @@
       "donnees",
       "dependance"
     ],
-    "confiance": "élevée",
-    "evidences": {
-      "donnees": 3,
-      "controle": -3,
-      "dependance": 3
-    }
+    "confiance": "élevée"
   },
   {
     "categorie": "Navigation Web",
@@ -817,12 +617,7 @@
       "donnees",
       "dependance"
     ],
-    "confiance": "élevée",
-    "evidences": {
-      "donnees": 3,
-      "controle": -3,
-      "dependance": 3
-    }
+    "confiance": "élevée"
   },
   {
     "categorie": "Ressources humaines et gestion du temps",
@@ -837,12 +632,7 @@
       "donnees",
       "controle"
     ],
-    "confiance": "moyenne",
-    "evidences": {
-      "donnees": 1.5,
-      "controle": 3,
-      "dependance": 0
-    }
+    "confiance": "moyenne"
   },
   {
     "categorie": "Ressources humaines et gestion du temps",
@@ -857,12 +647,7 @@
       "donnees",
       "controle"
     ],
-    "confiance": "moyenne",
-    "evidences": {
-      "donnees": 1.5,
-      "controle": 3,
-      "dependance": 0
-    }
+    "confiance": "moyenne"
   },
   {
     "categorie": "Sécurité et gestion des accès",
@@ -877,12 +662,7 @@
       "donnees",
       "controle"
     ],
-    "confiance": "moyenne",
-    "evidences": {
-      "donnees": 1.5,
-      "controle": 3,
-      "dependance": 0
-    }
+    "confiance": "moyenne"
   },
   {
     "categorie": "Sécurité et gestion des accès",
@@ -897,12 +677,7 @@
       "donnees",
       "controle"
     ],
-    "confiance": "moyenne",
-    "evidences": {
-      "donnees": 1.5,
-      "controle": 3,
-      "dependance": 0
-    }
+    "confiance": "moyenne"
   },
   {
     "categorie": "Sécurité et gestion des accès",
@@ -917,12 +692,7 @@
       "donnees",
       "dependance"
     ],
-    "confiance": "élevée",
-    "evidences": {
-      "donnees": 6,
-      "controle": -3,
-      "dependance": 2
-    }
+    "confiance": "élevée"
   },
   {
     "categorie": "Sécurité et gestion des accès",
@@ -937,12 +707,7 @@
       "donnees",
       "dependance"
     ],
-    "confiance": "élevée",
-    "evidences": {
-      "donnees": 3,
-      "controle": -3,
-      "dependance": 1
-    }
+    "confiance": "élevée"
   },
   {
     "categorie": "Sécurité et gestion des accès",
@@ -957,12 +722,7 @@
       "donnees",
       "dependance"
     ],
-    "confiance": "élevée",
-    "evidences": {
-      "donnees": 3,
-      "controle": -3,
-      "dependance": 4
-    }
+    "confiance": "élevée"
   },
   {
     "categorie": "Sécurité et gestion des accès",
@@ -977,12 +737,7 @@
       "donnees",
       "dependance"
     ],
-    "confiance": "élevée",
-    "evidences": {
-      "donnees": 6,
-      "controle": -3,
-      "dependance": 5
-    }
+    "confiance": "élevée"
   },
   {
     "categorie": "Stockage, infonuagique et sauvegarde",
@@ -998,12 +753,7 @@
       "controle",
       "dependance"
     ],
-    "confiance": "élevée",
-    "evidences": {
-      "donnees": 4.5,
-      "controle": 3,
-      "dependance": 0
-    }
+    "confiance": "élevée"
   },
   {
     "categorie": "Stockage, infonuagique et sauvegarde",
@@ -1019,12 +769,7 @@
       "controle",
       "dependance"
     ],
-    "confiance": "élevée",
-    "evidences": {
-      "donnees": 1.5,
-      "controle": 3,
-      "dependance": 0
-    }
+    "confiance": "élevée"
   },
   {
     "categorie": "Stockage, infonuagique et sauvegarde",
@@ -1039,12 +784,7 @@
       "donnees",
       "controle"
     ],
-    "confiance": "élevée",
-    "evidences": {
-      "donnees": 4.5,
-      "controle": 3,
-      "dependance": -3
-    }
+    "confiance": "élevée"
   },
   {
     "categorie": "Stockage, infonuagique et sauvegarde",
@@ -1059,12 +799,7 @@
       "donnees",
       "dependance"
     ],
-    "confiance": "élevée",
-    "evidences": {
-      "donnees": 6,
-      "controle": -3,
-      "dependance": 1
-    }
+    "confiance": "élevée"
   },
   {
     "categorie": "Stockage, infonuagique et sauvegarde",
@@ -1079,12 +814,7 @@
       "donnees",
       "controle"
     ],
-    "confiance": "faible",
-    "evidences": {
-      "donnees": 1.5,
-      "controle": 3,
-      "dependance": 1
-    }
+    "confiance": "faible"
   },
   {
     "categorie": "Transcription et assistance aux réunions",
@@ -1099,12 +829,7 @@
       "donnees",
       "controle"
     ],
-    "confiance": "moyenne",
-    "evidences": {
-      "donnees": 1.5,
-      "controle": 3,
-      "dependance": 0
-    }
+    "confiance": "moyenne"
   },
   {
     "categorie": "Transcription et assistance aux réunions",
@@ -1119,12 +844,7 @@
       "donnees",
       "controle"
     ],
-    "confiance": "moyenne",
-    "evidences": {
-      "donnees": 1.5,
-      "controle": 3,
-      "dependance": 0
-    }
+    "confiance": "moyenne"
   },
   {
     "categorie": "Transcription et assistance aux réunions",
@@ -1139,12 +859,7 @@
       "donnees",
       "dependance"
     ],
-    "confiance": "élevée",
-    "evidences": {
-      "donnees": 3,
-      "controle": -3,
-      "dependance": 4
-    }
+    "confiance": "élevée"
   },
   {
     "categorie": "Veille et gestion de l’information",
@@ -1160,12 +875,7 @@
       "controle",
       "dependance"
     ],
-    "confiance": "élevée",
-    "evidences": {
-      "donnees": 4.5,
-      "controle": 3,
-      "dependance": 3
-    }
+    "confiance": "élevée"
   },
   {
     "categorie": "Veille et gestion de l’information",
@@ -1180,12 +890,7 @@
       "donnees",
       "dependance"
     ],
-    "confiance": "élevée",
-    "evidences": {
-      "donnees": 3,
-      "controle": -3,
-      "dependance": 2
-    }
+    "confiance": "élevée"
   },
   {
     "categorie": "Veille et gestion de l’information",
@@ -1200,11 +905,6 @@
       "donnees",
       "dependance"
     ],
-    "confiance": "élevée",
-    "evidences": {
-      "donnees": 3,
-      "controle": -3,
-      "dependance": 2
-    }
+    "confiance": "élevée"
   }
 ]
