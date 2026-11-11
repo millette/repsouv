@@ -45,8 +45,15 @@ Fichier unifié : un tableau de 60 outils (plus d'éventuels outils retirés). C
 | `removed` | Présent (`true`) seulement pour un outil disparu de la page; l'entrée est conservée |
 | `criteres` | Identifiants (voir `criteres.json`) des critères que les étoiles représentent. Déduits, voir [Classification](#classification) |
 | `confiance` | Fiabilité de cette déduction : `"élevée"`, `"moyenne"` ou `"faible"` |
+| `description_longue` | Description détaillée en français (80 à 150 mots), générée une seule fois par `update.ts --enrichir`. Absente tant que l'outil n'est pas enrichi |
+| `tags` | De 1 à 5 identifiants de `tags.json`. Ajoutés par l'enrichissement |
+| `source` | Statut du code source : `"libre"` (licence libre, code public), `"partiel"` (édition communautaire libre mais édition complète ou services propriétaires, « open core »), `"source-disponible"` (code visible, licence non libre) ou `"proprietaire"` |
+| `licence` | Licence du logiciel (identifiant SPDX si possible); `null` pour un logiciel propriétaire ou si elle est inconnue |
+| `repo` | URL du dépôt de code source, sur n'importe quelle forge (GitHub, GitLab, Codeberg, Framagit…); `null` si aucun ou inconnu |
 
 La page n'affiche qu'une seule date pour toute la note. `derniere_modification` est donc la date de la page au moment où l'outil a été ajouté ou a changé, et non la date exacte du changement de cet outil.
+
+Les champs `description_longue`, `tags`, `source`, `licence` et `repo` viennent d'un modèle d'IA (voir `update.ts --enrichir`). Ils s'appuient sur la page de l'outil, mais la licence et le dépôt sont à vérifier avant de s'y fier : le modèle est invité à répondre `null` en cas de doute.
 
 ### `criteres.json`
 
@@ -59,6 +66,12 @@ Les trois critères du répertoire (« trois critères simples et concrets »), 
 | `dependance` | 🔗 | De qui dépend-il pour fonctionner ? |
 
 Les `id` sont la forme courte utilisée dans le champ `criteres` de `outils.json`.
+
+### `tags.json`
+
+Le vocabulaire restreint de tags : un tableau de `{ id, description }`, avec une description en français pour chaque tag (37 au départ). Chaque outil reçoit de 1 à 5 de ces tags, jamais plus.
+
+De nouveaux tags peuvent s'ajouter après cette première phase, avec `update.ts --enrichir --nouveaux-tags`. Chaque tag ajouté doit être **justifié** : il porte alors en plus un champ `justification` (pourquoi aucun tag existant ne convient) et `propose_pour` (l'outil pour lequel il a été proposé). Un nouveau tag peut ne concerner qu'un seul outil.
 
 ## Scripts
 
@@ -94,7 +107,21 @@ Télécharge la page en ligne (par défaut celle du répertoire), la compare à 
 - Outil absent de la page : `"retrait"` et `removed: true`. L'entrée est conservée.
 - Outil identique : rien ne change, ni sa date ni son `changement`.
 
-Les outils nouveaux, modifiés, retirés ou de retour reçoivent la date de modification de la page; les nouveaux, modifiés et de retour sont reclassés. Le fichier n'est réécrit que s'il y a au moins un changement.
+Les outils nouveaux, modifiés, retirés ou de retour reçoivent la date de modification de la page; les nouveaux, modifiés et de retour sont reclassés. Le fichier n'est réécrit que s'il y a au moins un changement. Les champs d'enrichissement d'un outil (description longue, tags, source, licence, repo) survivent à une modification ou à un retour.
+
+**Enrichissement** (`--enrichir`) : après la synchronisation, génère pour chaque outil qui n'a pas encore de `description_longue` une description longue en français, de 1 à 5 tags et, pour les logiciels libres, `source`, `licence` et `repo`. C'est fait **une seule fois** : un outil qui a déjà une description longue n'est jamais régénéré, même si sa description courte change. Les outils retirés sont ignorés.
+
+- Le script télécharge la page (`lien`) de l'outil, en extrait le texte et les liens vers des forges de code, puis les envoie avec la description courante à l'API OpenAI (Responses API, sortie JSON structurée). Les tags sont limités au vocabulaire de `tags.json`.
+- Réponse validée avant d'être écrite (1 à 5 tags, tags connus, URL de dépôt valide, aucun repo ni licence pour un logiciel propriétaire); une réponse invalide est redemandée une fois, puis consignée comme échec.
+- `outils.json` est écrit après chaque outil : une interruption ne perd rien, et une relance reprend où on s'est arrêté.
+- `--nouveaux-tags` autorise le modèle à proposer de nouveaux tags (justification obligatoire); ils sont ajoutés à `tags.json`.
+- `--limite=N` n'enrichit pas plus de N outils par exécution.
+- `--dry-run` liste les outils concernés sans appeler l'API.
+- Configuration : `OPENAI_API_KEY` dans `.env` (voir `.env.example`; `.env` est ignoré par Git), et `OPENAI_MODEL` pour changer le modèle (`gpt-6-astra` par défaut). Chaque outil enrichi envoie son nom, sa description et un extrait de sa page publique à OpenAI.
+
+### `enrichir.ts`
+
+Module de l'enrichissement : lecture de la page de l'outil, requête à l'API OpenAI, validation des réponses (`validerProposition`) et boucle `enrichirOutils`, qui reçoit le générateur en paramètre pour pouvoir être testée sans réseau.
 
 ### `ids.ts`
 
@@ -106,7 +133,8 @@ Lancés avec `node:test` via `nub` :
 
 - `classify.test.ts` : cas de classification connus, et un nombre de critères égal au score pour les 60 outils.
 - `extract.test.ts` : conversion de date, cohérence de `criteres.json` et `outils.json`, rejet d'une page sans date.
-- `update.test.ts` : nouveau, modification, retrait, comeback, conservation des dates des outils inchangés.
+- `update.test.ts` : nouveau, modification, retrait, comeback, conservation des dates des outils inchangés et des champs d'enrichissement.
+- `enrichir.test.ts` : vocabulaire `tags.json`, validation (maximum 5 tags, nouveaux tags justifiés, propriétaire sans licence), extraction de la page, enrichissement une seule fois, limite, reprise et échecs, avec un faux générateur.
 
 ## Classification
 
@@ -126,9 +154,10 @@ C'est une heuristique, pas une vérité : un critère retenu avec une confiance 
 | `nub run classify` | `nub classify.ts outils.json` : classe les outils en place |
 | `nub run build` | `extract` puis `classify` : reconstruit `outils.json` depuis le `.html` local. **Efface** l'historique des `changement` et des `removed` |
 | `nub run update` | `nub update.ts` : synchronise `outils.json` avec la page en ligne (ajouter `-- --dry-run` pour simuler) |
-| `nub run test` | Lance les trois fichiers de tests |
+| `nub run enrichir` | `nub update.ts --enrichir` : synchronise, puis enrichit les outils sans description longue (ajouter `-- --limite=5`, `-- --nouveaux-tags` ou `-- --dry-run`) |
+| `nub run test` | Lance les quatre fichiers de tests |
 | `nub run typecheck` | `tsrs -p .` : vérifie les types avec [tsrs](https://www.npmjs.com/package/tsrs), un portage en Rust de `tsc` |
 
 ## Utiliser les données
 
-Pour obtenir le répertoire courant, filtrer les outils portant `removed`.
+Pour obtenir le répertoire courant, filtrer les outils portant `removed`. Pour les logiciels libres, filtrer sur `source` (`libre` ou `partiel`) et utiliser `licence` et `repo`.

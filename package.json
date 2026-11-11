@@ -7,8 +7,9 @@
     "classify": "nub classify.ts outils.json",
     "build": "nub run extract && nub run classify",
     "update": "nub update.ts",
-    "test": "nub test/classify.test.ts && nub test/extract.test.ts && nub test/update.test.ts",
-    "typecheck": "tsrs -p ."
+    "test": "nub test/classify.test.ts && nub test/extract.test.ts && nub test/update.test.ts && nub test/enrichir.test.ts",
+    "typecheck": "tsrs -p .",
+    "enrichir": "nub update.ts --enrichir"
   },
   "dependencies": {
     "linkedom": "^0.18.15"

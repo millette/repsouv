@@ -21,6 +21,17 @@ export interface Outil {
   changement: Changement | null;
   /** Présent (true) seulement si l'outil a disparu de la page; l'entrée est alors conservée. */
   removed?: true;
+  // Champs ajoutés par `update.ts --enrichir` (voir enrichir.ts); absents tant que l'outil n'est pas enrichi.
+  /** Description longue en français, générée une seule fois. */
+  description_longue?: string;
+  /** 1 à 5 identifiants de tags (voir tags.json). */
+  tags?: string[];
+  /** Statut du code source. */
+  source?: "libre" | "partiel" | "source-disponible" | "proprietaire";
+  /** Licence du logiciel (identifiant SPDX si possible); null si propriétaire ou inconnue. */
+  licence?: string | null;
+  /** URL du dépôt de code source, sur n'importe quelle forge; null si aucun. */
+  repo?: string | null;
 }
 
 export interface Critere {

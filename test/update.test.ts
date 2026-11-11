@@ -58,3 +58,21 @@ test("removed n'apparaît que sur les outils retirés", () => {
   assert.equal("removed" in outils[0]!, false);
   assert.equal(outils[1]!.removed, true);
 });
+test("modification: les champs d'enrichissement sont conservés", () => {
+  const enrichi: OutilClasse = {
+    ...base("a"), description_longue: "Longue.", tags: ["gratuit"], source: "libre", licence: "MIT", repo: "https://github.com/x/y",
+  };
+  const page = { ...base("a"), description: "Nouvelle description." };
+  const { outils } = mettreAJour([enrichi], [page], NOUVELLE);
+  assert.equal(outils[0]!.changement, "modification");
+  assert.equal(outils[0]!.description, "Nouvelle description.");
+  assert.equal(outils[0]!.description_longue, "Longue.");
+  assert.deepEqual(outils[0]!.tags, ["gratuit"]);
+  assert.equal(outils[0]!.repo, "https://github.com/x/y");
+});
+test("comeback: les champs d'enrichissement sont conservés", () => {
+  const retire: OutilClasse = { ...base("a"), description_longue: "Longue.", removed: true, changement: "retrait" };
+  const { outils } = mettreAJour([retire], [base("a")], NOUVELLE);
+  assert.equal(outils[0]!.changement, "comeback");
+  assert.equal(outils[0]!.description_longue, "Longue.");
+});
