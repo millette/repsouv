@@ -1,20 +1,20 @@
 # Sommaire du répertoire d'outils favorisant la souveraineté numérique
 
-Généré le 2026-11-11T17:45:29-05:00 par `sommaire.ts` d'après `outils.json` (données sous licence CC-BY-SA-4.0, créées le 2026-11-11T16:43:11-05:00 et modifiées pour la dernière fois le 2026-11-11T17:43:31-05:00). Ne pas modifier ce fichier à la main : relancer `nub run sommaire`.
+Généré le 2026-11-11T18:05:39-05:00 par `sommaire.ts` d'après `outils.json` (données sous licence CC-BY-SA-4.0, créées le 2026-11-11T16:43:11-05:00 et modifiées pour la dernière fois le 2026-11-11T17:43:31-05:00). Ne pas modifier ce fichier à la main : relancer `nub run sommaire`.
 
 Sauf indication contraire, les pourcentages sont calculés sur les 60 outils du répertoire. Les statistiques sur le statut du code source, les licences, les forges et les tags ne portent que sur les 57 outils déjà enrichis.
 
 ## Résumé
 
-Ce répertoire rassemble 60 outils numériques pour aider les OSBL des arts et de la culture du Canada français à repérer des solutions favorisant leur souveraineté numérique. Les fiches sont organisées par catégories et présentent des descriptions, des étiquettes d’usage et, lorsque ces renseignements sont disponibles, le statut du code, la licence et le dépôt de développement. L’évaluation repose sur trois critères : où peuvent rester les données, qui contrôle l’outil et de qui il dépend pour fonctionner. Le score, de 0 à 3 étoiles, indique le nombre de critères satisfaits. Dans le répertoire, 52 outils obtiennent 2 étoiles et 8 obtiennent 3 étoiles, pour une moyenne de 2,13. Le critère relatif aux données est attribué à 60 outils, celui du contrôle à 29 et celui des dépendances à 39.
+Ce répertoire rassemble 60 outils numériques pour aider les OSBL des arts et de la culture du Canada français à orienter leurs choix en matière de souveraineté numérique. Les fiches présentent les usages des outils et, lorsque l’enrichissement est disponible, leur statut logiciel, leur licence, leur dépôt de code et leurs caractéristiques pratiques. L’évaluation repose sur trois critères : où peuvent rester les données, qui contrôle l’outil et de qui il dépend pour fonctionner. Le nombre de critères satisfaits donne un score de 0 à 3 étoiles. Le répertoire attribue 2 étoiles à 52 outils et 3 étoiles à 8 outils, pour une moyenne de 2,13. Les catégories les plus fournies sont la bureautique et la collaboration, avec 8 outils, la sécurité et la gestion des accès, avec 6, puis le stockage, l’infonuagique et la sauvegarde, avec 5. D’autres couvrent notamment les collections culturelles, la billetterie, les dons et la gestion des membres.
 
-La classification enrichie distingue 24 logiciels libres, 6 partiellement libres, 1 à code source disponible et 26 propriétaires, tandis que 3 outils ne sont pas encore enrichis. Parmi les licences renseignées, le copyleft fort, associé aux familles GPL et AGPL, concerne 14 outils, les licences permissives en concernent 5 et le copyleft faible, 4. Une licence précise reste toutefois non renseignée pour certains logiciels, y compris des outils classés libres ou partiellement libres. Les dépôts de code indiqués se trouvent principalement sur GitHub, mais aussi sur Framagit, git.jami.net, hg.mozilla.org et kolaente.dev. Aucun dépôt n’est renseigné pour La Digitale. Ces informations permettent de distinguer la disponibilité du code, les conditions de licence et les lieux de développement, sans les confondre avec le score de souveraineté.
+La classification distingue 24 logiciels libres, 6 partiellement libres, 1 à code source disponible et 26 propriétaires; 3 outils ne sont pas encore enrichis. Parmi les licences recensées, le copyleft fort, associé aux familles GPL et AGPL, représente 14 occurrences, contre 5 pour les licences permissives et 4 pour le copyleft faible. Certaines licences restent non renseignées, notamment pour 5 logiciels classés libres et 2 partiellement libres : une absence de renseignement ne signifie donc pas une absence de licence. GitHub domine les dépôts de code recensés, aux côtés de Framagit, git.jami.net, hg.mozilla.org et kolaente.dev. Aucun dépôt n’est renseigné pour La Digitale. Les données du répertoire sont elles-mêmes diffusées sous licence CC-BY-SA-4.0.
 
-Les catégories les plus représentées sont la bureautique et la collaboration avec 8 outils, la sécurité et la gestion des accès avec 6, puis le stockage, l’infonuagique et la sauvegarde avec 5. Le répertoire couvre également des besoins propres aux organismes culturels, notamment les collections, la billetterie, les dons et les subventions. Les étiquettes les plus fréquentes signalent l’auto-hébergement pour 25 outils, les API ou intégrations pour 24, une offre gratuite pour 21 et la protection de la vie privée pour 16. Un organisme peut ainsi repérer des solutions par fonction, puis comparer leurs modalités d’utilisation selon ses besoins et le niveau de maîtrise des données recherché. Omeka S permet par exemple de gérer et publier des collections numériques en auto-hébergement, tandis que CiviCRM répond à des besoins de gestion des membres, des donateurs et des événements.
+Les étiquettes les plus fréquentes concernent l’auto-hébergement, associé à 25 outils, les API et intégrations, à 24, la gratuité, à 21, et la protection de la vie privée, à 16. Ces repères permettent de comparer les solutions selon les activités de l’organisme, ses capacités techniques et le niveau de maîtrise souhaité sur ses données. Un organisme peut ainsi examiner Omeka S pour publier des collections numériques, CiviCRM pour gérer ses membres et donateurs, ou Nextcloud pour stocker et partager des fichiers. Les descriptions permettent aussi de distinguer les services hébergés, les solutions auto-hébergeables et les applications conservant les données localement, plutôt que de choisir uniquement selon le nombre d’étoiles.
 
-Le répertoire constitue une aide au choix, non une garantie de souveraineté complète. La Réserve illustre une souveraineté partielle : conserver des sauvegardes au Canada ne supprime pas la dépendance aux plateformes d’origine. L’enrichissement porte sur 57 outils et ne doit pas être extrapolé aux fiches restantes. Il fait aussi apparaître des écarts avec l’évaluation du répertoire : les critères relatifs aux données, au contrôle et aux dépendances y sont respectivement retenus pour 47, 19 et 34 outils. Les déductions automatiques doivent donc rester des indications à confirmer. Avant de choisir, il convient de vérifier les licences, les conditions de gratuité, la disponibilité du français, les modalités réelles d’hébergement, les possibilités d’exportation et les dépendances techniques, en tenant compte de la capacité de l’organisme à exploiter la solution retenue.
+La souveraineté décrite reste partielle et doit être interprétée avec prudence. Dans l’évaluation du répertoire, le critère relatif aux données est satisfait par 60 outils, celui du contrôle par 29 et celui de la dépendance par 39. L’évaluation enrichie porte toutefois sur 57 outils et indique respectivement 47, 19 et 34 critères satisfaits, avec des écarts signalés pour certaines fiches. Les déductions automatiques et les classifications ne constituent donc pas une validation définitive. L’origine canadienne, le caractère libre ou la possibilité d’auto-hébergement ne suffisent pas, isolément, à garantir une maîtrise complète. Avant de retenir une solution, il convient de vérifier les informations auprès du fournisseur ou du projet, notamment la licence de l’édition choisie, l’hébergement effectif, les dépendances, les possibilités d’exportation, les conditions de gratuité et la disponibilité du français.
 
-*Résumé rédigé par un modèle d'IA (gpt-6-astra) le 2026-11-11T17:45:29-05:00, à partir des statistiques ci-dessous et de la liste des outils. À relire avant de le diffuser.*
+*Résumé rédigé par un modèle d'IA (gpt-6-astra) le 2026-11-11T18:05:39-05:00, à partir des statistiques ci-dessous et de la liste des outils. À relire avant de le diffuser.*
 
 ## Chiffres clés
 
@@ -54,6 +54,8 @@ La page du répertoire n'affiche qu'une date pour toute la note : la date d'un o
 
 ## Catégories
 
+![Diagramme à barres empilées : nombre d'outils par catégorie (20 catégories), réparti selon le statut du code source.](graphiques/categories-statut.png)
+
 | Catégorie | Outils | % du répertoire | Enrichis | Libres ou partiels | Score moyen |
 |---|---|---|---|---|---|
 | 📝 Bureautique et collaboration | 8 | 13,3 % | 8 | 6 | 2,25 |
@@ -79,6 +81,8 @@ La page du répertoire n'affiche qu'une date pour toute la note : la date d'un o
 
 ## Statut du code source
 
+![Diagramme à barres : nombre d'outils par statut du code source (Libre 24, Partiellement libre 6, Code source disponible 1, Propriétaire 26, Pas encore enrichi 3).](graphiques/statut-code-source.png)
+
 | Statut | Outils | % du répertoire | % des outils enrichis |
 |---|---|---|---|
 | Libre | 24 | 40,0 % | 42,1 % |
@@ -88,6 +92,8 @@ La page du répertoire n'affiche qu'une date pour toute la note : la date d'un o
 | Pas encore enrichi | 3 | 5,0 % |  |
 
 ## Licences
+
+![Diagramme à barres : nombre d'outils par licence SPDX (8 licences), colorées selon leur famille (Copyleft fort (GPL, AGPL), Copyleft faible (LGPL, MPL, EPL, EUPL), Permissive (MIT, Apache, BSD, ISC)).](graphiques/licences.png)
 
 | Licence (SPDX) | Outils | % des outils enrichis |
 |---|---|---|
@@ -123,6 +129,8 @@ Les critères du répertoire sont **déduits** des descriptions (voir le README)
 
 ### Nombre d'outils par critère (répertoire)
 
+![Diagramme à barres groupées : part des outils qui satisfont chacun des trois critères de souveraineté, selon le répertoire (déduit, 60 outils) et selon l'évaluation enrichie (57 outils).](graphiques/criteres-repertoire-enrichie.png)
+
 | Critère | Outils | % du répertoire |
 |---|---|---|
 | Où peuvent rester les données ? | 60 | 100,0 % |
@@ -130,6 +138,8 @@ Les critères du répertoire sont **déduits** des descriptions (voir le README)
 | De qui dépend-il pour fonctionner ? | 39 | 65,0 % |
 
 ### Critères satisfaits par statut du code source (répertoire)
+
+![Carte de chaleur : pour chaque statut du code source, part des outils qui satisfont chacun des trois critères, selon le répertoire (déduit) et selon l'évaluation enrichie.](graphiques/criteres-par-statut.png)
 
 | Statut | Outils | Où peuvent rester les données ? | Qui contrôle l’outil ? | De qui dépend-il pour fonctionner ? | Critères au total | Moyenne par outil |
 |---|---|---|---|---|---|---|
@@ -161,6 +171,8 @@ Les critères du répertoire sont **déduits** des descriptions (voir le README)
 
 ## Forges de code
 
+![Diagramme à barres : nombre d'outils par forge de code (GitHub 25, Framagit 1, git.jami.net 1, hg.mozilla.org 1, kolaente.dev 1).](graphiques/forges.png)
+
 | Forge | Outils | Hôte(s) | Outils concernés |
 |---|---|---|---|
 | GitHub | 25 | github.com | 2FAS Auth, Bitwarden, CiviCRM, Collabora Online, CryptPad, Discourse et 19 autre(s) |
@@ -176,6 +188,8 @@ Les critères du répertoire sont **déduits** des descriptions (voir le README)
 
 - Moyenne de **4,42 tags par outil enrichi**.
 - 37 tags utilisés sur 37 du vocabulaire.
+
+![Diagramme à barres : les 15 tags les plus fréquents (auto-hebergeable 25, api-integrations 24, gratuit 21, vie-privee 16, automatisation 13…).](graphiques/tags.png)
 
 | Tag | Description | Outils | % des outils enrichis |
 |---|---|---|---|

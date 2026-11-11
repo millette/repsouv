@@ -3,63 +3,12 @@
 // Ces tests n'utilisent que des données fictives: ni outils.json, ni réseau, ni ligne de commande.
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import type { OutilClasse } from "../classify.ts";
-import type { Tag } from "../enrichir.ts";
-import type { Critere } from "../extract.ts";
+import { CRITERES, D0, D1, entree, enrichi, META, outil, OUTILS, sansDate, TAGS } from "./donnees-fictives.ts";
 import {
   calculerStatistiques, chargeResume, familleLicence, forgeDe, produireResume, rendreMarkdown, validerResume,
   type Entree, type GenerateurResume,
 } from "../sommaire.ts";
 
-const META = { data_license: "CC-BY-SA-4.0", created_at: "2026-11-11T16:43:11-05:00", updated_at: "2026-11-12T10:00:00-05:00" };
-const D0 = "2026-11-05T09:53:00-05:00";
-const D1 = "2026-11-20T14:00:00-05:00";
-
-const CRITERES: Critere[] = [
-  { id: "donnees", icon: "📍", titre: "Où peuvent rester les données ?", description: "d" },
-  { id: "controle", icon: "🏢", titre: "Qui contrôle l'outil ?", description: "d" },
-  { id: "dependance", icon: "🔗", titre: "De qui dépend-il pour fonctionner ?", description: "d" },
-];
-const TAGS: Tag[] = [
-  { id: "chiffrement", description: "Chiffre les données." },
-  { id: "auto-hebergeable", description: "Installable | chez soi." },
-  { id: "gratuit", description: "Gratuit." },
-  { id: "inutilise", description: "Jamais utilisé." },
-  { id: "nouveau-tag", description: "Ajouté.", justification: "Aucun tag existant ne convient.", propose_pour: "Maison" },
-];
-
-const outil = (nom: string, extra: Partial<OutilClasse> = {}): OutilClasse => ({
-  categorie: "Cat1", icone: "🧪", nom, score: 2, lien: `https://${nom}.example/`, description: `Description de ${nom}.`,
-  derniere_modification: D0, changement: null, criteres: ["donnees", "dependance"], confiance: "moyenne", ...extra,
-});
-const enrichi = (nom: string, extra: Partial<OutilClasse> = {}) =>
-  outil(nom, {
-    description_longue: "Longue.", tags: ["chiffrement"], source: "libre", licence: "AGPL-3.0-only", custom_license: null, custom_license_url: null,
-    repo: `https://github.com/org/${nom}`, page_lue: true, enrichi_le: "2026-11-12T09:00:00-05:00",
-    evaluation_enrichie: { score: 2, criteres: ["donnees", "dependance"], confiance: "élevée" }, ...extra,
-  });
-
-/** Un outil enrichi avant que la date d'enrichissement soit enregistrée. */
-const sansDate = (o: OutilClasse): OutilClasse => {
-  delete o.enrichi_le;
-  return o;
-};
-
-const OUTILS: OutilClasse[] = [
-  enrichi("A", { tags: ["chiffrement", "auto-hebergeable"] }),
-  enrichi("B", {
-    source: "partiel", licence: "MIT", repo: "https://gitlab.com/org/B", tags: ["chiffrement", "auto-hebergeable", "gratuit"],
-    criteres: ["donnees", "controle"], enrichi_le: "2026-11-12T09:00:20-05:00",
-    evaluation_enrichie: { score: 1, criteres: ["controle"], confiance: "faible", ecart: "Le répertoire suppose les données au Canada." },
-  }),
-  enrichi("C", { source: "proprietaire", licence: null, repo: null, score: 3, criteres: ["donnees", "controle", "dependance"], tags: ["gratuit"], categorie: "Cat2", enrichi_le: "2026-11-13T08:00:00-05:00",
-    evaluation_enrichie: { score: 3, criteres: ["donnees", "controle", "dependance"], confiance: "élevée" } }),
-  outil("D", { categorie: "Cat2", changement: "nouveau", derniere_modification: D1 }),
-  enrichi("Maison", { source: "source-disponible", licence: null, custom_license: "Licence maison", custom_license_url: "https://maison.example/licence", repo: "https://git.exemple.org/x/Maison", tags: [] }),
-  sansDate(enrichi("G", { licence: "Apache-2.0 OR MIT", page_lue: false, categorie: "Cat2" })),
-  outil("Retire", { removed: true, changement: "retrait", derniere_modification: D1 }),
-];
-const entree = (outils = OUTILS): Entree => ({ outils, tags: TAGS, criteres: CRITERES, meta: META });
 const cles = (cs: { cle: string; n: number }[]) => Object.fromEntries(cs.map((c) => [c.cle, c.n]));
 
 test("forgeDe: noms connus, hôtes inconnus, et URL invalide", () => {
@@ -245,4 +194,36 @@ test("produireResume: une réponse invalide est redemandée avec la raison, puis
 test("produireResume: deux réponses invalides, c'est une erreur", async () => {
   const charge = chargeResume(calculerStatistiques(entree()), OUTILS);
   await assert.rejects(produireResume(charge, async () => ({ paragraphes: [] })), /3 ou 4/);
+});
+
+test("statistiques: nombre d'outils par catégorie et par statut du code source", () => {
+  const { categoriesSources } = calculerStatistiques(entree());
+  assert.equal(categoriesSources.reduce((n, r) => n + r.n, 0), 6);
+  assert.deepEqual(categoriesSources.filter((r) => r.categorie === "Cat2").map((r) => [r.source, r.n]).sort(), [["libre", 1], ["non enrichi", 1], ["proprietaire", 1]]);
+});
+
+const GRAPHIQUE = (id: string) => ({ id, titre: `Titre ${id}`, description: `Texte alternatif de ${id} [avec crochets].`, png: `graphiques/${id}.png`, svg: `graphiques/${id}.svg` });
+test("rendu: chaque image PNG est insérée dans la section du graphique, avec son texte alternatif", () => {
+  const ids = ["statut-code-source", "categories-statut", "criteres-repertoire-enrichie", "criteres-par-statut", "licences", "forges", "tags", "enrichissement-jours"];
+  const md = rendreMarkdown(calculerStatistiques(entree()), { genereLe: GENERE_LE, graphiques: ids.map(GRAPHIQUE) });
+  for (const id of ids) {
+    assert.ok(md.includes(`](graphiques/${id}.png)`), id);
+    assert.ok(md.includes(`![Texte alternatif de ${id} avec crochets.]`), `${id}: texte alternatif sans crochets`);
+  }
+  const section = (titre: string) => md.slice(md.indexOf(`## ${titre}`), md.indexOf("\n## ", md.indexOf(`## ${titre}`) + 3));
+  assert.ok(section("Statut du code source").includes("statut-code-source.png"));
+  assert.ok(section("Catégories").includes("categories-statut.png"));
+  assert.ok(section("Licences").includes("licences.png"));
+  assert.ok(section("Forges de code").includes("forges.png"));
+  assert.ok(section("Tags").includes("tags.png"));
+  assert.ok(section("Critères de souveraineté").includes("criteres-repertoire-enrichie.png") && section("Critères de souveraineté").includes("criteres-par-statut.png"));
+  assert.ok(section("Dates").includes("enrichissement-jours.png"));
+  assert.doesNotMatch(md, /\.svg/); // seules les images PNG sont insérées
+});
+test("rendu: sans graphiques, aucune image; l'image précède son tableau", () => {
+  const sans = rendreMarkdown(calculerStatistiques(entree()), { genereLe: GENERE_LE });
+  assert.doesNotMatch(sans, /!\[/);
+  const avec = rendreMarkdown(calculerStatistiques(entree()), { genereLe: GENERE_LE, graphiques: [GRAPHIQUE("statut-code-source")] });
+  assert.ok(avec.indexOf("statut-code-source.png") < avec.indexOf("| Statut | Outils |"));
+  assert.doesNotMatch(avec, /undefined|NaN|\[object/);
 });

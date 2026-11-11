@@ -6,7 +6,7 @@ Extraction en JSON du [répertoire d'outils favorisant la souveraineté numériq
 - l'analyse des étoiles de chaque outil selon les trois critères du répertoire;
 - la synchronisation avec la page en ligne, qui détecte les outils nouveaux, modifiés et retirés;
 - un enrichissement facultatif par IA : description longue, tags, licence et dépôt de code, second avis sur la souveraineté;
-- un sommaire statistique du répertoire (`sommaire.md`), avec un résumé rédigé par IA.
+- un sommaire statistique du répertoire (`sommaire.md`), avec des graphiques et un résumé rédigé par IA.
 
 Le répertoire rassemble 60 outils numériques répartis en 20 catégories, sélectionnés pour les besoins des OSBL des arts et de la culture. Chaque outil reçoit de 0 à 3 étoiles (un critère satisfait = une étoile); seuls ceux qui en ont au moins 2 y figurent.
 
@@ -34,7 +34,7 @@ Le contenu du répertoire est l'œuvre des auteur·trices de la note, et non de 
 | Ce qui | Licence |
 |---|---|
 | **Code source** (`*.ts`, `test/`, `package.json`, `tsconfig.json`) | [GNU Affero General Public License v3.0](https://www.gnu.org/licenses/agpl-3.0.html), identifiant SPDX `AGPL-3.0-only`. Texte complet dans [`LICENSE`](LICENSE). Chaque fichier `.ts` commence par les en-têtes `SPDX-License-Identifier` et `SPDX-FileCopyrightText` |
-| **Données** (`outils.json`, `criteres.json`, `tags.json`) et le **sommaire** qui en est dérivé (`sommaire.md`) | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.fr), identifiant SPDX `CC-BY-SA-4.0`. Texte complet dans [`LICENSE-CC-BY-SA-4.0`](LICENSE-CC-BY-SA-4.0). Le JSON n'admet pas de commentaires : chaque fichier déclare sa licence dans `meta.data_license`, que les scripts maintiennent (voir [Fichiers JSON](#fichiers-json)) |
+| **Données** (`outils.json`, `criteres.json`, `tags.json`) et ce qui en est dérivé : le **sommaire** (`sommaire.md`) et ses **graphiques** (`graphiques/`) | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.fr), identifiant SPDX `CC-BY-SA-4.0`. Texte complet dans [`LICENSE-CC-BY-SA-4.0`](LICENSE-CC-BY-SA-4.0). Le JSON n'admet pas de commentaires : chaque fichier déclare sa licence dans `meta.data_license`, que les scripts maintiennent (voir [Fichiers JSON](#fichiers-json)) |
 
 Les données sont des adaptations du répertoire d'origine : elles restent donc partagées dans les mêmes conditions que lui (CC BY-SA 4.0), avec attribution. Pour les réutiliser, créditer par exemple ainsi :
 
@@ -52,7 +52,7 @@ Les champs d'enrichissement résument des pages tierces (voir [D'où viennent le
 
 ## Démarrage
 
-Prérequis : [nub](https://nubjs.com/), qui exécute le TypeScript directement, et un accès au réseau (`extract`, `update` et l'enrichissement téléchargent des pages en ligne). Les commandes `nub run` sont définies dans `package.json`.
+Prérequis : [nub](https://nubjs.com/), qui exécute le TypeScript directement, et un accès au réseau (`extract`, `update` et l'enrichissement téléchargent des pages en ligne). Les commandes `nub run` sont définies dans `package.json`. Seul le sommaire a besoin d'un programme de plus, [vl-convert](https://github.com/vega/vl-convert) (voir [Sommaire statistique](#sommaire-statistique)), pour ses graphiques.
 
 ```sh
 nub install                      # installe les dépendances
@@ -61,7 +61,7 @@ nub run typecheck                # vérifie les types
 nub run update --dry-run         # compare outils.json à la page en ligne, sans rien écrire
 nub run update                   # synchronise outils.json avec la page en ligne
 nub run enrichir --limite=5      # enrichit 5 outils par IA (nécessite OPENAI_API_KEY)
-nub run sommaire                 # écrit sommaire.md (résumé par IA; --sans-resume pour s'en passer)
+nub run sommaire                 # écrit sommaire.md et graphiques/ (--sans-resume, --sans-graphiques pour s'en passer)
 ```
 
 Pour l'enrichissement, copier `.env.example` vers `.env` et y mettre la clé `OPENAI_API_KEY` (`.env` est ignoré par Git).
@@ -72,7 +72,7 @@ Pour l'enrichissement, copier `.env.example` vers `.env` et y mettre la clé `OP
 Import initial   page en ligne ──▶ extract.ts ──▶ classify.ts ──▶ outils.json
 Suivi courant    page en ligne ──▶ update.ts ──▶ outils.json   (nouveau, modification, retrait, comeback)
 Enrichissement   update.ts --enrichir ──▶ API OpenAI ──▶ outils.json (+ tags.json si de nouveaux tags)
-Sommaire         outils.json ──▶ sommaire.ts ──▶ sommaire.md   (résumé: API OpenAI)
+Sommaire         outils.json ──▶ sommaire.ts ──▶ sommaire.md + graphiques/   (vl-convert; résumé: API OpenAI)
 ```
 
 `extract` et `update` téléchargent la page en ligne (le dépôt n'en contient aucune copie). Après l'import initial, `update` suffit pour suivre le répertoire. Voir [Importer ou réimporter depuis le web](#importer-ou-réimporter-depuis-le-web) avant de relancer `extract` ou `build`.
@@ -83,8 +83,8 @@ Sommaire         outils.json ──▶ sommaire.ts ──▶ sommaire.md   (rés
 |---|---|
 | `outils.json`, `criteres.json`, `tags.json` | Les données (voir [Fichiers JSON](#fichiers-json)) |
 | `extract.ts`, `classify.ts`, `update.ts` | Les trois scripts du flux de travail |
-| `sommaire.ts`, `sommaire.md` | Le script du sommaire statistique, et le sommaire qu'il a généré (à regénérer avec `nub run sommaire` après une synchronisation ou un enrichissement) |
-| `enrichir.ts`, `fichiers.ts`, `temps.ts`, `spdx.ts`, `progress.ts`, `couleurs.ts`, `ids.ts`, `cli.ts` | Modules utilisés par les scripts |
+| `sommaire.ts`, `sommaire.md`, `graphiques/` | Le script du sommaire statistique, le sommaire qu'il a généré et les graphiques (SVG et PNG) qu'il contient (à regénérer avec `nub run sommaire` après une synchronisation ou un enrichissement) |
+| `enrichir.ts`, `statistiques.ts`, `graphiques.ts`, `fichiers.ts`, `temps.ts`, `spdx.ts`, `progress.ts`, `couleurs.ts`, `ids.ts`, `cli.ts` | Modules utilisés par les scripts |
 | `test/` | Les tests |
 | `package.json`, `nub.lock`, `tsconfig.json` | Dépendances, scripts npm et configuration TypeScript |
 | `.env.example` | Modèle du fichier `.env` (la clé OpenAI) |
@@ -229,14 +229,22 @@ Le résumé (stdout) et le journal avec la barre de progression (stderr) sont co
 ### `sommaire.ts`
 
 ```sh
-nub sommaire.ts [--sans-resume] [outils.json] [sommaire.md]
+nub sommaire.ts [--sans-resume] [--sans-graphiques] [outils.json] [sommaire.md]
 ```
 
-Écrit `sommaire.md` (par défaut dans le dossier de `outils.json`) : voir [Sommaire statistique](#sommaire-statistique).
+Écrit `sommaire.md` et le dossier `graphiques/` (par défaut dans le dossier de `outils.json`) : voir [Sommaire statistique](#sommaire-statistique).
 
 ### `enrichir.ts`
 
 Module de l'enrichissement : lecture de la page de l'outil, requêtes à l'API OpenAI, validation des réponses (`validerProposition`, `validerEcart`) et boucle `enrichirOutils`. Cette boucle reçoit ses générateurs en paramètres, ce qui permet de la tester sans réseau.
+
+### `statistiques.ts`
+
+Le calcul des statistiques du répertoire (`calculerStatistiques`), sans entrée-sortie : statuts du code source, licences et familles, forges, tags, critères par statut, dates. Il alimente le sommaire et les graphiques.
+
+### `graphiques.ts`
+
+Les graphiques du sommaire. `construireGraphiques(statistiques)` produit des spécifications [Vega-Lite](https://vega.github.io/vega-lite/) (calcul pur, avec les données incluses dans chaque spécification), et `ecrireGraphiques` les convertit en SVG et en PNG avec [vl-convert](https://github.com/vega/vl-convert). Les paquets `vega-lite` et `vega` fournissent les types TypeScript des spécifications.
 
 ### `fichiers.ts`
 
@@ -348,7 +356,8 @@ jaq '.outils |= map(if .page_lue == false then del(.description_longue, .tags, .
 - les **critères de souveraineté** : nombre d'outils par critère, et critères satisfaits par statut du code source, d'abord pour le répertoire (déduits) puis pour l'évaluation enrichie, avec les écarts entre les deux;
 - les **forges de code** : nombre d'outils par forge (GitHub, GitLab, Codeberg…) et logiciels libres sans dépôt connu;
 - les **tags** : utilisation de chacun, tags inutilisés, moyenne par outil, paires les plus fréquentes, tags ajoutés;
-- la **fiabilité** : confiance de la classification, outils enrichis sans page lisible, outils restant à enrichir.
+- la **fiabilité** : confiance de la classification, outils enrichis sans page lisible, outils restant à enrichir;
+- des **graphiques**, insérés dans la section qu'ils illustrent (voir plus bas).
 
 Tant que tous les outils ont la même date (aucune modification détectée depuis l'import), les lignes « outils les plus anciens » et « outils les plus récents » sont identiques. Les outils enrichis avant l'ajout de `enrichi_le` ont tous la même date de substitution : ils apparaissent donc ensemble comme « premier enrichissement » (voir le champ `enrichi_le`).
 
@@ -359,6 +368,26 @@ Le calcul est local; seul le résumé passe par le réseau. Pour le rédiger, le
 | Option | Effet |
 |---|---|
 | `--sans-resume` | Omet le résumé : aucun appel à l'API, aucune clé nécessaire |
+| `--sans-graphiques` | Omet les graphiques : vl-convert n'est pas nécessaire |
+
+### Graphiques
+
+Les graphiques sont des spécifications Vega-Lite construites à partir des statistiques, puis converties par **vl-convert** en **SVG** (images vectorielles, dans `graphiques/`) et en **PNG** (insérés dans `sommaire.md`, à deux fois la résolution pour rester nets). Les nombres et les axes sont en français (locale `fr-CA`), et un statut du code source garde la même couleur dans tous les graphiques (palette Okabe-Ito, lisible par les personnes daltoniennes).
+
+| Fichier (`graphiques/…`) | Contenu | Section |
+|---|---|---|
+| `statut-code-source` | Outils par statut du code source | Statut du code source |
+| `categories-statut` | Outils par catégorie, empilés par statut | Catégories |
+| `criteres-repertoire-enrichie` | Part des outils satisfaisant chaque critère, répertoire (déduit) et évaluation enrichie | Critères de souveraineté |
+| `criteres-par-statut` | Carte de chaleur : critères satisfaits par statut, répertoire et évaluation enrichie | Critères de souveraineté |
+| `licences` | Outils par licence SPDX, colorés par famille | Licences |
+| `forges` | Outils par forge de code | Forges de code |
+| `tags` | Les 15 tags les plus fréquents | Tags |
+| `enrichissement-jours` | Outils enrichis par jour, seulement à partir de deux jours distincts | Dates |
+
+Un graphique sans données est omis (par exemple, sans outil enrichi, ni licences, ni forges, ni tags), et les fichiers d'un graphique qui n'est plus produit sont supprimés du dossier (les autres fichiers y restent). Chaque image du sommaire a un texte alternatif qui résume son contenu. Les graphiques ne contiennent que des statistiques déjà publiées dans le sommaire; aucune donnée ne quitte l'ordinateur pour les produire.
+
+**Installer vl-convert** : `cargo install vl-convert`, ou télécharger un binaire sur la [page des versions](https://github.com/vega/vl-convert/releases). Le programme doit être dans le `PATH`. Le script vérifie sa présence au début, avant tout appel à l'API, et propose `--sans-graphiques` s'il est absent. Les spécifications visent Vega-Lite 6.1, la version de `vl-convert` 1.9.
 
 Le dépôt contient un `sommaire.md` déjà généré ([le consulter](sommaire.md)); il reflète l'état des données au moment où il a été produit, et son introduction donne la date de génération. Le résumé rédigé par l'IA est différent à chaque exécution : régénérer le sommaire en change le texte, même si les données n'ont pas bougé.
 
@@ -404,8 +433,8 @@ Si le `score` ou les `criteres` d'un outil déjà enrichi changent, après un `c
 | `nub run build:force` | Comme `build`, mais **remplace tout**, enrichissement et historique compris |
 | `nub run update` | `nub update.ts` : synchronise `outils.json` avec la page en ligne. Les options passent directement : `nub run update --dry-run` |
 | `nub run enrichir` | `nub update.ts --enrichir` : synchronise, puis enrichit les outils sans description longue. Par exemple : `nub run enrichir --limite=5` |
-| `nub run sommaire` | `nub sommaire.ts` : écrit `sommaire.md` (ajouter `--sans-resume` pour éviter l'appel à l'API) |
-| `nub run test` | Lance les onze fichiers de tests |
+| `nub run sommaire` | `nub sommaire.ts` : écrit `sommaire.md` et `graphiques/` (`--sans-resume` évite l'appel à l'API, `--sans-graphiques` évite vl-convert) |
+| `nub run test` | Lance les douze fichiers de tests |
 | `nub run typecheck` | `tsrs -p .` : vérifie les types avec [tsrs](https://www.npmjs.com/package/tsrs), un portage en Rust de `tsc` |
 
 ## Tests
@@ -421,7 +450,8 @@ Dans `test/`, avec `node:test` lancé par `nub` :
 - `couleurs.test.ts` : règles d'activation (terminal, `NO_COLOR`, `FORCE_COLOR`, `TERM=dumb`, `--sans-couleur`) et codes ANSI.
 - `temps.test.ts` : heure de Toronto (hiver, été, minuit, passage à l'heure d'été), décalage ajouté à une date locale.
 - `fichiers.test.ts` : structure et `meta` des fichiers de données (création, contenu inchangé ou modifié, licence rétablie, refus des formats invalides), et conformité des trois fichiers du dépôt.
-- `sommaire.test.ts` : statistiques (statuts, licences, familles, tags, critères par statut, forges, dates), rendu Markdown (sections, cas sans outil enrichi), validation du résumé et nouvelle tentative, avec des données fictives (jamais `outils.json`, jamais le réseau).
+- `sommaire.test.ts` : statistiques (statuts, licences, familles, tags, critères par statut, forges, dates), rendu Markdown (sections, images insérées dans leur section, cas sans outil enrichi), validation du résumé et nouvelle tentative, avec des données fictives (jamais `outils.json`, jamais le réseau).
+- `graphiques.test.ts` : spécifications Vega-Lite (données incluses, champs existants, pourcentages, graphiques omis sans données), écriture et nettoyage des fichiers, message si vl-convert est absent, et conversion réelle en SVG et PNG (ignorée si vl-convert n'est pas installé). Les données fictives des tests sont dans `donnees-fictives.ts`.
 - `en-tetes.test.ts` : chaque fichier `.ts` porte les en-têtes SPDX, la licence du code est la même dans `package.json`, et les deux textes de licence sont présents.
 
 ## Dépannage
@@ -434,6 +464,8 @@ Dans `test/`, avec `node:test` lancé par `nub` :
 | `OPENAI_API_KEY absente` | Il y a des outils à enrichir (ou un résumé à rédiger pour `nub run sommaire`), mais `.env` n'a pas la clé. La synchronisation, elle, a déjà été écrite. Pour le sommaire, `--sans-resume` évite la clé |
 | `page inaccessible …` ou `page presque vide …`, `outil non enrichi` | La page de l'outil n'a pas pu être lue : réessayer plus tard, ou enrichir à partir de la description seule avec `--sans-page`. Voir [Pages inaccessibles](#pages-inaccessibles-ou-presque-vides) |
 | Des séquences comme `^[[32m` ou `[32m` apparaissent dans la sortie | Les couleurs sont forcées (`FORCE_COLOR`). Les désactiver avec `--sans-couleur` (ou retirer `FORCE_COLOR`) |
+| `vl-convert est introuvable …` | Le sommaire a besoin de vl-convert pour ses graphiques. L'installer (voir [Graphiques](#graphiques)) ou utiliser `nub run sommaire --sans-graphiques` |
+| `vl-convert vl2svg: …` ou `vl-convert vl2png: …` | vl-convert a refusé une spécification de graphique : le message de vl-convert dit pourquoi. Vérifier sa version (`vl-convert --version`, 1.9 ou plus) |
 | `Option inconnue: …` | Option mal orthographiée. Les options valides sont décrites dans la section de chaque script |
 
 ## Utiliser les données

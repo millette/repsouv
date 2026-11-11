@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Sommaire statistique du répertoire, écrit dans sommaire.md.
-// Usage: nub sommaire.ts [--sans-resume] [outils.json] [sommaire.md]
+// Usage: nub sommaire.ts [--sans-resume] [--sans-graphiques] [outils.json] [sommaire.md]
 //
 // Lit outils.json (et tags.json et criteres.json, dans le même dossier) et écrit un sommaire en
 // Markdown: chiffres clés, dates, catégories, statut du code source, licences, critères de
@@ -9,278 +9,24 @@
 // Un résumé de 3 ou 4 paragraphes sur le répertoire et son utilité est rédigé par l'API OpenAI à
 // partir de toutes les statistiques et de la liste des outils (clé OPENAI_API_KEY dans .env; modèle:
 // OPENAI_MODEL). --sans-resume l'omet: le sommaire est alors calculé localement, sans appel à l'API.
+// Des graphiques (Vega-Lite, convertis en SVG et en PNG par vl-convert) sont écrits dans le dossier
+// graphiques/ à côté du sommaire, et leurs images PNG y sont insérées. --sans-graphiques les omet.
 // Le calcul des statistiques et le rendu sont des fonctions pures; seul le résumé utilise le réseau.
 import { writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import type { OutilClasse } from "./classify.ts";
 import { lancer } from "./cli.ts";
+import { construireGraphiques, ecrireGraphiques, verifierVlConvert, type GraphiqueEcrit } from "./graphiques.ts";
+import { appelerOpenAI, chargerCriteres, chargerTags, MODELE_PAR_DEFAUT, obtenirValide, problemesMarkdown } from "./enrichir.ts";
+import { lireFichier } from "./fichiers.ts";
 import {
-  appelerOpenAI, chargerCriteres, chargerTags, MODELE_PAR_DEFAUT, obtenirValide, problemesMarkdown, type Tag,
-} from "./enrichir.ts";
-import type { Critere } from "./extract.ts";
-import { lireFichier, type Metadonnees } from "./fichiers.ts";
+  arrondi, calculerStatistiques, forgeDe, NOMS_SOURCES, NON_ENRICHI, type LigneCriteres, type Statistiques,
+} from "./statistiques.ts";
 import { horodatage } from "./temps.ts";
 
-// ---------- vocabulaire ----------
-
-export const SOURCES = ["libre", "partiel", "source-disponible", "proprietaire"] as const;
-export const NON_ENRICHI = "non enrichi";
-const NOMS_SOURCES: Record<string, string> = {
-  libre: "Libre",
-  partiel: "Partiellement libre (open core)",
-  "source-disponible": "Code source disponible",
-  proprietaire: "Propriétaire",
-  [NON_ENRICHI]: "Pas encore enrichi",
-};
-
-const FORGES_CONNUES: Record<string, string> = {
-  "github.com": "GitHub",
-  "gitlab.com": "GitLab",
-  "codeberg.org": "Codeberg",
-  "framagit.org": "Framagit",
-  "bitbucket.org": "Bitbucket",
-  "git.sr.ht": "SourceHut",
-  "sr.ht": "SourceHut",
-  "sourceforge.net": "SourceForge",
-};
-
-/** Familles de licences, indicatives (classées d'après l'identifiant SPDX, de la plus forte à la plus permissive). */
-const FAMILLES: [RegExp, string][] = [
-  [/\b(?:AGPL|GPL)-/, "Copyleft fort (GPL, AGPL)"],
-  [/\b(?:LGPL|MPL|EPL|CDDL|EUPL)-/, "Copyleft faible (LGPL, MPL, EPL, EUPL)"],
-  [/\b(?:MIT|Apache|BSD|ISC|Unlicense|0BSD|Zlib|CC0)\b/, "Permissive (MIT, Apache, BSD, ISC)"],
-];
-const AUTRE_FAMILLE = "Autre ou non classée";
-
-// ---------- statistiques ----------
-
-export interface Entree {
-  outils: OutilClasse[];
-  tags: Tag[];
-  criteres: Critere[];
-  meta: Metadonnees;
-}
-
-export interface Compte {
-  cle: string;
-  n: number;
-}
-
-export interface DateExtreme {
-  date: string;
-  outils: string[];
-}
-
-export interface LigneCriteres {
-  source: string;
-  outils: number;
-  parCritere: Record<string, number>;
-  total: number;
-}
-
-export interface Statistiques {
-  meta: Metadonnees;
-  total: number;
-  retires: string[];
-  categories: { categorie: string; icone: string; outils: number; enrichis: number; libres: number; scoreMoyen: number }[];
-  scores: { deux: number; trois: number; moyen: number };
-  enrichissement: { enrichis: number; sansPage: string[]; avecEcart: string[]; sansDate: number };
-  changements: Compte[];
-  confianceClassification: Compte[];
-  dates: { premieres: DateExtreme | null; dernieres: DateExtreme | null; parDate: Compte[] };
-  datesEnrichissement: { premiere: DateExtreme | null; derniere: DateExtreme | null; parJour: Compte[] };
-  sources: Compte[];
-  licences: { spdx: Compte[]; familles: Compte[]; maison: { nom: string; url: string | null; n: number }[]; sansLicence: Compte[] };
-  tags: { utilisation: (Compte & { description: string })[]; inutilises: string[]; moyenneParOutil: number; sansTag: string[]; paires: Compte[]; ajoutes: Tag[] };
-  criteres: {
-    definitions: { id: string; titre: string }[];
-    repertoire: { parCritere: Compte[]; parSource: LigneCriteres[] };
-    enrichie: { parCritere: Compte[]; parSource: LigneCriteres[]; concordants: number; confiance: Compte[] };
-  };
-  forges: { forge: string; hotes: string[]; outils: string[] }[];
-  sansDepot: { libresOuPartiels: string[]; autres: number };
-}
-
-const compter = (valeurs: Iterable<string>): Map<string, number> => {
-  const m = new Map<string, number>();
-  for (const v of valeurs) m.set(v, (m.get(v) ?? 0) + 1);
-  return m;
-};
-const trier = (m: Map<string, number>): Compte[] =>
-  [...m].map(([cle, n]) => ({ cle, n })).sort((a, b) => b.n - a.n || a.cle.localeCompare(b.cle, "fr"));
-const moyenne = (nombres: number[]) => (nombres.length ? nombres.reduce((a, b) => a + b, 0) / nombres.length : 0);
-const arrondi = (n: number) => Math.round(n * 100) / 100;
-
-/** Forge de code d'une URL de dépôt: son nom connu (GitHub, GitLab...) ou, à défaut, son nom d'hôte. */
-export function forgeDe(url: string): { forge: string; hote: string } {
-  let hote: string;
-  try {
-    hote = new URL(url).hostname.replace(/^www\./, "");
-  } catch {
-    return { forge: "URL invalide", hote: url };
-  }
-  return { forge: FORGES_CONNUES[hote] ?? hote, hote };
-}
-
-/** Famille d'une expression de licence SPDX, d'après la plus forte des licences qu'elle nomme. */
-export function familleLicence(expression: string): string {
-  return FAMILLES.find(([re]) => re.test(expression))?.[1] ?? AUTRE_FAMILLE;
-}
-
-/** Les outils portant la date la plus petite (« min ») ou la plus grande (« max »), à l'instant près. */
-function extremes(items: { nom: string; date: string }[], sens: "min" | "max"): DateExtreme | null {
-  if (!items.length) return null;
-  const instants = items.map((i) => Date.parse(i.date));
-  const cible = sens === "min" ? Math.min(...instants) : Math.max(...instants);
-  const retenus = items.filter((_, i) => instants[i] === cible);
-  return { date: retenus[0]!.date, outils: retenus.map((i) => i.nom).sort((a, b) => a.localeCompare(b, "fr")) };
-}
-
-function lignesCriteres(outils: OutilClasse[], ids: string[], criteresDe: (o: OutilClasse) => string[], sourceDe: (o: OutilClasse) => string): LigneCriteres[] {
-  const lignes = new Map<string, OutilClasse[]>();
-  for (const o of outils) lignes.set(sourceDe(o), [...(lignes.get(sourceDe(o)) ?? []), o]);
-  const ligne = (source: string, os: OutilClasse[]): LigneCriteres => ({
-    source,
-    outils: os.length,
-    parCritere: Object.fromEntries(ids.map((id) => [id, os.filter((o) => criteresDe(o).includes(id)).length])),
-    total: os.reduce((n, o) => n + criteresDe(o).length, 0),
-  });
-  const ordre = [...SOURCES, NON_ENRICHI];
-  return [...lignes]
-    .sort((a, b) => ordre.indexOf(a[0]) - ordre.indexOf(b[0]))
-    .map(([source, os]) => ligne(source, os))
-    .concat(outils.length ? [ligne("Ensemble", outils)] : []);
-}
-
-export function calculerStatistiques({ outils: tous, tags, criteres, meta }: Entree): Statistiques {
-  const outils = tous.filter((o) => !o.removed);
-  const enrichis = outils.filter((o) => o.description_longue);
-  const ids = criteres.map((c) => c.id);
-  const sourceDe = (o: OutilClasse) => o.source ?? NON_ENRICHI;
-  const libres = (o: OutilClasse) => o.source === "libre" || o.source === "partiel";
-
-  // Catégories
-  const categories = [...compter(outils.map((o) => o.categorie))].map(([categorie]) => {
-    const os = outils.filter((o) => o.categorie === categorie);
-    return {
-      categorie,
-      icone: os[0]!.icone,
-      outils: os.length,
-      enrichis: os.filter((o) => o.description_longue).length,
-      libres: os.filter(libres).length,
-      scoreMoyen: arrondi(moyenne(os.map((o) => o.score))),
-    };
-  }).sort((a, b) => b.outils - a.outils || a.categorie.localeCompare(b.categorie, "fr"));
-
-  // Licences
-  const avecLicence = enrichis.filter((o) => o.licence);
-  const maison = new Map<string, { nom: string; url: string | null; n: number }>();
-  for (const o of enrichis) {
-    if (!o.custom_license) continue;
-    const cle = `${o.custom_license}\n${o.custom_license_url ?? ""}`;
-    maison.set(cle, { nom: o.custom_license, url: o.custom_license_url ?? null, n: (maison.get(cle)?.n ?? 0) + 1 });
-  }
-  const sansLicence = enrichis.filter((o) => !o.licence && !o.custom_license);
-
-  // Tags
-  const parTag = compter(enrichis.flatMap((o) => o.tags ?? []));
-  const paires = compter(
-    enrichis.flatMap((o) => {
-      const ts = [...(o.tags ?? [])].sort();
-      return ts.flatMap((a, i) => ts.slice(i + 1).map((b) => `${a} + ${b}`));
-    }),
-  );
-
-  // Critères
-  const nomsCriteres = criteres.map((c) => ({ id: c.id, titre: c.titre }));
-  const parCritere = (os: OutilClasse[], de: (o: OutilClasse) => string[]) =>
-    ids.map((id) => ({ cle: id, n: os.filter((o) => de(o).includes(id)).length }));
-  const enrichiesCriteres = (o: OutilClasse) => o.evaluation_enrichie?.criteres ?? [];
-  const avecEvaluation = enrichis.filter((o) => o.evaluation_enrichie);
-
-  // Forges
-  const parForge = new Map<string, { hotes: Set<string>; outils: string[] }>();
-  for (const o of enrichis) {
-    if (!o.repo) continue;
-    const { forge, hote } = forgeDe(o.repo);
-    const f = parForge.get(forge) ?? { hotes: new Set<string>(), outils: [] };
-    f.hotes.add(hote);
-    f.outils.push(o.nom);
-    parForge.set(forge, f);
-  }
-  const sansDepot = enrichis.filter((o) => !o.repo);
-
-  // Dates
-  const dateDe = (o: OutilClasse) => ({ nom: o.nom, date: o.derniere_modification });
-  const enrichiLe = enrichis.filter((o) => o.enrichi_le).map((o) => ({ nom: o.nom, date: o.enrichi_le! }));
-
-  return {
-    meta,
-    total: outils.length,
-    retires: tous.filter((o) => o.removed).map((o) => o.nom),
-    categories,
-    scores: {
-      deux: outils.filter((o) => o.score === 2).length,
-      trois: outils.filter((o) => o.score === 3).length,
-      moyen: arrondi(moyenne(outils.map((o) => o.score))),
-    },
-    enrichissement: {
-      enrichis: enrichis.length,
-      sansPage: enrichis.filter((o) => o.page_lue === false).map((o) => o.nom),
-      avecEcart: enrichis.filter((o) => o.evaluation_enrichie?.ecart).map((o) => o.nom),
-      sansDate: enrichis.length - enrichiLe.length,
-    },
-    changements: trier(compter(outils.map((o) => o.changement ?? "aucun"))),
-    confianceClassification: trier(compter(outils.map((o) => o.confiance ?? "inconnue"))),
-    dates: {
-      premieres: extremes(outils.map(dateDe), "min"),
-      dernieres: extremes(outils.map(dateDe), "max"),
-      parDate: trier(compter(outils.map((o) => o.derniere_modification))).sort((a, b) => Date.parse(b.cle) - Date.parse(a.cle)),
-    },
-    datesEnrichissement: {
-      premiere: extremes(enrichiLe, "min"),
-      derniere: extremes(enrichiLe, "max"),
-      parJour: [...compter(enrichiLe.map((e) => e.date.slice(0, 10)))].map(([cle, n]) => ({ cle, n })).sort((a, b) => a.cle.localeCompare(b.cle)),
-    },
-    sources: trier(compter(outils.map(sourceDe))).sort((a, b) => [...SOURCES, NON_ENRICHI].indexOf(a.cle) - [...SOURCES, NON_ENRICHI].indexOf(b.cle)),
-    licences: {
-      spdx: trier(compter(avecLicence.map((o) => o.licence!))),
-      familles: trier(compter(avecLicence.map((o) => familleLicence(o.licence!)))),
-      maison: [...maison.values()].sort((a, b) => b.n - a.n || a.nom.localeCompare(b.nom, "fr")),
-      sansLicence: trier(compter(sansLicence.map((o) => NOMS_SOURCES[sourceDe(o)] ?? sourceDe(o)))),
-    },
-    tags: {
-      utilisation: tags
-        .map((t) => ({ cle: t.id, n: parTag.get(t.id) ?? 0, description: t.description }))
-        .sort((a, b) => b.n - a.n || a.cle.localeCompare(b.cle, "fr")),
-      inutilises: tags.filter((t) => !parTag.has(t.id)).map((t) => t.id),
-      moyenneParOutil: arrondi(moyenne(enrichis.map((o) => (o.tags ?? []).length))),
-      sansTag: enrichis.filter((o) => !(o.tags ?? []).length).map((o) => o.nom),
-      paires: trier(paires).filter((p) => p.n >= 2).slice(0, 10),
-      ajoutes: tags.filter((t) => t.justification),
-    },
-    criteres: {
-      definitions: nomsCriteres,
-      repertoire: {
-        parCritere: parCritere(outils, (o) => o.criteres ?? []),
-        parSource: lignesCriteres(outils, ids, (o) => o.criteres ?? [], sourceDe),
-      },
-      enrichie: {
-        parCritere: parCritere(avecEvaluation, enrichiesCriteres),
-        parSource: lignesCriteres(avecEvaluation, ids, enrichiesCriteres, sourceDe),
-        concordants: avecEvaluation.filter((o) => !o.evaluation_enrichie?.ecart).length,
-        confiance: trier(compter(avecEvaluation.map((o) => o.evaluation_enrichie!.confiance))),
-      },
-    },
-    forges: [...parForge]
-      .map(([forge, f]) => ({ forge, hotes: [...f.hotes].sort(), outils: f.outils.sort((a, b) => a.localeCompare(b, "fr")) }))
-      .sort((a, b) => b.outils.length - a.outils.length || a.forge.localeCompare(b.forge, "fr")),
-    sansDepot: {
-      libresOuPartiels: sansDepot.filter(libres).map((o) => o.nom),
-      autres: sansDepot.filter((o) => !libres(o)).length,
-    },
-  };
-}
+// Les statistiques vivent dans statistiques.ts; elles sont réexportées ici pour les appelants du sommaire.
+export { calculerStatistiques, familleLicence, forgeDe, NON_ENRICHI, SOURCES } from "./statistiques.ts";
+export type { Compte, DateExtreme, Entree, LigneCriteres, Statistiques } from "./statistiques.ts";
 
 // ---------- rendu Markdown ----------
 
@@ -304,6 +50,8 @@ export type ResumeIA = { paragraphes: string[]; modele: string; date: string } |
 export interface OptionsRendu {
   genereLe: string;
   resume?: ResumeIA;
+  /** Graphiques déjà écrits (voir graphiques.ts): chaque image PNG est insérée dans sa section. */
+  graphiques?: GraphiqueEcrit[];
 }
 
 function sectionResume(resume: ResumeIA | undefined): string {
@@ -314,10 +62,15 @@ function sectionResume(resume: ResumeIA | undefined): string {
   return `## Résumé\n\n${resume.paragraphes.join("\n\n")}\n\n*Résumé rédigé par un modèle d'IA (${resume.modele}) le ${resume.date}, à partir des statistiques ci-dessous et de la liste des outils. À relire avant de le diffuser.*\n\n`;
 }
 
-export function rendreMarkdown(s: Statistiques, { genereLe, resume }: OptionsRendu): string {
+export function rendreMarkdown(s: Statistiques, { genereLe, resume, graphiques = [] }: OptionsRendu): string {
   const ens = s.enrichissement.enrichis;
   const aucunEnrichi = "*Aucun outil n'est enrichi pour l'instant.*";
   const parts: string[] = [];
+  /** L'image PNG du graphique `id`, suivie d'une ligne vide; rien si ce graphique n'existe pas. */
+  const image = (id: string) => {
+    const g = graphiques.find((x) => x.id === id);
+    return g ? `![${g.description.replace(/[\[\]]/g, "")}](${g.png})\n\n` : "";
+  };
 
   parts.push(`# Sommaire du répertoire d'outils favorisant la souveraineté numérique
 
@@ -362,13 +115,13 @@ ${ens ? `- ${pluriel(ens, "outil enrichi", "outils enrichis")}, dont ${ens - s.e
 ${de.premiere ? `- **Premier enrichissement** : ${de.premiere.date} (${liste(de.premiere.outils, 5)}).
 - **Dernier enrichissement** : ${de.derniere!.date} (${liste(de.derniere!.outils, 5)}).` : "- Aucune date d'enrichissement par outil n'est enregistrée."}
 - Dernière écriture du fichier de données : ${s.meta.updated_at}.
-${de.parJour.length ? `\n${tableau(["Jour", "Outils enrichis"], de.parJour.map((c) => [c.cle, c.n]))}\n` : ""}` : aucunEnrichi}
+${de.parJour.length ? `\n${image("enrichissement-jours")}${tableau(["Jour", "Outils enrichis"], de.parJour.map((c) => [c.cle, c.n]))}\n` : ""}` : aucunEnrichi}
 `);
 
   // Catégories
   parts.push(`## Catégories
 
-${tableau(
+${image("categories-statut")}${tableau(
     ["Catégorie", "Outils", "% du répertoire", "Enrichis", "Libres ou partiels", "Score moyen"],
     s.categories.map((c) => [`${c.icone} ${c.categorie}`, c.outils, pourcent(c.outils, s.total), c.enrichis, c.libres, decimal(c.scoreMoyen)]),
   )}
@@ -377,7 +130,7 @@ ${tableau(
   // Source
   parts.push(`## Statut du code source
 
-${tableau(
+${image("statut-code-source")}${tableau(
     ["Statut", "Outils", "% du répertoire", ens ? "% des outils enrichis" : ""].filter(Boolean),
     s.sources.map((c) => [NOMS_SOURCES[c.cle] ?? c.cle, c.n, pourcent(c.n, s.total), ...(ens ? [c.cle === NON_ENRICHI ? "" : pourcent(c.n, ens)] : [])]),
   )}
@@ -387,7 +140,7 @@ ${tableau(
   const l = s.licences;
   parts.push(`## Licences
 
-${ens ? `${tableau(["Licence (SPDX)", "Outils", "% des outils enrichis"], l.spdx.map((c) => [c.cle, c.n, pourcent(c.n, ens)]))}
+${ens ? `${image("licences")}${tableau(["Licence (SPDX)", "Outils", "% des outils enrichis"], l.spdx.map((c) => [c.cle, c.n, pourcent(c.n, ens)]))}
 
 **Familles de licences** (classement indicatif d'après l'identifiant SPDX) :
 
@@ -410,11 +163,11 @@ Les critères du répertoire sont **déduits** des descriptions (voir le README)
 
 ### Nombre d'outils par critère (répertoire)
 
-${tableau(["Critère", "Outils", "% du répertoire"], c.repertoire.parCritere.map((x) => [titre(x.cle), x.n, pourcent(x.n, s.total)]))}
+${image("criteres-repertoire-enrichie")}${tableau(["Critère", "Outils", "% du répertoire"], c.repertoire.parCritere.map((x) => [titre(x.cle), x.n, pourcent(x.n, s.total)]))}
 
 ### Critères satisfaits par statut du code source (répertoire)
 
-${matrice(c.repertoire.parSource)}
+${image("criteres-par-statut")}${matrice(c.repertoire.parSource)}
 
 ### Évaluation enrichie (second avis)
 
@@ -429,7 +182,7 @@ ${matrice(c.enrichie.parSource)}
   // Forges
   parts.push(`## Forges de code
 
-${s.forges.length ? `${tableau(["Forge", "Outils", "Hôte(s)", "Outils concernés"], s.forges.map((f) => [f.forge, f.outils.length, f.hotes.join(", "), liste(f.outils, 6)]))}
+${s.forges.length ? `${image("forges")}${tableau(["Forge", "Outils", "Hôte(s)", "Outils concernés"], s.forges.map((f) => [f.forge, f.outils.length, f.hotes.join(", "), liste(f.outils, 6)]))}
 
 ${s.sansDepot.libresOuPartiels.length ? `- **Logiciels libres ou partiels sans dépôt connu** : ${liste(s.sansDepot.libresOuPartiels, 10)}.\n` : ""}- Autres outils enrichis sans dépôt (propriétaires ou inconnus) : ${s.sansDepot.autres}.` : ens ? "*Aucun dépôt de code n'est connu pour les outils enrichis.*" : aucunEnrichi}
 `);
@@ -441,7 +194,7 @@ ${s.sansDepot.libresOuPartiels.length ? `- **Logiciels libres ou partiels sans d
 ${ens ? `- Moyenne de **${decimal(tg.moyenneParOutil)} ${tg.moyenneParOutil >= 2 ? "tags" : "tag"} par outil enrichi**${tg.sansTag.length ? `; sans tag : ${liste(tg.sansTag)}` : ""}.
 - ${pluriel(tg.utilisation.filter((t) => t.n).length, "tag utilisé", "tags utilisés")} sur ${tg.utilisation.length} du vocabulaire${tg.inutilises.length ? `; **non utilisés** : ${liste(tg.inutilises, 12)}` : ""}.
 
-${tableau(["Tag", "Description", "Outils", "% des outils enrichis"], tg.utilisation.filter((t) => t.n).map((t) => [t.cle, t.description, t.n, pourcent(t.n, ens)]))}
+${image("tags")}${tableau(["Tag", "Description", "Outils", "% des outils enrichis"], tg.utilisation.filter((t) => t.n).map((t) => [t.cle, t.description, t.n, pourcent(t.n, ens)]))}
 ${tg.paires.length ? `\n**Tags les plus souvent associés** :\n\n${tableau(["Paire de tags", "Outils"], tg.paires.map((p) => [p.cle, p.n]))}\n` : ""}` : aucunEnrichi}
 ${tg.ajoutes.length ? `\n**Tags ajoutés après le vocabulaire initial** :\n\n${tableau(["Tag", "Description", "Proposé pour", "Justification"], tg.ajoutes.map((t) => [t.id, t.description, t.propose_pour ?? "", t.justification ?? ""]))}\n` : ""}
 `);
@@ -540,12 +293,15 @@ if (import.meta.main) {
   await lancer(async () => {
     const args = process.argv.slice(2);
     const sansResume = args.includes("--sans-resume");
-    const inconnue = args.find((a) => a.startsWith("--") && a !== "--sans-resume");
+    const sansGraphiques = args.includes("--sans-graphiques");
+    const inconnue = args.find((a) => a.startsWith("--") && a !== "--sans-resume" && a !== "--sans-graphiques");
     if (inconnue) throw new Error(`Option inconnue: ${inconnue}`);
     const [source = "outils.json", sortie] = args.filter((a) => !a.startsWith("--"));
     const dossier = dirname(source);
     const cle = process.env.OPENAI_API_KEY;
     if (!sansResume && !cle) throw new Error("OPENAI_API_KEY absente (voir .env.example); utiliser --sans-resume pour omettre le résumé");
+    // Les vérifications qui ne coûtent rien passent avant l'appel à l'API.
+    if (!sansGraphiques) verifierVlConvert();
 
     const lu = lireFichier<OutilClasse>(source, "outils");
     const statistiques = calculerStatistiques({
@@ -554,6 +310,9 @@ if (import.meta.main) {
       criteres: chargerCriteres(join(dossier, "criteres.json")),
       meta: lu.meta,
     });
+
+    const destination = sortie ?? join(dossier, "sommaire.md");
+    const graphiques = sansGraphiques ? [] : ecrireGraphiques(construireGraphiques(statistiques), join(dirname(destination), "graphiques"));
 
     let resume: ResumeIA = null;
     if (!sansResume) {
@@ -569,8 +328,7 @@ if (import.meta.main) {
       }
     }
 
-    const destination = sortie ?? join(dossier, "sommaire.md");
-    writeFileSync(destination, rendreMarkdown(statistiques, { genereLe: horodatage(), resume }));
-    console.log(`${destination} écrit (${statistiques.total} outils, ${statistiques.enrichissement.enrichis} enrichis, résumé: ${resume && "paragraphes" in resume ? "oui" : "non"})`);
+    writeFileSync(destination, rendreMarkdown(statistiques, { genereLe: horodatage(), resume, graphiques }));
+    console.log(`${destination} écrit (${statistiques.total} outils, ${statistiques.enrichissement.enrichis} enrichis, ${graphiques.length} graphique(s), résumé: ${resume && "paragraphes" in resume ? "oui" : "non"})`);
   });
 }
