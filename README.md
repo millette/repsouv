@@ -1,5 +1,9 @@
 # Répertoire d'outils favorisant la souveraineté numérique : données
 
+<img src="graphiques/statut-code-source.png" alt="Répartition des outils du répertoire par statut du code source : libre, partiellement libre, code source disponible, propriétaire, pas encore enrichi" width="720">
+
+*Statut du code source des outils du répertoire, d'après [`sommaire.md`](sommaire.md) (image produite par `nub run sommaire`).*
+
 Extraction en JSON du [répertoire d'outils favorisant la souveraineté numérique](https://praxis.encommun.io/n/voRYZbuBYZKLejs8JyNkc5C4o7s/) publié sur Praxis. Le dépôt contient les données (`outils.json`, `criteres.json`, `tags.json`) et les scripts qui les produisent :
 
 - l'extraction de la page en ligne vers du JSON;
@@ -377,7 +381,7 @@ Les graphiques sont des spécifications Vega-Lite construites à partir des stat
 
 | Fichier (`graphiques/…`) | Contenu | Section |
 |---|---|---|
-| `statut-code-source` | Outils par statut du code source | Statut du code source |
+| `statut-code-source` | Outils par statut du code source (aussi affiché en tête du README) | Statut du code source |
 | `categories-statut` | Outils par catégorie, empilés par statut | Catégories |
 | `criteres-repertoire-enrichie` | Part des outils satisfaisant chaque critère, répertoire (déduit) et évaluation enrichie | Critères de souveraineté |
 | `criteres-par-statut` | Carte de chaleur : critères satisfaits par statut, répertoire et évaluation enrichie | Critères de souveraineté |
@@ -386,7 +390,7 @@ Les graphiques sont des spécifications Vega-Lite construites à partir des stat
 | `tags` | Les 15 tags les plus fréquents | Tags |
 | `enrichissement-jours` | Outils enrichis par jour, seulement à partir de deux jours distincts | Dates |
 
-Un graphique sans données est omis (par exemple, sans outil enrichi, ni licences, ni forges, ni tags), et les fichiers d'un graphique qui n'est plus produit sont supprimés du dossier (les autres fichiers y restent). Chaque image du sommaire a un texte alternatif qui résume son contenu. Les graphiques ne contiennent que des statistiques déjà publiées dans le sommaire; aucune donnée ne quitte l'ordinateur pour les produire.
+Un graphique sans données est omis (par exemple, sans outil enrichi, ni licences, ni forges, ni tags), et les fichiers d'un graphique qui n'est plus produit sont supprimés du dossier (les autres fichiers y restent). Chaque image du sommaire a un texte alternatif qui résume son contenu. L'image en tête du README pointe vers `graphiques/statut-code-source.png` (par une balise `<img>`, la seule balise HTML du README, pour en fixer la largeur) : elle se met à jour quand ce fichier est régénéré et commité. Les graphiques ne contiennent que des statistiques déjà publiées dans le sommaire; aucune donnée ne quitte l'ordinateur pour les produire.
 
 **Installer vl-convert** : `cargo install vl-convert`, ou télécharger un binaire sur la [page des versions](https://github.com/vega/vl-convert/releases). Le programme doit être dans le `PATH`. Le script vérifie sa présence au début, avant tout appel à l'API, et propose `--sans-graphiques` s'il est absent. Les spécifications visent Vega-Lite 6.1, la version la plus récente que gère `vl-convert` 1.9.
 
