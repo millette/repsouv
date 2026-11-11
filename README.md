@@ -86,7 +86,7 @@ Enrichissement   update.ts --enrichir ──▶ API OpenAI ──▶ outils.json
 | `.env.example` | Modèle du fichier `.env` (la clé OpenAI) |
 | `LICENSE` | Texte de la licence AGPL-3.0 du code |
 | `LICENSE-CC-BY-SA-4.0` | Texte de la licence CC BY-SA 4.0 des données (voir [Licences](#licences)) |
-| `.gitignore` | Ignore `.env` et `node_modules/` |
+| `.gitignore` | Ignore `.env`, `node_modules/` et `pre-enrichir-outils.json` (copie de sauvegarde, voir [Enrichissement par IA](#enrichissement-par-ia)) |
 
 ## Fichiers JSON
 
@@ -204,7 +204,7 @@ Télécharge la page en ligne (`[url]`, par défaut celle du répertoire; le mê
 - absent de la page : `"retrait"` et `removed: true`, l'entrée est conservée;
 - identique : rien ne change, ni sa date ni son `changement`.
 
-Les outils nouveaux, modifiés, retirés ou de retour reçoivent la date de modification de la page; les nouveaux, modifiés et de retour sont reclassés. Les champs d'enrichissement d'un outil survivent à une modification ou à un retour. Le fichier n'est réécrit que s'il y a au moins un changement; `meta.updated_at` est alors mis à jour, et `tags.json` aussi quand de nouveaux tags s'ajoutent.
+Les outils nouveaux, modifiés, retirés ou de retour reçoivent la date de modification de la page; les nouveaux, modifiés et de retour sont reclassés. Les champs d'enrichissement d'un outil survivent à une modification ou à un retour, mais ils ne sont pas recalculés (voir la dernière remarque de [Importer ou réimporter](#importer-ou-réimporter-depuis-le-web)). Le fichier n'est réécrit que s'il y a au moins un changement; `meta.updated_at` est alors mis à jour, et `tags.json` aussi quand de nouveaux tags s'ajoutent.
 
 Avec `--enrichir`, la synchronisation est suivie de l'[enrichissement](#enrichissement-par-ia), qui lit `tags.json` et `criteres.json` dans le même dossier que `outils.json`. Une option inconnue est refusée, de même que `--nouveaux-tags` ou `--sans-page` sans `--enrichir`.
 
@@ -264,6 +264,8 @@ C'est une heuristique, pas une vérité : un critère retenu avec une confiance 
 | `--sans-page` | Enrichit aussi les outils dont la page est inaccessible ou presque vide, à partir de leur seule description (ils portent alors `page_lue: false`). Voir [Pages inaccessibles](#pages-inaccessibles-ou-presque-vides) |
 | `--nouveaux-tags` | Autorise le modèle à proposer de nouveaux tags, au plus 2 par outil selon sa consigne (justification obligatoire, validée par le script); ils sont ajoutés à `tags.json` |
 | `--dry-run` | Liste les outils concernés sans appeler l'API |
+
+**Conseil :** l'enrichissement coûte des appels à l'API et ne se refait pas (un outil enrichi n'est jamais régénéré). Avant de le lancer, commiter `outils.json` ou en garder une copie, par exemple `cp outils.json pre-enrichir-outils.json` : ce nom est ignoré par Git.
 
 **Configuration :** `OPENAI_API_KEY` dans `.env` (voir `.env.example`), et `OPENAI_MODEL` pour changer le modèle (`gpt-6-astra` par défaut). Compter environ 20 secondes par outil (mesuré sur quelques outils).
 
@@ -329,7 +331,7 @@ Comme la page est téléchargée à chaque exécution, un réimport n'est **pas 
 
 Les options de `nub run` sont transmises à la **dernière** commande du script. `nub run extract --force` agit donc bien sur `extract`, alors que `nub run build --force` transmettrait `--force` à `classify`, où il est ignoré : pour forcer une reconstruction, utiliser `build:force`.
 
-Si les `criteres` d'un outil déjà enrichi changent après un `classify`, son `evaluation_enrichie.ecart` peut devenir périmé : rien ne le recalcule, puisqu'un outil enrichi n'est jamais régénéré.
+Si le `score` ou les `criteres` d'un outil déjà enrichi changent, après un `classify` ou parce que `update` détecte une modification, son `evaluation_enrichie` (et son `ecart`) peut devenir périmé : rien ne le recalcule, puisqu'un outil enrichi n'est jamais régénéré. Pour le refaire, supprimer ses champs d'enrichissement (même méthode que la recette de [Pages inaccessibles](#pages-inaccessibles-ou-presque-vides), en adaptant le filtre `select`), puis relancer `nub run enrichir`.
 
 ## Scripts npm (`package.json`)
 
