@@ -489,3 +489,21 @@ test("tags.json: sauverTags maintient la licence des données et les dates (upda
   assert.equal(apres.meta.created_at, premier.meta.created_at);
   assert.equal(apres.tags.length, 2);
 });
+
+test("enrichi_le: la date et l'heure de l'enrichissement sont enregistrées pour chaque outil, selon l'horloge", async () => {
+  const heures = ["2026-11-12T09:00:00-05:00", "2026-11-12T09:00:20-05:00"];
+  const outils = [outil("a"), outil("b")];
+  await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer: async () => valide(), lire: pageOk, horloge: () => heures.shift()! });
+  assert.equal(outils[0]!.enrichi_le, "2026-11-12T09:00:00-05:00");
+  assert.equal(outils[1]!.enrichi_le, "2026-11-12T09:00:20-05:00");
+});
+test("enrichi_le: absent d'un outil dont l'enrichissement a échoué", async () => {
+  const outils = [outil("a")];
+  await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer: async () => ({}), lire: pageOk });
+  assert.equal(outils[0]!.enrichi_le, undefined);
+});
+test("enrichi_le: sans horloge fournie, c'est l'heure actuelle de Toronto", async () => {
+  const outils = [outil("a")];
+  await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer: async () => valide(), lire: pageOk });
+  assert.match(outils[0]!.enrichi_le!, /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}-0[45]:00$/);
+});

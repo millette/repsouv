@@ -65,6 +65,8 @@ export interface Outil {
    * page lisible (option --sans-page), à partir de sa seule description: résultat moins fiable.
    */
   page_lue?: boolean;
+  /** Date et heure de l'enrichissement de l'outil (ISO 8601, heure de Toronto, avec décalage). Absente pour les outils enrichis avant l'ajout de ce champ. */
+  enrichi_le?: string;
 }
 
 export interface Critere {
@@ -175,7 +177,7 @@ export function extraire(html: string): Repertoire {
 /** Les champs ajoutés par l'enrichissement (voir enrichir.ts). */
 export const CHAMPS_ENRICHIS = [
   "description_longue", "tags", "source", "licence", "custom_license", "custom_license_url", "repo", "evaluation_enrichie",
-  "page_lue",
+  "page_lue", "enrichi_le",
 ] as const;
 
 /**

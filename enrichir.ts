@@ -10,6 +10,7 @@ import type { ConfianceEvaluation, Critere, EvaluationEnrichie, Outil } from "./
 import { ecrireFichier, lireFichier, lireSiExiste } from "./fichiers.ts";
 import { CONTROLE, DEPENDANCE, DONNEES } from "./ids.ts";
 import { problemeLicenceSpdx } from "./spdx.ts";
+import { horodatage } from "./temps.ts";
 
 export const MAX_TAGS = 5;
 export const SOURCES = ["libre", "partiel", "source-disponible", "proprietaire"] as const;
@@ -312,7 +313,7 @@ ${liste}`;
 }
 
 /** Appelle l'API Responses d'OpenAI avec une sortie JSON structurée et retourne l'objet JSON parsé. */
-async function appelerOpenAI(
+export async function appelerOpenAI(
   cle: string,
   modele: string,
   requete: { nom: string; schema: unknown; instructions: string; messages: string[]; maxTokens: number },
@@ -448,6 +449,8 @@ export interface OptionsEnrichissement {
    * porte `page_lue: false`.
    */
   accepterSansPage?: boolean;
+  /** Date et heure du moment, pour `enrichi_le` (ISO 8601, heure de Toronto). Par défaut, l'heure actuelle. */
+  horloge?: () => string;
   limite?: number;
   /** Appelé après chaque outil enrichi pour persister l'état (outils.json, tags.json). */
   apresChaque?: (outils: OutilARevoir[], tags: Tag[]) => void;
@@ -473,7 +476,7 @@ const TENTATIVES = 2;
  * Demande une réponse au modèle jusqu'à TENTATIVES fois; à chaque rejet, la raison est
  * transmise à la tentative suivante. Lève la dernière erreur si aucune réponse n'est valide.
  */
-async function obtenirValide<T>(
+export async function obtenirValide<T>(
   produire: (rappel?: string) => Promise<unknown>,
   valider: (brut: unknown) => T,
   rejet: (raison: string) => void,
@@ -496,7 +499,7 @@ async function obtenirValide<T>(
  * Un outil n'est modifié que si TOUT son enrichissement, explication d'écart comprise, a réussi.
  */
 export async function enrichirOutils(outils: OutilARevoir[], options: OptionsEnrichissement): Promise<ResultatEnrichissement> {
-  const { tags, criteres, generer, expliquer, autoriserNouveauxTags = false, limite = Infinity, lire = lireContenu, accepterSansPage = false } = options;
+  const { tags, criteres, generer, expliquer, autoriserNouveauxTags = false, limite = Infinity, lire = lireContenu, accepterSansPage = false, horloge = horodatage } = options;
   const journal = options.journal ?? (() => {});
   const resultat: ResultatEnrichissement = { enrichis: [], erreurs: [], ecarts: [], sansPage: [] };
   let traites = 0;
@@ -532,7 +535,7 @@ export async function enrichirOutils(outils: OutilARevoir[], options: OptionsEnr
       }
 
       for (const n of nouveaux_tags) tags.push({ ...n, propose_pour: outil.nom });
-      outils[i] = { ...outil, ...champs, page_lue: !probleme };
+      outils[i] = { ...outil, ...champs, page_lue: !probleme, enrichi_le: horloge() };
       resultat.enrichis.push(outil.nom);
       if (probleme) resultat.sansPage.push(outil.nom);
       journal(`  ${outil.nom}: ${champs.tags.join(", ")} (${champs.source})`);

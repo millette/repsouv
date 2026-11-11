@@ -5,11 +5,12 @@ Extraction en JSON du [répertoire d'outils favorisant la souveraineté numériq
 - l'extraction de la page en ligne vers du JSON;
 - l'analyse des étoiles de chaque outil selon les trois critères du répertoire;
 - la synchronisation avec la page en ligne, qui détecte les outils nouveaux, modifiés et retirés;
-- un enrichissement facultatif par IA : description longue, tags, licence et dépôt de code, second avis sur la souveraineté.
+- un enrichissement facultatif par IA : description longue, tags, licence et dépôt de code, second avis sur la souveraineté;
+- un sommaire statistique du répertoire (`sommaire.md`), avec un résumé rédigé par IA.
 
 Le répertoire rassemble 60 outils numériques répartis en 20 catégories, sélectionnés pour les besoins des OSBL des arts et de la culture. Chaque outil reçoit de 0 à 3 étoiles (un critère satisfait = une étoile); seuls ceux qui en ont au moins 2 y figurent.
 
-**Sommaire :** [Source, crédits et licences](#source-crédits-et-licences) · [Démarrage](#démarrage) · [Fichiers JSON](#fichiers-json) · [Scripts](#scripts) · [Classification](#classification) · [Enrichissement par IA](#enrichissement-par-ia) · [Importer ou réimporter](#importer-ou-réimporter-depuis-le-web) · [Scripts npm](#scripts-npm-packagejson) · [Tests](#tests) · [Dépannage](#dépannage) · [Utiliser les données](#utiliser-les-données)
+**Sommaire :** [Source, crédits et licences](#source-crédits-et-licences) · [Démarrage](#démarrage) · [Fichiers JSON](#fichiers-json) · [Scripts](#scripts) · [Classification](#classification) · [Enrichissement par IA](#enrichissement-par-ia) · [Sommaire statistique](#sommaire-statistique) · [Importer ou réimporter](#importer-ou-réimporter-depuis-le-web) · [Scripts npm](#scripts-npm-packagejson) · [Tests](#tests) · [Dépannage](#dépannage) · [Utiliser les données](#utiliser-les-données)
 
 ## Source, crédits et licences
 
@@ -33,7 +34,7 @@ Le contenu du répertoire est l'œuvre des auteur·trices de la note, et non de 
 | Ce qui | Licence |
 |---|---|
 | **Code source** (`*.ts`, `test/`, `package.json`, `tsconfig.json`) | [GNU Affero General Public License v3.0](https://www.gnu.org/licenses/agpl-3.0.html), identifiant SPDX `AGPL-3.0-only`. Texte complet dans [`LICENSE`](LICENSE). Chaque fichier `.ts` commence par les en-têtes `SPDX-License-Identifier` et `SPDX-FileCopyrightText` |
-| **Données** (`outils.json`, `criteres.json`, `tags.json`) | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.fr), identifiant SPDX `CC-BY-SA-4.0`. Texte complet dans [`LICENSE-CC-BY-SA-4.0`](LICENSE-CC-BY-SA-4.0). Le JSON n'admet pas de commentaires : chaque fichier déclare sa licence dans `meta.data_license`, que les scripts maintiennent (voir [Fichiers JSON](#fichiers-json)) |
+| **Données** (`outils.json`, `criteres.json`, `tags.json`) et le **sommaire** qui en est dérivé (`sommaire.md`) | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.fr), identifiant SPDX `CC-BY-SA-4.0`. Texte complet dans [`LICENSE-CC-BY-SA-4.0`](LICENSE-CC-BY-SA-4.0). Le JSON n'admet pas de commentaires : chaque fichier déclare sa licence dans `meta.data_license`, que les scripts maintiennent (voir [Fichiers JSON](#fichiers-json)) |
 
 Les données sont des adaptations du répertoire d'origine : elles restent donc partagées dans les mêmes conditions que lui (CC BY-SA 4.0), avec attribution. Pour les réutiliser, créditer par exemple ainsi :
 
@@ -45,7 +46,7 @@ Les champs d'enrichissement résument des pages tierces (voir [D'où viennent le
 
 - **De la source :** la catégorie, le nom, le score, le lien et la description de chaque outil, ainsi que les trois critères.
 - **Rédigé pour ce dépôt :** le vocabulaire de `tags.json` (identifiants et descriptions des 37 tags de départ).
-- **Calculé par les scripts :** `meta` (licence et dates des fichiers), `derniere_modification`, `changement` et `removed` (voir `update.ts` et `fichiers.ts`).
+- **Calculé par les scripts :** `meta` (licence et dates des fichiers), `derniere_modification`, `changement`, `removed` et `enrichi_le` (voir `update.ts`, `enrichir.ts` et `fichiers.ts`).
 - **Déduit par heuristique dans ce dépôt :** `criteres` et `confiance` (voir [Classification](#classification)).
 - **Généré par un modèle d'IA :** les champs d'enrichissement (voir [Enrichissement](#enrichissement-par-ia)). Ils résument des pages tierces et sont à vérifier avant de s'y fier ou de les diffuser, surtout la licence et le dépôt.
 
@@ -80,6 +81,7 @@ Enrichissement   update.ts --enrichir ──▶ API OpenAI ──▶ outils.json
 |---|---|
 | `outils.json`, `criteres.json`, `tags.json` | Les données (voir [Fichiers JSON](#fichiers-json)) |
 | `extract.ts`, `classify.ts`, `update.ts` | Les trois scripts du flux de travail |
+| `sommaire.ts` | Le script du sommaire statistique, qui écrit `sommaire.md` (absent tant que le script n'a pas été lancé) |
 | `enrichir.ts`, `fichiers.ts`, `temps.ts`, `spdx.ts`, `progress.ts`, `ids.ts`, `cli.ts` | Modules utilisés par les scripts |
 | `test/` | Les tests |
 | `package.json`, `nub.lock`, `tsconfig.json` | Dépendances, scripts npm et configuration TypeScript |
@@ -143,6 +145,7 @@ Champs ajoutés par l'[enrichissement](#enrichissement-par-ia), absents tant que
 | `custom_license` | Nom ou identifiant d'une licence absente de la liste SPDX (licence maison ou propre à l'éditeur), tel que l'éditeur l'écrit. Exclusif avec `licence`; `null` si la licence est SPDX, si le logiciel est propriétaire ou si elle est inconnue |
 | `custom_license_url` | URL du texte de la licence maison, quand elle est disponible; `null` sinon. Exige `custom_license` |
 | `repo` | URL du dépôt de code source, sur n'importe quelle forge (GitHub, GitLab, Codeberg, Framagit…); `null` si aucun ou inconnu |
+| `enrichi_le` | Date et heure de l'enrichissement de l'outil (ISO 8601, heure de Toronto). Absente pour les outils enrichis avant l'ajout de ce champ : leur date exacte n'est pas connue |
 | `page_lue` | `true` si la page de l'outil a servi à l'enrichissement; `false` si l'outil a été enrichi sans page lisible (option `--sans-page`), à partir de sa seule description : résultat moins fiable, voir [Pages inaccessibles](#pages-inaccessibles-ou-presque-vides) |
 | `evaluation_enrichie` | Second avis du modèle sur la souveraineté de l'outil : `score` (nombre de critères satisfaits, de 0 à 3, égal à `criteres.length`), `criteres` (identifiants de `criteres.json`) et `confiance` (`"élevée"`, `"moyenne"` ou `"faible"`). S'y ajoute `ecart`, une explication en français de la différence, seulement quand cette évaluation diffère du `score` et des `criteres` du répertoire |
 
@@ -207,6 +210,14 @@ Télécharge la page en ligne (`[url]`, par défaut celle du répertoire; le mê
 Les outils nouveaux, modifiés, retirés ou de retour reçoivent la date de modification de la page; les nouveaux, modifiés et de retour sont reclassés. Les champs d'enrichissement d'un outil survivent à une modification ou à un retour, mais ils ne sont pas recalculés (voir la dernière remarque de [Importer ou réimporter](#importer-ou-réimporter-depuis-le-web)). Le fichier n'est réécrit que s'il y a au moins un changement; `meta.updated_at` est alors mis à jour, et `tags.json` aussi quand de nouveaux tags s'ajoutent.
 
 Avec `--enrichir`, la synchronisation est suivie de l'[enrichissement](#enrichissement-par-ia), qui lit `tags.json` et `criteres.json` dans le même dossier que `outils.json`. Une option inconnue est refusée, de même que `--nouveaux-tags` ou `--sans-page` sans `--enrichir`.
+
+### `sommaire.ts`
+
+```sh
+nub sommaire.ts [--sans-resume] [outils.json] [sommaire.md]
+```
+
+Écrit `sommaire.md` (par défaut dans le dossier de `outils.json`) : voir [Sommaire statistique](#sommaire-statistique).
 
 ### `enrichir.ts`
 
@@ -300,8 +311,33 @@ Les outils enrichis avec une page lisible portent `page_lue: true`. Pour refaire
 
 ```sh
 # à faire après un commit de outils.json (meta.updated_at sera mis à jour à la prochaine écriture par un script)
-jaq '.outils |= map(if .page_lue == false then del(.description_longue, .tags, .source, .licence, .custom_license, .custom_license_url, .repo, .evaluation_enrichie, .page_lue) else . end)' outils.json > /tmp/outils.json && mv /tmp/outils.json outils.json
+jaq '.outils |= map(if .page_lue == false then del(.description_longue, .tags, .source, .licence, .custom_license, .custom_license_url, .repo, .evaluation_enrichie, .page_lue, .enrichi_le) else . end)' outils.json > /tmp/outils.json && mv /tmp/outils.json outils.json
 ```
+
+## Sommaire statistique
+
+`nub run sommaire` analyse `outils.json` (et `tags.json` et `criteres.json`, lus dans le même dossier) et écrit `sommaire.md`, un document en Markdown qui regroupe :
+
+- **un résumé de 3 ou 4 paragraphes** sur le répertoire et son utilité, rédigé par l'API OpenAI;
+- les **chiffres clés** (outils, catégories, scores, outils enrichis, libres ou partiels);
+- les **dates** : les outils les plus anciens et les plus récents du répertoire (`derniere_modification`), les changements détectés, et les dates d'enrichissement (premier, dernier, nombre d'outils par jour, outils enrichis sans date);
+- les **catégories** (outils, enrichis, libres ou partiels, score moyen);
+- le **statut du code source** (libre, partiellement libre, code source disponible, propriétaire, pas encore enrichi);
+- les **licences** : par licence SPDX, par famille (copyleft fort ou faible, permissive; classement indicatif d'après l'identifiant), licences maison, et outils sans licence connue;
+- les **critères de souveraineté** : nombre d'outils par critère, et critères satisfaits par statut du code source, d'abord pour le répertoire (déduits) puis pour l'évaluation enrichie, avec les écarts entre les deux;
+- les **forges de code** : nombre d'outils par forge (GitHub, GitLab, Codeberg…) et logiciels libres sans dépôt connu;
+- les **tags** : utilisation de chacun, tags inutilisés, moyenne par outil, paires les plus fréquentes, tags ajoutés;
+- la **fiabilité** : confiance de la classification, outils enrichis sans page lisible, outils restant à enrichir.
+
+Les retirés (`removed`) sont comptés à part. Les statistiques sur le statut du code source, les licences, les forges et les tags ne portent que sur les outils déjà enrichis : le sommaire dit combien il y en a, et reste valide à n'importe quel stade de l'enrichissement. Il reflète l'état du fichier au moment de l'exécution, donc à relancer après un enrichissement.
+
+Le calcul est local; seul le résumé passe par le réseau. Pour le rédiger, le script envoie à l'API OpenAI toutes les statistiques et, pour chaque outil du répertoire, son nom, sa catégorie, son score, ses critères, son statut, sa licence, sa forge, ses tags et sa description courte. Le résumé est validé (3 ou 4 paragraphes de texte continu, sans liste, sans gras, sans HTML, sans tiret cadratin ni émoji; redemandé une fois avec la raison du rejet), puis inscrit dans le sommaire avec le nom du modèle et la date, et la mention qu'il est à relire. Si la rédaction échoue, le sommaire est tout de même écrit avec une note à la place du résumé, et le code de sortie est 1.
+
+| Option | Effet |
+|---|---|
+| `--sans-resume` | Omet le résumé : aucun appel à l'API, aucune clé nécessaire |
+
+Configuration : `OPENAI_API_KEY` dans `.env` et, facultativement, `OPENAI_MODEL`, comme pour l'enrichissement. Un seul appel est fait par exécution.
 
 ## Importer ou réimporter depuis le web
 
@@ -343,7 +379,8 @@ Si le `score` ou les `criteres` d'un outil déjà enrichi changent, après un `c
 | `nub run build:force` | Comme `build`, mais **remplace tout**, enrichissement et historique compris |
 | `nub run update` | `nub update.ts` : synchronise `outils.json` avec la page en ligne. Les options passent directement : `nub run update --dry-run` |
 | `nub run enrichir` | `nub update.ts --enrichir` : synchronise, puis enrichit les outils sans description longue. Par exemple : `nub run enrichir --limite=5` |
-| `nub run test` | Lance les neuf fichiers de tests |
+| `nub run sommaire` | `nub sommaire.ts` : écrit `sommaire.md` (ajouter `--sans-resume` pour éviter l'appel à l'API) |
+| `nub run test` | Lance les dix fichiers de tests |
 | `nub run typecheck` | `tsrs -p .` : vérifie les types avec [tsrs](https://www.npmjs.com/package/tsrs), un portage en Rust de `tsc` |
 
 ## Tests
@@ -353,11 +390,12 @@ Dans `test/`, avec `node:test` lancé par `nub` :
 - `classify.test.ts` : cas de classification connus, un nombre de critères égal au score pour les 60 outils, les options de la ligne de commande, et le refus d'un fichier au mauvais format.
 - `extract.test.ts` : conversion de la date de la page en heure de Toronto, cohérence de `criteres.json` et `outils.json`, rejet d'une page sans date, téléchargement (sur un serveur local, sans réseau), erreurs de téléchargement, le garde-fou contre l'écrasement (avec et sans `--force`, y compris pour un fichier au mauvais format), et la preuve qu'aucun fichier HTML local n'est lu.
 - `update.test.ts` : nouveau, modification, retrait, comeback, conservation des dates des outils inchangés et des champs d'enrichissement.
-- `enrichir.test.ts` : vocabulaire de `tags.json`, validation (tags, Markdown permis et interdit, licences SPDX et maison, évaluation), explication des écarts, extraction de la page, pages inaccessibles ou presque vides (avertissement, refus par défaut, `--sans-page`), enrichissement une seule fois, limite, reprise et échecs, avec de faux générateurs.
+- `enrichir.test.ts` : vocabulaire de `tags.json`, date d'enrichissement, validation (tags, Markdown permis et interdit, licences SPDX et maison, évaluation), explication des écarts, extraction de la page, pages inaccessibles ou presque vides (avertissement, refus par défaut, `--sans-page`), enrichissement une seule fois, limite, reprise et échecs, avec de faux générateurs.
 - `spdx.test.ts` : licences SPDX valides et refusées.
 - `progress.test.ts` : barre en terminal et hors terminal, bornes, étiquette, `end()` idempotent, `message()`.
 - `temps.test.ts` : heure de Toronto (hiver, été, minuit, passage à l'heure d'été), décalage ajouté à une date locale.
 - `fichiers.test.ts` : structure et `meta` des fichiers de données (création, contenu inchangé ou modifié, licence rétablie, refus des formats invalides), et conformité des trois fichiers du dépôt.
+- `sommaire.test.ts` : statistiques (statuts, licences, familles, tags, critères par statut, forges, dates), rendu Markdown (sections, cas sans outil enrichi), validation du résumé et nouvelle tentative, avec des données fictives (jamais `outils.json`, jamais le réseau).
 - `en-tetes.test.ts` : chaque fichier `.ts` porte les en-têtes SPDX, la licence du code est la même dans `package.json`, et les deux textes de licence sont présents.
 
 ## Dépannage
@@ -367,7 +405,7 @@ Dans `test/`, avec `node:test` lancé par `nub` :
 | `Refus d'écraser: …` | `extract` (ou `build`) a trouvé dans `outils.json` un enrichissement, un historique de changement, ou un format inattendu. Pour suivre la page sans rien perdre, utiliser `nub run update`; pour tout remplacer quand même, `nub run build:force` |
 | `… format invalide …` ou `« meta » invalide …` | Un fichier de données n'a pas la structure décrite dans [Fichiers JSON](#fichiers-json). Le restaurer depuis Git (`git checkout outils.json`) ou, pour `outils.json`, le recréer avec `nub run build:force` |
 | `Téléchargement impossible (url): …` | Réseau, délai de 30 secondes dépassé ou erreur HTTP en téléchargeant le répertoire. Rien n'a été écrit : réessayer |
-| `OPENAI_API_KEY absente` | Il y a des outils à enrichir, mais `.env` n'a pas la clé. La synchronisation, elle, a déjà été écrite |
+| `OPENAI_API_KEY absente` | Il y a des outils à enrichir (ou un résumé à rédiger pour `nub run sommaire`), mais `.env` n'a pas la clé. La synchronisation, elle, a déjà été écrite. Pour le sommaire, `--sans-resume` évite la clé |
 | `page inaccessible …` ou `page presque vide …`, `outil non enrichi` | La page de l'outil n'a pas pu être lue : réessayer plus tard, ou enrichir à partir de la description seule avec `--sans-page`. Voir [Pages inaccessibles](#pages-inaccessibles-ou-presque-vides) |
 | `Option inconnue: …` | Option mal orthographiée. Les options valides sont décrites dans la section de chaque script |
 
@@ -387,6 +425,9 @@ jaq '.outils[] | select(.source == "libre" or .source == "partiel") | {nom, lice
 
 # outils enrichis sans page lisible (résultat moins fiable)
 jaq '.outils[] | select(.page_lue == false) | .nom' outils.json
+
+# outils enrichis depuis une date donnée
+jaq '.outils[] | select(.enrichi_le != null and .enrichi_le >= "2026-11-12") | .nom' outils.json
 
 # outils portant un tag
 jaq '.outils[] | select((.tags // []) | index("chiffrement")) | .nom' outils.json
