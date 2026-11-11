@@ -45,15 +45,16 @@ Fichier unifié : un tableau de 60 outils (plus d'éventuels outils retirés). C
 | `removed` | Présent (`true`) seulement pour un outil disparu de la page; l'entrée est conservée |
 | `criteres` | Identifiants (voir `criteres.json`) des critères que les étoiles représentent. Déduits, voir [Classification](#classification) |
 | `confiance` | Fiabilité de cette déduction : `"élevée"`, `"moyenne"` ou `"faible"` |
-| `description_longue` | Description détaillée en français (80 à 150 mots), générée une seule fois par `update.ts --enrichir`. Absente tant que l'outil n'est pas enrichi |
+| `description_longue` | Description détaillée en français (150 à 350 mots), en Markdown (plusieurs paragraphes, titres, gras, italique, listes), sans image, sans HTML, sans tiret cadratin et sans émoji ni émoticône. Générée une seule fois par `update.ts --enrichir`; absente tant que l'outil n'est pas enrichi |
 | `tags` | De 1 à 5 identifiants de `tags.json`. Ajoutés par l'enrichissement |
 | `source` | Statut du code source : `"libre"` (licence libre, code public), `"partiel"` (édition communautaire libre mais édition complète ou services propriétaires, « open core »), `"source-disponible"` (code visible, licence non libre) ou `"proprietaire"` |
 | `licence` | Licence du logiciel (identifiant SPDX si possible); `null` pour un logiciel propriétaire ou si elle est inconnue |
 | `repo` | URL du dépôt de code source, sur n'importe quelle forge (GitHub, GitLab, Codeberg, Framagit…); `null` si aucun ou inconnu |
+| `evaluation_enrichie` | Second avis du modèle sur la souveraineté de l'outil, avec trois sous-champs : `score` (nombre de critères satisfaits, de 0 à 3, égal à `criteres.length`), `criteres` (identifiants de `criteres.json`) et `confiance` (`"élevée"`, `"moyenne"` ou `"faible"`). À comparer au `score` du répertoire et au `criteres` déduit par `classify.ts` |
 
 La page n'affiche qu'une seule date pour toute la note. `derniere_modification` est donc la date de la page au moment où l'outil a été ajouté ou a changé, et non la date exacte du changement de cet outil.
 
-Les champs `description_longue`, `tags`, `source`, `licence` et `repo` viennent d'un modèle d'IA (voir `update.ts --enrichir`). Ils s'appuient sur la page de l'outil, mais la licence et le dépôt sont à vérifier avant de s'y fier : le modèle est invité à répondre `null` en cas de doute.
+Les champs `description_longue`, `tags`, `source`, `licence`, `repo` et `evaluation_enrichie` viennent d'un modèle d'IA (voir `update.ts --enrichir`). Ils s'appuient sur la page de l'outil, mais la licence et le dépôt sont à vérifier avant de s'y fier : le modèle est invité à répondre `null` en cas de doute.
 
 ### `criteres.json`
 
@@ -109,10 +110,11 @@ Télécharge la page en ligne (par défaut celle du répertoire), la compare à 
 
 Les outils nouveaux, modifiés, retirés ou de retour reçoivent la date de modification de la page; les nouveaux, modifiés et de retour sont reclassés. Le fichier n'est réécrit que s'il y a au moins un changement. Les champs d'enrichissement d'un outil (description longue, tags, source, licence, repo) survivent à une modification ou à un retour.
 
-**Enrichissement** (`--enrichir`) : après la synchronisation, génère pour chaque outil qui n'a pas encore de `description_longue` une description longue en français, de 1 à 5 tags et, pour les logiciels libres, `source`, `licence` et `repo`. C'est fait **une seule fois** : un outil qui a déjà une description longue n'est jamais régénéré, même si sa description courte change. Les outils retirés sont ignorés.
+**Enrichissement** (`--enrichir`) : après la synchronisation, génère pour chaque outil qui n'a pas encore de `description_longue` une description longue en français (Markdown), de 1 à 5 tags, `source`, `licence` et `repo` pour les logiciels libres, et une évaluation indépendante des critères et du score (`evaluation_enrichie`). C'est fait **une seule fois** : un outil qui a déjà une description longue n'est jamais régénéré, même si sa description courte change. Les outils retirés sont ignorés.
 
 - Le script télécharge la page (`lien`) de l'outil, en extrait le texte et les liens vers des forges de code, puis les envoie avec la description courante à l'API OpenAI (Responses API, sortie JSON structurée). Les tags sont limités au vocabulaire de `tags.json`.
-- Réponse validée avant d'être écrite (1 à 5 tags, tags connus, URL de dépôt valide, aucun repo ni licence pour un logiciel propriétaire); une réponse invalide est redemandée une fois, puis consignée comme échec.
+- Réponse validée avant d'être écrite : 1 à 5 tags connus, URL de dépôt valide, aucun repo ni licence pour un logiciel propriétaire, description longue sans image Markdown, sans HTML (balises, entités, liens entre chevrons), sans tiret cadratin et sans émoji ni émoticône, évaluation cohérente (score égal au nombre de critères). Une réponse invalide est redemandée une fois, avec la raison du rejet, puis consignée comme échec.
+- **Évaluation indépendante** : le modèle reçoit la description des trois critères mais pas le score ni les critères du répertoire, pour ne pas simplement les confirmer. Les écarts avec le répertoire sont affichés à la fin de l'exécution (le `score` et les `criteres` du répertoire ne sont jamais modifiés).
 - `outils.json` est écrit après chaque outil : une interruption ne perd rien, et une relance reprend où on s'est arrêté.
 - `--nouveaux-tags` autorise le modèle à proposer de nouveaux tags (justification obligatoire); ils sont ajoutés à `tags.json`.
 - `--limite=N` n'enrichit pas plus de N outils par exécution.

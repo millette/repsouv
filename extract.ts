@@ -6,6 +6,16 @@ import { globSync, readFileSync, writeFileSync } from "node:fs";
 import { parseHTML } from "linkedom";
 import { ID_PAR_ICONE, type CritereId } from "./ids.ts";
 
+export type ConfianceEvaluation = "élevée" | "moyenne" | "faible";
+
+/** Évaluation indépendante des critères de souveraineté, produite par l'enrichissement. */
+export interface EvaluationEnrichie {
+  /** Nombre de critères satisfaits, de 0 à 3 (égal à criteres.length). */
+  score: number;
+  criteres: CritereId[];
+  confiance: ConfianceEvaluation;
+}
+
 export type Changement = "nouveau" | "modification" | "retrait" | "comeback";
 
 export interface Outil {
@@ -22,7 +32,7 @@ export interface Outil {
   /** Présent (true) seulement si l'outil a disparu de la page; l'entrée est alors conservée. */
   removed?: true;
   // Champs ajoutés par `update.ts --enrichir` (voir enrichir.ts); absents tant que l'outil n'est pas enrichi.
-  /** Description longue en français, générée une seule fois. */
+  /** Description longue en français (Markdown, sans image ni HTML), générée une seule fois. */
   description_longue?: string;
   /** 1 à 5 identifiants de tags (voir tags.json). */
   tags?: string[];
@@ -32,6 +42,8 @@ export interface Outil {
   licence?: string | null;
   /** URL du dépôt de code source, sur n'importe quelle forge; null si aucun. */
   repo?: string | null;
+  /** Second avis sur score et critères, à comparer à `score` et `criteres` du répertoire. */
+  evaluation_enrichie?: EvaluationEnrichie;
 }
 
 export interface Critere {
