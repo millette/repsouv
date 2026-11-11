@@ -221,9 +221,9 @@ Avec `--enrichir`, la synchronisation est suivie de l'[enrichissement](#enrichis
 
 **Sommaire automatique.** Avec `--enrichir`, ou avec `--sommaire` seul (hors `--dry-run`), `update.ts` met à jour le [sommaire](#sommaire-statistique) à la fin de l'exécution, **seulement si quelque chose a changé** : au moins un outil nouveau, modifié ou retiré, ou au moins un outil enrichi. Une page inchangée sans enrichissement ne fait rien.
 
-- Avec `--enrichir`, c'est le comportement **par défaut** : il n'y a pas d'option pour le demander, et `--sans-sommaire` le désactive (si quelque chose a changé, un message atténué rappelle alors qu'il n'a pas été mis à jour).
+- Avec `--enrichir`, c'est le comportement **par défaut** : il n'y a pas d'option pour le demander, et `--sans-sommaire` le désactive (si quelque chose a changé, un avertissement le rappelle, voir plus bas).
 - Sans `--enrichir`, `nub run update --sommaire` le demande au besoin. Rien n'est enrichi : le sommaire n'est mis à jour que si la synchronisation a détecté des changements. `--sommaire` est inutile avec `--enrichir`, et `--sommaire` avec `--sans-sommaire` est refusé.
-- `nub run update` seul ne touche pas au sommaire.
+- `nub run update` seul ne touche pas au sommaire, mais **avertit** si des changements ont été détectés (voir ci-dessous).
 
 La mise à jour demande la clé `OPENAI_API_KEY` (pour le résumé) et `vl-convert` (pour les graphiques), et prend environ 30 secondes. Deux garde-fous évitent d'abîmer un bon sommaire :
 
@@ -232,12 +232,20 @@ La mise à jour demande la clé `OPENAI_API_KEY` (pour le résumé) et `vl-conve
 
 Un enrichissement par lots (`--limite=N`) met donc le sommaire à jour à chaque lot.
 
+**Avertissement.** Chaque fois que des changements ont eu lieu (un outil nouveau, modifié ou retiré, ou un outil enrichi) **sans** que le sommaire soit mis à jour, `update.ts` le dit, pour qu'on ne laisse pas un sommaire en retard sans le savoir :
+
+- `nub run update` seul : « Le sommaire n'est plus à jour (des changements ont été détectés): lancer `nub run sommaire`, ou ajouter --sommaire à update »;
+- avec `--sans-sommaire` : le même message, qui mentionne le flag;
+- clé ou `vl-convert` manquant, ou résumé impossible : les messages décrits plus haut.
+
+L'avertissement est jaune, n'est pas une erreur (le code de sortie n'est pas modifié) et n'apparaît pas quand rien n'a changé, ni avec `--dry-run`, où rien n'est écrit.
+
 **Couleurs.** Dans un terminal, `update.ts` colore ses messages pour les rendre plus lisibles :
 
 | Couleur | Sens |
 |---|---|
 | Vert | Succès et rien à signaler : `nouveau`, outil enrichi, « 0 changement(s) », « 0 échec » |
-| Jaune | À regarder : `modification`, avertissement (page inaccessible, réponse rejetée, évaluation différente du répertoire) |
+| Jaune | À regarder : `modification`, avertissement (page inaccessible, réponse rejetée, évaluation différente du répertoire, sommaire qui n'est plus à jour) |
 | Rouge | `retrait`, échec d'un outil, erreur |
 | Magenta | `comeback` |
 | Cyan | Les dates, les listes d'outils à enrichir, les nouveaux tags et le nom de l'outil en cours sur la barre |
@@ -465,7 +473,7 @@ Dans `test/`, avec `node:test` lancé par `nub` :
 
 - `classify.test.ts` : cas de classification connus, un nombre de critères égal au score pour les 60 outils, les options de la ligne de commande, le refus d'un fichier au mauvais format, et la couleur de « Erreur: ».
 - `extract.test.ts` : conversion de la date de la page en heure de Toronto, cohérence de `criteres.json` et `outils.json`, rejet d'une page sans date, téléchargement (sur un serveur local, sans réseau), erreurs de téléchargement, le garde-fou contre l'écrasement (avec et sans `--force`, y compris pour un fichier au mauvais format), et la preuve qu'aucun fichier HTML local n'est lu.
-- `update.test.ts` : nouveau, modification, retrait, comeback, conservation des dates des outils inchangés et des champs d'enrichissement, la présentation colorée du résumé et du journal (même texte avec ou sans couleurs), et les conditions de la mise à jour automatique du sommaire (dont `--sommaire` et `--sans-sommaire`).
+- `update.test.ts` : nouveau, modification, retrait, comeback, conservation des dates des outils inchangés et des champs d'enrichissement, la présentation colorée du résumé et du journal (même texte avec ou sans couleurs), et les conditions de la mise à jour automatique du sommaire (dont `--sommaire` et `--sans-sommaire`) et l'avertissement quand le sommaire n'est pas à jour.
 - `enrichir.test.ts` : vocabulaire de `tags.json`, date d'enrichissement, validation (tags, Markdown permis et interdit, licences SPDX et maison, évaluation), explication des écarts, extraction de la page, pages inaccessibles ou presque vides (avertissement, refus par défaut, `--sans-page`), enrichissement une seule fois, limite, reprise et échecs, avec de faux générateurs.
 - `spdx.test.ts` : licences SPDX valides et refusées.
 - `progress.test.ts` : barre en terminal et hors terminal, bornes, étiquette, `end()` idempotent, `message()`, peinture de la barre.
@@ -486,6 +494,7 @@ Dans `test/`, avec `node:test` lancé par `nub` :
 | `OPENAI_API_KEY absente` | Il y a des outils à enrichir (ou un résumé à rédiger pour `nub run sommaire`), mais `.env` n'a pas la clé. La synchronisation, elle, a déjà été écrite. Pour le sommaire, `--sans-resume` évite la clé |
 | `page inaccessible …` ou `page presque vide …`, `outil non enrichi` | La page de l'outil n'a pas pu être lue : réessayer plus tard, ou enrichir à partir de la description seule avec `--sans-page`. Voir [Pages inaccessibles](#pages-inaccessibles-ou-presque-vides) |
 | Des séquences comme `^[[32m` ou `[32m` apparaissent dans la sortie | Les couleurs sont forcées (`FORCE_COLOR`). Les désactiver avec `--sans-couleur` (ou retirer `FORCE_COLOR`) |
+| `Le sommaire n'est plus à jour …` | `update` a détecté des changements (ou enrichi des outils) sans mettre le sommaire à jour, parce qu'on ne l'a pas demandé ou qu'on l'a refusé avec `--sans-sommaire`. Lancer `nub run sommaire`, ou utiliser `--sommaire` (ou `--enrichir`) la prochaine fois |
 | `Sommaire non mis à jour: …` | Après `--enrichir` ou `--sommaire`, le sommaire n'a pas pu être mis à jour : clé ou vl-convert manquant (avertissement, rien n'est modifié) ou résumé impossible à rédiger (le sommaire existant est conservé, code de sortie 1). Régler le problème, puis lancer `nub run sommaire` (ou le désactiver avec `--sans-sommaire`) |
 | `vl-convert est introuvable …` | Le sommaire a besoin de vl-convert pour ses graphiques. L'installer (voir [Graphiques](#graphiques)) ou utiliser `nub run sommaire --sans-graphiques` |
 | `vl-convert vl2svg: …` ou `vl-convert vl2png: …` | vl-convert a refusé une spécification de graphique : le message de vl-convert dit pourquoi. Vérifier sa version (`vl-convert --version`, 1.9 ou plus) |

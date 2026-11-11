@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { classer, type OutilClasse } from "../classify.ts";
 import { creerCouleurs } from "../couleurs.ts";
-import { ligneJournal, lignesResume, mettreAJour, raisonDeSauterSommaire, sommaireNecessaire } from "../update.ts";
+import { avertissementSommaireNonMisAJour, ligneJournal, lignesResume, mettreAJour, raisonDeSauterSommaire, sommaireNecessaire } from "../update.ts";
 
 const base = (nom: string, extra: Partial<OutilClasse> = {}): OutilClasse => {
   const o = {
@@ -165,4 +165,32 @@ test("raisonDeSauterSommaire: clé API absente, vl-convert introuvable, ou rien 
   assert.match(raisonDeSauterSommaire(undefined, present)!, /OPENAI_API_KEY absente/);
   assert.match(raisonDeSauterSommaire("", present)!, /OPENAI_API_KEY absente/);
   assert.match(raisonDeSauterSommaire("sk-test", absent)!, /vl-convert est introuvable/);
+});
+
+test("avertissement si des changements ont eu lieu et que le sommaire n'est pas mis à jour (update seul)", () => {
+  const base = { enrichir: false, dryRun: false, changements: 2, enrichis: 0 };
+  const a = avertissementSommaireNonMisAJour(base)!;
+  assert.match(a, /Le sommaire n'est plus à jour \(des changements ont été détectés\)/);
+  assert.match(a, /nub run sommaire/);
+  assert.match(a, /--sommaire/);
+});
+test("avertissement avec --sans-sommaire, y compris après un enrichissement", () => {
+  const a = avertissementSommaireNonMisAJour({ enrichir: true, dryRun: false, changements: 0, enrichis: 3, sansSommaire: true })!;
+  assert.match(a, /des outils ont été enrichis, --sans-sommaire/);
+  assert.match(a, /nub run sommaire/);
+  assert.doesNotMatch(a, /ajouter --sommaire/);
+});
+test("pas d'avertissement: rien n'a changé, simulation, ou sommaire mis à jour", () => {
+  const base = { enrichir: false, dryRun: false, changements: 0, enrichis: 0 };
+  assert.equal(avertissementSommaireNonMisAJour(base), null); // aucun changement
+  assert.equal(avertissementSommaireNonMisAJour({ ...base, changements: 2, dryRun: true }), null); // simulation: rien d'écrit
+  assert.equal(avertissementSommaireNonMisAJour({ ...base, changements: 2, sommaire: true }), null); // --sommaire: il sera mis à jour
+  assert.equal(avertissementSommaireNonMisAJour({ ...base, changements: 2, enrichir: true }), null); // --enrichir: idem
+  assert.equal(avertissementSommaireNonMisAJour({ ...base, enrichir: true, enrichis: 1 }), null);
+});
+test("un avertissement et une mise à jour du sommaire s'excluent toujours", () => {
+  for (const enrichir of [true, false]) for (const sommaire of [true, false]) for (const sansSommaire of [true, false]) for (const dryRun of [true, false]) for (const [changements, enrichis] of [[0, 0], [1, 0], [0, 1], [2, 2]]) {
+    const o = { enrichir, sommaire, sansSommaire, dryRun, changements: changements!, enrichis: enrichis! };
+    assert.equal(avertissementSommaireNonMisAJour(o) !== null && sommaireNecessaire(o), false, JSON.stringify(o));
+  }
 });

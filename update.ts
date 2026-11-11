@@ -31,6 +31,8 @@
 // comportement par défaut. Il faut pour cela la clé OPENAI_API_KEY et vl-convert; s'ils manquent,
 // un avertissement le dit et le sommaire existant reste tel quel. Si le résumé ne peut pas être rédigé, le sommaire
 // existant est aussi conservé (code de sortie 1). --sans-sommaire désactive cette mise à jour.
+// Dans tous les cas où des changements ont eu lieu (ou des outils ont été enrichis) et où le sommaire n'est pas
+// mis à jour (update seul, --sans-sommaire, clé ou vl-convert manquant, résumé impossible), un avertissement le dit.
 //
 // Couleurs (terminal seulement): résumé sur stdout, journal et barre sur stderr; chaque flux est coloré
 // s'il est un terminal. NO_COLOR ou --sans-couleur les désactive, FORCE_COLOR les impose. Hors terminal,
@@ -115,6 +117,20 @@ export function mettreAJour(
  */
 export function sommaireNecessaire(o: { enrichir: boolean; dryRun: boolean; changements: number; enrichis: number; sansSommaire?: boolean; sommaire?: boolean }): boolean {
   return (o.enrichir || o.sommaire === true) && !o.dryRun && !o.sansSommaire && (o.changements > 0 || o.enrichis > 0);
+}
+
+/**
+ * L'avertissement quand le sommaire n'est PAS mis à jour parce qu'on ne l'a pas demandé (update seul) ou qu'on l'a
+ * refusé (--sans-sommaire), alors que des changements ont eu lieu. Null s'il n'y a rien à signaler. Les autres cas
+ * (clé ou vl-convert manquant, résumé impossible) ont leur propre message.
+ */
+export function avertissementSommaireNonMisAJour(o: { enrichir: boolean; dryRun: boolean; changements: number; enrichis: number; sansSommaire?: boolean; sommaire?: boolean }): string | null {
+  const change = !o.dryRun && (o.changements > 0 || o.enrichis > 0);
+  if (!change || sommaireNecessaire(o)) return null;
+  const quoi = o.enrichis > 0 ? "des outils ont été enrichis" : "des changements ont été détectés";
+  return o.sansSommaire
+    ? `Le sommaire n'est plus à jour (${quoi}, --sans-sommaire): lancer \`nub run sommaire\`.`
+    : `Le sommaire n'est plus à jour (${quoi}): lancer \`nub run sommaire\`, ou ajouter --sommaire à update.`;
 }
 
 /**
@@ -249,9 +265,8 @@ if (import.meta.main) {
       }
     }
 
-    if (enrichir && !dryRun && sansSommaire && (total > 0 || nbEnrichis > 0)) {
-      console.error(suivi.attenue("Sommaire non mis à jour (--sans-sommaire); lancer `nub run sommaire` pour le mettre à jour."));
-    }
+    const nonMisAJour = avertissementSommaireNonMisAJour({ enrichir, dryRun, changements: total, enrichis: nbEnrichis, sansSommaire, sommaire });
+    if (nonMisAJour) console.error(suivi.jaune(nonMisAJour));
     if (sommaireNecessaire({ enrichir, dryRun, changements: total, enrichis: nbEnrichis, sansSommaire, sommaire })) {
       const raison = raisonDeSauterSommaire(process.env.OPENAI_API_KEY, verifierVlConvert);
       if (raison) {
