@@ -22,6 +22,7 @@ Le contenu est l'œuvre des auteur·trices de la note, et non de ce dépôt :
 Ce qui vient d'où :
 
 - **De la source :** la catégorie, le nom, le score, le lien et la description de chaque outil, ainsi que les trois critères.
+- **Calculé par les scripts :** `derniere_modification`, `changement` et `removed` (voir `update.ts`).
 - **Déduit par heuristique dans ce dépôt :** `criteres` et `confiance` (voir [Classification](#classification)).
 - **Généré par un modèle d'IA :** les champs d'enrichissement (voir [Enrichissement](#enrichissement-par-ia)). Ils sont à vérifier avant de s'y fier, surtout la licence et le dépôt.
 
@@ -43,14 +44,24 @@ Pour l'enrichissement, copier `.env.example` vers `.env` et y mettre la clé `OP
 ### Flux de travail
 
 ```
-page HTML sauvegardée ──extract.ts──▶ outils.json ──classify.ts──▶ outils.json (+ criteres, confiance)
-                                                                           │
-page en ligne ────────────update.ts────────────────────────────────────────┤  nouveau / modification / retrait / comeback
-                                                                           │
-OpenAI ───────────update.ts --enrichir─────────────────────────────────────┘  description longue, tags, licence, évaluation
+Import initial   copie HTML ──▶ extract.ts ──▶ classify.ts ──▶ outils.json
+Suivi courant    page en ligne ──▶ update.ts ──▶ outils.json   (nouveau, modification, retrait, comeback)
+Enrichissement   update.ts --enrichir ──▶ API OpenAI ──▶ outils.json (+ tags.json si de nouveaux tags)
 ```
 
-L'import initial (`extract` puis `classify`) part d'une copie locale de la page, enregistrée depuis le navigateur dans ce dossier (les fichiers `.html` sont ignorés par Git). Ensuite, `update` suffit : il lit la page en ligne. Voir [Importer ou réimporter depuis la copie HTML](#importer-ou-réimporter-depuis-la-copie-html) avant de relancer `extract` ou `build`.
+L'import initial part d'une copie locale de la page, enregistrée depuis le navigateur dans ce dossier (les fichiers `.html` sont ignorés par Git). Ensuite, `update` suffit : il lit la page en ligne. Voir [Importer ou réimporter depuis la copie HTML](#importer-ou-réimporter-depuis-la-copie-html) avant de relancer `extract` ou `build`.
+
+### Contenu du dépôt
+
+| Fichier | Rôle |
+|---|---|
+| `outils.json`, `criteres.json`, `tags.json` | Les données (voir [Fichiers JSON](#fichiers-json)) |
+| `extract.ts`, `classify.ts`, `update.ts` | Les trois scripts du flux de travail |
+| `enrichir.ts`, `spdx.ts`, `progress.ts`, `ids.ts` | Modules utilisés par les scripts |
+| `test/` | Les tests |
+| `package.json`, `nub.lock`, `tsconfig.json` | Dépendances, scripts npm et configuration TypeScript |
+| `.env.example` | Modèle du fichier `.env` (la clé OpenAI) |
+| `.gitignore` | Ignore `.env`, `node_modules/` et les copies `.html` de la page |
 
 ## Fichiers JSON
 
@@ -68,7 +79,7 @@ Fichier unifié : un tableau de 60 outils (plus d'éventuels outils retirés). C
 | `description` | Description fournie par la source |
 | `derniere_modification` | Dernière date de modification connue (ISO, ex. `2026-11-05T09:53`) |
 | `changement` | Dernier changement détecté par `update.ts` : `"nouveau"`, `"modification"`, `"retrait"` ou `"comeback"`; `null` si jamais modifié depuis l'import |
-| `removed` | Présent (`true`) seulement pour un outil disparu de la page; l'entrée est conservée |
+| `removed` | Présent (`true`) seulement pour un outil disparu de la page; l'entrée est conservée, à la fin du tableau |
 | `criteres` | Identifiants (voir `criteres.json`) des critères que les étoiles représentent. Déduits, voir [Classification](#classification) |
 | `confiance` | Fiabilité de cette déduction : `"élevée"`, `"moyenne"` ou `"faible"` |
 
@@ -133,7 +144,7 @@ Ajoute `criteres` et `confiance` à chaque outil (réécrit `outils.json` en pla
 nub update.ts [--dry-run] [--enrichir [--nouveaux-tags] [--limite=N]] [outils.json] [url]
 ```
 
-Télécharge la page en ligne (par défaut celle du répertoire), la compare à `outils.json` et met le fichier à jour. `--dry-run` affiche les changements sans écrire. Pour chaque outil :
+Télécharge la page en ligne (`[url]`, par défaut celle du répertoire), la compare à `outils.json` (par défaut `./outils.json`) et met le fichier à jour. `--dry-run` affiche les changements sans écrire. Pour chaque outil :
 
 - absent du fichier : `changement: "nouveau"`;
 - marqué `removed` et de retour sur la page : `"comeback"`, et `removed` disparaît;
@@ -183,20 +194,20 @@ C'est une heuristique, pas une vérité : un critère retenu avec une confiance 
 | Option | Effet |
 |---|---|
 | `--enrichir` | Active l'enrichissement après la synchronisation |
-| `--limite=N` | N'enrichit pas plus de N outils par exécution |
+| `--limite=N` | N'enrichit pas plus de N outils par exécution. Seuls les succès comptent : un outil en échec ne compte pas dans la limite, mais n'est essayé qu'une fois par exécution |
 | `--nouveaux-tags` | Autorise le modèle à proposer de nouveaux tags (justification obligatoire); ils sont ajoutés à `tags.json` |
 | `--dry-run` | Liste les outils concernés sans appeler l'API |
 
-**Configuration :** `OPENAI_API_KEY` dans `.env` (voir `.env.example`), et `OPENAI_MODEL` pour changer le modèle (`gpt-6-astra` par défaut). Compter environ 20 secondes par outil.
+**Configuration :** `OPENAI_API_KEY` dans `.env` (voir `.env.example`), et `OPENAI_MODEL` pour changer le modèle (`gpt-6-astra` par défaut). Compter environ 20 secondes par outil (mesuré sur quelques outils).
 
-**Confidentialité :** pour chaque outil, le script télécharge la page publique (`lien`), en extrait le texte et les liens vers des forges de code, puis envoie à l'API OpenAI (Responses API, sortie JSON structurée) le nom, la catégorie, la description et cet extrait. Les tags sont limités au vocabulaire de `tags.json`.
+**Confidentialité :** pour chaque outil, le script télécharge la page publique (`lien`), en extrait le texte et les liens vers des forges de code, puis envoie à l'API OpenAI (Responses API, sortie JSON structurée) le nom, la catégorie, le lien, la description et cet extrait. Quand l'évaluation diffère du répertoire, le second appel y ajoute les deux évaluations. Les tags sont limités au vocabulaire de `tags.json`.
 
 **Validation :** chaque réponse est vérifiée avant d'être écrite :
 
 - de 1 à 5 tags connus, sans doublon;
 - URL de dépôt valide, licence SPDX valide (voir `spdx.ts`);
-- licence maison cohérente : exclusive avec `licence`, URL seulement avec un nom, aucune pour un identifiant SPDX;
-- aucun dépôt ni licence pour un logiciel propriétaire;
+- licence maison cohérente : exclusive avec `licence`, URL seulement avec un nom, et un nom qui n'est pas lui-même un identifiant SPDX;
+- ni dépôt, ni licence, ni licence maison pour un logiciel propriétaire;
 - description longue sans image Markdown, sans HTML (balises, entités, liens entre chevrons), sans tiret cadratin et sans émoji ni émoticône;
 - évaluation cohérente (score égal au nombre de critères).
 
@@ -204,7 +215,7 @@ Une réponse invalide est redemandée une fois, avec la raison du rejet, puis co
 
 **Évaluation indépendante :** le modèle reçoit la description des trois critères, mais pas le score ni les critères du répertoire, pour ne pas simplement les confirmer. Quand son évaluation diffère (score ou critères), un second appel explique l'écart en 2 à 4 phrases, sans prétendre savoir laquelle des deux est correcte et en rappelant que les critères du répertoire sont eux-mêmes déduits. Cette explication, soumise aux mêmes interdits typographiques que la description longue, est inscrite dans `evaluation_enrichie.ecart`. Le `score` et les `criteres` du répertoire ne sont jamais modifiés, et les écarts sont résumés à la fin de l'exécution.
 
-**Progression :** la barre de progression et le journal vont sur stderr, de sorte que stdout reste propre. Le nom de l'outil en cours s'affiche à droite de la barre (en terminal) ou sur une ligne `Enrichissement de <outil>...` (hors terminal, où une ligne de pourcentage est aussi écrite par tranche de 10 %).
+**Progression :** la barre de progression et le journal vont sur stderr; les résumés (changements, nombre d'outils enrichis, écarts, nouveaux tags) restent sur stdout. Le nom de l'outil en cours s'affiche à droite de la barre (en terminal) ou sur une ligne `Enrichissement de <outil>...` (hors terminal, où une ligne de pourcentage est aussi écrite par tranche de 10 %).
 
 **Reprise :** `outils.json` est écrit après chaque outil, donc une interruption ne perd rien et une relance reprend où on s'est arrêté. Le code de sortie est 1 si au moins un outil a échoué.
 
