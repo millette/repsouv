@@ -2,29 +2,19 @@
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
-import { existsSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { createServer } from "node:http";
 import type { AddressInfo } from "node:net";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { test } from "node:test";
-import { dateIso, estUrl, extraire, normaliserOutils, telechargerRepertoire, travailAPerdre } from "../extract.ts";
-import { lireFichier } from "../fichiers.ts";
+import { dateIso, estUrl, extraire, telechargerRepertoire, travailAPerdre } from "../extract.ts";
+import { ecrireFichier, lireFichier } from "../fichiers.ts";
 import { ID_PAR_ICONE } from "../ids.ts";
 
 test("dateIso convertit la date française en heure de Toronto, avec le décalage de la saison", () => {
   assert.equal(dateIso("5 novembre 2026 09:53"), "2026-11-05T09:53:00-05:00");
   assert.equal(dateIso("5 juillet 2026 10:00"), "2026-07-05T10:00:00-04:00");
-});
-test("normaliserOutils: met derniere_modification au format courant sans toucher au reste", () => {
-  const outils = [
-    { nom: "a", derniere_modification: "2026-11-05T09:53" },
-    { nom: "b", derniere_modification: "2026-07-05T10:00:00-04:00" },
-  ] as never[];
-  const [a, b] = normaliserOutils(outils) as { nom: string; derniere_modification: string }[];
-  assert.equal(a!.derniere_modification, "2026-11-05T09:53:00-05:00");
-  assert.equal(a!.nom, "a");
-  assert.equal(b!.derniere_modification, "2026-07-05T10:00:00-04:00");
 });
 test("criteres.json: chaque critère a un id correspondant à son icône", () => {
   const criteres = lireFichier<{ id: string; icon: string }>("criteres.json", "criteres").donnees;
@@ -130,8 +120,8 @@ test("CLI: télécharge la page et écrit outils.json et criteres.json", async (
 });
 test("CLI: refuse d'écraser un outils.json enrichi sans --force, puis l'écrase avec --force", async () => {
   const sortie = join(dossierTemporaire(), "outils.json");
-  const enrichi = JSON.stringify([{ nom: "X", description_longue: "Précieuse." }]);
-  writeFileSync(sortie, enrichi);
+  ecrireFichier(sortie, "outils", [{ nom: "X", description_longue: "Précieuse." }], null, "2026-11-11T16:00:00-05:00");
+  const enrichi = readFileSync(sortie, "utf8");
 
   await avecServeur(200, PAGE, async (url) => {
     const refus = await lancer(sortie, url);
@@ -191,5 +181,38 @@ test("CLI: un réimport garde created_at, et updated_at ne change que si le cont
     const apres = JSON.parse(readFileSync(sortie, "utf8"));
     assert.equal(apres.meta.created_at, avant.meta.created_at);
     assert.equal(apres.outils[0].description, "Une autre description.");
+  });
+});
+test("CLI: aucun fichier HTML local n'est lu (un faux .html dans le dossier de travail et celui de sortie est ignoré)", async () => {
+  const dossier = dossierTemporaire();
+  const leurre = `<html><body>
+<p class="overline-col">Modification</p><p class="text-col">1 janvier 2020 00:00</p>
+<blockquote><h3>🧪 Leurre</h3><p><strong><a href="https://leurre.example/">Leurre</a> ★★☆</strong></p><p>Ne doit pas être lu.</p></blockquote>
+</body></html>`;
+  writeFileSync(join(dossier, "page.html"), leurre);
+  writeFileSync(join(process.cwd(), "_leurre.html"), leurre);
+  try {
+    const sortie = join(dossier, "outils.json");
+    const r = await avecServeur(200, PAGE, (url) => lancer(sortie, url));
+    assert.equal(r.status, 0, r.stderr);
+    const noms = JSON.parse(readFileSync(sortie, "utf8")).outils.map((o: { nom: string }) => o.nom);
+    assert.deepEqual(noms, ["X"]); // la page du serveur, pas le leurre
+  } finally {
+    rmSync(join(process.cwd(), "_leurre.html"), { force: true });
+  }
+});
+test("CLI: un outils.json qui n'a pas le format attendu n'est pas écrasé sans --force (il pourrait contenir du travail)", async () => {
+  const sortie = join(dossierTemporaire(), "outils.json");
+  const ancien = JSON.stringify([{ nom: "X", description_longue: "Précieuse." }]); // simple tableau, sans « meta »
+  writeFileSync(sortie, ancien);
+  await avecServeur(200, PAGE, async (url) => {
+    const refus = await lancer(sortie, url);
+    assert.equal(refus.status, 1);
+    assert.match(refus.stderr, /Refus d'écraser.*pas le format attendu/);
+    assert.equal(readFileSync(sortie, "utf8"), ancien);
+
+    const force = await lancer("--force", sortie, url);
+    assert.equal(force.status, 0, force.stderr);
+    assert.equal(JSON.parse(readFileSync(sortie, "utf8")).meta.data_license, "CC-BY-SA-4.0");
   });
 });

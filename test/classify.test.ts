@@ -56,19 +56,18 @@ test("CLI: une autre option est refusée et le fichier reste intact", () => {
   assert.notEqual(r.status, 0);
   assert.equal(readFileSync(f, "utf8"), avant);
 });
-test("CLI: un fichier inchangé garde ses métadonnées, un ancien tableau est converti avec la licence des données", () => {
+test("CLI: un fichier inchangé garde ses métadonnées (dates comprises), la licence reste CC-BY-SA-4.0", () => {
   const f = copie();
   const avant = JSON.parse(readFileSync(f, "utf8"));
   spawnSync("nub", [classifyTs, f], { encoding: "utf8" });
   const apres = JSON.parse(readFileSync(f, "utf8"));
-  assert.equal(apres.meta.updated_at, avant.meta.updated_at);
-  assert.equal(apres.meta.created_at, avant.meta.created_at);
-  assert.equal(apres.meta.data_license, "CC-BY-SA-4.0");
-
-  writeFileSync(f, JSON.stringify(avant.outils));
-  spawnSync("nub", [classifyTs, f], { encoding: "utf8" });
-  const converti = JSON.parse(readFileSync(f, "utf8"));
-  assert.equal(converti.meta.data_license, "CC-BY-SA-4.0");
-  assert.equal(converti.outils.length, 60);
-  assert.match(converti.meta.created_at, /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}-0[45]:00$/);
+  assert.deepEqual(apres.meta, avant.meta);
+});
+test("CLI: un fichier au mauvais format (simple tableau) est refusé avec un message clair et reste intact", () => {
+  const f = copie();
+  writeFileSync(f, JSON.stringify([{ nom: "a" }]));
+  const r = spawnSync("nub", [classifyTs, f], { encoding: "utf8" });
+  assert.equal(r.status, 1);
+  assert.match(r.stderr, /^Erreur: .*format invalide/);
+  assert.equal(readFileSync(f, "utf8"), JSON.stringify([{ nom: "a" }]));
 });

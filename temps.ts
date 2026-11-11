@@ -44,12 +44,3 @@ export function localVersIso(
   decalage = decalageMinutes(commeUtc - decalage * 60_000, fuseau); // le décalage est celui de l'instant réel
   return `${annee}-${pad(mois)}-${pad(jour)}T${pad(heure)}:${pad(minute)}:${pad(seconde)}${formatDecalage(decalage)}`;
 }
-
-const SANS_DECALAGE = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?$/;
-
-/** Ajoute le décalage de Toronto à une date locale qui n'en a pas (ancien format 2026-11-05T09:53); sinon la laisse telle quelle. */
-export function versHeureLocale(valeur: string, fuseau: string = FUSEAU): string {
-  const m = SANS_DECALAGE.exec(valeur);
-  if (!m) return valeur;
-  return localVersIso(Number(m[1]), Number(m[2]), Number(m[3]), Number(m[4]), Number(m[5]), Number(m[6] ?? 0), fuseau);
-}

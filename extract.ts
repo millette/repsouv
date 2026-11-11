@@ -9,10 +9,11 @@
 // ATTENTION: le fichier de sortie est remplacé en entier. Sans --force, le script refuse d'écraser
 // un outils.json qui contient du travail impossible à retrouver (enrichissement, historique des
 // changements). Pour suivre la page sans rien perdre, utiliser update.ts.
+import { existsSync } from "node:fs";
 import { parseHTML } from "linkedom";
 import { lancer } from "./cli.ts";
 import { ecrireFichier, lireFichier, lireSiExiste, type Lu } from "./fichiers.ts";
-import { localVersIso, versHeureLocale } from "./temps.ts";
+import { localVersIso } from "./temps.ts";
 import { ID_PAR_ICONE, type CritereId } from "./ids.ts";
 
 export type ConfianceEvaluation = "élevée" | "moyenne" | "faible";
@@ -86,8 +87,8 @@ const MOIS = [
 ];
 
 /**
- * « 5 novembre 2026 09:53 » → « 2026-11-05T09:53:00-05:00 ». La page affiche l'heure locale de l'Est
- * (même fuseau que Toronto, avec la même heure d'été): on lui ajoute le décalage de Toronto.
+ * « 5 novembre 2026 09:53 » → « 2026-11-05T09:53:00-05:00 ». La page affiche l'heure de l'Est (Toronto):
+ * on lui ajoute le décalage de Toronto qui s'applique ce jour-là (heure d'été comprise).
  */
 export function dateIso(affichee: string): string {
   const m = /^(\d{1,2}) (\S+) (\d{4}) (\d{2}):(\d{2})$/.exec(affichee.trim());
@@ -191,16 +192,14 @@ export function travailAPerdre(outils: Partial<Outil>[]): string[] {
   ];
 }
 
-/** Met `derniere_modification` au format courant (ancien format: 2026-11-05T09:53, sans décalage). */
-export const normaliserOutils = <T extends Outil>(outils: T[]): T[] =>
-  outils.map((o) => {
-    const date = versHeureLocale(o.derniere_modification);
-    return date === o.derniere_modification ? o : { ...o, derniere_modification: date };
-  });
-
-/** Lit outils.json en mettant ses dates au format courant. */
-export const lireOutils = <T extends Outil = Outil>(chemin: string): Lu<T> =>
-  lireFichier<T>(chemin, "outils", undefined, normaliserOutils);
+/** Arrête le script avec le code 1 plutôt que d'écraser outils.json (sauf --force). */
+function refuser(raison: string): never {
+  console.error(
+    `Refus d'écraser: ${raison}\n` +
+      `Pour synchroniser sans rien perdre, utiliser update.ts. Pour tout remplacer quand même: nub run extract --force (ou nub run build:force).`,
+  );
+  process.exit(1);
+}
 
 if (import.meta.main) {
   await lancer(async () => {
@@ -213,17 +212,20 @@ if (import.meta.main) {
     const [dstOutils, dstCriteres] = positionnels.filter((a) => !estUrl(a));
     if (!dstOutils) throw new Error("Usage: nub extract.ts [--force] <outils.json> [criteres.json] [url]");
 
-    // Un fichier absent ou illisible n'a rien à protéger. Le fichier existant sert aussi à conserver created_at.
-    const existant = lireSiExiste<Outil>(dstOutils, "outils", normaliserOutils);
+    // Le fichier de SORTIE (outils.json), s'il existe déjà: il sert au garde-fou et à conserver meta.created_at.
+    // La page, elle, n'est jamais lue sur disque: elle est téléchargée en mémoire (telechargerRepertoire)
+    // et aucun fichier HTML n'est lu ni écrit.
+    let existant: Lu<Outil> | null = null;
+    if (existsSync(dstOutils)) {
+      try {
+        existant = lireFichier<Outil>(dstOutils, "outils");
+      } catch (e) {
+        if (!force) refuser(`${dstOutils} n'a pas le format attendu et pourrait contenir du travail (${(e as Error).message}).`);
+      }
+    }
     if (!force && existant) {
       const perte = travailAPerdre(existant.donnees);
-      if (perte.length) {
-        console.error(
-          `Refus d'écraser ${dstOutils}: il contient du travail qui serait perdu (${perte.join("; ")}).\n` +
-            `Pour synchroniser sans rien perdre, utiliser update.ts. Pour tout remplacer quand même: nub run extract --force (ou nub run build:force).`,
-        );
-        process.exit(1);
-      }
+      if (perte.length) refuser(`${dstOutils} contient du travail qui serait perdu (${perte.join("; ")}).`);
     }
 
     const { outils, criteres, modification } = await telechargerRepertoire(url);

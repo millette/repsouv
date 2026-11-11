@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { horodatage, localVersIso, versHeureLocale } from "../temps.ts";
+import { horodatage, localVersIso } from "../temps.ts";
 
 test("horodatage: heure de Toronto avec décalage, hiver (EST, -05:00)", () => {
   assert.equal(horodatage(new Date("2026-11-11T21:42:07Z")), "2026-11-11T16:42:07-05:00");
@@ -33,10 +33,4 @@ test("localVersIso: l'instant produit correspond bien à l'heure locale demandé
     const iso = localVersIso(a, m, j, h, mi);
     assert.equal(horodatage(new Date(iso)), iso, iso);
   }
-});
-test("versHeureLocale: complète l'ancien format sans décalage, laisse le reste intact", () => {
-  assert.equal(versHeureLocale("2026-11-05T09:53"), "2026-11-05T09:53:00-05:00");
-  assert.equal(versHeureLocale("2026-07-05T10:00:30"), "2026-07-05T10:00:30-04:00");
-  assert.equal(versHeureLocale("2026-11-05T09:53:00-05:00"), "2026-11-05T09:53:00-05:00");
-  assert.equal(versHeureLocale("n'importe quoi"), "n'importe quoi");
 });

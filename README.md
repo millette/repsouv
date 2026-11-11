@@ -107,9 +107,9 @@ Les trois fichiers de données ont la même structure : un objet dont le champ `
 | `meta.updated_at` | Date et heure de la dernière modification du **contenu**. Un script qui réécrit le même contenu ne la change pas |
 | `outils`, `criteres` ou `tags` | Le tableau de données, nommé d'après le fichier |
 
-**Toutes les dates et heures sont locales, en heure de Toronto** (`America/Toronto`, heure d'été comprise), au format ISO 8601 avec le décalage : `-05:00` en hiver, `-04:00` en été. C'est le cas de `meta.created_at` et `meta.updated_at`, et aussi de `derniere_modification` de chaque outil. Cette dernière est la date affichée par la page d'origine (qui donne l'heure de l'Est, le même fuseau que Toronto) à laquelle on ajoute le décalage; elle ne se confond pas avec `meta.updated_at`, qui date des écritures du fichier.
+**Toutes les dates et heures sont locales, en heure de Toronto** (`America/Toronto`, heure d'été comprise), au format ISO 8601 avec le décalage : `-05:00` en hiver, `-04:00` en été. C'est le cas de `meta.created_at` et `meta.updated_at`, et aussi de `derniere_modification` de chaque outil. Cette dernière est la date affichée par la page d'origine, qui donne l'heure de l'Est (Toronto), à laquelle on ajoute le décalage de la saison; elle ne se confond pas avec `meta.updated_at`, qui date des écritures du fichier.
 
-Les anciens formats sont reconnus et convertis dès qu'un script écrit le fichier (`update` ou `classify`) : un simple tableau, des métadonnées au premier niveau plutôt que dans `meta`, et des dates sans décalage (`2026-11-05T09:53` devient `2026-11-05T09:53:00-05:00`). Quand le fichier n'avait pas de dates de métadonnées, elles reçoivent la date du moment.
+Le format est **strict** : un fichier de données qui n'a pas cette structure (sans `meta`, simple tableau, dates de `meta` sans décalage) est refusé avec un message clair. Pour le recréer depuis la page en ligne, voir [Importer ou réimporter depuis le web](#importer-ou-réimporter-depuis-le-web).
 
 ### `outils.json`
 
@@ -177,7 +177,7 @@ Télécharge la page en ligne (`[url]`, par défaut celle du répertoire) et éc
 
 Si `criteres.json` est donné, il est réécrit lui aussi, sans protection : il ne dépend que de la page.
 
-Les outils sont écrits **sans** classification ni enrichissement, et le fichier de sortie est **entièrement remplacé**. Sans `--force`, le script refuse d'écraser un `outils.json` qui contient des champs d'enrichissement ou un historique de changement (`changement`, `removed`). Voir [Importer ou réimporter depuis le web](#importer-ou-réimporter-depuis-le-web).
+Les outils sont écrits **sans** classification ni enrichissement, et le fichier de sortie est **entièrement remplacé**. Sans `--force`, le script refuse d'écraser un `outils.json` qui contient des champs d'enrichissement ou un historique de changement (`changement`, `removed`), ou qui n'a pas le format attendu (il pourrait contenir du travail). Voir [Importer ou réimporter depuis le web](#importer-ou-réimporter-depuis-le-web).
 
 ### `classify.ts`
 
@@ -201,7 +201,7 @@ Télécharge la page en ligne (`[url]`, par défaut celle du répertoire; le mê
 - absent de la page : `"retrait"` et `removed: true`, l'entrée est conservée;
 - identique : rien ne change, ni sa date ni son `changement`.
 
-Les outils nouveaux, modifiés, retirés ou de retour reçoivent la date de modification de la page; les nouveaux, modifiés et de retour sont reclassés. Les champs d'enrichissement d'un outil survivent à une modification ou à un retour. Le fichier n'est réécrit que s'il y a au moins un changement (ou si son format est à mettre à jour, par exemple un ancien tableau ou des dates sans décalage); `meta.updated_at` est alors mis à jour, et `tags.json` aussi quand de nouveaux tags s'ajoutent.
+Les outils nouveaux, modifiés, retirés ou de retour reçoivent la date de modification de la page; les nouveaux, modifiés et de retour sont reclassés. Les champs d'enrichissement d'un outil survivent à une modification ou à un retour. Le fichier n'est réécrit que s'il y a au moins un changement; `meta.updated_at` est alors mis à jour, et `tags.json` aussi quand de nouveaux tags s'ajoutent.
 
 Avec `--enrichir`, la synchronisation est suivie de l'[enrichissement](#enrichissement-par-ia). Une option inconnue est refusée.
 
@@ -211,11 +211,11 @@ Module de l'enrichissement : lecture de la page de l'outil, requêtes à l'API O
 
 ### `fichiers.ts`
 
-Lecture et écriture des trois fichiers de données : `lireFichier`, `lireSiExiste` et `ecrireFichier` maintiennent `meta` (`data_license`, `created_at`, `updated_at`), décrit dans [Fichiers JSON](#fichiers-json), et reconnaissent les anciens formats. Tous les scripts qui lisent ou écrivent ces fichiers passent par ce module.
+Lecture et écriture des trois fichiers de données : `lireFichier`, `lireSiExiste` et `ecrireFichier` maintiennent `meta` (`data_license`, `created_at`, `updated_at`), décrit dans [Fichiers JSON](#fichiers-json). La lecture est stricte : un fichier au mauvais format est refusé. Tous les scripts qui lisent ou écrivent ces fichiers passent par ce module.
 
 ### `temps.ts`
 
-Les dates et heures, toujours en heure de Toronto : `horodatage()` donne le moment présent (`2026-11-11T16:42:07-05:00`), `localVersIso()` ajoute à une date locale le décalage qui s'applique ce jour-là (heure d'été comprise), et `versHeureLocale()` convertit une date de l'ancien format, sans décalage. Sans dépendance : le calcul passe par `Intl`.
+Les dates et heures, toujours en heure de Toronto : `horodatage()` donne le moment présent (`2026-11-11T16:42:07-05:00`), `localVersIso()` ajoute à une date locale le décalage qui s'applique ce jour-là (heure d'été comprise). Sans dépendance : le calcul passe par `Intl`.
 
 ### `spdx.ts`
 
@@ -302,7 +302,7 @@ jaq '.outils |= map(if .page_lue == false then del(.description_longue, .tags, .
 
 `extract` et `build` servent à **construire `outils.json` depuis zéro** à partir de la page en ligne :
 
-- `nub run extract` télécharge la page et **réécrit `outils.json` en entier**, avec seulement les champs de la source. Il ne fusionne rien : le contenu est remplacé. Il ne lit le fichier existant que pour le garde-fou ci-dessous et pour conserver `meta.created_at`.
+- `nub run extract` télécharge la page et **réécrit `outils.json` en entier**, avec seulement les champs de la source. Il ne fusionne rien : le contenu est remplacé. Les seuls fichiers qu'il lit sont ses fichiers de **sortie** (`outils.json` et, s'il est donné, `criteres.json`), s'ils existent déjà : `outils.json` pour le garde-fou ci-dessous et pour conserver `meta.created_at`, `criteres.json` pour conserver `meta.created_at`. Il ne lit ni n'écrit **jamais de fichier HTML** : la page est téléchargée en mémoire à chaque exécution.
 - `nub run build` enchaîne `extract` puis `classify` : le fichier produit est complet, avec `criteres` et `confiance`.
 
 C'est la voie de l'import initial. Ensuite, `update` fait la synchronisation courante : il télécharge la même page, mais compare, détecte les changements, conserve les dates des outils inchangés et ne touche jamais à l'enrichissement.
@@ -312,14 +312,15 @@ Parce que `extract` remplace tout, un réimport détruit :
 - l'**enrichissement** (descriptions longues, tags, licences, évaluations), qui coûte des appels à l'API OpenAI;
 - l'**historique des changements** (`changement`, `removed`) et les dates de `update` : tous les outils reçoivent la date de modification actuelle de la page, avec `changement: null`. Le fichier garde en revanche son `meta.created_at`, et son `meta.updated_at` n'est modifié que si le contenu diffère.
 
-C'est pourquoi `extract` refuse d'écraser un `outils.json` qui contient ce genre de travail. La classification n'est pas protégée : `classify` la recalcule toujours.
+C'est pourquoi `extract` refuse d'écraser un `outils.json` qui contient ce genre de travail, ou qu'il ne peut pas lire. La classification n'est pas protégée : `classify` la recalcule toujours.
 
 Comme la page est téléchargée à chaque exécution, un réimport n'est **pas reproductible** : il donne l'état du répertoire au moment où il est lancé. Pour retrouver un état précis, utiliser l'historique Git de `outils.json`.
 
 | Besoin | Commande |
 |---|---|
 | Suivre la page en ligne (usage courant) | `nub run update` |
-| Première construction, ou fichier vide ou corrompu | `nub run build` |
+| Première construction (pas encore de `outils.json`) | `nub run build` |
+| `outils.json` invalide, vide ou corrompu | `nub run build:force` (le script refuse sinon, de peur d'écraser du travail) |
 | Appliquer de nouvelles règles de classification, sans rien perdre | `nub run classify` |
 | Tout remplacer volontairement depuis le web | `nub run build:force` (ou `nub run extract --force`) |
 
@@ -344,14 +345,14 @@ Si les `criteres` d'un outil déjà enrichi changent après un `classify`, son `
 
 Dans `test/`, avec `node:test` lancé par `nub` :
 
-- `classify.test.ts` : cas de classification connus, un nombre de critères égal au score pour les 60 outils, et les options de la ligne de commande.
-- `extract.test.ts` : conversion de la date de la page en heure de Toronto, normalisation des dates des outils, cohérence de `criteres.json` et `outils.json`, rejet d'une page sans date, téléchargement (sur un serveur local, sans réseau), erreurs de téléchargement, et le garde-fou contre l'écrasement (avec et sans `--force`).
+- `classify.test.ts` : cas de classification connus, un nombre de critères égal au score pour les 60 outils, les options de la ligne de commande, et le refus d'un fichier au mauvais format.
+- `extract.test.ts` : conversion de la date de la page en heure de Toronto, cohérence de `criteres.json` et `outils.json`, rejet d'une page sans date, téléchargement (sur un serveur local, sans réseau), erreurs de téléchargement, le garde-fou contre l'écrasement (avec et sans `--force`, y compris pour un fichier au mauvais format), et la preuve qu'aucun fichier HTML local n'est lu.
 - `update.test.ts` : nouveau, modification, retrait, comeback, conservation des dates des outils inchangés et des champs d'enrichissement.
 - `enrichir.test.ts` : vocabulaire de `tags.json`, validation (tags, Markdown permis et interdit, licences SPDX et maison, évaluation), explication des écarts, extraction de la page, pages inaccessibles ou presque vides (avertissement, refus par défaut, `--sans-page`), enrichissement une seule fois, limite, reprise et échecs, avec de faux générateurs.
 - `spdx.test.ts` : licences SPDX valides et refusées.
 - `progress.test.ts` : barre en terminal et hors terminal, bornes, étiquette, `end()` idempotent, `message()`.
-- `temps.test.ts` : heure de Toronto (hiver, été, minuit, passage à l'heure d'été), décalage ajouté à une date locale, conversion des dates de l'ancien format.
-- `fichiers.test.ts` : structure et `meta` des fichiers de données (création, contenu inchangé ou modifié, anciens formats, licence corrigée, données normalisées), et conformité des trois fichiers du dépôt.
+- `temps.test.ts` : heure de Toronto (hiver, été, minuit, passage à l'heure d'été), décalage ajouté à une date locale.
+- `fichiers.test.ts` : structure et `meta` des fichiers de données (création, contenu inchangé ou modifié, licence rétablie, refus des formats invalides), et conformité des trois fichiers du dépôt.
 - `en-tetes.test.ts` : chaque fichier `.ts` porte les en-têtes SPDX, la licence du code est la même dans `package.json`, et les deux textes de licence sont présents.
 
 ## Utiliser les données

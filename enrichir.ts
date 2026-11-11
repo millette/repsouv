@@ -5,7 +5,6 @@
 // (avec custom_license et custom_license_url pour les licences absentes de la liste SPDX).
 // Utilisé par `update.ts --enrichir`. Les fonctions sont pures ou reçoivent leurs dépendances
 // (générateur, rappel de sauvegarde) pour pouvoir être testées sans réseau.
-import { existsSync } from "node:fs";
 import { parseHTML } from "linkedom";
 import type { ConfianceEvaluation, Critere, EvaluationEnrichie, Outil } from "./extract.ts";
 import { ecrireFichier, lireFichier, lireSiExiste } from "./fichiers.ts";
@@ -70,7 +69,7 @@ export const chargerCriteres = (fichier: string): Critere[] => lireFichier<Crite
 export const chargerTags = (fichier: string): Tag[] => lireFichier<Tag>(fichier, "tags").donnees;
 /** Écrit tags.json en maintenant ses métadonnées (licence des données, created_at, updated_at). */
 export const sauverTags = (fichier: string, tags: Tag[]) => {
-  ecrireFichier(fichier, "tags", tags, existsSync(fichier) ? lireSiExiste<Tag>(fichier, "tags") : null);
+  ecrireFichier(fichier, "tags", tags, lireSiExiste<Tag>(fichier, "tags"));
 };
 
 // ---------- validation ----------

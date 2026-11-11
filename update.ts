@@ -30,8 +30,8 @@ import {
   aEnrichir, chargerCriteres, chargerTags, enrichirOutils, expliqueurOpenAI, generateurOpenAI, MODELE_PAR_DEFAUT, sauverTags,
 } from "./enrichir.ts";
 import { lancer } from "./cli.ts";
-import { ecrireFichier, type Lu } from "./fichiers.ts";
-import { CHAMPS_ENRICHIS, lireOutils, telechargerRepertoire, type Changement, type Outil } from "./extract.ts";
+import { ecrireFichier, lireFichier, type Lu } from "./fichiers.ts";
+import { CHAMPS_ENRICHIS, telechargerRepertoire, type Changement, type Outil } from "./extract.ts";
 import { createProgress } from "./progress.ts";
 
 const CHAMPS_COMPARES = ["categorie", "icone", "score", "lien", "description"] as const;
@@ -110,7 +110,7 @@ if (import.meta.main) {
 
     const { outils: page, modification } = await telechargerRepertoire(url);
     // Fichier de départ, puis dernier état écrit: les métadonnées (updated_at) sont maintenues par ecrireFichier.
-    let courant: Lu<OutilClasse> = lireOutils<OutilClasse>(fichier);
+    let courant: Lu<OutilClasse> = lireFichier<OutilClasse>(fichier, "outils");
     const existants = courant.donnees;
 
     const { outils, resume } = mettreAJour(existants, page, modification);
@@ -119,7 +119,7 @@ if (import.meta.main) {
     for (const [type, noms] of Object.entries(resume)) {
       if (noms.length) console.log(`  ${type}: ${noms.join(", ")}`);
     }
-    if ((total || courant.aCorriger) && !dryRun) {
+    if (total && !dryRun) {
       courant = ecrireFichier(fichier, "outils", outils, courant);
       console.log(`${fichier} mis à jour`);
     }

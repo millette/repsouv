@@ -11,8 +11,8 @@
 //  3. Sans score, on retient les critères dont l'indice atteint SEUIL.
 //  4. La confiance dépend de l'écart entre le dernier critère retenu et le premier écarté.
 import { lancer } from "./cli.ts";
-import { ecrireFichier, lireSiExiste } from "./fichiers.ts";
-import { lireOutils, normaliserOutils, type Outil } from "./extract.ts";
+import { ecrireFichier, lireFichier, lireSiExiste } from "./fichiers.ts";
+import type { Outil } from "./extract.ts";
 import { CONTROLE, DEPENDANCE, DONNEES, type CritereId } from "./ids.ts";
 
 export { CONTROLE, DEPENDANCE, DONNEES };
@@ -101,10 +101,10 @@ if (import.meta.main) {
     if (inconnue) throw new Error(`Option inconnue: ${inconnue}`);
     const [src, dst = src] = args.filter((a) => !a.startsWith("--"));
     if (!src || !dst) throw new Error("Usage: nub classify.ts <outils.json> [sortie.json]");
-    const lu = lireOutils(src);
+    const lu = lireFichier<Outil>(src, "outils");
     const res: OutilClasse[] = lu.donnees.map((o) => ({ ...o, ...classer(o.description, o.score) }));
     // En place, le fichier lu sert d'état précédent; vers un autre fichier, c'est celui-là s'il existe déjà.
-    ecrireFichier(dst, "outils", res, dst === src ? lu : lireSiExiste<OutilClasse>(dst, "outils", normaliserOutils));
+    ecrireFichier(dst, "outils", res, dst === src ? lu : lireSiExiste<OutilClasse>(dst, "outils"));
     console.log(res.length, "outils classés");
   });
 }
