@@ -2,7 +2,7 @@
   "meta": {
     "data_license": "CC-BY-SA-4.0",
     "created_at": "2026-11-11T16:43:11-05:00",
-    "updated_at": "2026-11-11T16:48:12-05:00"
+    "updated_at": "2026-11-11T17:35:34-05:00"
   },
   "outils": [
     {
@@ -18,7 +18,29 @@
         "donnees",
         "dependance"
       ],
-      "confiance": "élevée"
+      "confiance": "élevée",
+      "description_longue": "Matomo est une plateforme d’analyse de fréquentation des sites Web, proposée comme alternative à Google Analytics. Elle permet de suivre les pages consultées, les sources de trafic, les événements et les conversions. Pour un OSBL culturel, ces mesures peuvent notamment servir à comprendre comment les publics découvrent une programmation ou consultent les pages d’un événement.\n\nLa plateforme fournit des données non échantillonnées et des outils de segmentation. Elle propose aussi des fonctions d’analyse des parcours, des cartes de chaleur, des enregistrements de sessions et des tests A/B. Leur disponibilité dépend de l’offre et des modules utilisés. La collecte peut s’effectuer au moyen d’un code JavaScript ou de l’analyse des journaux du serveur. Des API, des intégrations et l’exportation des données brutes permettent de relier Matomo à d’autres outils.\n\n**Deux modes de déploiement sont proposés :** un service infonuagique géré et une installation sur l’infrastructure de son choix. Le cœur libre peut être auto-hébergé gratuitement, tandis que des fonctionnalités complémentaires et des services sont payants. L’auto-hébergement permet de conserver les données au Canada, mais demande de prendre en charge l’installation, les mises à jour, la sécurité et les sauvegardes.\n\nMatomo comprend des réglages d’anonymisation, de contrôle des accès et de suivi sans témoins. Ces possibilités aident à limiter la collecte de renseignements personnels, sans garantir à elles seules la conformité juridique. Le paramétrage doit correspondre aux besoins de l’organisme et à ses obligations en matière de protection de la vie privée.",
+      "tags": [
+        "rapports-analytique",
+        "auto-hebergeable",
+        "vie-privee",
+        "api-integrations",
+        "gratuit"
+      ],
+      "source": "partiel",
+      "licence": "GPL-3.0-or-later",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/matomo-org/matomo",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "élevée"
+      },
+      "page_lue": true
     },
     {
       "categorie": "Analyse et mesure",
@@ -33,7 +55,28 @@
         "donnees",
         "controle"
       ],
-      "confiance": "faible"
+      "confiance": "faible",
+      "description_longue": "Klipfolio propose **Klips**, une solution en ligne de création de tableaux de bord qui regroupe des données provenant de plusieurs sources. Elle permet de suivre des indicateurs de performance et d’automatiser une partie de la production de rapports. Son fonctionnement s’appuie notamment sur des formules et des manipulations de données proches de celles des tableurs. L’outil est disponible uniquement en anglais.\n\nKlips propose des connexions à plus de 200 services, notamment des outils de gestion de la relation client, des plateformes publicitaires et des réseaux sociaux. Il peut aussi récupérer des données d’Excel et de Google Sheets, ainsi qu’utiliser des connecteurs SQL et REST. Le rafraîchissement des données peut être planifié, et l’utilisation d’un entrepôt de données n’est pas obligatoire.\n\nLa création des tableaux de bord repose sur une trentaine de types de visualisations, des mises en page personnalisables et des options de couleurs, de logos et d’indicateurs. Les tableaux peuvent être présentés en direct, intégrés ailleurs ou exportés. L’envoi de rapports par courriel peut être programmé, tandis que des rôles permettent de gérer les accès.\n\nPour un OSBL culturel, l’outil peut servir à réunir des indicateurs issus de différents systèmes dans une vue commune, sous réserve de disposer des connexions nécessaires. La page annonce un tarif de départ de **120 USD par mois**. Elle ne précise pas le lieu d’hébergement des données, un point à vérifier avant d’y connecter des renseignements sensibles.",
+      "tags": [
+        "rapports-analytique",
+        "api-integrations",
+        "automatisation",
+        "anglais-seulement"
+      ],
+      "source": "proprietaire",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": null,
+      "evaluation_enrichie": {
+        "score": 1,
+        "criteres": [
+          "controle"
+        ],
+        "confiance": "moyenne",
+        "ecart": "L’écart entre les deux scores porte sur la conservation des données au Canada : ce critère est attribué au répertoire par déduction, avec une confiance faible, mais n’est pas retenu par l’évaluation enrichie. L’extrait ne précise ni le lieu d’hébergement, ni la possibilité de choisir le Canada ou d’auto-héberger l’outil, ce qui ne permet pas de trancher. Les deux évaluations retiennent le contrôle canadien et ne retiennent pas l’indépendance technologique, sans que l’extrait confirme ces points : les intégrations à Google ou Microsoft ne prouvent pas à elles seules une dépendance indispensable. Une documentation sur les options de résidence des données, la propriété de l’entreprise et ses fournisseurs d’infrastructure permettrait de vérifier ces hypothèses."
+      },
+      "page_lue": true
     },
     {
       "categorie": "Bureautique et collaboration",
@@ -49,7 +92,30 @@
         "controle",
         "dependance"
       ],
-      "confiance": "élevée"
+      "confiance": "élevée",
+      "description_longue": "cDox est une suite bureautique canadienne qui réunit **Pages** pour la rédaction, **Sheets** pour les tableurs et **Slides** pour les présentations. Disponible en français et en anglais, elle permet de créer, modifier et partager des documents. Pour un OSBL culturel, ces fonctions peuvent servir à préparer des rapports, travailler sur des budgets ou élaborer des présentations en équipe.\n\nLa collaboration comprend les modifications visibles en temps réel, les invitations par courriel et les commentaires liés à un paragraphe précis. Les documents peuvent être classés dans des dossiers et sous-dossiers, puis partagés individuellement ou par dossier. Une page peut aussi être publiée au moyen d’un lien accessible sans compte, que l’on peut ensuite désactiver.\n\nLes possibilités d’exportation comprennent Word, PDF, Markdown et texte brut pour les pages, Excel et CSV pour les tableaux, ainsi que PowerPoint pour les présentations. L’importation de fichiers Word et CSV est également annoncée. Une **API REST** permet d’automatiser des opérations et de créer des scripts à partir des pages et des tableaux.\n\nSelon le fournisseur, les documents sont stockés et traités sur des serveurs physiques indépendants à Montréal, avec des sauvegardes nocturnes à Toronto. Il affirme ne pas vendre les données ni utiliser les écrits pour entraîner des modèles d’intelligence artificielle, et annonce un service sans publicité ni pistage.\n\ncDox propose des applications pour Mac, Windows, Linux, iPhone, iPad et Android. L’extrait mentionne une offre Pro, mais ne précise pas les tarifs ni les limites des différentes formules.",
+      "tags": [
+        "redaction-documents",
+        "collaboration-temps-reel",
+        "vie-privee",
+        "api-integrations",
+        "application-bureau"
+      ],
+      "source": "proprietaire",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": null,
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "moyenne",
+        "ecart": "L’écart entre les trois étoiles du répertoire et les deux de l’évaluation enrichie porte uniquement sur le contrôle canadien : le qualificatif « outil canadien » a pu conduire à retenir ce critère, mais l’extrait ne précise ni la propriété ni le contrôle de l’organisation qui exploite cDox. Les deux évaluations retiennent l’hébergement au Canada et l’absence de dépendance étrangère importante, en s’appuyant notamment sur les serveurs indépendants à Montréal et les sauvegardes à Toronto. Les critères attribués au répertoire restent toutefois des hypothèses déduites automatiquement, même avec une confiance élevée : une confirmation de ses critères réels et des renseignements sur la propriété de cDox permettraient de trancher cet écart."
+      },
+      "page_lue": true
     },
     {
       "categorie": "Bureautique et collaboration",
@@ -65,7 +131,30 @@
         "controle",
         "dependance"
       ],
-      "confiance": "élevée"
+      "confiance": "élevée",
+      "description_longue": "Antidote est un logiciel propriétaire d’aide à la rédaction développé par **Druide informatique, une entreprise québécoise**. Il réunit un correcteur, des dictionnaires et des guides linguistiques. Il traite le français et propose un module anglais pour les organisations qui rédigent dans les deux langues.\n\nLe correcteur repère des problèmes d’orthographe, de grammaire, de typographie et de style. Des fonctions de reformulation assistées par intelligence artificielle complètent ces outils. Antidote s’intègre à différents logiciels de rédaction, ce qui permet de réviser des textes sans devoir systématiquement changer d’environnement de travail. Pour un OSBL culturel, il peut notamment servir à réviser des communications publiques, des dossiers de financement, des programmes et des courriels.\n\n**La gamme comprend trois applications aux fonctions distinctes :**\n\n- **Antidote 12**, installé localement sur Windows ou Mac, comprend le correcteur, les dictionnaires et les guides.\n- **Antidote Web**, accessible dans un navigateur, nécessite une connexion Internet et s’utilise sur ordinateur, tablette ou téléphone.\n- **Antidote Mobile**, pour iPhone et iPad, permet de consulter les dictionnaires et les guides sans connexion Internet.\n\nL’abonnement Antidote+ regroupe les trois applications. Le choix dépend donc des appareils utilisés et du besoin de correction ou de consultation linguistique. Les fonctions locales permettent certains usages sans service en ligne, mais il ne faut pas en déduire que toutes les fonctions, notamment la reformulation, fonctionnent hors ligne. L’extrait fourni ne précise pas les modalités d’hébergement des textes traités en ligne.",
+      "tags": [
+        "redaction-documents",
+        "intelligence-artificielle",
+        "application-bureau",
+        "application-mobile",
+        "hors-ligne"
+      ],
+      "source": "proprietaire",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": null,
+      "evaluation_enrichie": {
+        "score": 3,
+        "criteres": [
+          "donnees",
+          "controle",
+          "dependance"
+        ],
+        "confiance": "moyenne"
+      },
+      "page_lue": true
     },
     {
       "categorie": "Bureautique et collaboration",
@@ -80,7 +169,29 @@
         "donnees",
         "dependance"
       ],
-      "confiance": "élevée"
+      "confiance": "élevée",
+      "description_longue": "CryptPad est une **suite bureautique collaborative en ligne**, libre et chiffrée de bout en bout. Elle permet de créer et de partager des documents texte, des feuilles de calcul, des présentations, des formulaires, des tableaux Kanban et des tableaux blancs. Plusieurs personnes peuvent modifier un même contenu en temps réel, depuis leur navigateur.\n\nPour un OSBL des arts et de la culture, ces fonctions peuvent servir à rédiger collectivement un dossier de projet, préparer une réunion, recueillir des réponses à un questionnaire ou organiser les tâches d’une production. L’espace CryptDrive permet de regrouper des documents et des fichiers. La collaboration peut aussi se faire sans compte, ce qui facilite les échanges ponctuels avec des partenaires externes.\n\nLe **chiffrement de bout en bout** protège le contenu des documents de manière à empêcher l’hébergeur de le lire. Cette protection ne dispense toutefois pas l’organisme de gérer attentivement les liens de partage et les accès accordés aux participantes et participants.\n\nCryptPad peut être utilisé sur une instance existante ou installé sur une infrastructure choisie par l’organisation. L’auto-hébergement permet notamment de conserver les données au Canada, mais implique de prendre en charge l’exploitation, les mises à jour et les sauvegardes. Pour une instance gérée par un tiers, les conditions de service, les quotas et l’emplacement d’hébergement sont à vérifier auprès de ce fournisseur.",
+      "tags": [
+        "redaction-documents",
+        "collaboration-temps-reel",
+        "chiffrement",
+        "auto-hebergeable",
+        "vie-privee"
+      ],
+      "source": "libre",
+      "licence": "AGPL-3.0-only",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/cryptpad/cryptpad",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "élevée"
+      },
+      "page_lue": true
     },
     {
       "categorie": "Bureautique et collaboration",
@@ -95,7 +206,29 @@
         "donnees",
         "dependance"
       ],
-      "confiance": "élevée"
+      "confiance": "élevée",
+      "description_longue": "ONLYOFFICE est une suite bureautique qui permet de créer, modifier et commenter des documents texte, des feuilles de calcul, des présentations ainsi que des fichiers et formulaires PDF. Ses éditeurs sont accessibles sur le Web et sous forme d’applications pour ordinateur et appareils mobiles. Les applications de bureau, gratuites et disponibles pour Windows, Linux et macOS, permettent aussi de travailler hors ligne.\n\nPour un OSBL culturel, la suite peut servir à préparer des budgets, rédiger des demandes de financement ou travailler collectivement sur des documents de programmation. La **coédition en temps réel** permet à plusieurs personnes de modifier un même document. L’offre comprend également des fonctions de gestion de fichiers, d’organisation en espaces de collaboration, de partage avec des personnes externes et de contrôle des accès, selon les produits utilisés.\n\nONLYOFFICE peut être intégré à une plateforme existante au moyen de connecteurs ou d’API. Des fonctions d’intelligence artificielle sont proposées pour la rédaction, la synthèse, la recherche de contenu et l’automatisation. Le choix des services associés à ces fonctions doit être examiné séparément pour déterminer où les données sont traitées.\n\nLa gamme comprend des **éditions communautaires libres et des offres commerciales**. Le déploiement sur les serveurs de l’organisation permet de conserver les documents sur une infrastructure canadienne, sans que cela implique un hébergement canadien par défaut dans l’offre infonuagique. L’éditeur, Ascensio System SIA, est une société lettone détenue par un groupe établi à Singapour : l’outil n’est donc pas sous contrôle canadien.",
+      "tags": [
+        "redaction-documents",
+        "collaboration-temps-reel",
+        "auto-hebergeable",
+        "hors-ligne",
+        "api-integrations"
+      ],
+      "source": "partiel",
+      "licence": "AGPL-3.0-only",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/ONLYOFFICE/DocumentServer",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "élevée"
+      },
+      "page_lue": true
     },
     {
       "categorie": "Bureautique et collaboration",
@@ -110,7 +243,28 @@
         "donnees",
         "dependance"
       ],
-      "confiance": "élevée"
+      "confiance": "élevée",
+      "description_longue": "Collabora Online est une **suite bureautique libre accessible dans un navigateur**. Elle permet de consulter, de créer et de modifier des documents texte, des feuilles de calcul, des présentations et des dessins. Plusieurs personnes peuvent travailler sur un même document en temps réel. La suite prend en charge les formats Microsoft Office et OpenDocument (ODF), ce qui facilite les échanges avec des partenaires utilisant d’autres logiciels bureautiques.\n\nL’outil est conçu pour s’intégrer à une plateforme existante, notamment Nextcloud, plutôt que pour remplacer à lui seul l’ensemble des services de stockage et de collaboration d’une organisation. Ses intégrations permettent d’ouvrir et de modifier des documents directement depuis un environnement de partage de fichiers, un portail interne ou une autre application. Des interfaces de programmation et des options de personnalisation permettent aussi d’adapter son intégration.\n\nPour un OSBL culturel, Collabora Online peut notamment servir à rédiger collectivement des dossiers de projet, à préparer des budgets ou à réviser des présentations. Le travail dans le navigateur permet aux équipes de collaborer sans installer un éditeur bureautique sur chaque poste.\n\n**L’hébergement peut être assuré par l’organisation ou par un partenaire.** Une installation sur une infrastructure canadienne permet de conserver la maîtrise du lieu d’hébergement des documents. Cette formule demande toutefois des ressources pour le déploiement, les mises à jour et l’administration. Le fournisseur propose également du soutien et des ententes de niveau de service.",
+      "tags": [
+        "auto-hebergeable",
+        "collaboration-temps-reel",
+        "redaction-documents",
+        "api-integrations"
+      ],
+      "source": "libre",
+      "licence": "MPL-2.0",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/CollaboraOnline/online",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "élevée"
+      },
+      "page_lue": true
     },
     {
       "categorie": "Bureautique et collaboration",
@@ -125,7 +279,29 @@
         "donnees",
         "dependance"
       ],
-      "confiance": "élevée"
+      "confiance": "élevée",
+      "description_longue": "La Digitale est un ensemble d’outils numériques libres et gratuits conçus pour l’éducation, utilisables notamment pour préparer des contenus, collaborer et animer des activités en présence ou à distance. Le projet met de l’avant une approche qui ne repose pas sur la course au profit ni sur la collecte de données.\n\n### Collaboration et création\n\nLes applications en ligne couvrent plusieurs besoins distincts : **Digiboard** propose des tableaux blancs collaboratifs, **Digicalc** des feuilles de calcul, **Digidoc** des documents simples et **Digipad** des murs collaboratifs multimédias. **Digipage** permet de créer des pages collaboratives en Markdown. Pour recueillir les contributions d’un groupe, **Digistorm** offre des remue-méninges, des nuages de mots, des sondages et des questionnaires.\n\nLa gamme comprend aussi des outils de création et de modification de contenus : compositions graphiques, affiches, diagrammes, présentations, traitement de fichiers PDF, découpage et assemblage de fichiers audio ou vidéo. Certaines applications répondent à des besoins précis, comme masquer des visages sur une photo ou supprimer les métadonnées d’une image.\n\n### Usages pour les organismes culturels\n\nPour un OSBL des arts et de la culture, ces fonctions peuvent servir à préparer un atelier de médiation, recueillir des idées en équipe, produire des supports visuels ou partager des ressources avec des participants. Il s’agit d’une collection d’applications spécialisées plutôt que d’un seul logiciel réunissant toutes ces fonctions.\n\nConçus en France, les outils sont auto-hébergeables, ce qui permet d’envisager une installation sur une infrastructure canadienne. Cette possibilité doit être distinguée de l’utilisation des services publics de La Digitale, dont le lieu d’hébergement n’est pas précisé dans le contenu fourni.",
+      "tags": [
+        "auto-hebergeable",
+        "gratuit",
+        "collaboration-temps-reel",
+        "redaction-documents",
+        "conception-design"
+      ],
+      "source": "libre",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": null,
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "moyenne"
+      },
+      "page_lue": true
     },
     {
       "categorie": "Bureautique et collaboration",
@@ -140,7 +316,29 @@
         "donnees",
         "dependance"
       ],
-      "confiance": "élevée"
+      "confiance": "élevée",
+      "description_longue": "Euro-Office est une **suite bureautique collaborative** issue du code ouvert d’ONLYOFFICE. Elle permet de consulter et de modifier des documents texte, des tableurs, des présentations et des fichiers PDF. Les formats annoncés comprennent notamment DOCX, XLSX, PPTX, ODT, ODS, ODP et TXT. Plusieurs personnes peuvent travailler simultanément sur un document, un tableur ou une présentation.\n\nSon serveur de documents est conçu pour être **intégré à une autre plateforme**, comme Nextcloud, un wiki ou un outil de gestion de projets, plutôt que pour fonctionner seul. La plateforme d’accueil assure le stockage des fichiers. Les documents modifiés peuvent être enregistrés dans l’application d’origine ou téléchargés dans différents formats. Pour un OSBL culturel, cette intégration peut servir à préparer collectivement des budgets, des dossiers de projet ou des présentations.\n\nLe projet propose un serveur installable au moyen de paquets deb, rpm ou de Docker, ainsi que des éditeurs de bureau pour Windows, macOS et Linux. Deux distributions sont annoncées à partir du même code : des versions signées destinées à la production sous le nom Nextcloud Office, avec soutien professionnel par abonnement Nextcloud Enterprise, et des versions communautaires Euro-Office non signées pour les tests et les contributions.\n\nL’auto-hébergement permet de choisir l’infrastructure, notamment au Canada, mais suppose d’administrer le serveur et sa plateforme d’accueil. Le développement est public et communautaire. La documentation indique toutefois que le nettoyage du code hérité, certains travaux sur les applications mobiles et la mise en place d’une gouvernance structurée sont encore en cours.",
+      "tags": [
+        "redaction-documents",
+        "collaboration-temps-reel",
+        "auto-hebergeable",
+        "application-bureau",
+        "api-integrations"
+      ],
+      "source": "libre",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/Euro-Office/DocumentServer",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "moyenne"
+      },
+      "page_lue": true
     },
     {
       "categorie": "Bureautique et collaboration",
@@ -155,7 +353,29 @@
         "donnees",
         "dependance"
       ],
-      "confiance": "élevée"
+      "confiance": "élevée",
+      "description_longue": "Framapad est un **éditeur de texte collaboratif en ligne**, proposé gratuitement par Framasoft, une association française à but non lucratif. Il repose sur le logiciel libre Etherpad et permet à plusieurs personnes de rédiger simultanément un même document, appelé « pad ». L’interface est disponible en français.\n\nLes contributions apparaissent en temps réel et sont distinguées par des couleurs. Les modifications sont enregistrées au fil de la saisie, et un historique permet de retrouver ou de restaurer une version antérieure. Une messagerie intégrée permet aux personnes participantes d’échanger pendant la rédaction. Pour un OSBL culturel, ces fonctions peuvent servir à préparer un ordre du jour, prendre des notes collectives ou rédiger un texte en équipe.\n\nLa création d’un pad public permet de partager un lien avec ses collaborateurs. Un compte de pads privés donne accès à un espace de gestion des documents et de leurs droits d’accès. **Les pads publics ont une durée de conservation limitée**, calculée à partir de leur dernière modification. Il faut donc exporter les contenus à conserver plutôt que considérer le service comme un espace d’archivage permanent.\n\nFramapad est sans publicité, et Framasoft déclare limiter la collecte de données et ne pas exploiter les comportements des utilisateurs. Le service proposé sur framapad.org fonctionne sur les serveurs de Framasoft. Pour conserver les données sur une infrastructure canadienne, une organisation peut plutôt installer Etherpad sur son propre serveur ou faire gérer cette installation. Cette option implique d’assumer l’hébergement et l’entretien technique, mais permet de ne pas dépendre du service hébergé par l’association française.",
+      "tags": [
+        "collaboration-temps-reel",
+        "redaction-documents",
+        "auto-hebergeable",
+        "gratuit",
+        "vie-privee"
+      ],
+      "source": "libre",
+      "licence": "Apache-2.0",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/ether/etherpad-lite",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "élevée"
+      },
+      "page_lue": true
     },
     {
       "categorie": "Communication et collaboration d’équipe",
@@ -171,7 +391,30 @@
         "controle",
         "dependance"
       ],
-      "confiance": "élevée"
+      "confiance": "élevée",
+      "description_longue": "Jami est un logiciel libre de communication développé par Savoir-faire Linux, une entreprise établie à Montréal. Il permet d’échanger des messages, de passer des appels audio et vidéo, de tenir des conversations de groupe et des visioconférences, ainsi que de partager son écran et des fichiers. Pour un OSBL culturel, il peut servir aux échanges d’équipe, aux réunions de production ou aux communications entre partenaires.\n\nSon architecture **pair-à-pair** permet aux appareils de communiquer sans serveur central chargé de relayer les conversations. Les communications Jami sont chiffrées de bout en bout. La création d’un compte ne nécessite pas de renseignements personnels, et plusieurs appareils peuvent être associés au même compte. Le logiciel ne comporte pas de publicité.\n\nJami est disponible sur Linux, Windows, macOS, Android, Android TV et iOS. Il propose également l’enregistrement de messages audio et vidéo, la diffusion de médias et une plateforme d’extensions. Il peut aussi fonctionner comme client SIP. Des personnes connectées au **même réseau local** peuvent communiquer avec Jami même sans accès à Internet, ce qui ne signifie pas que les communications à distance fonctionnent hors ligne.\n\nDistribué sous licence GNU GPL version 3 ou ultérieure, Jami est gratuit. Son fonctionnement décentralisé permet de conserver les échanges sur les appareils participants plutôt que dans un service centralisé. Pour un organisme souhaitant garder ses données au Canada, l’emplacement et la sécurité de ces appareils restent donc des éléments à prendre en compte.",
+      "tags": [
+        "messagerie-visioconference",
+        "chiffrement",
+        "federe-decentralise",
+        "vie-privee",
+        "hors-ligne"
+      ],
+      "source": "libre",
+      "licence": "GPL-3.0-or-later",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://git.jami.net/savoirfairelinux/jami-daemon",
+      "evaluation_enrichie": {
+        "score": 3,
+        "criteres": [
+          "donnees",
+          "controle",
+          "dependance"
+        ],
+        "confiance": "élevée"
+      },
+      "page_lue": true
     },
     {
       "categorie": "Communication et collaboration d’équipe",
@@ -186,7 +429,29 @@
         "donnees",
         "dependance"
       ],
-      "confiance": "élevée"
+      "confiance": "élevée",
+      "description_longue": "Mattermost est une plateforme de **messagerie et de collaboration d’équipe** qui regroupe des canaux de discussion, des messages directs, des fils de conversation et le partage de fichiers. L’historique est consultable par recherche. L’outil est accessible sur le Web ainsi que par des applications de bureau et mobiles.\n\nPour un OSBL des arts et de la culture, il peut servir à centraliser les échanges d’une équipe, à coordonner une production ou à organiser les communications autour de projets. La plateforme propose également des appels audio et le partage d’écran, ainsi que des procédures automatisées fondées sur des listes de vérification et des déclencheurs. Une API et des mécanismes d’intégration permettent de relier les conversations à d’autres systèmes.\n\n**L’auto-hébergement est une caractéristique centrale** : Mattermost peut être installé sur l’infrastructure de l’organisation, dans un nuage privé ou dans un réseau entièrement déconnecté d’Internet. Une organisation canadienne peut donc choisir de conserver ses données au Canada. Cette approche exige toutefois des ressources pour l’installation, les mises à jour et l’administration.\n\nMattermost combine du code libre et des offres commerciales. La page présente notamment des fonctions avancées de gouvernance, de fédération et d’intelligence artificielle, avec la possibilité d’utiliser un modèle auto-hébergé. Il convient de vérifier les fonctions comprises dans l’édition retenue, particulièrement pour les contrôles d’accès, la conservation des messages et les automatisations avancées.",
+      "tags": [
+        "messagerie-visioconference",
+        "auto-hebergeable",
+        "automatisation",
+        "api-integrations",
+        "stockage-partage-fichiers"
+      ],
+      "source": "partiel",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/mattermost/mattermost",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "élevée"
+      },
+      "page_lue": true
     },
     {
       "categorie": "Communication et collaboration d’équipe",
@@ -201,7 +466,28 @@
         "donnees",
         "dependance"
       ],
-      "confiance": "élevée"
+      "confiance": "élevée",
+      "description_longue": "Jitsi Meet est un logiciel libre de **visioconférence** qui permet d’organiser des réunions vidéo, de partager son écran ou une présentation et d’échanger par clavardage. Les personnes participantes rejoignent une salle au moyen d’un lien, dont le nom peut être personnalisé. Pour un OSBL culturel, il peut servir aux réunions d’équipe, aux rencontres de comités ou aux échanges avec des partenaires.\n\nLe logiciel propose le chiffrement des communications et des réglages de sécurité. Il faut toutefois distinguer le chiffrement des échanges avec les serveurs du chiffrement de bout en bout : les garanties dépendent des fonctions activées et de la configuration utilisée. Une intégration avec Etherpad permet également de travailler à plusieurs sur des documents.\n\n**Deux modes d’utilisation sont possibles** : utiliser un service en ligne reposant sur Jitsi Meet ou installer sa propre instance. Le logiciel est gratuit, mais l’auto-hébergement nécessite une infrastructure, de la maintenance et des compétences techniques. Les exigences de compte ou d’authentification peuvent varier selon l’instance et selon qu’on organise une réunion ou qu’on y participe.\n\nL’auto-hébergement permet de choisir une infrastructure située au Canada et de maîtriser la configuration du service. Cette possibilité ne signifie pas que les services publics utilisant Jitsi hébergent automatiquement leurs données au Canada.",
+      "tags": [
+        "messagerie-visioconference",
+        "auto-hebergeable",
+        "chiffrement",
+        "gratuit"
+      ],
+      "source": "libre",
+      "licence": "Apache-2.0",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/jitsi/jitsi-meet",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "élevée"
+      },
+      "page_lue": true
     },
     {
       "categorie": "Communautés, réseaux et partage des connaissances",
@@ -231,7 +517,27 @@
         "donnees",
         "dependance"
       ],
-      "confiance": "élevée"
+      "confiance": "élevée",
+      "description_longue": "Mastodon est un **logiciel libre de réseau social décentralisé**, développé par une organisation à but non lucratif d’origine allemande. Le réseau repose sur des serveurs indépendants, aussi appelés instances, dont les membres peuvent communiquer entre eux. Le protocole ouvert ActivityPub permet également des échanges avec d’autres plateformes du fédiverse.\n\nLes personnes inscrites peuvent publier du texte, des photos, des vidéos et des contenus audio, suivre des comptes et participer à des discussions. Mastodon propose notamment des sondages, des descriptions d’accessibilité pour les images et des avertissements de contenu. Le fil principal présente les publications des comptes suivis dans l’ordre chronologique, sans classement publicitaire.\n\nPour un OSBL artistique ou culturel, Mastodon peut servir à **diffuser des nouvelles, présenter des œuvres et entretenir des liens avec une communauté**. Une organisation peut rejoindre un serveur existant dont les règles lui conviennent ou exploiter sa propre instance. Chaque serveur définit et applique ses règles de modération. L’exploitation d’une instance implique donc des responsabilités techniques et de modération.\n\nL’auto-hébergement permet d’installer Mastodon sur une infrastructure canadienne et de maîtriser l’administration du serveur. Il ne garantit toutefois pas que toutes les copies des publications restent au Canada : les contenus diffusés dans le réseau peuvent être transmis à des instances étrangères. Le choix du serveur et les pratiques de son exploitant restent importants pour la gestion des données.",
+      "tags": [
+        "communaute-reseau-social",
+        "federe-decentralise",
+        "auto-hebergeable"
+      ],
+      "source": "libre",
+      "licence": "AGPL-3.0-or-later",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/mastodon/mastodon",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "élevée"
+      },
+      "page_lue": true
     },
     {
       "categorie": "Communautés, réseaux et partage des connaissances",
@@ -246,7 +552,28 @@
         "donnees",
         "dependance"
       ],
-      "confiance": "élevée"
+      "confiance": "élevée",
+      "description_longue": "Discourse est une **plateforme libre de forums et de communautés en ligne**. Elle organise les échanges en sujets, catégories et étiquettes, avec une recherche permettant de retrouver les discussions et les réponses déjà apportées. Pour un OSBL culturel, elle peut servir d’espace d’entraide entre membres, de lieu de concertation ou de base de connaissances alimentée par les échanges.\n\nLa plateforme réunit des discussions structurées, un clavardage en temps réel et des messages privés. Elle permet également de participer par courriel et de partager des fichiers et des documents. Les groupes et les rôles servent à organiser les membres, tandis que les outils de modération et le tableau de bord administratif facilitent le suivi de la communauté.\n\nL’apparence et les fonctionnalités peuvent être adaptées au moyen de **thèmes et de modules complémentaires**. Des possibilités d’intégration et d’authentification unique sont proposées, certaines dans le cadre des offres d’hébergement destinées aux grandes organisations.\n\nDiscourse peut être auto-hébergé ou utilisé avec l’hébergement géré de l’éditeur. Le code est public et la plateforme permet d’exporter les données pour changer de mode d’hébergement. Bien que l’éditeur ne soit pas canadien, une installation sur une infrastructure au Canada permet d’y conserver les données de la communauté. Cette option implique toutefois de prévoir les ressources nécessaires à l’administration, aux mises à jour et aux sauvegardes.",
+      "tags": [
+        "communaute-reseau-social",
+        "auto-hebergeable",
+        "messagerie-visioconference",
+        "api-integrations"
+      ],
+      "source": "libre",
+      "licence": "GPL-2.0-or-later",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/discourse/discourse",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "élevée"
+      },
+      "page_lue": true
     },
     {
       "categorie": "Comptabilité et finances",
@@ -261,7 +588,29 @@
         "donnees",
         "controle"
       ],
-      "confiance": "moyenne"
+      "confiance": "moyenne",
+      "description_longue": "Kashoo est un logiciel canadien de comptabilité en ligne destiné aux petites entreprises et organisations. Disponible uniquement en anglais, il permet de suivre les revenus et les dépenses, de créer des factures, d’enregistrer les paiements, de rapprocher les comptes bancaires et de produire des rapports financiers. Il repose sur une comptabilité en partie double et comprend la gestion des taxes de vente et des opérations en plusieurs devises.\n\nLes transactions bancaires peuvent être récupérées automatiquement par l’intermédiaire de **Plaid**, ou importées à partir de fichiers CSV et OFX. Kashoo propose également des intégrations avec Square, Stripe pour les paiements associés aux factures, et PaymentEvolution pour la paie. Le suivi des projets et des articles en inventaire figure parmi les fonctions annoncées.\n\nL’abonnement permet d’inviter un nombre illimité de personnes, notamment le personnel et les responsables de la tenue de livres, sans frais supplémentaires par utilisateur. Des niveaux d’accès peuvent être attribués selon les besoins. Chaque organisation supplémentaire nécessite toutefois son propre abonnement. Un essai de 14 jours est offert sans carte de crédit; les prix sont affichés en dollars américains.\n\nPour un OSBL culturel, Kashoo peut servir à la tenue de livres courante et au partage des données avec un comptable. La page ne précise pas de fonctions propres à la comptabilité par fonds ou au suivi des subventions. Elle annonce l’authentification à deux facteurs, le chiffrement des échanges par TLS, des sauvegardes quotidiennes et la possibilité d’exporter les données. **Le lieu d’hébergement des données n’est pas précisé** dans le contenu fourni.",
+      "tags": [
+        "comptabilite-facturation",
+        "rapports-analytique",
+        "api-integrations",
+        "anglais-seulement",
+        "chiffrement"
+      ],
+      "source": "proprietaire",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": null,
+      "evaluation_enrichie": {
+        "score": 1,
+        "criteres": [
+          "controle"
+        ],
+        "confiance": "moyenne",
+        "ecart": "L’écart porte sur le critère « donnees » : le répertoire est interprété comme accordant une étoile pour la conservation des données au Canada, contrairement à l’évaluation enrichie. L’extrait mentionne le chiffrement et les sauvegardes, mais ne précise ni leur localisation ni une option d’hébergement canadien ou d’auto-hébergement. Les deux évaluations retiennent le contrôle canadien et ne retiennent pas l’absence de dépendances étrangères, mais les critères attribués au répertoire restent des hypothèses déduites avec une confiance moyenne. Une confirmation du fournisseur sur les lieux d’hébergement et de sauvegarde, ainsi que sur les options offertes, permettrait de trancher l’écart."
+      },
+      "page_lue": true
     },
     {
       "categorie": "Financement, subventions et dons",
@@ -276,7 +625,25 @@
         "donnees",
         "controle"
       ],
-      "confiance": "moyenne"
+      "confiance": "moyenne",
+      "description_longue": "Elodia est une plateforme québécoise d’aide à la recherche et à la rédaction de demandes de subventions culturelles utilisant l’intelligence artificielle. Elle s’adresse aux artistes, aux collectifs, aux organismes culturels, aux festivals et aux entreprises du secteur. **La page annonce un lancement en novembre 2026** : les fonctionnalités décrites sont donc à considérer comme une présentation de l’offre annoncée.\n\nLe parcours proposé commence par un questionnaire destiné à repérer les programmes correspondant au profil de l’utilisateur, notamment ceux du CALQ, de la SODEC, de Musicaction et de FACTOR. Un espace nommé « Mémoire » doit centraliser l’historique, la démarche artistique et les renseignements sur les projets afin de les réutiliser dans plusieurs demandes.\n\nL’assistance à la rédaction s’appuie sur ces renseignements pour proposer des réponses aux questions des formulaires. La plateforme annonce aussi une analyse automatisée du dossier et du budget, ainsi qu’une possibilité de révision par une personne experte en financement culturel. Le dépôt reste à effectuer par l’utilisateur dans le portail de l’organisme subventionnaire, en y copiant les réponses et les documents préparés.\n\nPour un OSBL culturel, l’intérêt potentiel réside dans la réutilisation des informations et la préparation des dossiers. Le catalogue présente également des dates limites; son accès complet nécessite une inscription gratuite. L’extrait ne précise toutefois pas les tarifs des fonctions de rédaction. Il affiche des questions sur la confidentialité et l’entraînement de l’IA, sans en fournir les réponses, et ne précise pas le lieu d’hébergement des données.",
+      "tags": [
+        "subventions",
+        "intelligence-artificielle",
+        "redaction-documents"
+      ],
+      "source": "proprietaire",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": null,
+      "evaluation_enrichie": {
+        "score": 0,
+        "criteres": [],
+        "confiance": "faible",
+        "ecart": "L’écart entre les 2 étoiles du répertoire et les 0 de l’évaluation enrichie porte sur les critères « donnees » et « controle », attribués au répertoire par déduction avec une confiance moyenne, et non selon des critères publiés. La description présente Elodia comme québécoise, mais l’extrait ne confirme ni le contrôle canadien de l’entreprise ni la possibilité de conserver les données au Canada. Aucune évaluation ne retient le critère « dependance » : les fournisseurs d’IA et d’infrastructure ne sont pas précisés, ce qui ne prouve pas une dépendance étrangère. Pour trancher, il faudrait documenter la propriété de l’entreprise, les lieux d’hébergement et de traitement des données ainsi que les prestataires techniques, le score enrichi étant lui-même de faible confiance."
+      },
+      "page_lue": true
     },
     {
       "categorie": "Financement, subventions et dons",
@@ -291,7 +658,28 @@
         "donnees",
         "controle"
       ],
-      "confiance": "moyenne"
+      "confiance": "moyenne",
+      "description_longue": "Zeffy est une plateforme québécoise de collecte de fonds destinée aux organismes sans but lucratif. Elle regroupe les dons, la billetterie, les adhésions, les campagnes pair-à-pair, les encans, les tirages et une boutique en ligne. Pour un organisme culturel, elle peut notamment servir à recevoir des contributions, à vendre des billets pour une activité-bénéfice ou à gérer une campagne de financement.\n\nLes formulaires de dons sont personnalisables avec les couleurs, le logo et les images de l’organisme. Ils permettent de recevoir des dons ponctuels ou récurrents. La billetterie comprend différents types de billets, la collecte de renseignements sur les participants ainsi que l’émission de billets électroniques pouvant être scannés à l’entrée. Les adhésions peuvent comporter plusieurs niveaux, des options de renouvellement et des cartes de membre émises automatiquement.\n\nLa **gestion des donateurs** permet de suivre l’historique des contributions, de segmenter les listes de contacts et d’envoyer des communications personnalisées. Les campagnes pair-à-pair donnent aux personnes participantes des pages personnalisables, tandis que les encans comprennent des avis de surenchère et la collecte automatique des paiements.\n\nZeffy annonce **l’absence de frais de plateforme et de transaction pour les organismes**. Son modèle repose sur des contributions volontaires proposées aux personnes qui effectuent un paiement. Il s’agit d’un service propriétaire en ligne. L’extrait fourni ne précise pas le lieu d’hébergement des données ni la possibilité de choisir un hébergement au Canada.",
+      "tags": [
+        "dons-paiements",
+        "evenements-billetterie",
+        "gestion-contacts-membres",
+        "gratuit"
+      ],
+      "source": "proprietaire",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": null,
+      "evaluation_enrichie": {
+        "score": 1,
+        "criteres": [
+          "controle"
+        ],
+        "confiance": "moyenne",
+        "ecart": "L’écart entre les deux étoiles du répertoire et l’étoile de l’évaluation enrichie porte sur le critère « donnees », retenu uniquement dans le répertoire selon une déduction automatique de confiance moyenne. La description présente Zeffy comme une plateforme québécoise, mais l’extrait ne précise pas où les données sont hébergées ni si leur conservation au Canada est possible. Les deux évaluations retiennent le contrôle canadien et ne retiennent pas l’absence de dépendances étrangères, sans que l’extrait suffise à confirmer ces conclusions. Une documentation sur les lieux d’hébergement et les options offertes permettrait de trancher l’écart, tandis que la structure de propriété et la liste des fournisseurs essentiels permettraient de vérifier les autres critères."
+      },
+      "page_lue": true
     },
     {
       "categorie": "Financement, subventions et dons",
@@ -306,7 +694,26 @@
         "donnees",
         "controle"
       ],
-      "confiance": "moyenne"
+      "confiance": "moyenne",
+      "description_longue": "CanaDon est une plateforme canadienne de collecte de dons en ligne, exploitée par un organisme de bienfaisance. Elle permet aux particuliers de soutenir des organismes de bienfaisance enregistrés au Canada et de suivre leurs dons depuis un guichet unique. Son répertoire comprend notamment une catégorie consacrée aux **arts et à la culture**.\n\nPour les organismes, CanaDon propose des outils permettant de recevoir des contributions, de créer des campagnes, de gérer les donateurs et de produire des reçus fiscaux. La plateforme indique que plus de 27 000 organismes de bienfaisance utilisent ses services pour recueillir des dons. Pour une organisation culturelle admissible, ces fonctions peuvent servir à soutenir une campagne de financement et à regrouper le suivi des contributions.\n\nDu côté des donateurs, le service présente plusieurs façons de contribuer : dons à un organisme précis, fonds soutenant plusieurs organismes autour d’une cause, appels d’urgence et cartes-cadeaux de bienfaisance. Le site propose aussi des ressources sur les tendances des dons au Canada.\n\n**L’admissibilité mérite une vérification** : l’offre décrite vise les organismes de bienfaisance enregistrés, un statut que ne possèdent pas tous les OSBL. L’extrait fourni ne précise ni les frais applicables, ni les modalités d’exportation des données, ni leur lieu d’hébergement. Le caractère canadien de l’organisme ne suffit donc pas à confirmer une conservation des données au Canada.",
+      "tags": [
+        "dons-paiements",
+        "gestion-contacts-membres"
+      ],
+      "source": "proprietaire",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": null,
+      "evaluation_enrichie": {
+        "score": 1,
+        "criteres": [
+          "controle"
+        ],
+        "confiance": "moyenne",
+        "ecart": "L’écart entre les deux étoiles du répertoire et l’étoile de l’évaluation enrichie porte sur le critère des données, attribué au répertoire par déduction automatique avec une confiance moyenne, et non confirmé par ses auteur·trices. L’extrait présente CanaDon comme canadien, ce qui appuie le contrôle canadien retenu dans les deux évaluations, mais ne précise ni le lieu d’hébergement ni une possibilité de conserver les données au Canada. Aucune des deux évaluations ne retient l’absence de dépendance importante à des infrastructures étrangères, sans que l’extrait permette de vérifier ce point. Une documentation sur l’hébergement et les sous-traitants, ainsi que les critères réellement appliqués par le répertoire, permettraient de trancher cet écart."
+      },
+      "page_lue": true
     },
     {
       "categorie": "Création et gestion de contenus numériques",
@@ -322,7 +729,28 @@
         "controle",
         "dependance"
       ],
-      "confiance": "élevée"
+      "confiance": "élevée",
+      "description_longue": "Webnames.ca est un fournisseur canadien d’enregistrement de noms de domaine, d’hébergement Web et de courriel professionnel. Il permet de réserver ou de transférer des domaines, notamment en .CA et en .COM, puis de gérer leurs renouvellements et leurs paramètres DNS. Pour un OSBL culturel, ces services peuvent servir à exploiter un site institutionnel et des adresses courriel associées à son propre domaine.\n\nL’offre comprend de l’**hébergement WordPress géré**, avec des mises à jour automatiques et des serveurs situés au Canada. Webnames propose également un créateur de sites reposant sur Wix. Cette dernière offre constitue un service distinct : l’indication d’hébergement canadien présentée pour WordPress ne doit pas être étendue automatiquement à tous les produits.\n\nLes fonctions de sécurité comprennent des certificats SSL, des options d’automatisation de leur gestion et des mécanismes de verrouillage des domaines et des comptes. La gestion DNS prend notamment en charge DNSSEC, la programmation de modifications et des modèles réutilisables. Le courriel professionnel inclut des protections contre les pourriels et les virus, ainsi que la synchronisation entre appareils.\n\nWebnames annonce un accompagnement pour les transferts de domaines, la migration de sites vers ses serveurs et l’installation de certificats SSL. Les services sont payants, avec des forfaits et des options distincts. L’entreprise se présente comme détenue et exploitée au Canada; toutefois, certaines offres reposent sur des technologies ou des plateformes tierces.",
+      "tags": [
+        "domaines-hebergement-web",
+        "courriel-infolettres",
+        "securite-acces"
+      ],
+      "source": "proprietaire",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": null,
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "controle"
+        ],
+        "confiance": "élevée",
+        "ecart": "L’écart entre les trois étoiles du répertoire et les deux de l’évaluation enrichie porte uniquement sur le critère « dependance », retenu dans le premier cas et non dans le second. La page affirme une propriété et une exploitation canadiennes ainsi que des serveurs au Canada, mais les offres Wix et la mention de Plesk soulèvent la question des dépendances technologiques étrangères sans établir leur importance pour chaque service. Les critères attribués au répertoire restent des hypothèses déduites automatiquement, même avec une confiance élevée : pour trancher, il faudrait connaître la justification des étoiles et vérifier quels services peuvent fonctionner sans ces fournisseurs étrangers."
+      },
+      "page_lue": true
     },
     {
       "categorie": "Création et gestion de contenus numériques",
@@ -337,7 +765,29 @@
         "donnees",
         "dependance"
       ],
-      "confiance": "élevée"
+      "confiance": "élevée",
+      "description_longue": "Penpot est une plateforme libre de **conception d’interfaces et de prototypage collaboratif** destinée aux équipes qui créent des produits numériques. Pour un OSBL culturel, elle peut servir à préparer les maquettes d’un site Web, à représenter le parcours des visiteurs ou à partager un prototype avec une équipe de développement avant sa réalisation.\n\nL’outil permet de concevoir des interfaces adaptatives, des maquettes fonctionnelles et des prototypes interactifs. Il propose des mises en page fondées sur CSS Grid et Flex, ainsi que des composants, des variables de design et des bibliothèques partagées pour constituer un système de design cohérent. Ces fonctions facilitent la réutilisation d’éléments visuels entre plusieurs projets.\n\nPenpot s’appuie sur des standards ouverts comme CSS, HTML, SVG et JSON et possède un format de fichier ouvert. Les fonctions d’inspection permettent aux développeurs de consulter les caractéristiques des éléments conçus. La plateforme propose également des intégrations avec des agents et des outils d’intelligence artificielle, notamment au moyen d’un serveur MCP.\n\nUne inscription gratuite au service en ligne est proposée. **L’auto-hébergement** permet aussi d’installer Penpot sur l’infrastructure choisie par l’organisme, y compris au Canada. Cette option demande toutefois de prendre en charge l’exploitation technique. Le projet est porté par Kaleidos, une entreprise espagnole; l’extrait fourni ne précise pas le lieu d’hébergement du service en ligne.",
+      "tags": [
+        "conception-design",
+        "auto-hebergeable",
+        "collaboration-temps-reel",
+        "gratuit",
+        "api-integrations"
+      ],
+      "source": "libre",
+      "licence": "MPL-2.0",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/penpot/penpot",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "élevée"
+      },
+      "page_lue": true
     },
     {
       "categorie": "Gestion de collections et de contenus culturels",
@@ -352,7 +802,27 @@
         "donnees",
         "controle"
       ],
-      "confiance": "moyenne"
+      "confiance": "moyenne",
+      "description_longue": "La Bibli est un logiciel de gestion de bibliothèque destiné aux organismes à but non lucratif, développé au Nouveau-Brunswick par Aynils. Il réunit le catalogage des livres, la présentation de la collection en ligne et le suivi des prêts aux membres. Le soutien est offert en français.\n\nL’ajout d’un livre se fait par saisie de l’ISBN ou lecture du code-barres. Le logiciel récupère alors les renseignements bibliographiques, notamment le titre, l’auteur ou l’autrice, l’éditeur, le résumé et la couverture. Pour une collection existante, le fournisseur propose une reprise à partir d’un fichier Excel, d’un CSV ou d’un export de PMB. Cet accompagnement est compris dans l’abonnement jusqu’à 3 000 titres.\n\nLa collection peut être partagée par un lien ou intégrée au site Web de l’organisme à l’aide d’un bloc de code. Les membres peuvent chercher par titre, par auteur ou autrice et par catégorie. La vitrine indique également les livres déjà prêtés et permet de mettre en avant des nouveautés ou des sélections.\n\nLe suivi des prêts comprend les dates d’emprunt et de retour attendu, le signalement des retards et des rappels automatiques aux personnes concernées. L’organisme choisit le nombre de relances et peut recevoir une liste quotidienne des retards.\n\nSelon le fournisseur, **les données sont hébergées par défaut à Toronto**, restent au Canada et ne sont pas revendues. Un hébergement dans une autre région peut être discuté. Le tarif affiché est de 30 $ US par mois ou de 330 $ US par année, avec un premier mois gratuit et sans limite de titres au catalogue.",
+      "tags": [
+        "collections-patrimoine",
+        "automatisation",
+        "gestion-contacts-membres"
+      ],
+      "source": "proprietaire",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": null,
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "controle"
+        ],
+        "confiance": "moyenne"
+      },
+      "page_lue": true
     },
     {
       "categorie": "Gestion de collections et de contenus culturels",
@@ -367,7 +837,28 @@
         "donnees",
         "dependance"
       ],
-      "confiance": "élevée"
+      "confiance": "élevée",
+      "description_longue": "Omeka S est une **plateforme libre de publication de collections numériques**, destinée notamment aux musées, aux bibliothèques, aux archives et aux établissements de recherche. Elle permet de documenter des ressources culturelles et de les présenter sur le Web. Dans un OSBL des arts et de la culture, elle peut servir à rendre accessibles des fonds documentaires, des objets numérisés ou des contenus patrimoniaux.\n\nSa particularité est de permettre la création de **plusieurs sites à partir d’un ensemble de ressources partagé**. Une institution peut ainsi organiser ses ressources et leurs métadonnées dans une même installation, puis les mobiliser dans différents projets de diffusion. Omeka S prend en charge des vocabulaires de métadonnées et des relations entre les ressources, ce qui facilite une description structurée des collections.\n\nLe logiciel peut être installé sur une infrastructure choisie par l’organisation, y compris au Canada. Cet auto-hébergement donne la maîtrise du lieu de conservation des données, mais implique de prévoir l’installation, les mises à jour, les sauvegardes et l’administration technique. L’équipe Omeka propose également des services d’hébergement géré, de soutien et de formation.\n\nOmeka S se distingue d’**Omeka Classic**, présenté comme une solution pour les projets individuels et l’enseignement. Le service hébergé Omeka.net mentionné sur le site concerne Omeka Classic, et non Omeka S. Le choix entre ces offres doit donc tenir compte du nombre de sites à gérer et des ressources techniques disponibles.",
+      "tags": [
+        "collections-patrimoine",
+        "auto-hebergeable",
+        "gestion-documentaire",
+        "gratuit"
+      ],
+      "source": "libre",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/omeka/omeka-s",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "moyenne"
+      },
+      "page_lue": true
     },
     {
       "categorie": "Gestion de projets et des tâches",
@@ -382,7 +873,29 @@
         "donnees",
         "dependance"
       ],
-      "confiance": "élevée"
+      "confiance": "élevée",
+      "description_longue": "Leantime est un outil de gestion de projets qui relie les objectifs, la planification et le suivi des tâches. Il s’adresse notamment aux personnes qui ne sont pas spécialistes de la gestion de projets. Son interface est conçue avec une attention particulière à la neurodivergence et au trouble du déficit de l’attention, avec ou sans hyperactivité, sans que cela constitue une garantie d’accessibilité pour chaque personne.\n\nLes tâches peuvent être présentées en **tableau Kanban, en tableau de données ou en liste**, avec des sous-tâches et des dépendances. Les jalons regroupent des tâches autour d’une date et permettent de visualiser les échéances dans un diagramme de Gantt. Des espaces consacrés aux idées, aux documents, au cadrage des projets et aux rétrospectives complètent le suivi opérationnel. Le suivi du temps et les rapports servent à examiner les heures consacrées au travail.\n\nUn tableau de bord personnel rassemble les tâches de plusieurs projets. Il comprend des notes privées et des fonctions de planification par blocs de temps, avec importation d’un calendrier par lien iCal. Le site présente aussi des fonctions d’intelligence artificielle pour décomposer les tâches, aider à leur priorisation et générer des rapports d’avancement.\n\nPour un OSBL culturel, Leantime peut servir à coordonner une programmation, une production ou un projet de médiation. Son **édition communautaire auto-hébergeable** permet une installation sur une infrastructure canadienne, à condition de prendre en charge l’administration, les mises à jour et les sauvegardes. Il convient de vérifier quelles fonctions présentées sont incluses dans l’édition retenue et quels services externes utilisent les fonctions d’IA.",
+      "tags": [
+        "gestion-projets-taches",
+        "auto-hebergeable",
+        "notes-veille",
+        "rapports-analytique",
+        "gratuit"
+      ],
+      "source": "partiel",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/leantime/leantime",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "moyenne"
+      },
+      "page_lue": true
     },
     {
       "categorie": "Gestion de projets et des tâches",
@@ -397,7 +910,29 @@
         "donnees",
         "dependance"
       ],
-      "confiance": "élevée"
+      "confiance": "élevée",
+      "description_longue": "OpenProject est un logiciel libre de **gestion de projets et de tâches**, développé en Allemagne. Il prend en charge des approches classiques, agiles ou hybrides. Il permet de répartir les responsabilités, de suivre les échéances et de regrouper les informations de projet dans un espace commun.\n\nLa planification s’appuie notamment sur des **diagrammes de Gantt**, qui représentent les activités et leur calendrier. Des tableaux adaptés aux méthodes Scrum et Kanban permettent de suivre l’avancement du travail. L’outil propose également une vue de planification des équipes, des fonctions de suivi du temps et des coûts, ainsi qu’une API pour les intégrations. Pour un organisme culturel, ces fonctions peuvent servir à organiser une production, une programmation ou un projet impliquant plusieurs équipes.\n\nL’édition **Community est gratuite et auto-hébergeable**. Les offres Enterprise sur infrastructure propre et Enterprise Cloud ajoutent notamment de l’assistance et des fonctionnalités supplémentaires. La disponibilité des fonctions varie selon l’édition. L’installation sur sa propre infrastructure nécessite des compétences techniques et une prise en charge de l’exploitation.\n\nL’auto-hébergement permet à un organisme de conserver ses données sur une infrastructure canadienne de son choix. En revanche, l’offre Enterprise Cloud présentée annonce un hébergement dans l’Union européenne, avec une possibilité de localisation en Allemagne, et non au Canada. La page mentionne aussi le chiffrement des échanges par HTTPS, l’authentification à deux facteurs et des réglages de sécurité des sessions.",
+      "tags": [
+        "gestion-projets-taches",
+        "auto-hebergeable",
+        "gratuit",
+        "api-integrations",
+        "rapports-analytique"
+      ],
+      "source": "libre",
+      "licence": "GPL-3.0-only",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/opf/openproject",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "élevée"
+      },
+      "page_lue": true
     },
     {
       "categorie": "Gestion de projets et des tâches",
@@ -412,7 +947,28 @@
         "donnees",
         "dependance"
       ],
-      "confiance": "élevée"
+      "confiance": "élevée",
+      "description_longue": "Taiga est un **logiciel libre de gestion de projets collaboratifs** fondé sur les méthodes agiles Kanban et Scrum. Il permet de structurer le travail en tâches, sous-tâches et ensembles de livrables, puis de suivre leur avancement. Pour un OSBL culturel, ces fonctions peuvent servir à organiser une production, une programmation ou un projet numérique impliquant plusieurs personnes.\n\nLes tableaux Kanban proposent des étapes personnalisables, des filtres et des limites de travail en cours. Le mode Scrum comprend un carnet de travail à prioriser, la planification de cycles de travail (*sprints*), des estimations et des graphiques d’avancement. Il est possible de passer d’une méthode à l’autre. Un module de suivi des problèmes permet aussi de définir des types, des priorités et des niveaux de gravité.\n\nTaiga comprend des tableaux de bord, des notifications, un historique du projet et un wiki. Les équipes peuvent configurer les rôles et les permissions, ajouter des champs et des étiquettes, et importer ou exporter des projets. Des intégrations sont proposées, certaines passant par Zapier. L’interface est offerte dans plus de vingt langues.\n\n**L’auto-hébergement est disponible** pour conserver les données sur les serveurs choisis par l’organisation et personnaliser l’installation. Cette option permet notamment un hébergement sur une infrastructure canadienne, mais demande de prendre en charge l’exploitation, les mises à jour et la maintenance. Taiga n’est pas un outil sous contrôle canadien.",
+      "tags": [
+        "gestion-projets-taches",
+        "auto-hebergeable",
+        "rapports-analytique",
+        "api-integrations"
+      ],
+      "source": "libre",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/taigaio/taiga-front",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "élevée"
+      },
+      "page_lue": true
     },
     {
       "categorie": "Gestion de projets et des tâches",
@@ -427,7 +983,27 @@
         "donnees",
         "dependance"
       ],
-      "confiance": "élevée"
+      "confiance": "élevée",
+      "description_longue": "Vikunja est un logiciel libre de gestion des tâches et des projets, utilisable individuellement ou en équipe. Il propose quatre modes d’affichage : **liste, tableau Kanban, diagramme de Gantt et tableau de données**. Ces vues permettent d’aborder les mêmes tâches sous différents angles, selon les besoins de planification et de suivi.\n\nPour le travail collectif, Vikunja permet de partager des projets et d’attribuer des tâches. Un OSBL culturel peut ainsi l’utiliser pour répartir les responsabilités liées à une production, organiser une programmation ou suivre les échéances d’un projet. Des fonctions d’importation intégrées facilitent la reprise de tâches et de projets provenant notamment de Todoist, Trello et Microsoft To-Do.\n\nDeux modes d’utilisation sont proposés. La version libre est **gratuite à auto-héberger**, avec une installation possible par Docker ou au moyen de fichiers exécutables adaptés à la plateforme. L’organisation doit alors prendre en charge l’exploitation de son installation. L’offre payante Vikunja Cloud comprend un hébergement géré, des mises à jour automatiques et des sauvegardes.\n\nVikunja est développé en Europe et son offre hébergée est présentée comme étant située dans l’Union européenne. L’auto-hébergement permet toutefois de conserver les données sur une infrastructure choisie par l’organisation, notamment au Canada. Ce choix apporte davantage de maîtrise sur l’hébergement, mais exige les ressources techniques nécessaires à l’administration du service.",
+      "tags": [
+        "gestion-projets-taches",
+        "auto-hebergeable",
+        "gratuit"
+      ],
+      "source": "libre",
+      "licence": "AGPL-3.0-or-later",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://kolaente.dev/vikunja/vikunja",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "élevée"
+      },
+      "page_lue": true
     },
     {
       "categorie": "Gestion de la relation, des membres et CRM",
@@ -442,7 +1018,27 @@
         "donnees",
         "controle"
       ],
-      "confiance": "faible"
+      "confiance": "faible",
+      "description_longue": "Member365 est une plateforme de gestion des membres destinée aux associations et aux organismes sans but lucratif. Elle regroupe les dossiers des membres, les adhésions, les renouvellements, les paiements et les communications autour d’une même fiche. Pour un regroupement artistique ou culturel, elle peut servir à suivre les relations avec ses membres sans maintenir plusieurs bases de données distinctes.\n\nLa gestion des adhésions comprend les inscriptions individuelles et de groupe, des catégories configurables et le suivi des renouvellements et des paiements. Un **portail libre-service** permet aux membres de gérer leur adhésion et d’accéder aux ressources de l’organisme. Des répertoires, des espaces de discussion et des fonctions de collaboration pour les comités complètent ce volet communautaire.\n\nLe module événementiel propose les inscriptions en ligne, la billetterie, des tarifs réservés aux membres et des rappels. Les inscriptions sont reliées aux dossiers des membres, et des rapports permettent de consulter la participation. La plateforme comprend également des outils de marketing par courriel et le traitement intégré des paiements.\n\nLes **rapports intégrés** portent notamment sur les adhésions et l’activité financière. Une connexion facultative à QuickBooks Online vise à réduire la double saisie comptable. Le fournisseur présente aussi un accompagnement au démarrage, de la formation et du soutien continu.\n\nLa description fournie présente Member365 comme un outil canadien. Toutefois, les renseignements disponibles ne précisent pas le lieu d’hébergement des données, la structure de propriété du fournisseur ni la disponibilité d’une interface et d’un soutien en français. Ces éléments restent à vérifier avant une adoption.",
+      "tags": [
+        "gestion-contacts-membres",
+        "evenements-billetterie",
+        "courriel-infolettres",
+        "dons-paiements",
+        "rapports-analytique"
+      ],
+      "source": "proprietaire",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": null,
+      "evaluation_enrichie": {
+        "score": 0,
+        "criteres": [],
+        "confiance": "moyenne",
+        "ecart": "L’écart entre les 2 étoiles du répertoire et les 0 étoile de l’évaluation enrichie porte sur les critères « donnees » et « controle », attribués au répertoire par déduction automatique avec une faible confiance. La description présente Member365 comme canadien, mais l’extrait ne précise ni les possibilités d’hébergement au Canada ni la propriété de l’entreprise, ce qui peut expliquer leur non-validation dans l’évaluation enrichie sans démontrer qu’ils ne sont pas satisfaits. Aucune évaluation ne retient le critère « dependance » : la connexion facultative à QuickBooks Online ne suffit toutefois pas à établir une dépendance importante à une infrastructure étrangère. Pour trancher, il faudrait vérifier les engagements d’hébergement, le contrôle effectif de l’entreprise et les fournisseurs indispensables au fonctionnement du service."
+      },
+      "page_lue": true
     },
     {
       "categorie": "Gestion de la relation, des membres et CRM",
@@ -457,7 +1053,29 @@
         "donnees",
         "dependance"
       ],
-      "confiance": "élevée"
+      "confiance": "élevée",
+      "description_longue": "CiviCRM est un **logiciel libre de gestion des relations avec les publics**, conçu pour les associations, les organismes sans but lucratif et les organisations de mobilisation. Il centralise les coordonnées des contacts et les communications, tout en proposant des fonctions de gestion des membres, des donateurs, des dons et des inscriptions aux événements.\n\nPour un OSBL des arts et de la culture, il peut servir à regrouper les renseignements sur ses membres et ses donateurs, à suivre ses activités de financement et à gérer la participation à ses événements. La plateforme permet également d’automatiser certaines tâches administratives liées à la collecte de fonds. Elle s’intègre notamment aux systèmes de gestion de contenu **WordPress, Drupal, Joomla et Backdrop**.\n\nCiviCRM peut être installé sur l’infrastructure de l’organisation ou hébergé par un prestataire. Le projet laisse le choix de l’hébergeur et du pays d’hébergement, ce qui permet de conserver les données sur une infrastructure canadienne. L’installation et l’exploitation en autonomie demandent toutefois des compétences techniques; le site recommande cette voie aux personnes expérimentées.\n\nUn réseau de partenaires propose des services d’installation, d’hébergement et d’accompagnement. Le projet met aussi à disposition une démonstration, de la documentation et des webinaires d’introduction. Le caractère libre du logiciel n’élimine donc pas les besoins de maintenance ni les coûts éventuels d’hébergement et de soutien.",
+      "tags": [
+        "gestion-contacts-membres",
+        "dons-paiements",
+        "evenements-billetterie",
+        "auto-hebergeable",
+        "api-integrations"
+      ],
+      "source": "libre",
+      "licence": "AGPL-3.0-or-later",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/civicrm/civicrm-core",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "élevée"
+      },
+      "page_lue": true
     },
     {
       "categorie": "Gestion d’événements et billetterie",
@@ -472,7 +1090,25 @@
         "donnees",
         "controle"
       ],
-      "confiance": "moyenne"
+      "confiance": "moyenne",
+      "description_longue": "Lepointdevente.com est une solution québécoise de **billetterie et de gestion d’événements**. Elle permet de vendre et de valider des billets, de gérer les inscriptions et les ventes, d’analyser les données de clientèle et d’intégrer la billetterie au site Web de l’organisateur.\n\nPour un OSBL des arts et de la culture, ces fonctions peuvent servir à gérer l’accès à des spectacles, des expositions, des ateliers ou des festivals. Le service comporte également un portail public où les personnes peuvent découvrir des événements et acheter des billets. Les catégories présentées couvrent notamment la musique, le théâtre, la danse, les arts visuels et les arts littéraires.\n\nLa recherche publique permet de filtrer les événements selon le lieu, la distance, les dates et la catégorie, ainsi que de distinguer les événements en personne des événements virtuels. Le site propose une navigation en français et en anglais, un accès à l’aide et une entrée pour créer un événement.\n\nL’extrait fourni présente surtout le parcours de découverte et d’achat. Il ne précise pas les frais de billetterie, les modalités de versement aux organisateurs ni les possibilités d’exportation des données. L’emplacement de l’hébergement et la structure de propriété de l’entreprise restent également à vérifier pour évaluer la souveraineté numérique du service.",
+      "tags": [
+        "evenements-billetterie",
+        "rapports-analytique",
+        "api-integrations"
+      ],
+      "source": "proprietaire",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": null,
+      "evaluation_enrichie": {
+        "score": 0,
+        "criteres": [],
+        "confiance": "faible",
+        "ecart": "L’écart entre les 2 étoiles du répertoire et les 0 étoile de l’évaluation enrichie porte sur la conservation des données au Canada et le contrôle canadien, deux critères attribués au répertoire par déduction automatique avec une confiance moyenne, et non publiés par ses auteur·trices. La description présente une solution québécoise, mais l’extrait de la page ne précise ni les lieux d’hébergement possibles ni la propriété de l’entreprise, ce qui peut expliquer leur non-validation dans l’évaluation enrichie, de confiance faible, sans démontrer qu’ils ne sont pas satisfaits. L’absence de dépendance importante à des infrastructures étrangères n’est retenue dans aucune des deux évaluations. Pour trancher, il faudrait obtenir des garanties sur la localisation des données, vérifier le contrôle effectif de l’entreprise et confirmer les critères réellement appliqués par le répertoire."
+      },
+      "page_lue": true
     },
     {
       "categorie": "Gestion d’événements et billetterie",
@@ -487,7 +1123,28 @@
         "donnees",
         "dependance"
       ],
-      "confiance": "élevée"
+      "confiance": "élevée",
+      "description_longue": "Mobilizon est un **logiciel libre de gestion d’événements et de groupes**. Il permet de créer, modifier et publier des événements, avec un mode brouillon avant publication, ainsi que des activités qui se déroulent toute l’année. Les événements peuvent être partagés par courriel ou sur les réseaux sociaux et ajoutés à un agenda. La recherche propose des filtres par mot-clé, lieu ou date.\n\nPour un OSBL culturel, Mobilizon peut servir à diffuser une programmation, annoncer des ateliers ou coordonner une communauté de bénévoles. Les groupes disposent d’une page publique pour présenter leurs activités et leurs contenus. Ils permettent également de gérer leurs membres et des contenus privés. Des fonctions de gestion des participations et de notification par courriel complètent ces possibilités. L’extrait fourni ne documente toutefois pas de billetterie payante ni de traitement des paiements.\n\nSon **fonctionnement fédéré** repose sur plusieurs sites indépendants, appelés instances, qui peuvent communiquer entre eux. Une organisation peut rejoindre une instance existante ou installer son propre site Mobilizon. L’auto-hébergement permet notamment de choisir une infrastructure située au Canada, mais implique de prendre en charge l’exploitation et la modération du service.\n\nMobilizon est disponible dans plus de vingt langues. Son API et la prise en charge des formats ICS et RSS facilitent l’importation, l’exportation et la diffusion des événements. Des possibilités d’automatisation de la publication sont également annoncées. Les administrateurs peuvent modérer les utilisateurs et retirer les contenus indésirables signalés.",
+      "tags": [
+        "evenements-billetterie",
+        "federe-decentralise",
+        "auto-hebergeable",
+        "api-integrations"
+      ],
+      "source": "libre",
+      "licence": "AGPL-3.0-or-later",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://framagit.org/framasoft/mobilizon",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "élevée"
+      },
+      "page_lue": true
     },
     {
       "categorie": "Gestion documentaire et signature électronique",
@@ -502,7 +1159,28 @@
         "donnees",
         "controle"
       ],
-      "confiance": "moyenne"
+      "confiance": "moyenne",
+      "description_longue": "eZsign est une solution québécoise de **signature électronique en ligne**. Elle permet d’envoyer des contrats, des ententes et d’autres documents à signer à distance, de suivre leur progression et de conserver une piste d’audit. Pour un OSBL en arts et culture, elle peut notamment servir à faire signer des ententes avec des artistes, des partenaires ou des prestataires de services.\n\nLe processus consiste à ajouter les champs requis au document, à authentifier les signataires, puis à leur transmettre une demande de signature. La plateforme propose des **relances automatiques par courriel** pour les signatures en attente. Une fois les signatures terminées, le document peut être téléchargé en PDF. Une API et des intégrations permettent également de relier la signature électronique à d’autres outils de l’organisation.\n\nL’éditeur indique que les données sont hébergées au Canada et annonce une certification SOC 2 de type II. Il présente aussi plusieurs cadres légaux et normes auxquels sa solution répond, dont la Loi 25 du Québec et la LPRPDE. Ces indications ne dispensent pas l’organisation de vérifier les exigences applicables à ses propres documents.\n\nLe service propose un essai de 30 jours sans carte de crédit, ainsi que de la formation et du soutien humain. Les OSBL admissibles, notamment en arts et culture, peuvent bénéficier d’un **rabais de 50 %**, selon les conditions du fournisseur.",
+      "tags": [
+        "signature-electronique",
+        "automatisation",
+        "api-integrations",
+        "tarif-osbl"
+      ],
+      "source": "proprietaire",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": null,
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "controle"
+        ],
+        "confiance": "moyenne"
+      },
+      "page_lue": true
     },
     {
       "categorie": "Gestion documentaire et signature électronique",
@@ -532,7 +1210,29 @@
         "donnees",
         "dependance"
       ],
-      "confiance": "élevée"
+      "confiance": "élevée",
+      "description_longue": "DocuSeal est une plateforme de **remplissage et de signature électronique de documents**, proposée comme service en ligne et en version auto-hébergeable. Elle permet de préparer des formulaires à partir de documents importés, d’envoyer des demandes de signature et de faire intervenir plusieurs signataires. La page présente notamment la prise en charge des formats PDF, DOCX, XLSX, JPEG et PNG.\n\nPour un OSBL culturel, cet outil peut servir à faire signer des contrats d’artistes, des ententes de partenariat ou des autorisations. Les fonctions présentées comprennent la personnalisation des demandes avec le logo de l’organisation, l’envoi depuis un compte de courriel connecté et la gestion des rôles et des autorisations d’accès. Leur disponibilité est à vérifier selon l’édition choisie.\n\nUne **API REST**, des webhooks et des composants intégrables permettent d’ajouter des parcours de signature à une application existante. Des intégrations avec Zapier, Make et n8n sont également annoncées pour automatiser les échanges entre outils.\n\nL’édition communautaire est libre, tandis que des fonctions professionnelles relèvent d’une offre commerciale. L’auto-hébergement permet de conserver les documents sur une infrastructure canadienne, mais demande de prendre en charge l’installation, les mises à jour, la sécurité et les sauvegardes. Il ne faut pas en déduire que le service hébergé conserve lui aussi les données au Canada. Enfin, les références de l’éditeur à ESIGN, UETA et eIDAS ne remplacent pas une vérification des exigences juridiques applicables aux documents de l’organisme.",
+      "tags": [
+        "signature-electronique",
+        "auto-hebergeable",
+        "api-integrations",
+        "automatisation",
+        "gratuit"
+      ],
+      "source": "partiel",
+      "licence": "AGPL-3.0-only",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/docusealco/docuseal",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "moyenne"
+      },
+      "page_lue": true
     },
     {
       "categorie": "Marketing par courriel",
@@ -548,7 +1248,29 @@
         "controle",
         "dependance"
       ],
-      "confiance": "élevée"
+      "confiance": "élevée",
+      "description_longue": "Envoke est une plateforme canadienne de communication par courriel destinée notamment aux associations, aux établissements d’enseignement et aux organismes publics. Elle privilégie les communications organisationnelles plutôt que les fonctions de vente : infolettres, messages internes, avis réglementaires et courriels aux personnes abonnées. Pour un OSBL culturel, elle peut servir à communiquer avec les membres, les équipes et les publics inscrits à une liste de diffusion.\n\nL’outil permet de **gérer les contacts, les abonnements et les consentements**, ainsi que de créer des courriels et des formulaires. Les contacts peuvent être importés au format CSV ou synchronisés au moyen d’intégrations. Des fonctions de suivi permettent également de mesurer l’engagement envers les communications internes.\n\nEnvoke distingue les communications sur abonnement des **messages obligatoires**, pour lesquels le désabonnement peut être désactivé. Cette possibilité vise notamment les avis liés à des obligations légales ou réglementaires; elle ne dispense pas l’organisme de vérifier les règles applicables à ses envois.\n\nLa gestion de plusieurs comptes permet aux départements de disposer de leur propre espace d’envoi, tout en maintenant une administration centralisée des données et des permissions. Le fournisseur annonce un hébergement des données au Canada. Un essai gratuit est proposé, sans indication dans l’extrait d’une offre gratuite permanente.",
+      "tags": [
+        "courriel-infolettres",
+        "gestion-contacts-membres",
+        "api-integrations",
+        "rapports-analytique"
+      ],
+      "source": "proprietaire",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": null,
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "controle"
+        ],
+        "confiance": "moyenne",
+        "ecart": "L’écart entre les trois étoiles du répertoire et les deux de l’évaluation enrichie porte uniquement sur l’indépendance envers les fournisseurs ou infrastructures technologiques étrangers. Le titre de la page annonce des données au Canada et la présentation décrit Envoke comme canadien, mais ces indications ne démontrent pas l’absence de dépendances étrangères importantes. Les critères attribués au répertoire restent des hypothèses déduites automatiquement, même avec une confiance élevée, et l’extrait ne permet pas de trancher ce troisième critère. Une documentation sur les hébergeurs, les sous-traitants et les services indispensables au fonctionnement permettrait de vérifier cette indépendance."
+      },
+      "page_lue": true
     },
     {
       "categorie": "Marketing par courriel",
@@ -563,7 +1285,29 @@
         "donnees",
         "controle"
       ],
-      "confiance": "moyenne"
+      "confiance": "moyenne",
+      "description_longue": "Cyberimpact est une plateforme québécoise de marketing par courriel qui permet de créer des infolettres, de gérer des listes de contacts et de suivre les résultats des campagnes. Pour un OSBL culturel, elle peut servir à diffuser une programmation, annoncer des événements ou maintenir les communications avec ses membres et ses publics.\n\nL’éditeur fonctionne par glisser-déposer et propose des modèles réutilisables ainsi que des mises en page adaptées aux appareils mobiles. La plateforme comprend aussi des formulaires d’inscription, des fenêtres contextuelles, des pages de destination et des fonctions de segmentation. Selon le forfait, elle permet de mettre en place des automatisations en plusieurs étapes. Des intégrations et une API permettent de synchroniser les contacts avec d’autres outils.\n\n**La gestion des consentements** comprend un historique horodaté et exportable pour chaque contact, la gestion des désabonnements et l’ajout des coordonnées de l’expéditeur dans le pied de page des envois. Ces fonctions visent à soutenir le respect de la Loi canadienne anti-pourriel et des règles de protection des renseignements personnels, sans remplacer les obligations de l’organisme. Le fournisseur indique que les données des contacts sont hébergées exclusivement sur des serveurs canadiens.\n\nUne formule gratuite couvre jusqu’à 250 contacts, avec des envois et des utilisateurs illimités. Les forfaits payants sont facturés en dollars canadiens et varient selon le nombre de contacts et les fonctions incluses. Le soutien est offert en français et en anglais par une équipe basée au Canada; son accès est limité à un essai de 30 jours dans la formule gratuite.",
+      "tags": [
+        "courriel-infolettres",
+        "gestion-contacts-membres",
+        "automatisation",
+        "api-integrations",
+        "gratuit"
+      ],
+      "source": "proprietaire",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": null,
+      "evaluation_enrichie": {
+        "score": 1,
+        "criteres": [
+          "donnees"
+        ],
+        "confiance": "moyenne",
+        "ecart": "L’écart entre les deux évaluations porte sur le contrôle canadien, retenu dans les critères déduits du répertoire avec une confiance moyenne, mais pas dans l’évaluation enrichie. La présentation de Cyberimpact comme outil québécois ou plateforme canadienne ne suffit pas à établir qui contrôle l’entreprise : il faudrait vérifier son actionnariat et son éventuelle société mère. Les deux évaluations retiennent le critère des données, la page affirmant que les données de contacts sont hébergées exclusivement sur des serveurs canadiens. Aucune ne retient l’indépendance technologique, que l’extrait ne permet pas d’établir sans précisions sur les fournisseurs et infrastructures indispensables au fonctionnement."
+      },
+      "page_lue": true
     },
     {
       "categorie": "Marketing par courriel",
@@ -578,7 +1322,29 @@
         "donnees",
         "controle"
       ],
-      "confiance": "moyenne"
+      "confiance": "moyenne",
+      "description_longue": "Dialog Insight est une plateforme québécoise de marketing relationnel qui regroupe la gestion des données de contacts, la personnalisation des communications et l’automatisation de campagnes multicanales. Elle permet de communiquer par courriel, SMS et notifications poussées sur mobile et sur le Web.\n\nSa **plateforme de données clients (CDP)** centralise les informations sur les contacts et peut intégrer des données provenant d’autres outils marketing. Ces informations servent à adapter les messages aux préférences et aux comportements des destinataires. Les fonctions d’automatisation permettent de déclencher des communications, notamment des relances ou des suivis personnalisés.\n\nPour le courriel, la plateforme propose la création, le test et l’envoi de messages ainsi que le suivi des performances et du retour sur investissement. Les fonctions Web comprennent le suivi des parcours, des formulaires et des fenêtres contextuelles. Elles permettent également de définir des parcours de conversion.\n\nPour un OSBL culturel, ces fonctions peuvent servir à organiser les communications avec ses publics et à personnaliser les suivis. Le site présente notamment le cas d’OSE, anciennement Québec Spectacles, qui utilise les données pour rendre ses communications plus pertinentes.\n\nL’extrait fourni propose une démonstration gratuite, mais ne précise ni les tarifs, ni l’existence d’un rabais pour les OSBL, ni les conditions d’hébergement des données. Ces éléments restent à vérifier avant de choisir la plateforme.",
+      "tags": [
+        "courriel-infolettres",
+        "automatisation",
+        "gestion-contacts-membres",
+        "api-integrations",
+        "rapports-analytique"
+      ],
+      "source": "proprietaire",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": null,
+      "evaluation_enrichie": {
+        "score": 1,
+        "criteres": [
+          "controle"
+        ],
+        "confiance": "moyenne",
+        "ecart": "L’écart entre les deux évaluations porte sur le critère « donnees » : le répertoire est interprété comme l’accordant, contrairement à l’évaluation enrichie, alors que toutes deux retiennent le contrôle canadien et n’accordent pas le critère d’indépendance technologique. Les critères attribués au répertoire sont toutefois des hypothèses déduites automatiquement avec une confiance moyenne, et la description de « solution québécoise » ne suffit pas à établir où les données sont hébergées. L’extrait fourni ne précise ni la possibilité de conserver les données au Canada, ni la propriété de l’entreprise, ni ses fournisseurs technologiques essentiels. Des engagements contractuels sur la localisation des données permettraient de trancher l’écart, tandis que des renseignements sur la propriété et les infrastructures permettraient de vérifier les deux critères communs."
+      },
+      "page_lue": true
     },
     {
       "categorie": "Marketing par courriel",
@@ -593,7 +1359,29 @@
         "donnees",
         "controle"
       ],
-      "confiance": "moyenne"
+      "confiance": "moyenne",
+      "description_longue": "Cakemail est une plateforme québécoise de marketing par courriel qui permet de créer des infolettres, de gérer des listes de contacts et de suivre les résultats des campagnes. Pour un OSBL des arts et de la culture, elle peut servir à diffuser une programmation, annoncer des activités ou maintenir le lien avec ses membres et ses publics.\n\nLa plateforme comprend des **modèles de courriels, des fonctions de segmentation, des automatisations et des outils d’analyse**. Elle propose également l’envoi de courriels transactionnels par API ou SMTP. Les formulaires d’inscription et les outils de gestion des listes permettent de recueillir et de suivre le consentement des personnes abonnées en tenant compte des exigences de la Loi canadienne anti-pourriel (LCAP). Ces fonctions ne remplacent toutefois pas les responsabilités de l’organisme en matière de conformité.\n\nSelon Cakemail, les **listes de contacts et les données de campagne des clients canadiens sont conservées sur des serveurs au Canada**, sous les lois canadiennes et québécoises relatives à la protection des renseignements personnels. Le soutien est offert en français et en anglais, et une facturation en dollars canadiens est disponible.\n\nLa création d’un compte gratuit est proposée sans carte de crédit. Une aide à la migration des contacts, des modèles et des automatisations peut être offerte sans frais aux comptes admissibles, après approbation au cas par cas. L’extrait fourni ne précise pas les limites de l’offre gratuite ni les dépendances techniques de l’infrastructure.",
+      "tags": [
+        "courriel-infolettres",
+        "automatisation",
+        "api-integrations",
+        "rapports-analytique",
+        "gratuit"
+      ],
+      "source": "proprietaire",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": null,
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "controle"
+        ],
+        "confiance": "moyenne"
+      },
+      "page_lue": true
     },
     {
       "categorie": "Messagerie électronique",
@@ -608,7 +1396,29 @@
         "donnees",
         "dependance"
       ],
-      "confiance": "élevée"
+      "confiance": "élevée",
+      "description_longue": "Thunderbird est un **client de messagerie libre et gratuit**, disponible en français sur Windows, macOS et Linux. Une application mobile est également proposée sur Android. La version de bureau réunit les courriels, les agendas et les contacts dans une même interface. Elle permet de gérer plusieurs comptes séparément ou de consulter leurs messages dans une boîte de réception unifiée.\n\nLes fonctions de classement comprennent notamment les dossiers, les filtres et les étiquettes. L’interface peut être personnalisée selon les préférences de travail. Pour un OSBL culturel, Thunderbird peut ainsi servir à consulter plusieurs adresses de l’organisme et à organiser les échanges liés aux activités, aux partenaires ou à l’administration. Il s’agit toutefois d’un client de courriel, et non d’une plateforme d’envoi massif d’infolettres.\n\n**Thunderbird ne remplace pas le fournisseur de messagerie.** Les messages demeurent sur les serveurs du fournisseur choisi, selon la configuration du compte, et peuvent aussi être conservés localement. Les messages téléchargés sont consultables hors ligne; l’envoi et la réception nécessitent une connexion. La localisation des données dépend donc du fournisseur et des appareils utilisés, plutôt que du seul logiciel.\n\nLe projet appartient à la famille Mozilla et est développé sous contrôle non canadien. Son financement repose sur les dons, et la page présente l’absence de publicité dans la boîte de réception comme un engagement. Son fonctionnement avec un fournisseur de courriel choisi par l’organisme permet d’utiliser une infrastructure canadienne sans imposer un service de messagerie étranger.",
+      "tags": [
+        "courriel-infolettres",
+        "application-bureau",
+        "application-mobile",
+        "gratuit",
+        "hors-ligne"
+      ],
+      "source": "libre",
+      "licence": "MPL-2.0",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://hg.mozilla.org/comm-central/",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "élevée"
+      },
+      "page_lue": true
     },
     {
       "categorie": "Navigation Web",
@@ -623,7 +1433,29 @@
         "donnees",
         "dependance"
       ],
-      "confiance": "élevée"
+      "confiance": "élevée",
+      "description_longue": "Firefox est un **navigateur Web libre et gratuit**, développé par Mozilla, une organisation américaine. Disponible en français sur ordinateur, téléphone et tablette, il permet de consulter des sites, de gérer des onglets, des favoris et des mots de passe, ainsi que de traduire des pages. Pour un OSBL culturel, il peut servir à la recherche documentaire, à la veille et à l’utilisation quotidienne de services Web.\n\nLa protection contre le pistage bloque automatiquement de nombreux traqueurs. Le mode lecture simplifie l’affichage des articles, tandis que les groupes d’onglets, les onglets épinglés et le panneau latéral facilitent l’organisation du travail. Firefox propose aussi la lecture et certaines modifications de PDF, des extensions et des thèmes. L’importation des favoris, des mots de passe et de l’historique facilite le passage depuis un autre navigateur.\n\nLa synchronisation facultative permet de retrouver des données de navigation sur plusieurs appareils. Les données synchronisées, notamment les mots de passe et l’historique, bénéficient d’un chiffrement de bout en bout. **L’utilisation courante ne nécessite pas de compte Mozilla** : les données du profil peuvent être conservées localement, sur les appareils de l’organisation au Canada.\n\nFirefox n’est pas sous contrôle canadien. Son fonctionnement de base ne nécessite toutefois pas de service infonuagique propriétaire de Mozilla. Il faut distinguer les données conservées dans le navigateur de celles transmises aux sites consultés ou aux services facultatifs activés. Le blocage du pistage ne rend donc pas la navigation anonyme et ne garantit pas que les services Web utilisés hébergent leurs données au Canada.",
+      "tags": [
+        "navigation-web",
+        "vie-privee",
+        "gratuit",
+        "application-bureau",
+        "application-mobile"
+      ],
+      "source": "libre",
+      "licence": "MPL-2.0",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/mozilla-firefox/firefox",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "élevée"
+      },
+      "page_lue": true
     },
     {
       "categorie": "Ressources humaines et gestion du temps",
@@ -638,7 +1470,28 @@
         "donnees",
         "controle"
       ],
-      "confiance": "moyenne"
+      "confiance": "moyenne",
+      "description_longue": "Feuille de temps est un **outil en ligne de gestion du temps de travail**, développé par Aynils, une entreprise établie à Moncton, au Nouveau-Brunswick. Coconçu avec des organismes sans but lucratif, il s’adresse aux équipes de 2 à 50 personnes. Il centralise les heures travaillées, les vacances, les congés de maladie et les heures supplémentaires.\n\nLes membres du personnel remplissent un tableau hebdomadaire dont les calculs sont automatisés. Ils peuvent consulter leurs banques d’heures sans passer par leur gestionnaire. De leur côté, les responsables disposent d’une vue d’ensemble des soldes de l’équipe et peuvent envoyer en un clic des rappels pour les feuilles de temps en retard. Les banques de vacances, de maladie et de congés sont gérées selon les politiques de l’organisme.\n\nL’outil permet également de **comptabiliser les heures par projet** et de produire des rapports pour les redditions de comptes. Pour un OSBL culturel, cette fonction peut servir à documenter le temps consacré aux différentes activités ou productions. Des rapports détaillant les heures travaillées et les absences peuvent être transmis automatiquement au service de paie, sans que l’outil soit présenté comme un logiciel de traitement de la paie.\n\nSelon l’éditeur, les serveurs et la base de données sont situés au Canada, et les données ne transitent pas par les États-Unis. L’entreprise indique ne pas partager les données et permettre leur téléchargement dans un format compréhensible. Un accompagnement à la configuration et un soutien en français sont proposés. L’extrait fourni ne précise ni les tarifs ni les formats d’exportation.",
+      "tags": [
+        "ressources-humaines",
+        "rapports-analytique",
+        "automatisation",
+        "vie-privee"
+      ],
+      "source": "proprietaire",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": null,
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "controle"
+        ],
+        "confiance": "moyenne"
+      },
+      "page_lue": true
     },
     {
       "categorie": "Ressources humaines et gestion du temps",
@@ -653,7 +1506,27 @@
         "donnees",
         "controle"
       ],
-      "confiance": "moyenne"
+      "confiance": "moyenne",
+      "description_longue": "Folks HR est une plateforme de gestion des ressources humaines conçue au Québec et destinée aux PME canadiennes. Elle regroupe des fonctions de gestion du personnel, de recrutement, de paie et de suivi de la performance. Le site présente également les organismes à but non lucratif parmi les secteurs auxquels s’adresse la solution.\n\nLe volet **gestion RH** centralise les dossiers des employés, avec pièces jointes, commentaires et droits d’accès. Les employés peuvent mettre à jour leurs renseignements personnels et consulter leur calendrier de vacances ainsi que leur solde de congés. Les responsables reçoivent des notifications pour les demandes d’absence et peuvent les approuver dans la plateforme. L’offre comprend aussi l’accueil et l’intégration, la gestion documentaire, la signature électronique, un organigramme et le suivi des formations et certifications.\n\nLes évaluations de rendement peuvent être personnalisées selon les critères et les objectifs de l’organisation. Des tableaux de bord et des rapports permettent notamment de suivre l’absentéisme, la rétention et le roulement du personnel.\n\nLe volet **recrutement** propose une banque de candidatures, une connexion à la page carrière et aux sites d’emploi, ainsi que des fonctions d’analyse de CV par intelligence artificielle. L’offre de paie comprend les calculs automatisés, le dépôt direct et l’accès aux fiches de paie dans une application mobile.\n\nPour un OSBL culturel, ces fonctions peuvent servir à regrouper les processus administratifs liés à son équipe. L’extrait fourni ne précise toutefois ni les tarifs et modules inclus, ni le lieu d’hébergement des données.",
+      "tags": [
+        "ressources-humaines",
+        "automatisation",
+        "rapports-analytique",
+        "application-mobile",
+        "signature-electronique"
+      ],
+      "source": "proprietaire",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": null,
+      "evaluation_enrichie": {
+        "score": 0,
+        "criteres": [],
+        "confiance": "moyenne",
+        "ecart": "L’écart entre les 2 étoiles du répertoire et les 0 étoile de l’évaluation enrichie porte sur les critères « donnees » et « controle », attribués au répertoire par déduction automatique avec une confiance moyenne, et non selon des critères publiés. La conception au Québec et le ciblage des PME canadiennes ne prouvent ni que les données peuvent rester au Canada ni que l’entreprise est sous contrôle canadien, et l’extrait ne précise pas ces éléments. Le critère « dependance » n’est retenu dans aucune des deux évaluations, sans que cela démontre une dépendance étrangère importante. Pour trancher, il faudrait vérifier les engagements d’hébergement, la propriété actuelle de l’entreprise et ses fournisseurs technologiques essentiels, ainsi que les motifs des étoiles du répertoire."
+      },
+      "page_lue": true
     },
     {
       "categorie": "Sécurité et gestion des accès",
@@ -683,7 +1556,29 @@
         "donnees",
         "controle"
       ],
-      "confiance": "moyenne"
+      "confiance": "moyenne",
+      "description_longue": "1Password est un gestionnaire de mots de passe propriétaire développé par une entreprise canadienne. Il permet de conserver des identifiants, des clés d’accès et d’autres secrets dans des **coffres chiffrés**, de générer des mots de passe et de partager certains éléments au sein d’une équipe. Il est accessible notamment au moyen d’applications pour ordinateur et appareil mobile, ainsi que d’extensions de navigateur.\n\nPour un OSBL culturel, les coffres partagés peuvent servir à organiser les accès aux comptes administratifs, aux réseaux sociaux ou aux services utilisés pour les événements. Les fonctions de gestion des accès permettent de déterminer quels membres de l’équipe peuvent consulter les éléments partagés. Le chiffrement de bout en bout vise à empêcher le fournisseur de lire le contenu des coffres.\n\nLa page présente également une gamme destinée aux entreprises : gestion des secrets pour les machines et les agents d’IA, accès privilégiés temporaires et gestion des applications SaaS. Ces fonctions dépassent la gestion courante des mots de passe et leur disponibilité dépend de l’offre choisie.\n\n**Un hébergement des données au Canada est proposé**, mais il faut sélectionner la région appropriée lors de la création du compte. Le service n’est pas auto-hébergeable et repose sur une infrastructure infonuagique tierce. Le choix d’une région canadienne ne supprime donc pas toutes les dépendances envers des fournisseurs étrangers.",
+      "tags": [
+        "securite-acces",
+        "chiffrement",
+        "application-bureau",
+        "application-mobile"
+      ],
+      "source": "proprietaire",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": null,
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "controle"
+        ],
+        "confiance": "moyenne"
+      },
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:24-05:00"
     },
     {
       "categorie": "Sécurité et gestion des accès",
@@ -698,7 +1593,30 @@
         "donnees",
         "dependance"
       ],
-      "confiance": "élevée"
+      "confiance": "élevée",
+      "description_longue": "Bitwarden est un gestionnaire de mots de passe qui permet de conserver des identifiants, des clés d’accès et des informations sensibles dans un **coffre chiffré de bout en bout**. Il propose la génération de mots de passe uniques, le remplissage automatique des connexions et le partage d’identifiants avec des permissions. Il est accessible sur ordinateur, sur appareils mobiles et dans les navigateurs.\n\nPour un OSBL culturel, il peut notamment servir à organiser les accès aux comptes administratifs, aux réseaux sociaux ou aux services utilisés par une équipe. Les offres pour organisations ajoutent des fonctions de gestion centralisée, de partage et de suivi des activités. Selon le forfait, elles comprennent aussi la synchronisation d’annuaires, le provisionnement des comptes avec SCIM, l’authentification unique et des politiques de sécurité.\n\nUne **offre personnelle gratuite** couvre la gestion de base des mots de passe. Des abonnements payants ajoutent des fonctions individuelles ou collectives. Les prix affichés sur la page sont en dollars américains, avec facturation annuelle.\n\nBitwarden peut être utilisé dans le nuage ou **auto-hébergé**, notamment sur une infrastructure située au Canada. Cette dernière option implique de prendre en charge l’exploitation, les mises à jour et les sauvegardes. L’entreprise qui développe l’outil est américaine. Le code est public, mais les licences varient selon les composants : le socle du serveur est libre, tandis que certaines fonctions commerciales relèvent d’une licence non libre. Il faut donc distinguer la disponibilité du code et les droits d’utilisation de chaque composant.",
+      "tags": [
+        "securite-acces",
+        "chiffrement",
+        "auto-hebergeable",
+        "gratuit",
+        "application-mobile"
+      ],
+      "source": "partiel",
+      "licence": "AGPL-3.0-only",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/bitwarden/server",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "élevée"
+      },
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:29:53-05:00"
     },
     {
       "categorie": "Sécurité et gestion des accès",
@@ -713,7 +1631,29 @@
         "donnees",
         "dependance"
       ],
-      "confiance": "élevée"
+      "confiance": "élevée",
+      "description_longue": "Vaultwarden est un **serveur libre de gestion de mots de passe**, écrit en Rust et compatible avec les applications officielles Bitwarden pour ordinateurs, appareils mobiles et navigateurs. Anciennement appelé Bitwarden_RS, il constitue une implémentation alternative et non officielle du serveur Bitwarden, conçue notamment pour les déploiements auto-hébergés disposant de ressources limitées. Le projet est indépendant de Bitwarden et n’est pas un service exploité par cette entreprise.\n\nIl propose des coffres personnels, des pièces jointes et des fonctions de partage au sein d’organisations : collections, rôles des membres, groupes, politiques et journaux d’événements. Plusieurs méthodes d’authentification à deux facteurs sont prises en charge, dont les applications d’authentification et les clés de sécurité compatibles FIDO2 WebAuthn. Une interface Web et une interface d’administration sont également disponibles.\n\nPour un OSBL culturel, Vaultwarden peut servir à **centraliser et partager les identifiants** des services utilisés par l’équipe, tout en conservant le serveur sous le contrôle de l’organisation. L’auto-hébergement permet de choisir une infrastructure située au Canada, sans que le projet soit pour autant sous contrôle canadien.\n\nCette autonomie exige des compétences techniques. Le projet recommande une installation par conteneur et l’utilisation d’un mandataire inverse. L’interface Web nécessite HTTPS. L’organisation doit prévoir l’entretien du serveur, les mises à jour et des sauvegardes régulières des fichiers et de la base de données. Les demandes d’aide et les signalements de problèmes doivent être adressés à la communauté Vaultwarden, et non au soutien officiel de Bitwarden.",
+      "tags": [
+        "auto-hebergeable",
+        "securite-acces",
+        "chiffrement",
+        "gratuit"
+      ],
+      "source": "libre",
+      "licence": "AGPL-3.0-only",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/dani-garcia/vaultwarden",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "élevée"
+      },
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:30:16-05:00"
     },
     {
       "categorie": "Sécurité et gestion des accès",
@@ -728,7 +1668,30 @@
         "donnees",
         "dependance"
       ],
-      "confiance": "élevée"
+      "confiance": "élevée",
+      "description_longue": "2FAS Auth est une **application mobile d’authentification à deux facteurs** qui génère localement des codes temporaires pour les comptes en ligne compatibles. Elle est gratuite, à code source ouvert et utilisable hors ligne. Aucun compte 2FAS, numéro de téléphone ou courriel n’est nécessaire pour l’utiliser. L’éditeur indique également que l’application ne contient pas de dispositifs de suivi.\n\nPour un OSBL, elle peut servir à ajouter une vérification aux connexions aux comptes de l’organisme, en complément du mot de passe, lorsque le service concerné accepte ce type d’authentification. Les données sont conservées localement sur l’appareil. Des fichiers d’exportation permettent de transférer les jetons; une synchronisation facultative avec iCloud ou Google Drive facilite leur restauration en cas de perte ou de remplacement du téléphone.\n\nUne **extension de navigateur** permet de transmettre un code après confirmation dans l’application mobile, sans le recopier manuellement. Elle est proposée pour Chrome, Brave, Firefox, Edge, Opera et Safari. Les communications entre le téléphone et le navigateur sont chiffrées de bout en bout; leur association s’effectue à l’aide d’un code QR et nécessite l’activation des notifications poussées.\n\nLe fonctionnement local et hors ligne permet de conserver les données sur un appareil au Canada sans utiliser de stockage infonuagique étranger. En revanche, les options iCloud et Google Drive font intervenir des fournisseurs étrangers. L’application prend en charge 16 langues et dispose d’un centre d’aide ainsi que d’un canal de soutien sur Discord.",
+      "tags": [
+        "securite-acces",
+        "hors-ligne",
+        "vie-privee",
+        "application-mobile",
+        "gratuit"
+      ],
+      "source": "libre",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/twofas/2fas-android",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "moyenne"
+      },
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:30:40-05:00"
     },
     {
       "categorie": "Sécurité et gestion des accès",
@@ -743,7 +1706,30 @@
         "donnees",
         "dependance"
       ],
-      "confiance": "élevée"
+      "confiance": "élevée",
+      "description_longue": "2FAS Pass est un **gestionnaire de mots de passe à stockage local** : son coffre chiffré est conservé sur l’appareil mobile, et l’accès aux éléments enregistrés ne nécessite pas de connexion Internet. L’utilisation ne demande pas de création de compte. L’éditeur indique ne pas recueillir d’adresses courriel, de noms, d’adresses IP ni d’autres identifiants personnels. L’outil est disponible uniquement en anglais.\n\nUne extension de navigateur permet d’utiliser les éléments du coffre sur ordinateur, avec des échanges chiffrés de bout en bout entre le téléphone et le navigateur. Trois niveaux de sécurité déterminent les conditions d’accès à chaque élément :\n\n- **Secret** : utilisation possible avec le remplissage automatique et l’extension.\n- **Highly Secret** : confirmation supplémentaire requise dans l’application mobile.\n- **Top Secret** : exclusion du remplissage automatique et de l’extension, avec saisie manuelle nécessaire.\n\nLa synchronisation est facultative. Le coffre peut être synchronisé avec iCloud, Google Drive ou un stockage accessible par WebDAV. Il est aussi possible de conserver une sauvegarde chiffrée sur un support externe ou dans son propre espace de stockage. Une organisation peut ainsi privilégier un stockage local ou une infrastructure canadienne plutôt qu’un service infonuagique étranger.\n\nLe code est présenté comme **consultable, mais pas encore sous licence libre**. L’éditeur annonce un passage à un modèle entièrement ouvert deux ans après la sortie du logiciel. Cette annonce ne doit pas être confondue avec le statut actuel. Pour un OSBL, l’intérêt principal réside dans la conservation locale des identifiants et le choix de l’emplacement des sauvegardes.",
+      "tags": [
+        "securite-acces",
+        "chiffrement",
+        "vie-privee",
+        "hors-ligne",
+        "application-mobile"
+      ],
+      "source": "source-disponible",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": null,
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "élevée"
+      },
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:31:02-05:00"
     },
     {
       "categorie": "Stockage, infonuagique et sauvegarde",
@@ -759,7 +1745,30 @@
         "controle",
         "dependance"
       ],
-      "confiance": "élevée"
+      "confiance": "élevée",
+      "description_longue": "Micrologic est un fournisseur québécois de services infonuagiques et d’infrastructures technologiques. L’entreprise se présente comme étant à **propriété entièrement canadienne** et affirme héberger les données de son nuage souverain au Canada. Son environnement Cirrus permet notamment d’héberger des applications et des données.\n\nL’offre comprend de l’infrastructure-service (IaaS), des infrastructures réservées, du stockage objet, un service de fichiers et une plateforme-service (PaaS). Micrologic propose aussi des services de migration des charges de travail, de déploiement, d’exploitation et d’accompagnement technique. Il s’agit d’une offre d’infrastructure et de services, plutôt que d’une simple application de partage de fichiers.\n\nLes services de **sauvegarde et de continuité** couvrent notamment la sauvegarde hors site, la sauvegarde en voûte isolée, la protection des charges Cirrus et de Microsoft 365, l’archivage et la reprise après sinistre. Le catalogue inclut également des solutions de cybersécurité, comme les pare-feu, la protection des postes et la gestion des clés de chiffrement.\n\nPour un OSBL culturel, ces services peuvent répondre à des besoins d’hébergement d’applications, de conservation de fichiers organisationnels ou de relève informatique. Le choix des services suppose de préciser les volumes, les exigences de disponibilité et les besoins d’assistance. L’extrait fourni ne précise ni les tarifs ni les conditions de récupération des données. Les engagements d’hébergement canadien sont explicites, mais ne suffisent pas à établir l’absence de dépendances technologiques étrangères.",
+      "tags": [
+        "domaines-hebergement-web",
+        "stockage-partage-fichiers",
+        "sauvegarde",
+        "securite-acces"
+      ],
+      "source": "proprietaire",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": null,
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "controle"
+        ],
+        "confiance": "élevée",
+        "ecart": "L’écart entre les 3 étoiles du répertoire et les 2 étoiles de l’évaluation enrichie porte uniquement sur l’indépendance envers les fournisseurs et infrastructures étrangers. La page affirme un hébergement intégral au Canada et une propriété 100 % canadienne, ce qui appuie les deux critères communs, mais la mention d’un cloud souverain ne suffit pas à établir son indépendance technologique. L’utilisation de technologies NVIDIA pour l’offre d’intelligence artificielle soulève une question de dépendance sans démontrer qu’elle concerne l’ensemble de Cirrus. Les critères attribués au répertoire restant des hypothèses déduites, même avec une confiance élevée, il faudrait connaître sa grille réelle et les dépendances techniques indispensables aux services évalués pour trancher."
+      },
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:31:29-05:00"
     },
     {
       "categorie": "Stockage, infonuagique et sauvegarde",
@@ -775,7 +1784,30 @@
         "controle",
         "dependance"
       ],
-      "confiance": "élevée"
+      "confiance": "élevée",
+      "description_longue": "TitanFile est une plateforme canadienne de partage sécurisé de fichiers et de communications avec des collègues, des clients ou des partenaires externes. Elle permet de créer des espaces de travail où les participants échangent des documents et des messages. Pour un OSBL culturel, ces espaces peuvent servir à regrouper les échanges liés à un projet ou à transmettre des documents confidentiels à des partenaires.\n\nLe service prend en charge les fichiers volumineux, notamment les vidéos, les enregistrements audio, les photographies et les PDF. L’éditeur annonce la possibilité de transférer des fichiers de plus de 100 Go et de téléverser des arborescences de dossiers sans les compresser au préalable. Les capacités de stockage et les conditions applicables sont à vérifier selon l’abonnement.\n\nLes fonctions de sécurité comprennent le **chiffrement en transit et au repos**, l’authentification multifacteur, des contrôles d’accès détaillés et des journaux d’audit. Les administrateurs peuvent également configurer des politiques de mots de passe. TitanFile indique détenir une certification ISO 27001 et une attestation SOC 2 Type II.\n\nLa plateforme propose une **résidence des données au Canada**, aux États-Unis ou en Europe. Les fichiers sont hébergés dans des centres de données AWS et Azure : choisir le Canada permet donc de conserver les données dans le pays, sans éliminer la dépendance à des fournisseurs d’infrastructure étrangers. L’extrait fourni ne précise pas les tarifs, les éventuels rabais pour les OSBL ni la disponibilité d’une interface en français.",
+      "tags": [
+        "stockage-partage-fichiers",
+        "chiffrement",
+        "securite-acces",
+        "messagerie-visioconference"
+      ],
+      "source": "proprietaire",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": null,
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "controle"
+        ],
+        "confiance": "moyenne",
+        "ecart": "L’écart entre les 3 étoiles du répertoire et les 2 étoiles de l’évaluation enrichie porte sur l’indépendance technologique : la page indique que TitanFile stocke les données dans des centres AWS et Azure, ce qui suggère une dépendance importante à des fournisseurs étrangers, même avec une résidence des données au Canada. Les deux évaluations retiennent les critères de données et de contrôle canadien, mais si la page annonce une résidence possible au Canada, l’extrait ne confirme pas le contrôle de l’entreprise. Les critères attribués au répertoire restent des hypothèses déduites automatiquement, malgré une confiance élevée ; pour trancher, il faudrait connaître la justification des étoiles et vérifier les garanties de résidence, la propriété de l’entreprise et la possibilité de fonctionner sans AWS ni Azure."
+      },
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:31:57-05:00"
     },
     {
       "categorie": "Stockage, infonuagique et sauvegarde",
@@ -790,7 +1822,28 @@
         "donnees",
         "controle"
       ],
-      "confiance": "élevée"
+      "confiance": "élevée",
+      "description_longue": "La Réserve est un service de **sauvegarde automatisée des données de Google Workspace et de Microsoft 365**, proposé par Sylvéa. Il permet de conserver des copies chiffrées au Canada et de récupérer des documents perdus ou supprimés. Pour un OSBL culturel, il peut constituer un filet de sécurité pour les fichiers de travail conservés dans ces plateformes.\n\nLa page de Sylvéa annonce des **sauvegardes chaque nuit**, sur des serveurs situés au Canada et mutualisés entre OSBL, ainsi qu’un historique conservé pendant un an. Le service vise à maintenir l’accès aux copies sauvegardées lorsqu’un compte Google ou Microsoft devient inaccessible, notamment après sa fermeture ou lors d’un incident. Une restauration accompagnée est prévue en cas de besoin.\n\nCette offre protège les sauvegardes sans remplacer les plateformes utilisées au quotidien. Elle ne supprime donc pas la dépendance à Google Workspace ou à Microsoft 365 pour les activités qui continuent de s’y dérouler. Sylvéa présente séparément des services de migration et d’hébergement d’outils libres, qui ne doivent pas être confondus avec la sauvegarde seule.\n\nLe **tarif de la sauvegarde est établi sur mesure**, selon le volume de données et les services à protéger. Le montant de départ affiché pour l’accompagnement à la transition ne correspond pas au prix de cette sauvegarde. Le périmètre couvert et les modalités de restauration sont à préciser avec le fournisseur.",
+      "tags": [
+        "sauvegarde",
+        "automatisation",
+        "chiffrement"
+      ],
+      "source": "proprietaire",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": null,
+      "evaluation_enrichie": {
+        "score": 1,
+        "criteres": [
+          "donnees"
+        ],
+        "confiance": "moyenne",
+        "ecart": "L’écart porte sur le contrôle canadien : le répertoire est interprété comme accordant ce critère, mais cette attribution reste une hypothèse déduite de la description, même avec une confiance élevée. L’évaluation enrichie ne retient que la conservation des données au Canada, explicitement annoncée pour les sauvegardes, car l’extrait ne précise pas qui détient ou contrôle Sylvéa. Les deux évaluations ne retiennent pas l’indépendance technologique, la sauvegarde de Google Workspace et Microsoft 365 ne supprimant pas la dépendance aux plateformes d’origine. Pour trancher, il faudrait vérifier la structure de propriété de Sylvéa et obtenir des auteur·trices du répertoire la justification des deux étoiles."
+      },
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:32:26-05:00"
     },
     {
       "categorie": "Stockage, infonuagique et sauvegarde",
@@ -805,7 +1858,30 @@
         "donnees",
         "dependance"
       ],
-      "confiance": "élevée"
+      "confiance": "élevée",
+      "description_longue": "Nextcloud est une **plateforme libre de stockage et de collaboration**, développée par une entreprise allemande. Elle peut être installée sur l’infrastructure choisie par une organisation, notamment au Canada. La suite Nextcloud Hub réunit le partage de fichiers, les communications, les calendriers, les contacts et l’édition collaborative de documents.\n\nNextcloud Files permet de stocker, synchroniser et partager des fichiers depuis une interface Web ou des applications pour ordinateur et appareil mobile. Des fonctions de gestion des utilisateurs et de contrôle des accès servent à encadrer leur consultation et leur partage. Pour un OSBL culturel, ces fonctions peuvent soutenir le travail sur des dossiers de production, des documents administratifs ou des ressources partagées avec des partenaires.\n\nNextcloud Talk propose la messagerie, les appels audio et vidéo et le partage d’écran. Groupware regroupe notamment les calendriers, les contacts et le courriel. Nextcloud Office, fondé sur LibreOffice, permet de modifier à plusieurs des textes, des feuilles de calcul et des présentations dans le navigateur. La plateforme comprend aussi des composants d’automatisation et un assistant d’intelligence artificielle, dont l’utilisation dépend du déploiement retenu.\n\n**L’auto-hébergement donne le choix du lieu de conservation des données**, sans rendre l’éditeur canadien. Il implique toutefois de prendre en charge l’administration, les mises à jour, la sécurité et les sauvegardes, ou de confier ces tâches à un prestataire. La synchronisation des fichiers ne remplace pas une stratégie de sauvegarde. Le logiciel est libre, mais son hébergement et son soutien peuvent entraîner des coûts.",
+      "tags": [
+        "auto-hebergeable",
+        "stockage-partage-fichiers",
+        "collaboration-temps-reel",
+        "messagerie-visioconference",
+        "vie-privee"
+      ],
+      "source": "libre",
+      "licence": "AGPL-3.0-or-later",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/nextcloud/server",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "élevée"
+      },
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:32:46-05:00"
     },
     {
       "categorie": "Stockage, infonuagique et sauvegarde",
@@ -820,7 +1896,30 @@
         "donnees",
         "controle"
       ],
-      "confiance": "faible"
+      "confiance": "faible",
+      "description_longue": "Sync.com est un service canadien de **stockage infonuagique, de synchronisation et de partage de fichiers**. Il permet de consulter des documents depuis un navigateur, un ordinateur ou un appareil mobile. Son interface est offerte en anglais. Pour un OSBL culturel, il peut servir à regrouper les documents administratifs, les dossiers de production ou les fichiers échangés avec des partenaires.\n\nLe service repose sur le **chiffrement de bout en bout** : selon Sync, le fournisseur ne peut pas consulter le contenu des fichiers ainsi protégés. Les données sont hébergées au Canada. Il s’agit toutefois d’un service propriétaire exploité par le fournisseur, et non d’un logiciel que l’organisation peut installer sur sa propre infrastructure.\n\nLes fonctions de collaboration comprennent des dossiers centralisés accessibles aux membres d’une équipe et à des collaborateurs externes, avec gestion des permissions. Un portail de fichiers personnalisable avec le logo de l’organisation permet également d’envoyer et de recevoir des documents. Ces fonctions facilitent les échanges sans constituer, à elles seules, un outil de rédaction collaborative en temps réel.\n\nSync propose la sauvegarde et la récupération de fichiers, notamment après une suppression accidentelle. La fonction CloudFiles donne accès aux fichiers à la demande depuis l’Explorateur Windows ou le Finder de macOS, afin de limiter l’espace occupé localement.\n\nUne offre gratuite comprend 5 Go de stockage. Des forfaits payants pour les particuliers et les équipes ajoutent des capacités et des fonctions; l’offre de stockage illimité est associée au forfait Pro Teams Unlimited.",
+      "tags": [
+        "stockage-partage-fichiers",
+        "sauvegarde",
+        "chiffrement",
+        "vie-privee",
+        "anglais-seulement"
+      ],
+      "source": "proprietaire",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": null,
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "controle"
+        ],
+        "confiance": "moyenne"
+      },
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:33:09-05:00"
     },
     {
       "categorie": "Transcription et assistance aux réunions",
@@ -835,7 +1934,30 @@
         "donnees",
         "controle"
       ],
-      "confiance": "moyenne"
+      "confiance": "moyenne",
+      "description_longue": "Manni est un outil québécois de transcription et de prise de notes par intelligence artificielle. Son application pour **Mac et Windows** capte l’audio des réunions sans ajouter de participant automatisé à l’appel. Elle produit un verbatim, des résumés structurés et des actions à suivre. Une interface conversationnelle permet ensuite de poser des questions sur les transcriptions pour retrouver une information.\n\nL’application se connecte à Google Calendar ou à Outlook Calendar pour détecter les réunions et démarrer automatiquement l’enregistrement. Le fournisseur annonce une compatibilité avec Zoom, Microsoft Teams et Google Meet. Les modèles de résumé sont personnalisables, par exemple pour préparer un compte rendu de réunion ou des notes d’entrevue. Les exportations vers Slack et Notion sont présentées comme des fonctions à venir, et non comme des intégrations déjà disponibles.\n\nManni met l’accent sur la reconnaissance de l’accent québécois et du vocabulaire spécialisé. Pour un OSBL culturel, ses fonctions peuvent servir à documenter des réunions d’équipe, des échanges avec des partenaires ou des entrevues. Le taux de précision annoncé demeure une affirmation du fournisseur; une relecture reste prudente avant de diffuser un compte rendu.\n\nLe fournisseur indique que **les données restent au Canada** et affirme respecter la Loi 25 et la LPRPDE. La capture audio locale ne signifie toutefois pas que tout le traitement se déroule sur l’ordinateur : la page décrit aussi l’envoi des enregistrements vers un tableau de bord. Elle ne précise pas les fournisseurs de modèles d’IA ni les modalités de conservation. Un essai gratuit de sept jours est annoncé.",
+      "tags": [
+        "transcription-reunions",
+        "intelligence-artificielle",
+        "application-bureau",
+        "automatisation",
+        "api-integrations"
+      ],
+      "source": "proprietaire",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": null,
+      "evaluation_enrichie": {
+        "score": 1,
+        "criteres": [
+          "donnees"
+        ],
+        "confiance": "moyenne",
+        "ecart": "L’écart porte sur le contrôle canadien : le répertoire affiche deux étoiles, associées par déduction aux critères données et contrôle, tandis que l’évaluation enrichie ne retient que les données. La description « outil québécois » suggère un ancrage local sans établir la propriété ni le contrôle de l’entreprise, alors que la page affirme explicitement que les données restent au Canada. Aucune des deux évaluations ne retient l’indépendance technologique, et l’extrait ne précise pas les fournisseurs d’IA ou d’hébergement, les intégrations étrangères ne suffisant pas à établir une dépendance importante. Pour trancher l’écart, il faudrait vérifier la structure de propriété de Manni et obtenir les critères effectivement appliqués par les auteur·trices du répertoire, puisque leur attribution reste hypothétique."
+      },
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:33:37-05:00"
     },
     {
       "categorie": "Transcription et assistance aux réunions",
@@ -850,7 +1972,30 @@
         "donnees",
         "controle"
       ],
-      "confiance": "moyenne"
+      "confiance": "moyenne",
+      "description_longue": "Fellow est un **assistant de réunions fondé sur l’intelligence artificielle**, développé par une entreprise canadienne. Il enregistre et transcrit les échanges, produit des résumés et repère automatiquement les actions à suivre. Il centralise les transcriptions, les enregistrements audio et vidéo ainsi que les comptes rendus. L’interface est en anglais, mais la reconnaissance vocale prend en charge le français.\n\nL’outil s’utilise avec **Zoom, Microsoft Teams et Google Meet**, ainsi que pour des conversations en personne. La capture peut se faire avec ou sans robot de réunion. Pour un OSBL culturel, ces fonctions peuvent servir à documenter des réunions d’équipe, des comités ou des rencontres de production, puis à retrouver les décisions et les suivis convenus.\n\nFellow propose des réglages organisationnels pour encadrer l’enregistrement, le partage, les accès et la durée de conservation. Les personnes peuvent interrompre puis reprendre la capture d’une conversation. La page présente également des permissions par rôle, l’authentification unique et des journaux d’audit. L’éditeur affirme que les données de réunion ne servent pas à entraîner ses modèles d’IA ni ceux de ses fournisseurs.\n\nDes intégrations permettent de transmettre le contexte des réunions à des outils de gestion de contacts et à d’autres assistants d’IA. Ces connexions demandent une attention particulière aux informations partagées. **Le contenu fourni ne précise pas si un hébergement au Canada est offert** : l’origine canadienne de l’entreprise ne suffit donc pas à établir le lieu de conservation des données.",
+      "tags": [
+        "transcription-reunions",
+        "intelligence-artificielle",
+        "automatisation",
+        "api-integrations",
+        "vie-privee"
+      ],
+      "source": "proprietaire",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": null,
+      "evaluation_enrichie": {
+        "score": 1,
+        "criteres": [
+          "controle"
+        ],
+        "confiance": "moyenne",
+        "ecart": "L’écart entre les deux évaluations porte sur le critère « donnees », attribué au répertoire par déduction avec une confiance moyenne, mais non retenu dans l’évaluation enrichie. L’extrait présente des garanties de sécurité, de conservation et de non-utilisation des données pour entraîner l’IA, sans préciser si un hébergement au Canada est possible. Les deux évaluations retiennent le contrôle canadien et ne retiennent pas l’indépendance technologique, mais la mention « conçu au Canada » ne suffit pas à établir le contrôle actuel de l’entreprise. Pour trancher l’écart, il faudrait une documentation contractuelle confirmant les lieux d’hébergement et les options de résidence des données, les critères réels des auteur·trices du répertoire restant inconnus."
+      },
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:34:05-05:00"
     },
     {
       "categorie": "Transcription et assistance aux réunions",
@@ -865,7 +2010,30 @@
         "donnees",
         "dependance"
       ],
-      "confiance": "élevée"
+      "confiance": "élevée",
+      "description_longue": "Handy est une **application gratuite et libre de dictée vocale** pour ordinateur. Elle transforme la parole en texte et insère la transcription dans le champ de saisie actif. Pour un OSBL des arts et de la culture, elle peut servir à dicter des courriels, des notes ou des brouillons de documents dans les outils déjà utilisés par l’équipe.\n\nLe fonctionnement repose sur un raccourci clavier personnalisable. Par défaut, on maintient les touches enfoncées pendant la dictée, puis on les relâche pour déclencher la transcription. Un autre mode permet d’appuyer une première fois pour démarrer l’enregistrement et une seconde fois pour l’arrêter. Le texte obtenu est ensuite collé à l’endroit où l’on écrit.\n\nLa **reconnaissance vocale s’effectue localement sur l’ordinateur**, sans envoyer l’audio dans le nuage. Ce fonctionnement permet de conserver le traitement de la voix sur l’appareil. La confidentialité du texte inséré dépend toutefois aussi de l’application de destination, notamment si celle-ci synchronise ses contenus en ligne.\n\nL’interface est en anglais, tandis que la reconnaissance vocale prend en charge le français. Handy se concentre sur la dictée dans les champs de texte : la présentation fournie ne décrit pas de fonctions de compte rendu de réunion ou d’identification des personnes qui parlent. Son code public permet d’examiner l’application, de la modifier et d’y contribuer.",
+      "tags": [
+        "transcription-reunions",
+        "application-bureau",
+        "hors-ligne",
+        "vie-privee",
+        "gratuit"
+      ],
+      "source": "libre",
+      "licence": "MIT",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/cjpais/Handy",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "élevée"
+      },
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:34:32-05:00"
     },
     {
       "categorie": "Veille et gestion de l’information",
@@ -881,7 +2049,31 @@
         "controle",
         "dependance"
       ],
-      "confiance": "élevée"
+      "confiance": "élevée",
+      "description_longue": "Obsidian est une application canadienne de **prise de notes et d’organisation des connaissances**. Elle conserve les notes sous forme de fichiers texte Markdown dans des dossiers locaux, appelés « coffres ». Les contenus restent accessibles hors ligne et peuvent être ouverts avec d’autres logiciels compatibles avec ce format. L’application est gratuite, mais son code source est propriétaire.\n\nLes liens entre notes permettent de constituer une base de connaissances interconnectée. Un graphe visualise ces relations, tandis que l’espace **Canvas** sert à disposer des idées et des ressources sur un tableau visuel. Des thèmes et des extensions permettent d’adapter l’environnement de travail, notamment pour ajouter des calendriers, des tableaux Kanban, des requêtes sur les notes ou un suivi des tâches. Les fonctions disponibles dépendent donc en partie des extensions installées.\n\nPour un OSBL culturel, Obsidian peut servir à rassembler des recherches, documenter des projets artistiques ou relier des références et des notes de programmation. Le stockage local permet de conserver ces informations sur les appareils de l’organisation, y compris au Canada, sans recourir obligatoirement à un service infonuagique.\n\nDeux services payants facultatifs complètent l’application : **Obsidian Sync**, pour synchroniser les fichiers entre appareils avec chiffrement de bout en bout, historique des versions et coffres partagés; et **Obsidian Publish**, pour publier des notes sous forme de site Web. Le partage par synchronisation ne doit pas être confondu avec une édition collaborative en temps réel. Le chiffrement annoncé pour Sync ne signifie pas que les fichiers locaux sont automatiquement chiffrés.",
+      "tags": [
+        "notes-veille",
+        "hors-ligne",
+        "vie-privee",
+        "gratuit",
+        "application-bureau"
+      ],
+      "source": "proprietaire",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": null,
+      "evaluation_enrichie": {
+        "score": 3,
+        "criteres": [
+          "donnees",
+          "controle",
+          "dependance"
+        ],
+        "confiance": "élevée"
+      },
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:35:34-05:00"
     },
     {
       "categorie": "Veille et gestion de l’information",
@@ -896,7 +2088,29 @@
         "donnees",
         "dependance"
       ],
-      "confiance": "élevée"
+      "confiance": "élevée",
+      "description_longue": "Miniflux est un **lecteur de flux RSS libre et minimaliste**, développé par Frédéric Guillot. Il regroupe les publications de plusieurs sites dans une même interface et permet d’organiser ses abonnements. Pour un OSBL culturel, il peut servir à suivre l’actualité du secteur, les publications de partenaires ou des sources spécialisées, lorsque celles-ci proposent un flux.\n\nL’interface privilégie la lisibilité et la consultation rapide des articles non lus. Des raccourcis clavier facilitent la navigation. Lorsqu’un flux ne fournit qu’un résumé, Miniflux peut récupérer automatiquement le contenu de l’article original, afin de le lire directement dans l’application.\n\nLa **protection de la vie privée** fait partie des fonctions mises de l’avant : suppression des pixels de suivi et des paramètres de traçage dans les adresses, utilisation d’un mandataire pour les médias et absence de transmission du référent. Le projet indique également ne comporter ni publicité ni télémétrie.\n\nMiniflux est proposé en auto-hébergement ainsi qu’en service hébergé. Pour l’installation sur son propre serveur, le projet fournit un exécutable, des paquets RPM et Debian et une image Docker. L’auto-hébergement permet à une organisation de choisir une infrastructure canadienne et de gérer elle-même son instance, mais implique d’en assurer l’exploitation et les mises à jour. Le code est publié sous licence Apache 2.0.",
+      "tags": [
+        "notes-veille",
+        "auto-hebergeable",
+        "vie-privee",
+        "gratuit"
+      ],
+      "source": "libre",
+      "licence": "Apache-2.0",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/miniflux/v2",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "moyenne"
+      },
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:35:54-05:00"
     },
     {
       "categorie": "Veille et gestion de l’information",
@@ -911,7 +2125,30 @@
         "donnees",
         "dependance"
       ],
-      "confiance": "élevée"
+      "confiance": "élevée",
+      "description_longue": "Wallabag est un logiciel libre de sauvegarde d’articles et de pages Web pour une lecture ultérieure. Il extrait le contenu principal des articles et propose une présentation épurée, sans publicité ni pistage. Les contenus sauvegardés constituent une archive personnelle dans laquelle il est possible de classer et d’annoter ses lectures.\n\nPour un OSBL des arts et de la culture, il peut servir à conserver des articles de veille, des références pour un projet ou des ressources professionnelles. La consultation peut se faire depuis un navigateur, des applications mobiles, un lecteur RSS ou une liseuse. Des extensions de navigateur facilitent l’enregistrement des pages, tandis qu’une API permet d’intégrer Wallabag à d’autres outils.\n\nWallabag propose des fonctions d’importation depuis Pocket, Omnivore, Instapaper et Pinboard pour reprendre une archive existante. Le projet est développé publiquement, avec des traductions et une documentation alimentées par sa communauté.\n\nDeux modes d’utilisation sont proposés : **l’auto-hébergement** et le service hébergé **wallabag.it**. L’auto-hébergement permet de choisir l’emplacement des données, notamment sur une infrastructure canadienne, mais laisse à l’organisation la responsabilité des mises à jour, des sauvegardes et des accès. Le service wallabag.it comprend du soutien professionnel, des mises à niveau automatiques et des sauvegardes quotidiennes, avec un essai gratuit de 14 jours. L’extrait fourni ne précise pas où ce service héberge les données.",
+      "tags": [
+        "notes-veille",
+        "auto-hebergeable",
+        "vie-privee",
+        "application-mobile",
+        "api-integrations"
+      ],
+      "source": "libre",
+      "licence": "MIT",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/wallabag/wallabag",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "élevée"
+      },
+      "page_lue": true,
+      "enrichi_le": "2026-11-11T17:36:13-05:00"
     }
   ]
 }

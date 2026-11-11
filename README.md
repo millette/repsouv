@@ -61,6 +61,7 @@ nub run typecheck                # vérifie les types
 nub run update --dry-run         # compare outils.json à la page en ligne, sans rien écrire
 nub run update                   # synchronise outils.json avec la page en ligne
 nub run enrichir --limite=5      # enrichit 5 outils par IA (nécessite OPENAI_API_KEY)
+nub run sommaire                 # écrit sommaire.md (résumé par IA; --sans-resume pour s'en passer)
 ```
 
 Pour l'enrichissement, copier `.env.example` vers `.env` et y mettre la clé `OPENAI_API_KEY` (`.env` est ignoré par Git).
@@ -71,6 +72,7 @@ Pour l'enrichissement, copier `.env.example` vers `.env` et y mettre la clé `OP
 Import initial   page en ligne ──▶ extract.ts ──▶ classify.ts ──▶ outils.json
 Suivi courant    page en ligne ──▶ update.ts ──▶ outils.json   (nouveau, modification, retrait, comeback)
 Enrichissement   update.ts --enrichir ──▶ API OpenAI ──▶ outils.json (+ tags.json si de nouveaux tags)
+Sommaire         outils.json ──▶ sommaire.ts ──▶ sommaire.md   (résumé: API OpenAI)
 ```
 
 `extract` et `update` téléchargent la page en ligne (le dépôt n'en contient aucune copie). Après l'import initial, `update` suffit pour suivre le répertoire. Voir [Importer ou réimporter depuis le web](#importer-ou-réimporter-depuis-le-web) avant de relancer `extract` ou `build`.
@@ -81,7 +83,7 @@ Enrichissement   update.ts --enrichir ──▶ API OpenAI ──▶ outils.json
 |---|---|
 | `outils.json`, `criteres.json`, `tags.json` | Les données (voir [Fichiers JSON](#fichiers-json)) |
 | `extract.ts`, `classify.ts`, `update.ts` | Les trois scripts du flux de travail |
-| `sommaire.ts` | Le script du sommaire statistique, qui écrit `sommaire.md` (absent tant que le script n'a pas été lancé) |
+| `sommaire.ts`, `sommaire.md` | Le script du sommaire statistique, et le sommaire qu'il a généré (à regénérer avec `nub run sommaire` après une synchronisation ou un enrichissement) |
 | `enrichir.ts`, `fichiers.ts`, `temps.ts`, `spdx.ts`, `progress.ts`, `couleurs.ts`, `ids.ts`, `cli.ts` | Modules utilisés par les scripts |
 | `test/` | Les tests |
 | `package.json`, `nub.lock`, `tsconfig.json` | Dépendances, scripts npm et configuration TypeScript |
@@ -281,6 +283,8 @@ Pour une description sans score connu, la fonction exportée `classer(descriptio
 
 C'est une heuristique, pas une vérité : un critère retenu avec une confiance « faible » ou « moyenne » est une hypothèse (par exemple, un fournisseur canadien à 2 étoiles est supposé héberger au Canada). L'enrichissement fournit un second avis indépendant (`evaluation_enrichie`) pour repérer les cas douteux.
 
+Le [sommaire](sommaire.md) montre l'effet de cette heuristique : dans l'état actuel du répertoire, elle attribue le critère « données » à tous les outils, alors que l'évaluation enrichie ne le retient que pour une partie des outils enrichis. Les critères du répertoire sont donc des déductions prudentes à lire avec l'évaluation enrichie, pas des mesures.
+
 ## Enrichissement par IA
 
 `update.ts --enrichir` génère, **une seule fois** par outil, les champs décrits plus haut : description longue, tags, `source`, `licence` (ou `custom_license`), `repo` et `evaluation_enrichie`. Un outil qui a déjà une `description_longue` n'est jamais régénéré, même si sa description courte change. Les outils retirés sont ignorés. L'enrichissement s'exécute aussi quand la page n'a pas changé. Quand tous les outils sont déjà enrichis, aucun appel n'est fait et la clé n'est pas nécessaire.
@@ -318,7 +322,7 @@ Une réponse invalide est redemandée une fois, avec la raison du rejet, puis co
 
 ### Pages inaccessibles ou presque vides
 
-La page de chaque outil est lue avant tout appel à l'API. Elle est jugée inutilisable si elle est inaccessible (erreur réseau, délai de 20 secondes dépassé, réponse HTTP non réussie comme un 403 de blocage anti-robot) ou presque vide (moins de 200 caractères de texte, par exemple un site rendu par JavaScript). Dans ce cas :
+La page de chaque outil est lue avant tout appel à l'API. Elle est jugée inutilisable si elle est inaccessible (erreur réseau, délai de 20 secondes dépassé, réponse HTTP non réussie comme un 403 de blocage anti-robot) ou presque vide (moins de 200 caractères de texte, par exemple un site rendu par JavaScript). Dans ce cas (exemples rencontrés : En commun, dont la page est vide parce qu'elle est générée par JavaScript, ainsi que Paperless-ngx et CIRA Canadian Shield, qui répondent par une erreur HTTP 403) :
 
 - un **avertissement** est affiché dans le journal, avec la raison;
 - **par défaut**, l'outil n'est **pas enrichi** : aucun appel à l'API n'est fait, l'échec est consigné (code de sortie 1) et l'outil sera retenté à la prochaine exécution. Un résultat bâti sur la seule description serait moins fiable (licence et dépôt tirés de la mémoire du modèle, description générique), et comme un outil enrichi n'est jamais régénéré, il serait figé;
@@ -353,6 +357,8 @@ Le calcul est local; seul le résumé passe par le réseau. Pour le rédiger, le
 | Option | Effet |
 |---|---|
 | `--sans-resume` | Omet le résumé : aucun appel à l'API, aucune clé nécessaire |
+
+Le dépôt contient un `sommaire.md` déjà généré ([le consulter](sommaire.md)); il reflète l'état des données au moment où il a été produit, et son introduction donne la date de génération.
 
 Configuration : `OPENAI_API_KEY` dans `.env` et, facultativement, `OPENAI_MODEL`, comme pour l'enrichissement. Un seul appel est fait par exécution, deux si la première réponse est rejetée.
 
@@ -430,7 +436,7 @@ Dans `test/`, avec `node:test` lancé par `nub` :
 
 ## Utiliser les données
 
-Pour obtenir le répertoire courant, ignorer les outils portant `removed`. Pour les logiciels libres, filtrer sur `source` (`libre` ou `partiel`) et utiliser `licence` (ou `custom_license`) et `repo`. Par exemple, avec [jaq](https://github.com/01mf02/jaq) :
+Pour un aperçu chiffré, voir [`sommaire.md`](sommaire.md). Pour obtenir le répertoire courant, ignorer les outils portant `removed`. Pour les logiciels libres, filtrer sur `source` (`libre` ou `partiel`) et utiliser `licence` (ou `custom_license`) et `repo`. Par exemple, avec [jaq](https://github.com/01mf02/jaq) :
 
 ```sh
 # licence et dates du fichier
