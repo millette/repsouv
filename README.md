@@ -57,7 +57,7 @@ Les champs d'enrichissement résument des pages tierces (voir [D'où viennent le
 
 ## Démarrage
 
-Prérequis : [nub](https://nubjs.com/), qui exécute le TypeScript directement, et un accès au réseau (`extract`, `update` et l'enrichissement téléchargent des pages en ligne). Les commandes `nub run` sont définies dans `package.json`. Seul le sommaire a besoin d'un programme de plus, [vl-convert](https://github.com/vega/vl-convert) (voir [Sommaire statistique](#sommaire-statistique)), pour ses graphiques.
+Prérequis : [nub](https://nubjs.com/), qui exécute le TypeScript directement, et un accès au réseau (`extract`, `update` et l'enrichissement téléchargent des pages en ligne). Les commandes `nub run` sont définies dans `package.json`. Seul le sommaire (y compris sa mise à jour par `update`) a besoin d'un programme de plus, [vl-convert](https://github.com/vega/vl-convert) (voir [Sommaire statistique](#sommaire-statistique)), pour ses graphiques.
 
 ```sh
 nub install                      # installe les dépendances
@@ -65,6 +65,7 @@ nub run test                     # lance les tests
 nub run typecheck                # vérifie les types
 nub run update --dry-run         # compare outils.json à la page en ligne, sans rien écrire
 nub run update                   # synchronise outils.json avec la page en ligne
+nub run update --sommaire        # idem, puis met à jour le sommaire si la synchronisation a détecté des changements
 nub run enrichir --limite=5      # enrichit 5 outils par IA (nécessite OPENAI_API_KEY), puis met à jour le sommaire si quelque chose a changé
 nub run sommaire                 # écrit sommaire.md et graphiques/ (--sans-resume, --sans-graphiques pour s'en passer)
 ```
@@ -75,7 +76,7 @@ Pour l'enrichissement, copier `.env.example` vers `.env` et y mettre la clé `OP
 
 ```
 Import initial   page en ligne ──▶ extract.ts ──▶ classify.ts ──▶ outils.json
-Suivi courant    page en ligne ──▶ update.ts ──▶ outils.json   (nouveau, modification, retrait, comeback)
+Suivi courant    page en ligne ──▶ update.ts ──▶ outils.json   (nouveau, modification, retrait, comeback)   [──▶ sommaire avec --sommaire]
 Enrichissement   update.ts --enrichir ──▶ API OpenAI ──▶ outils.json (+ tags.json si de nouveaux tags) ──▶ sommaire (si quelque chose a changé)
 Sommaire         outils.json ──▶ sommaire.ts ──▶ sommaire.md + graphiques/   (vl-convert; résumé: API OpenAI)
 ```
@@ -88,7 +89,7 @@ Sommaire         outils.json ──▶ sommaire.ts ──▶ sommaire.md + graph
 |---|---|
 | `outils.json`, `criteres.json`, `tags.json` | Les données (voir [Fichiers JSON](#fichiers-json)) |
 | `extract.ts`, `classify.ts`, `update.ts` | Les trois scripts du flux de travail |
-| `sommaire.ts`, `sommaire.md`, `graphiques/` | Le script du sommaire statistique, le sommaire qu'il a généré et les graphiques (SVG et PNG) qu'il contient (mis à jour automatiquement par `nub run enrichir` quand quelque chose a changé; sinon à regénérer avec `nub run sommaire`) |
+| `sommaire.ts`, `sommaire.md`, `graphiques/` | Le script du sommaire statistique, le sommaire qu'il a généré et les graphiques (SVG et PNG) qu'il contient (mis à jour automatiquement par `nub run enrichir`, ou par `nub run update --sommaire`, quand quelque chose a changé; sinon à regénérer avec `nub run sommaire`) |
 | `enrichir.ts`, `statistiques.ts`, `graphiques.ts`, `fichiers.ts`, `temps.ts`, `spdx.ts`, `progress.ts`, `couleurs.ts`, `ids.ts`, `cli.ts` | Modules utilisés par les scripts |
 | `test/` | Les tests |
 | `package.json`, `nub.lock`, `tsconfig.json` | Dépendances, scripts npm et configuration TypeScript |
@@ -203,7 +204,7 @@ Ajoute `criteres` et `confiance` à chaque outil (réécrit `outils.json` en pla
 ### `update.ts`
 
 ```sh
-nub update.ts [--dry-run] [--sans-couleur] [--enrichir [--nouveaux-tags] [--sans-page] [--sans-sommaire] [--limite=N]] [outils.json] [url]
+nub update.ts [--dry-run] [--sans-couleur] [--sommaire] [--enrichir [--nouveaux-tags] [--sans-page] [--sans-sommaire] [--limite=N]] [outils.json] [url]
 ```
 
 Télécharge la page en ligne (`[url]`, par défaut celle du répertoire; le même téléchargement qu'`extract.ts`), la compare à `outils.json` (par défaut `./outils.json`, qui doit exister : pour un premier import, utiliser `nub run build`) et met le fichier à jour. `--dry-run` affiche les changements sans écrire (et le rappelle par une ligne « Simulation »). Pour chaque outil :
@@ -218,7 +219,13 @@ Les outils nouveaux, modifiés, retirés ou de retour reçoivent la date de modi
 
 Avec `--enrichir`, la synchronisation est suivie de l'[enrichissement](#enrichissement-par-ia), qui lit `tags.json` et `criteres.json` dans le même dossier que `outils.json`. Une option inconnue est refusée, de même que `--nouveaux-tags`, `--sans-page` ou `--sans-sommaire` sans `--enrichir`.
 
-**Sommaire automatique.** Avec `--enrichir` (hors `--dry-run`), `update.ts` met à jour le [sommaire](#sommaire-statistique) à la fin de l'exécution, **seulement si quelque chose a changé** : au moins un outil nouveau, modifié ou retiré, ou au moins un outil enrichi. Une page inchangée sans enrichissement ne fait rien. Il n'y a pas d'option pour le demander : c'est le comportement de `--enrichir`, et `--sans-sommaire` le désactive (si quelque chose a changé, un message atténué rappelle alors qu'il n'a pas été mis à jour). Il demande la clé `OPENAI_API_KEY` (pour le résumé) et `vl-convert` (pour les graphiques), et prend environ 30 secondes. Deux garde-fous évitent d'abîmer un bon sommaire :
+**Sommaire automatique.** Avec `--enrichir`, ou avec `--sommaire` seul (hors `--dry-run`), `update.ts` met à jour le [sommaire](#sommaire-statistique) à la fin de l'exécution, **seulement si quelque chose a changé** : au moins un outil nouveau, modifié ou retiré, ou au moins un outil enrichi. Une page inchangée sans enrichissement ne fait rien.
+
+- Avec `--enrichir`, c'est le comportement **par défaut** : il n'y a pas d'option pour le demander, et `--sans-sommaire` le désactive (si quelque chose a changé, un message atténué rappelle alors qu'il n'a pas été mis à jour).
+- Sans `--enrichir`, `nub run update --sommaire` le demande au besoin. Rien n'est enrichi : le sommaire n'est mis à jour que si la synchronisation a détecté des changements. `--sommaire` est inutile avec `--enrichir`, et `--sommaire` avec `--sans-sommaire` est refusé.
+- `nub run update` seul ne touche pas au sommaire.
+
+La mise à jour demande la clé `OPENAI_API_KEY` (pour le résumé) et `vl-convert` (pour les graphiques), et prend environ 30 secondes. Deux garde-fous évitent d'abîmer un bon sommaire :
 
 - si la clé ou `vl-convert` manque, un avertissement jaune le dit, le sommaire n'est pas touché et le code de sortie n'est pas modifié; il reste à lancer `nub run sommaire` après avoir réglé le problème;
 - si le résumé ne peut pas être rédigé (erreur de l'API, réponses invalides), le sommaire existant et ses graphiques sont conservés tels quels, un message rouge l'explique et le code de sortie est 1. (Lancé directement, `nub run sommaire` écrit au contraire un sommaire avec une note à la place du résumé.)
@@ -244,7 +251,7 @@ Le résumé (stdout) et le journal avec la barre de progression (stderr) sont co
 nub sommaire.ts [--sans-resume] [--sans-graphiques] [outils.json] [sommaire.md]
 ```
 
-Écrit `sommaire.md` (par défaut dans le dossier de `outils.json`) et, à côté, le dossier `graphiques/` : voir [Sommaire statistique](#sommaire-statistique). La fonction exportée `genererSommaire` fait ce travail; `update.ts` l'appelle après un enrichissement.
+Écrit `sommaire.md` (par défaut dans le dossier de `outils.json`) et, à côté, le dossier `graphiques/` : voir [Sommaire statistique](#sommaire-statistique). La fonction exportée `genererSommaire` fait ce travail; `update.ts` l'appelle après un enrichissement ou avec `--sommaire`.
 
 ### `enrichir.ts`
 
@@ -324,7 +331,7 @@ Le [sommaire](sommaire.md) montre l'effet de cette heuristique : dans l'état ac
 
 **Confidentialité :** pour chaque outil, le script télécharge la page publique (`lien`), en extrait le texte (limité à 6 000 caractères) et les liens vers des dépôts de code (GitHub, GitLab, Codeberg, Framagit, Bitbucket, SourceHut, SourceForge, et les hôtes `gitlab.*`, `git.*`, `forge.*` ou `gitea.*`), puis envoie à l'API OpenAI (Responses API, sortie JSON structurée) le nom, la catégorie, le lien, la description et cet extrait. Quand l'évaluation diffère du répertoire, le second appel y ajoute les deux évaluations. Les tags sont limités au vocabulaire de `tags.json`. La page est lue d'abord : voir [Pages inaccessibles ou presque vides](#pages-inaccessibles-ou-presque-vides).
 
-**Sommaire automatique :** la mise à jour du sommaire qui suit un enrichissement envoie aussi à l'API OpenAI les statistiques et la liste des outils (nom, catégorie, score, critères, statut, licence, forge, tags, description courte), comme décrit dans [Sommaire statistique](#sommaire-statistique).
+**Sommaire automatique :** la mise à jour du sommaire qui suit un enrichissement (ou `update --sommaire`) envoie aussi à l'API OpenAI les statistiques et la liste des outils (nom, catégorie, score, critères, statut, licence, forge, tags, description courte), comme décrit dans [Sommaire statistique](#sommaire-statistique).
 
 **Validation :** chaque réponse est vérifiée avant d'être écrite :
 
@@ -360,7 +367,7 @@ jaq '.outils |= map(if .page_lue == false then del(.description_longue, .tags, .
 
 ## Sommaire statistique
 
-Le sommaire est mis à jour **automatiquement** par `update.ts --enrichir` quand quelque chose a changé (voir [`update.ts`](#updatets)), et se lance aussi à la main avec `nub run sommaire`. Il analyse `outils.json` (et `tags.json` et `criteres.json`, lus dans le même dossier) et écrit `sommaire.md`, un document en Markdown qui regroupe :
+Le sommaire est mis à jour **automatiquement** par `update.ts --enrichir` (ou `update.ts --sommaire`) quand quelque chose a changé (voir [`update.ts`](#updatets)), et se lance aussi à la main avec `nub run sommaire`. Il analyse `outils.json` (et `tags.json` et `criteres.json`, lus dans le même dossier) et écrit `sommaire.md`, un document en Markdown qui regroupe :
 
 - **un résumé de 3 ou 4 paragraphes** sur le répertoire et son utilité, rédigé par l'API OpenAI;
 - les **chiffres clés** (outils, catégories, scores, outils enrichis, libres ou partiels);
@@ -376,7 +383,7 @@ Le sommaire est mis à jour **automatiquement** par `update.ts --enrichir` quand
 
 Tant que tous les outils ont la même date (aucune modification détectée depuis l'import), les lignes « outils les plus anciens » et « outils les plus récents » sont identiques. Les outils enrichis avant l'ajout de `enrichi_le` ont tous la même date de substitution : ils apparaissent donc ensemble comme « premier enrichissement » (voir le champ `enrichi_le`).
 
-Les retirés (`removed`) sont comptés à part. Les statistiques sur le statut du code source, les licences, les forges et les tags ne portent que sur les outils déjà enrichis : le sommaire dit combien il y en a, et reste valide à n'importe quel stade de l'enrichissement. Il reflète l'état du fichier au moment de l'exécution. `update --enrichir` le met à jour tout seul quand quelque chose a changé; il reste à le relancer à la main après une synchronisation sans `--enrichir` (`nub run update` seul ne le touche pas), après un enrichissement fait avec `--sans-sommaire`, ou quand la mise à jour automatique a été sautée.
+Les retirés (`removed`) sont comptés à part. Les statistiques sur le statut du code source, les licences, les forges et les tags ne portent que sur les outils déjà enrichis : le sommaire dit combien il y en a, et reste valide à n'importe quel stade de l'enrichissement. Il reflète l'état du fichier au moment de l'exécution. `update --enrichir` le met à jour tout seul quand quelque chose a changé, et `update --sommaire` fait de même après une simple synchronisation. Il reste à le relancer à la main après un `nub run update` sans `--sommaire`, après un enrichissement fait avec `--sans-sommaire`, ou quand la mise à jour automatique a été sautée.
 
 Le calcul est local; seul le résumé passe par le réseau. Pour le rédiger, le script envoie à l'API OpenAI toutes les statistiques et, pour chaque outil du répertoire, son nom, sa catégorie, son score, ses critères, son statut, sa licence, sa forge, ses tags et sa description courte. Le résumé est validé (3 ou 4 paragraphes de texte continu, sans liste, sans gras, sans HTML, sans tiret cadratin ni émoji; redemandé une fois avec la raison du rejet), puis inscrit dans le sommaire avec le nom du modèle et la date, et la mention qu'il est à relire. Si la rédaction échoue, le sommaire, lancé directement, est tout de même écrit avec une note à la place du résumé, et le code de sortie est 1 (la mise à jour automatique, elle, conserve l'ancien sommaire).
 
@@ -446,7 +453,7 @@ Si le `score` ou les `criteres` d'un outil déjà enrichi changent, après un `c
 | `nub run classify` | `nub classify.ts outils.json` : classe les outils en place |
 | `nub run build` | `extract` puis `classify` : construit `outils.json` depuis la page en ligne. Refuse d'écraser un enrichissement ou un historique existant |
 | `nub run build:force` | Comme `build`, mais **remplace tout**, enrichissement et historique compris |
-| `nub run update` | `nub update.ts` : synchronise `outils.json` avec la page en ligne. Les options passent directement : `nub run update --dry-run` |
+| `nub run update` | `nub update.ts` : synchronise `outils.json` avec la page en ligne. Les options passent directement : `nub run update --dry-run`, ou `nub run update --sommaire` pour mettre aussi le sommaire à jour si des changements sont détectés |
 | `nub run enrichir` | `nub update.ts --enrichir` : synchronise, enrichit les outils sans description longue, puis met à jour le sommaire si quelque chose a changé. Par exemple : `nub run enrichir --limite=5` |
 | `nub run sommaire` | `nub sommaire.ts` : écrit `sommaire.md` et `graphiques/` (`--sans-resume` évite l'appel à l'API, `--sans-graphiques` évite vl-convert) |
 | `nub run test` | Lance les douze fichiers de tests |
@@ -458,7 +465,7 @@ Dans `test/`, avec `node:test` lancé par `nub` :
 
 - `classify.test.ts` : cas de classification connus, un nombre de critères égal au score pour les 60 outils, les options de la ligne de commande, le refus d'un fichier au mauvais format, et la couleur de « Erreur: ».
 - `extract.test.ts` : conversion de la date de la page en heure de Toronto, cohérence de `criteres.json` et `outils.json`, rejet d'une page sans date, téléchargement (sur un serveur local, sans réseau), erreurs de téléchargement, le garde-fou contre l'écrasement (avec et sans `--force`, y compris pour un fichier au mauvais format), et la preuve qu'aucun fichier HTML local n'est lu.
-- `update.test.ts` : nouveau, modification, retrait, comeback, conservation des dates des outils inchangés et des champs d'enrichissement, la présentation colorée du résumé et du journal (même texte avec ou sans couleurs), et les conditions de la mise à jour automatique du sommaire (dont `--sans-sommaire`).
+- `update.test.ts` : nouveau, modification, retrait, comeback, conservation des dates des outils inchangés et des champs d'enrichissement, la présentation colorée du résumé et du journal (même texte avec ou sans couleurs), et les conditions de la mise à jour automatique du sommaire (dont `--sommaire` et `--sans-sommaire`).
 - `enrichir.test.ts` : vocabulaire de `tags.json`, date d'enrichissement, validation (tags, Markdown permis et interdit, licences SPDX et maison, évaluation), explication des écarts, extraction de la page, pages inaccessibles ou presque vides (avertissement, refus par défaut, `--sans-page`), enrichissement une seule fois, limite, reprise et échecs, avec de faux générateurs.
 - `spdx.test.ts` : licences SPDX valides et refusées.
 - `progress.test.ts` : barre en terminal et hors terminal, bornes, étiquette, `end()` idempotent, `message()`, peinture de la barre.
@@ -479,7 +486,7 @@ Dans `test/`, avec `node:test` lancé par `nub` :
 | `OPENAI_API_KEY absente` | Il y a des outils à enrichir (ou un résumé à rédiger pour `nub run sommaire`), mais `.env` n'a pas la clé. La synchronisation, elle, a déjà été écrite. Pour le sommaire, `--sans-resume` évite la clé |
 | `page inaccessible …` ou `page presque vide …`, `outil non enrichi` | La page de l'outil n'a pas pu être lue : réessayer plus tard, ou enrichir à partir de la description seule avec `--sans-page`. Voir [Pages inaccessibles](#pages-inaccessibles-ou-presque-vides) |
 | Des séquences comme `^[[32m` ou `[32m` apparaissent dans la sortie | Les couleurs sont forcées (`FORCE_COLOR`). Les désactiver avec `--sans-couleur` (ou retirer `FORCE_COLOR`) |
-| `Sommaire non mis à jour: …` | Après `--enrichir`, le sommaire n'a pas pu être mis à jour : clé ou vl-convert manquant (avertissement, rien n'est modifié) ou résumé impossible à rédiger (le sommaire existant est conservé, code de sortie 1). Régler le problème, puis lancer `nub run sommaire` (ou le désactiver avec `--sans-sommaire`) |
+| `Sommaire non mis à jour: …` | Après `--enrichir` ou `--sommaire`, le sommaire n'a pas pu être mis à jour : clé ou vl-convert manquant (avertissement, rien n'est modifié) ou résumé impossible à rédiger (le sommaire existant est conservé, code de sortie 1). Régler le problème, puis lancer `nub run sommaire` (ou le désactiver avec `--sans-sommaire`) |
 | `vl-convert est introuvable …` | Le sommaire a besoin de vl-convert pour ses graphiques. L'installer (voir [Graphiques](#graphiques)) ou utiliser `nub run sommaire --sans-graphiques` |
 | `vl-convert vl2svg: …` ou `vl-convert vl2png: …` | vl-convert a refusé une spécification de graphique : le message de vl-convert dit pourquoi. Vérifier sa version (`vl-convert --version`, 1.9 ou plus) |
 | `Option inconnue: …` | Option mal orthographiée. Les options valides sont décrites dans la section de chaque script |

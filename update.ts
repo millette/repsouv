@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Met à jour outils.json depuis le répertoire en ligne.
-// Usage: nub update.ts [--dry-run] [--sans-couleur] [--enrichir [--nouveaux-tags] [--sans-page] [--sans-sommaire] [--limite=N]] [outils.json] [url]
+// Usage: nub update.ts [--dry-run] [--sans-couleur] [--sommaire] [--enrichir [--nouveaux-tags] [--sans-page] [--sans-sommaire] [--limite=N]] [outils.json] [url]
 //
 // Pour chaque outil, selon la comparaison avec la page en ligne:
 //   - absent du fichier → changement "nouveau"
@@ -25,9 +25,10 @@
 //   --nouveaux-tags : le modèle peut proposer de nouveaux tags (justification obligatoire, ajoutés à tags.json).
 //   --limite=N      : n'enrichit pas plus de N outils par exécution.
 //
-// Sommaire: avec --enrichir (hors --dry-run), le sommaire (sommaire.md et graphiques/, voir sommaire.ts) est
-// mis à jour automatiquement à la fin, mais SEULEMENT si quelque chose a changé (un outil nouveau, modifié ou
-// retiré, ou au moins un outil enrichi). Il faut pour cela la clé OPENAI_API_KEY et vl-convert; s'ils manquent,
+// Sommaire: avec --enrichir, ou avec --sommaire seul (hors --dry-run), le sommaire (sommaire.md et graphiques/,
+// voir sommaire.ts) est mis à jour automatiquement à la fin, mais SEULEMENT si quelque chose a changé (un outil
+// nouveau, modifié ou retiré, ou au moins un outil enrichi). --sommaire est inutile avec --enrichir, où c'est le
+// comportement par défaut. Il faut pour cela la clé OPENAI_API_KEY et vl-convert; s'ils manquent,
 // un avertissement le dit et le sommaire existant reste tel quel. Si le résumé ne peut pas être rédigé, le sommaire
 // existant est aussi conservé (code de sortie 1). --sans-sommaire désactive cette mise à jour.
 //
@@ -108,9 +109,12 @@ export function mettreAJour(
 
 // ---------- sommaire automatique ----------
 
-/** Le sommaire est mis à jour avec --enrichir, hors simulation et sans --sans-sommaire, et seulement si quelque chose a changé. */
-export function sommaireNecessaire(o: { enrichir: boolean; dryRun: boolean; changements: number; enrichis: number; sansSommaire?: boolean }): boolean {
-  return o.enrichir && !o.dryRun && !o.sansSommaire && (o.changements > 0 || o.enrichis > 0);
+/**
+ * Le sommaire est mis à jour avec --enrichir (par défaut) ou --sommaire, hors simulation et sans --sans-sommaire,
+ * et seulement si quelque chose a changé.
+ */
+export function sommaireNecessaire(o: { enrichir: boolean; dryRun: boolean; changements: number; enrichis: number; sansSommaire?: boolean; sommaire?: boolean }): boolean {
+  return (o.enrichir || o.sommaire === true) && !o.dryRun && !o.sansSommaire && (o.changements > 0 || o.enrichis > 0);
 }
 
 /**
@@ -165,12 +169,14 @@ if (import.meta.main) {
     const nouveauxTags = args.includes("--nouveaux-tags");
     const sansPage = args.includes("--sans-page");
     const sansSommaire = args.includes("--sans-sommaire");
+    const sommaire = args.includes("--sommaire");
     const limiteArg = args.find((a) => a.startsWith("--limite="));
     const limite = limiteArg ? Number(limiteArg.slice("--limite=".length)) : undefined;
     const sansCouleur = args.includes("--sans-couleur");
-    const connues = ["--dry-run", "--sans-couleur", "--enrichir", "--nouveaux-tags", "--sans-page", "--sans-sommaire", "--limite"];
+    const connues = ["--dry-run", "--sans-couleur", "--sommaire", "--enrichir", "--nouveaux-tags", "--sans-page", "--sans-sommaire", "--limite"];
     const inconnue = args.find((a) => a.startsWith("--") && !connues.some((o) => a === o || a.startsWith(`${o}=`)));
     if (inconnue) throw new Error(`Option inconnue: ${inconnue}`);
+    if (sommaire && sansSommaire) throw new Error("--sommaire et --sans-sommaire s'excluent");
     if ((nouveauxTags || sansPage || sansSommaire) && !enrichir) throw new Error("--nouveaux-tags, --sans-page et --sans-sommaire nécessitent --enrichir");
     if (limite !== undefined && !(Number.isInteger(limite) && limite > 0)) throw new Error("--limite=N: entier positif attendu");
     const [fichier = "outils.json", url] = args.filter((a) => !a.startsWith("--"));
@@ -246,7 +252,7 @@ if (import.meta.main) {
     if (enrichir && !dryRun && sansSommaire && (total > 0 || nbEnrichis > 0)) {
       console.error(suivi.attenue("Sommaire non mis à jour (--sans-sommaire); lancer `nub run sommaire` pour le mettre à jour."));
     }
-    if (sommaireNecessaire({ enrichir, dryRun, changements: total, enrichis: nbEnrichis, sansSommaire })) {
+    if (sommaireNecessaire({ enrichir, dryRun, changements: total, enrichis: nbEnrichis, sansSommaire, sommaire })) {
       const raison = raisonDeSauterSommaire(process.env.OPENAI_API_KEY, verifierVlConvert);
       if (raison) {
         console.error(suivi.jaune(`Sommaire non mis à jour: ${raison}. Le sommaire existant est conservé; relancer \`nub run sommaire\` ensuite.`));

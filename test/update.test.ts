@@ -147,6 +147,15 @@ test("sommaireNecessaire: seulement avec --enrichir, hors simulation, et si quel
   assert.equal(sommaireNecessaire({ ...base, changements: 2, enrichis: 3, sansSommaire: true }), false); // --sans-sommaire
   assert.equal(sommaireNecessaire({ ...base, changements: 2, sansSommaire: false }), true);
 });
+test("sommaireNecessaire avec --sommaire seul (sans --enrichir): seulement si des changements sont détectés", () => {
+  const seul = { enrichir: false, dryRun: false, changements: 0, enrichis: 0, sommaire: true };
+  assert.equal(sommaireNecessaire({ ...seul, changements: 1 }), true);
+  assert.equal(sommaireNecessaire(seul), false); // rien n'a changé
+  assert.equal(sommaireNecessaire({ ...seul, changements: 1, dryRun: true }), false); // simulation
+  assert.equal(sommaireNecessaire({ ...seul, changements: 1, sansSommaire: true }), false);
+  assert.equal(sommaireNecessaire({ ...seul, changements: 1, sommaire: false }), false); // sans le flag, update seul ne touche pas au sommaire
+  assert.equal(sommaireNecessaire({ ...seul, changements: 1, enrichir: true }), true); // --sommaire est redondant avec --enrichir
+});
 test("raisonDeSauterSommaire: clé API absente, vl-convert introuvable, ou rien à signaler", () => {
   const present = () => "vl-convert 1.9.0";
   const absent = () => {
