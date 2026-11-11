@@ -1,11 +1,14 @@
-// Extrait les outils et les critères du répertoire de souveraineté numérique vers du JSON.
+// Extrait les outils et les critères du répertoire de souveraineté numérique vers du JSON,
+// à partir de la page en ligne (téléchargée à chaque exécution).
 // Source: https://praxis.encommun.io/n/voRYZbuBYZKLejs8JyNkc5C4o7s/
-// Usage: nub extract.ts [--force] <dossier contenant le .html sauvegardé> <outils.json> [criteres.json]
+// Usage: nub extract.ts [--force] <outils.json> [criteres.json] [url]
 // Les outils sont écrits sans classification; lancer ensuite classify.ts.
 // ATTENTION: le fichier de sortie est remplacé en entier. Sans --force, le script refuse d'écraser
-// un outils.json qui contient du travail impossible à retrouver (enrichissement, historique des changements).
-import { existsSync, globSync, readFileSync, writeFileSync } from "node:fs";
+// un outils.json qui contient du travail impossible à retrouver (enrichissement, historique des
+// changements). Pour suivre la page sans rien perdre, utiliser update.ts.
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { parseHTML } from "linkedom";
+import { lancer } from "./cli.ts";
 import { ID_PAR_ICONE, type CritereId } from "./ids.ts";
 
 export type ConfianceEvaluation = "élevée" | "moyenne" | "faible";
@@ -88,6 +91,23 @@ const separerIcone = (s: string) => {
   return { icone, reste: reste.join(" ") };
 };
 
+export const URL_REPERTOIRE = "https://praxis.encommun.io/n/voRYZbuBYZKLejs8JyNkc5C4o7s/";
+
+export const estUrl = (s: string) => /^https?:\/\//.test(s);
+
+/** Télécharge la page du répertoire et en extrait les outils, les critères et la date de modification. */
+export async function telechargerRepertoire(url: string = URL_REPERTOIRE): Promise<Repertoire> {
+  let reponse: Response;
+  try {
+    reponse = await fetch(url, { signal: AbortSignal.timeout(30_000) });
+  } catch (e) {
+    const cause = (e as { cause?: { message?: string } }).cause?.message ?? (e as Error).message;
+    throw new Error(`Téléchargement impossible (${url}): ${cause}`);
+  }
+  if (!reponse.ok) throw new Error(`Téléchargement impossible (${url}): HTTP ${reponse.status}`);
+  return extraire(await reponse.text());
+}
+
 export function extraire(html: string): Repertoire {
   const { document } = parseHTML(html);
 
@@ -159,35 +179,39 @@ export function travailAPerdre(outils: Partial<Outil>[]): string[] {
 }
 
 if (import.meta.main) {
-  const args = process.argv.slice(2);
-  const force = args.includes("--force");
-  const inconnue = args.find((a) => a.startsWith("--") && a !== "--force");
-  if (inconnue) throw new Error(`Option inconnue: ${inconnue}`);
-  const [dir, dstOutils, dstCriteres] = args.filter((a) => !a.startsWith("--"));
-  if (!dir || !dstOutils) throw new Error("Usage: nub extract.ts [--force] <dossier> <outils.json> [criteres.json]");
-  if (!force && existsSync(dstOutils)) {
-    let existants: Partial<Outil>[] = [];
-    try {
-      existants = JSON.parse(readFileSync(dstOutils, "utf8"));
-    } catch {
-      /* fichier illisible: rien à protéger */
+  await lancer(async () => {
+    const args = process.argv.slice(2);
+    const force = args.includes("--force");
+    const inconnue = args.find((a) => a.startsWith("--") && a !== "--force");
+    if (inconnue) throw new Error(`Option inconnue: ${inconnue}`);
+    const positionnels = args.filter((a) => !a.startsWith("--"));
+    const url = positionnels.find(estUrl) ?? URL_REPERTOIRE;
+    const [dstOutils, dstCriteres] = positionnels.filter((a) => !estUrl(a));
+    if (!dstOutils) throw new Error("Usage: nub extract.ts [--force] <outils.json> [criteres.json] [url]");
+
+    if (!force && existsSync(dstOutils)) {
+      let existants: Partial<Outil>[] = [];
+      try {
+        existants = JSON.parse(readFileSync(dstOutils, "utf8"));
+      } catch {
+        /* fichier illisible: rien à protéger */
+      }
+      const perte = travailAPerdre(existants);
+      if (perte.length) {
+        console.error(
+          `Refus d'écraser ${dstOutils}: il contient du travail qui serait perdu (${perte.join("; ")}).\n` +
+            `Pour synchroniser sans rien perdre, utiliser update.ts. Pour tout remplacer quand même: nub run extract --force (ou nub run build:force).`,
+        );
+        process.exit(1);
+      }
     }
-    const perte = travailAPerdre(existants);
-    if (perte.length) {
-      console.error(
-        `Refus d'écraser ${dstOutils}: il contient du travail qui serait perdu (${perte.join("; ")}).\n` +
-          `Pour synchroniser sans rien perdre, utiliser update.ts. Pour tout remplacer quand même: nub run extract --force (ou nub run build:force).`,
-      );
-      process.exit(1);
+
+    const { outils, criteres, modification } = await telechargerRepertoire(url);
+    writeFileSync(dstOutils, JSON.stringify(outils, null, 2));
+    console.log(outils.length, "outils (modification:", modification + ")");
+    if (dstCriteres) {
+      writeFileSync(dstCriteres, JSON.stringify(criteres, null, 2));
+      console.log(criteres.length, "critères");
     }
-  }
-  const fichier = globSync(`${dir}/*.html`)[0];
-  if (!fichier) throw new Error(`Aucun fichier .html dans ${dir}`);
-  const { outils, criteres, modification } = extraire(readFileSync(fichier, "utf8"));
-  writeFileSync(dstOutils, JSON.stringify(outils, null, 2));
-  console.log(outils.length, "outils (modification:", modification + ")");
-  if (dstCriteres) {
-    writeFileSync(dstCriteres, JSON.stringify(criteres, null, 2));
-    console.log(criteres.length, "critères");
-  }
+  });
 }

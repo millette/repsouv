@@ -1,10 +1,12 @@
 import assert from "node:assert/strict";
-import { spawnSync } from "node:child_process";
-import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { spawn } from "node:child_process";
+import { existsSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { createServer } from "node:http";
+import type { AddressInfo } from "node:net";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { test } from "node:test";
-import { dateIso, extraire, travailAPerdre } from "../extract.ts";
+import { dateIso, estUrl, extraire, telechargerRepertoire, travailAPerdre } from "../extract.ts";
 import { ID_PAR_ICONE } from "../ids.ts";
 
 test("dateIso convertit la date française", () => {
@@ -48,37 +50,107 @@ const PAGE = `<html><body>
 <p class="overline-col">Modification</p><p class="text-col">5 novembre 2026 09:53</p>
 <blockquote><h3>🧪 Test</h3><p><strong><a href="https://x.example/">X</a> ★★☆</strong></p><p>Une description.</p></blockquote>
 </body></html>`;
-const extractTs = resolve("extract.ts");
-const lancer = (dossier: string, ...args: string[]) =>
-  spawnSync("nub", [extractTs, ...args, dossier, join(dossier, "outils.json")], { encoding: "utf8" });
 
-test("CLI: refuse d'écraser un outils.json enrichi sans --force, puis l'écrase avec --force", () => {
-  const dossier = mkdtempSync(join(tmpdir(), "extract-"));
-  writeFileSync(join(dossier, "page.html"), PAGE);
-  const sortie = join(dossier, "outils.json");
+/** Sert `reponses` (statut, corps) sur un port local libre pendant `f`, sans toucher au réseau. */
+async function avecServeur<T>(statut: number, corps: string, f: (url: string) => Promise<T>): Promise<T> {
+  const serveur = createServer((_q, r) => {
+    r.writeHead(statut, { "content-type": "text/html; charset=utf-8" });
+    r.end(corps);
+  });
+  await new Promise<void>((ok) => serveur.listen(0, "127.0.0.1", ok));
+  try {
+    return await f(`http://127.0.0.1:${(serveur.address() as AddressInfo).port}/`);
+  } finally {
+    serveur.close();
+  }
+}
+
+const extractTs = resolve("extract.ts");
+/** Lance extract.ts sans bloquer la boucle d'événements (le serveur local doit pouvoir répondre). */
+const lancer = (...args: string[]) =>
+  new Promise<{ status: number | null; stdout: string; stderr: string }>((fini) => {
+    const p = spawn("nub", [extractTs, ...args]);
+    let stdout = "";
+    let stderr = "";
+    p.stdout.on("data", (d) => (stdout += d));
+    p.stderr.on("data", (d) => (stderr += d));
+    p.on("close", (status) => fini({ status, stdout, stderr }));
+  });
+const dossierTemporaire = () => mkdtempSync(join(tmpdir(), "extract-"));
+
+test("telechargerRepertoire: télécharge la page et en extrait les outils", async () => {
+  const r = await avecServeur(200, PAGE, (url) => telechargerRepertoire(url));
+  assert.equal(r.outils.length, 1);
+  assert.equal(r.outils[0]!.nom, "X");
+  assert.equal(r.modification, "2026-11-05T09:53");
+});
+test("telechargerRepertoire: une erreur HTTP est signalée avec l'URL et le code", async () => {
+  await avecServeur(404, "introuvable", (url) =>
+    assert.rejects(telechargerRepertoire(url), (e: Error) => e.message.includes("HTTP 404") && e.message.includes(url)),
+  );
+});
+test("telechargerRepertoire: un serveur injoignable est signalé", async () => {
+  await assert.rejects(telechargerRepertoire("http://127.0.0.1:1/"), /Téléchargement impossible/);
+});
+test("estUrl: reconnaît http et https seulement", () => {
+  assert.equal(estUrl("https://x.example/"), true);
+  assert.equal(estUrl("http://x.example/"), true);
+  assert.equal(estUrl("outils.json"), false);
+  assert.equal(estUrl("file:///x.html"), false);
+});
+
+test("CLI: télécharge la page et écrit outils.json et criteres.json", async () => {
+  const dossier = dossierTemporaire();
+  const [outils, criteres] = [join(dossier, "outils.json"), join(dossier, "criteres.json")];
+  const r = await avecServeur(200, PAGE, (url) => lancer(outils, criteres, url));
+  assert.equal(r.status, 0, r.stderr);
+  assert.equal(JSON.parse(readFileSync(outils, "utf8"))[0].nom, "X");
+  assert.deepEqual(JSON.parse(readFileSync(criteres, "utf8")), []);
+});
+test("CLI: refuse d'écraser un outils.json enrichi sans --force, puis l'écrase avec --force", async () => {
+  const sortie = join(dossierTemporaire(), "outils.json");
   const enrichi = JSON.stringify([{ nom: "X", description_longue: "Précieuse." }]);
   writeFileSync(sortie, enrichi);
 
-  const refus = lancer(dossier);
-  assert.equal(refus.status, 1);
-  assert.match(refus.stderr, /Refus d'écraser/);
-  assert.match(refus.stderr, /--force/);
-  assert.equal(readFileSync(sortie, "utf8"), enrichi);
+  await avecServeur(200, PAGE, async (url) => {
+    const refus = await lancer(sortie, url);
+    assert.equal(refus.status, 1);
+    assert.match(refus.stderr, /Refus d'écraser/);
+    assert.match(refus.stderr, /--force/);
+    assert.equal(readFileSync(sortie, "utf8"), enrichi);
 
-  const force = lancer(dossier, "--force");
-  assert.equal(force.status, 0, force.stderr);
-  const outils = JSON.parse(readFileSync(sortie, "utf8"));
-  assert.equal(outils[0].nom, "X");
-  assert.equal(outils[0].description_longue, undefined);
+    const force = await lancer("--force", sortie, url);
+    assert.equal(force.status, 0, force.stderr);
+    const outils = JSON.parse(readFileSync(sortie, "utf8"));
+    assert.equal(outils[0].nom, "X");
+    assert.equal(outils[0].description_longue, undefined);
+  });
 });
-test("CLI: sans travail à perdre (ou sans fichier), l'import se fait sans --force", () => {
-  const dossier = mkdtempSync(join(tmpdir(), "extract-"));
-  writeFileSync(join(dossier, "page.html"), PAGE);
-  assert.equal(lancer(dossier).status, 0);
-  assert.equal(lancer(dossier).status, 0); // le fichier produit n'a rien de précieux
+test("CLI: sans travail à perdre, l'import se fait sans --force, même répété", async () => {
+  const sortie = join(dossierTemporaire(), "outils.json");
+  await avecServeur(200, PAGE, async (url) => {
+    assert.equal((await lancer(sortie, url)).status, 0);
+    assert.equal((await lancer(sortie, url)).status, 0);
+  });
 });
-test("CLI: une option inconnue est refusée", () => {
-  const dossier = mkdtempSync(join(tmpdir(), "extract-"));
-  writeFileSync(join(dossier, "page.html"), PAGE);
-  assert.notEqual(lancer(dossier, "--forse").status, 0);
+test("CLI: un téléchargement raté donne un message clair, sans trace de pile, et n'écrit rien", async () => {
+  const sortie = join(dossierTemporaire(), "outils.json");
+  const r = await lancer(sortie, "http://127.0.0.1:1/");
+  assert.equal(r.status, 1);
+  assert.match(r.stderr, /^Erreur: Téléchargement impossible/);
+  assert.doesNotMatch(r.stderr, /\n\s+at /);
+  assert.equal(existsSync(sortie), false);
+});
+test("CLI: même un --force n'écrase rien quand le téléchargement échoue", async () => {
+  const sortie = join(dossierTemporaire(), "outils.json");
+  writeFileSync(sortie, "[]");
+  const r = await avecServeur(500, "erreur", (url) => lancer("--force", sortie, url));
+  assert.equal(r.status, 1);
+  assert.match(r.stderr, /HTTP 500/);
+  assert.equal(readFileSync(sortie, "utf8"), "[]");
+});
+test("CLI: une option inconnue ou l'absence de fichier de sortie est refusée", async () => {
+  const sortie = join(dossierTemporaire(), "outils.json");
+  assert.match((await lancer("--forse", sortie)).stderr, /Option inconnue/);
+  assert.match((await lancer()).stderr, /Usage/);
 });

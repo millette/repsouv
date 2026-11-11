@@ -25,10 +25,9 @@ import { classer, type OutilClasse } from "./classify.ts";
 import {
   aEnrichir, chargerCriteres, chargerTags, enrichirOutils, expliqueurOpenAI, generateurOpenAI, MODELE_PAR_DEFAUT, sauverTags,
 } from "./enrichir.ts";
-import { extraire, type Changement, type Outil } from "./extract.ts";
+import { lancer } from "./cli.ts";
+import { telechargerRepertoire, type Changement, type Outil } from "./extract.ts";
 import { createProgress } from "./progress.ts";
-
-export const URL_REPERTOIRE = "https://praxis.encommun.io/n/voRYZbuBYZKLejs8JyNkc5C4o7s/";
 
 const CHAMPS_COMPARES = ["categorie", "icone", "score", "lien", "description"] as const;
 const CHAMPS_ENRICHIS = [
@@ -92,70 +91,70 @@ export function mettreAJour(
 }
 
 if (import.meta.main) {
-  const args = process.argv.slice(2);
-  const dryRun = args.includes("--dry-run");
-  const enrichir = args.includes("--enrichir");
-  const nouveauxTags = args.includes("--nouveaux-tags");
-  const limiteArg = args.find((a) => a.startsWith("--limite="));
-  const limite = limiteArg ? Number(limiteArg.slice("--limite=".length)) : undefined;
-  if (nouveauxTags && !enrichir) throw new Error("--nouveaux-tags nécessite --enrichir");
-  if (limite !== undefined && !(Number.isInteger(limite) && limite > 0)) throw new Error("--limite=N: entier positif attendu");
-  const [fichier = "outils.json", url = URL_REPERTOIRE] = args.filter((a) => !a.startsWith("--"));
+  await lancer(async () => {
+    const args = process.argv.slice(2);
+    const dryRun = args.includes("--dry-run");
+    const enrichir = args.includes("--enrichir");
+    const nouveauxTags = args.includes("--nouveaux-tags");
+    const limiteArg = args.find((a) => a.startsWith("--limite="));
+    const limite = limiteArg ? Number(limiteArg.slice("--limite=".length)) : undefined;
+    if (nouveauxTags && !enrichir) throw new Error("--nouveaux-tags nécessite --enrichir");
+    if (limite !== undefined && !(Number.isInteger(limite) && limite > 0)) throw new Error("--limite=N: entier positif attendu");
+    const [fichier = "outils.json", url] = args.filter((a) => !a.startsWith("--"));
 
-  const reponse = await fetch(url);
-  if (!reponse.ok) throw new Error(`${url}: HTTP ${reponse.status}`);
-  const { outils: page, modification } = extraire(await reponse.text());
-  const existants: OutilClasse[] = JSON.parse(readFileSync(fichier, "utf8"));
+    const { outils: page, modification } = await telechargerRepertoire(url);
+    const existants: OutilClasse[] = JSON.parse(readFileSync(fichier, "utf8"));
 
-  const { outils, resume } = mettreAJour(existants, page, modification);
-  const total = Object.values(resume).reduce((n, noms) => n + noms.length, 0);
-  console.log(`Page modifiée le ${modification}: ${total} changement(s)`);
-  for (const [type, noms] of Object.entries(resume)) {
-    if (noms.length) console.log(`  ${type}: ${noms.join(", ")}`);
-  }
-  if (total && !dryRun) {
-    writeFileSync(fichier, JSON.stringify(outils, null, 2));
-    console.log(`${fichier} mis à jour`);
-  }
-
-  if (enrichir) {
-    const fichierTags = join(dirname(fichier), "tags.json");
-    const aFaire = outils.filter(aEnrichir);
-    const prevus = limite ? aFaire.slice(0, limite) : aFaire;
-    console.log(`Enrichissement: ${aFaire.length} outil(s) sans description longue`);
-    if (dryRun) {
-      if (prevus.length) console.log(`  à enrichir (${prevus.length}): ${prevus.map((o) => o.nom).join(", ")}`);
-    } else if (aFaire.length) {
-      const cle = process.env.OPENAI_API_KEY;
-      if (!cle) throw new Error("OPENAI_API_KEY absente (voir .env.example)");
-      const tags = chargerTags(fichierTags);
-      const criteres = chargerCriteres(join(dirname(fichier), "criteres.json"));
-      const nbTags = tags.length;
-      const modele = process.env.OPENAI_MODEL || MODELE_PAR_DEFAUT;
-      const progression = createProgress(prevus.length, { logWhenNotTTY: true });
-      let traites = 0;
-      const resultat = await enrichirOutils(outils, {
-        tags,
-        criteres,
-        generer: generateurOpenAI(cle, modele),
-        expliquer: expliqueurOpenAI(cle, modele),
-        autoriserNouveauxTags: nouveauxTags,
-        ...(limite !== undefined && { limite }),
-        apresChaque: (os, ts) => {
-          writeFileSync(fichier, JSON.stringify(os, null, 2));
-          if (ts.length !== nbTags) sauverTags(fichierTags, ts);
-        },
-        // En terminal, le nom de l'outil en cours s'affiche sur la barre; sinon, sur une ligne de journal.
-        debut: (nom) =>
-          process.stderr.isTTY ? progression.update(traites, nom) : progression.message(`Enrichissement de ${nom}...`),
-        progression: (n) => progression.update((traites = n)),
-        journal: (message) => progression.message(message),
-      });
-      progression.end();
-      console.log(`Enrichis: ${resultat.enrichis.length}; échecs: ${resultat.erreurs.length}`);
-      if (resultat.ecarts.length) console.log(`Évaluation différente du répertoire: ${resultat.ecarts.join(", ")}`);
-      if (tags.length > nbTags) console.log(`Nouveaux tags: ${tags.slice(nbTags).map((t) => t.id).join(", ")}`);
-      if (resultat.erreurs.length) process.exitCode = 1;
+    const { outils, resume } = mettreAJour(existants, page, modification);
+    const total = Object.values(resume).reduce((n, noms) => n + noms.length, 0);
+    console.log(`Page modifiée le ${modification}: ${total} changement(s)`);
+    for (const [type, noms] of Object.entries(resume)) {
+      if (noms.length) console.log(`  ${type}: ${noms.join(", ")}`);
     }
-  }
+    if (total && !dryRun) {
+      writeFileSync(fichier, JSON.stringify(outils, null, 2));
+      console.log(`${fichier} mis à jour`);
+    }
+
+    if (enrichir) {
+      const fichierTags = join(dirname(fichier), "tags.json");
+      const aFaire = outils.filter(aEnrichir);
+      const prevus = limite ? aFaire.slice(0, limite) : aFaire;
+      console.log(`Enrichissement: ${aFaire.length} outil(s) sans description longue`);
+      if (dryRun) {
+        if (prevus.length) console.log(`  à enrichir (${prevus.length}): ${prevus.map((o) => o.nom).join(", ")}`);
+      } else if (aFaire.length) {
+        const cle = process.env.OPENAI_API_KEY;
+        if (!cle) throw new Error("OPENAI_API_KEY absente (voir .env.example)");
+        const tags = chargerTags(fichierTags);
+        const criteres = chargerCriteres(join(dirname(fichier), "criteres.json"));
+        const nbTags = tags.length;
+        const modele = process.env.OPENAI_MODEL || MODELE_PAR_DEFAUT;
+        const progression = createProgress(prevus.length, { logWhenNotTTY: true });
+        let traites = 0;
+        const resultat = await enrichirOutils(outils, {
+          tags,
+          criteres,
+          generer: generateurOpenAI(cle, modele),
+          expliquer: expliqueurOpenAI(cle, modele),
+          autoriserNouveauxTags: nouveauxTags,
+          ...(limite !== undefined && { limite }),
+          apresChaque: (os, ts) => {
+            writeFileSync(fichier, JSON.stringify(os, null, 2));
+            if (ts.length !== nbTags) sauverTags(fichierTags, ts);
+          },
+          // En terminal, le nom de l'outil en cours s'affiche sur la barre; sinon, sur une ligne de journal.
+          debut: (nom) =>
+            process.stderr.isTTY ? progression.update(traites, nom) : progression.message(`Enrichissement de ${nom}...`),
+          progression: (n) => progression.update((traites = n)),
+          journal: (message) => progression.message(message),
+        });
+        progression.end();
+        console.log(`Enrichis: ${resultat.enrichis.length}; échecs: ${resultat.erreurs.length}`);
+        if (resultat.ecarts.length) console.log(`Évaluation différente du répertoire: ${resultat.ecarts.join(", ")}`);
+        if (tags.length > nbTags) console.log(`Nouveaux tags: ${tags.slice(nbTags).map((t) => t.id).join(", ")}`);
+        if (resultat.erreurs.length) process.exitCode = 1;
+      }
+    }
+  });
 }

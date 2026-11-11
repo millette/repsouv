@@ -2,7 +2,7 @@
 
 Extraction en JSON du [répertoire d'outils favorisant la souveraineté numérique](https://praxis.encommun.io/n/voRYZbuBYZKLejs8JyNkc5C4o7s/) publié sur Praxis. Le dépôt contient les données (`outils.json`, `criteres.json`, `tags.json`) et les scripts qui les produisent :
 
-- l'extraction de la page vers du JSON;
+- l'extraction de la page en ligne vers du JSON;
 - l'analyse des étoiles de chaque outil selon les trois critères du répertoire;
 - la synchronisation avec la page en ligne, qui détecte les outils nouveaux, modifiés et retirés;
 - un enrichissement facultatif par IA : description longue, tags, licence et dépôt de code, second avis sur la souveraineté.
@@ -44,12 +44,12 @@ Pour l'enrichissement, copier `.env.example` vers `.env` et y mettre la clé `OP
 ### Flux de travail
 
 ```
-Import initial   copie HTML ──▶ extract.ts ──▶ classify.ts ──▶ outils.json
+Import initial   page en ligne ──▶ extract.ts ──▶ classify.ts ──▶ outils.json
 Suivi courant    page en ligne ──▶ update.ts ──▶ outils.json   (nouveau, modification, retrait, comeback)
 Enrichissement   update.ts --enrichir ──▶ API OpenAI ──▶ outils.json (+ tags.json si de nouveaux tags)
 ```
 
-L'import initial part d'une copie locale de la page, enregistrée depuis le navigateur dans ce dossier (les fichiers `.html` sont ignorés par Git). Ensuite, `update` suffit : il lit la page en ligne. Voir [Importer ou réimporter depuis la copie HTML](#importer-ou-réimporter-depuis-la-copie-html) avant de relancer `extract` ou `build`.
+`extract` et `update` téléchargent la page en ligne (le dépôt n'en contient aucune copie). Après l'import initial, `update` suffit pour suivre le répertoire. Voir [Importer ou réimporter depuis le web](#importer-ou-réimporter-depuis-le-web) avant de relancer `extract` ou `build`.
 
 ### Contenu du dépôt
 
@@ -57,11 +57,11 @@ L'import initial part d'une copie locale de la page, enregistrée depuis le navi
 |---|---|
 | `outils.json`, `criteres.json`, `tags.json` | Les données (voir [Fichiers JSON](#fichiers-json)) |
 | `extract.ts`, `classify.ts`, `update.ts` | Les trois scripts du flux de travail |
-| `enrichir.ts`, `spdx.ts`, `progress.ts`, `ids.ts` | Modules utilisés par les scripts |
+| `enrichir.ts`, `spdx.ts`, `progress.ts`, `ids.ts`, `cli.ts` | Modules utilisés par les scripts |
 | `test/` | Les tests |
 | `package.json`, `nub.lock`, `tsconfig.json` | Dépendances, scripts npm et configuration TypeScript |
 | `.env.example` | Modèle du fichier `.env` (la clé OpenAI) |
-| `.gitignore` | Ignore `.env`, `node_modules/` et les copies `.html` de la page |
+| `.gitignore` | Ignore `.env` et `node_modules/` |
 
 ## Fichiers JSON
 
@@ -123,12 +123,12 @@ Tous sont en TypeScript et se lancent avec `nub`. Les fonctions principales sont
 ### `extract.ts`
 
 ```sh
-nub extract.ts [--force] <dossier> <outils.json> [criteres.json]
+nub extract.ts [--force] <outils.json> [criteres.json] [url]
 ```
 
-Lit le fichier `.html` sauvegardé dans `<dossier>` et écrit les outils et, si demandé, les critères. Utilise [linkedom](https://github.com/WebReflection/linkedom) pour interroger le DOM. Lit la date de modification affichée sur la page; refuse une page sans date ou contenant deux outils de même nom.
+Télécharge la page en ligne (`[url]`, par défaut celle du répertoire) et écrit les outils et, si demandé, les critères. Utilise [linkedom](https://github.com/WebReflection/linkedom) pour interroger le DOM. Lit la date de modification affichée sur la page; refuse une page sans date ou contenant deux outils de même nom. Un échec de téléchargement (réseau, erreur HTTP) n'écrit rien.
 
-Les outils sont écrits **sans** classification ni enrichissement, et le fichier de sortie est **entièrement remplacé**. Sans `--force`, le script refuse d'écraser un `outils.json` qui contient des champs d'enrichissement ou un historique de changement (`changement`, `removed`). Voir [Importer ou réimporter depuis la copie HTML](#importer-ou-réimporter-depuis-la-copie-html).
+Les outils sont écrits **sans** classification ni enrichissement, et le fichier de sortie est **entièrement remplacé**. Sans `--force`, le script refuse d'écraser un `outils.json` qui contient des champs d'enrichissement ou un historique de changement (`changement`, `removed`). Voir [Importer ou réimporter depuis le web](#importer-ou-réimporter-depuis-le-web).
 
 ### `classify.ts`
 
@@ -144,7 +144,7 @@ Ajoute `criteres` et `confiance` à chaque outil (réécrit `outils.json` en pla
 nub update.ts [--dry-run] [--enrichir [--nouveaux-tags] [--limite=N]] [outils.json] [url]
 ```
 
-Télécharge la page en ligne (`[url]`, par défaut celle du répertoire), la compare à `outils.json` (par défaut `./outils.json`) et met le fichier à jour. `--dry-run` affiche les changements sans écrire. Pour chaque outil :
+Télécharge la page en ligne (`[url]`, par défaut celle du répertoire; le même téléchargement qu'`extract.ts`), la compare à `outils.json` (par défaut `./outils.json`) et met le fichier à jour. `--dry-run` affiche les changements sans écrire. Pour chaque outil :
 
 - absent du fichier : `changement: "nouveau"`;
 - marqué `removed` et de retour sur la page : `"comeback"`, et `removed` disparaît;
@@ -172,6 +172,10 @@ Module de l'enrichissement : lecture de la page de l'outil, requêtes à l'API O
 ### `progress.ts`
 
 Barre de progression minimale sur une ligne, sans dépendance : `createProgress(total, options)` retourne `update(valeur, étiquette?)` (l'étiquette, par exemple l'outil en cours, s'affiche après le pourcentage), `message(texte)` (écrit une ligne au-dessus de la barre sans l'abîmer) et `end()`. Écrit sur stderr par défaut.
+
+### `cli.ts`
+
+`lancer(principal)` exécute le corps d'un script en ligne de commande : une erreur s'affiche en un message clair (`Erreur: …`), sans trace de pile, et donne le code de sortie 1. Utilisé par `extract.ts`, `classify.ts` et `update.ts`.
 
 ### `ids.ts`
 
@@ -219,28 +223,30 @@ Une réponse invalide est redemandée une fois, avec la raison du rejet, puis co
 
 **Reprise :** `outils.json` est écrit après chaque outil, donc une interruption ne perd rien et une relance reprend où on s'est arrêté. Le code de sortie est 1 si au moins un outil a échoué.
 
-## Importer ou réimporter depuis la copie HTML
+## Importer ou réimporter depuis le web
 
-`extract` et `build` servent à **construire `outils.json` depuis zéro** à partir de la copie de la page enregistrée dans ce dossier :
+`extract` et `build` servent à **construire `outils.json` depuis zéro** à partir de la page en ligne :
 
-- `nub run extract` lit la copie HTML et **réécrit `outils.json` en entier**, avec seulement les champs de la source. Il ne regarde jamais le fichier existant et ne fusionne rien.
+- `nub run extract` télécharge la page et **réécrit `outils.json` en entier**, avec seulement les champs de la source. Il ne regarde jamais le fichier existant et ne fusionne rien.
 - `nub run build` enchaîne `extract` puis `classify` : le fichier produit est complet, avec `criteres` et `confiance`.
 
-Cette voie existait avant tout le reste (c'était alors le projet entier). Depuis, `update` fait la synchronisation courante, et c'est lui qu'il faut utiliser pour suivre la page en ligne : il détecte les changements, conserve les dates des outils inchangés et ne touche jamais à l'enrichissement.
+C'est la voie de l'import initial. Ensuite, `update` fait la synchronisation courante : il télécharge la même page, mais compare, détecte les changements, conserve les dates des outils inchangés et ne touche jamais à l'enrichissement.
 
 Parce que `extract` remplace tout, un réimport détruit :
 
 - l'**enrichissement** (descriptions longues, tags, licences, évaluations), qui coûte des appels à l'API OpenAI;
-- l'**historique des changements** (`changement`, `removed`) et les dates de `update`, car les données reviennent à l'état de la copie HTML, souvent plus ancienne que la page en ligne.
+- l'**historique des changements** (`changement`, `removed`) et les dates de `update` : tous les outils reçoivent la date de modification actuelle de la page, avec `changement: null`.
 
-C'est pourquoi `extract` refuse maintenant d'écraser un `outils.json` qui contient ce genre de travail. La classification n'est pas protégée : `classify` la recalcule toujours.
+C'est pourquoi `extract` refuse d'écraser un `outils.json` qui contient ce genre de travail. La classification n'est pas protégée : `classify` la recalcule toujours.
+
+Comme la page est téléchargée à chaque exécution, un réimport n'est **pas reproductible** : il donne l'état du répertoire au moment où il est lancé. Pour retrouver un état précis, utiliser l'historique Git de `outils.json`.
 
 | Besoin | Commande |
 |---|---|
 | Suivre la page en ligne (usage courant) | `nub run update` |
 | Première construction, ou fichier vide ou corrompu | `nub run build` |
 | Appliquer de nouvelles règles de classification, sans rien perdre | `nub run classify` |
-| Tout remplacer volontairement depuis la copie HTML | `nub run build:force` (ou `nub run extract --force`) |
+| Tout remplacer volontairement depuis le web | `nub run build:force` (ou `nub run extract --force`) |
 
 Les options de `nub run` sont transmises à la **dernière** commande du script. `nub run extract --force` agit donc bien sur `extract`, alors que `nub run build --force` transmettrait `--force` à `classify`, où il est ignoré : pour forcer une reconstruction, utiliser `build:force`.
 
@@ -250,9 +256,9 @@ Si les `criteres` d'un outil déjà enrichi changent après un `classify`, son `
 
 | Commande | Effet |
 |---|---|
-| `nub run extract` | `nub extract.ts . outils.json criteres.json` : importe depuis le `.html` local. Refuse d'écraser un travail existant sans `--force` |
+| `nub run extract` | `nub extract.ts outils.json criteres.json` : importe depuis la page en ligne. Refuse d'écraser un travail existant sans `--force` |
 | `nub run classify` | `nub classify.ts outils.json` : classe les outils en place |
-| `nub run build` | `extract` puis `classify` : construit `outils.json` depuis le `.html` local. Refuse d'écraser un enrichissement ou un historique existant |
+| `nub run build` | `extract` puis `classify` : construit `outils.json` depuis la page en ligne. Refuse d'écraser un enrichissement ou un historique existant |
 | `nub run build:force` | Comme `build`, mais **remplace tout**, enrichissement et historique compris |
 | `nub run update` | `nub update.ts` : synchronise `outils.json` avec la page en ligne. Les options passent directement : `nub run update --dry-run` |
 | `nub run enrichir` | `nub update.ts --enrichir` : synchronise, puis enrichit les outils sans description longue. Par exemple : `nub run enrichir --limite=5` |
@@ -264,7 +270,7 @@ Si les `criteres` d'un outil déjà enrichi changent après un `classify`, son `
 Dans `test/`, avec `node:test` lancé par `nub` :
 
 - `classify.test.ts` : cas de classification connus, un nombre de critères égal au score pour les 60 outils, et les options de la ligne de commande.
-- `extract.test.ts` : conversion de date, cohérence de `criteres.json` et `outils.json`, rejet d'une page sans date, et le garde-fou contre l'écrasement (avec et sans `--force`).
+- `extract.test.ts` : conversion de date, cohérence de `criteres.json` et `outils.json`, rejet d'une page sans date, téléchargement (sur un serveur local, sans réseau), erreurs de téléchargement, et le garde-fou contre l'écrasement (avec et sans `--force`).
 - `update.test.ts` : nouveau, modification, retrait, comeback, conservation des dates des outils inchangés et des champs d'enrichissement.
 - `enrichir.test.ts` : vocabulaire de `tags.json`, validation (tags, Markdown permis et interdit, licences SPDX et maison, évaluation), explication des écarts, extraction de la page, enrichissement une seule fois, limite, reprise et échecs, avec de faux générateurs.
 - `spdx.test.ts` : licences SPDX valides et refusées.
