@@ -6,6 +6,7 @@
     "extract": "nub extract.ts . outils.json criteres.json",
     "classify": "nub classify.ts outils.json",
     "build": "nub run extract && nub run classify",
+    "build:force": "nub run extract --force && nub run classify",
     "update": "nub update.ts",
     "test": "nub test/classify.test.ts && nub test/extract.test.ts && nub test/update.test.ts && nub test/enrichir.test.ts && nub test/progress.test.ts && nub test/spdx.test.ts",
     "typecheck": "tsrs -p .",

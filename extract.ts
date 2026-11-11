@@ -1,8 +1,10 @@
 // Extrait les outils et les critères du répertoire de souveraineté numérique vers du JSON.
 // Source: https://praxis.encommun.io/n/voRYZbuBYZKLejs8JyNkc5C4o7s/
-// Usage: nub extract.ts <dossier contenant le .html sauvegardé> <outils.json> [criteres.json]
+// Usage: nub extract.ts [--force] <dossier contenant le .html sauvegardé> <outils.json> [criteres.json]
 // Les outils sont écrits sans classification; lancer ensuite classify.ts.
-import { globSync, readFileSync, writeFileSync } from "node:fs";
+// ATTENTION: le fichier de sortie est remplacé en entier. Sans --force, le script refuse d'écraser
+// un outils.json qui contient du travail impossible à retrouver (enrichissement, historique des changements).
+import { existsSync, globSync, readFileSync, writeFileSync } from "node:fs";
 import { parseHTML } from "linkedom";
 import { ID_PAR_ICONE, type CritereId } from "./ids.ts";
 
@@ -138,9 +140,47 @@ export function extraire(html: string): Repertoire {
   return { outils, criteres, modification };
 }
 
+const CHAMPS_ENRICHIS = [
+  "description_longue", "tags", "source", "licence", "custom_license", "custom_license_url", "repo", "evaluation_enrichie",
+] as const;
+
+/**
+ * Décrit ce qu'un nouvel import écraserait sans pouvoir le retrouver: l'enrichissement (appels
+ * à l'API) et l'historique des changements (update.ts). La classification n'en fait pas partie:
+ * classify.ts la recalcule. Retourne une liste vide s'il n'y a rien à perdre.
+ */
+export function travailAPerdre(outils: Partial<Outil>[]): string[] {
+  const enrichis = outils.filter((o) => CHAMPS_ENRICHIS.some((c) => o[c] !== undefined)).length;
+  const historiques = outils.filter((o) => o.removed || (o.changement ?? null) !== null).length;
+  return [
+    ...(enrichis ? [`${enrichis} outil(s) enrichi(s) par IA`] : []),
+    ...(historiques ? [`${historiques} outil(s) avec un historique de changement (changement ou removed)`] : []),
+  ];
+}
+
 if (import.meta.main) {
-  const [dir, dstOutils, dstCriteres] = process.argv.slice(2);
-  if (!dir || !dstOutils) throw new Error("Usage: nub extract.ts <dossier> <outils.json> [criteres.json]");
+  const args = process.argv.slice(2);
+  const force = args.includes("--force");
+  const inconnue = args.find((a) => a.startsWith("--") && a !== "--force");
+  if (inconnue) throw new Error(`Option inconnue: ${inconnue}`);
+  const [dir, dstOutils, dstCriteres] = args.filter((a) => !a.startsWith("--"));
+  if (!dir || !dstOutils) throw new Error("Usage: nub extract.ts [--force] <dossier> <outils.json> [criteres.json]");
+  if (!force && existsSync(dstOutils)) {
+    let existants: Partial<Outil>[] = [];
+    try {
+      existants = JSON.parse(readFileSync(dstOutils, "utf8"));
+    } catch {
+      /* fichier illisible: rien à protéger */
+    }
+    const perte = travailAPerdre(existants);
+    if (perte.length) {
+      console.error(
+        `Refus d'écraser ${dstOutils}: il contient du travail qui serait perdu (${perte.join("; ")}).\n` +
+          `Pour synchroniser sans rien perdre, utiliser update.ts. Pour tout remplacer quand même: nub run extract --force (ou nub run build:force).`,
+      );
+      process.exit(1);
+    }
+  }
   const fichier = globSync(`${dir}/*.html`)[0];
   if (!fichier) throw new Error(`Aucun fichier .html dans ${dir}`);
   const { outils, criteres, modification } = extraire(readFileSync(fichier, "utf8"));

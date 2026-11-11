@@ -1,5 +1,8 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { spawnSync } from "node:child_process";
+import { copyFileSync, mkdtempSync, readFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
 import { test } from "node:test";
 import type { Outil } from "../extract.ts";
 import { CONTROLE, DEPENDANCE, DONNEES, classer } from "../classify.ts";
@@ -29,4 +32,24 @@ test("sans score, on retient les indices forts", () => {
 });
 test("le nombre de critères égale le score pour tous les outils", () => {
   for (const [nom, o] of outils) assert.equal(criteres(nom).length, o.score, nom);
+});
+
+const classifyTs = resolve("classify.ts");
+const copie = () => {
+  const f = join(mkdtempSync(join(tmpdir(), "classify-")), "outils.json");
+  copyFileSync("outils.json", f);
+  return f;
+};
+test("CLI: --force est accepté sans effet (nub run build --force le transmet à classify)", () => {
+  const f = copie();
+  const r = spawnSync("nub", [classifyTs, f, "--force"], { encoding: "utf8" });
+  assert.equal(r.status, 0, r.stderr);
+  assert.equal(JSON.parse(readFileSync(f, "utf8")).length, 60);
+});
+test("CLI: une autre option est refusée et le fichier reste intact", () => {
+  const f = copie();
+  const avant = readFileSync(f, "utf8");
+  const r = spawnSync("nub", [classifyTs, f, "--bogus"], { encoding: "utf8" });
+  assert.notEqual(r.status, 0);
+  assert.equal(readFileSync(f, "utf8"), avant);
 });
