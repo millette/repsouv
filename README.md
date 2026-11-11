@@ -9,6 +9,8 @@ Extraction en JSON du [répertoire d'outils favorisant la souveraineté numériq
 
 Le répertoire rassemble 60 outils numériques répartis en 20 catégories, sélectionnés pour les besoins des OSBL des arts et de la culture. Chaque outil reçoit de 0 à 3 étoiles (un critère satisfait = une étoile); seuls ceux qui en ont au moins 2 y figurent.
 
+**Sommaire :** [Source, crédits et licences](#source-crédits-et-licences) · [Démarrage](#démarrage) · [Fichiers JSON](#fichiers-json) · [Scripts](#scripts) · [Classification](#classification) · [Enrichissement par IA](#enrichissement-par-ia) · [Importer ou réimporter](#importer-ou-réimporter-depuis-le-web) · [Scripts npm](#scripts-npm-packagejson) · [Tests](#tests) · [Dépannage](#dépannage) · [Utiliser les données](#utiliser-les-données)
+
 ## Source, crédits et licences
 
 ### Le répertoire d'origine
@@ -42,6 +44,7 @@ Les champs d'enrichissement résument des pages tierces (voir [D'où viennent le
 ### D'où viennent les champs
 
 - **De la source :** la catégorie, le nom, le score, le lien et la description de chaque outil, ainsi que les trois critères.
+- **Rédigé pour ce dépôt :** le vocabulaire de `tags.json` (identifiants et descriptions des 37 tags de départ).
 - **Calculé par les scripts :** `meta` (licence et dates des fichiers), `derniere_modification`, `changement` et `removed` (voir `update.ts` et `fichiers.ts`).
 - **Déduit par heuristique dans ce dépôt :** `criteres` et `confiance` (voir [Classification](#classification)).
 - **Généré par un modèle d'IA :** les champs d'enrichissement (voir [Enrichissement](#enrichissement-par-ia)). Ils résument des pages tierces et sont à vérifier avant de s'y fier ou de les diffuser, surtout la licence et le dépôt.
@@ -259,12 +262,12 @@ C'est une heuristique, pas une vérité : un critère retenu avec une confiance 
 | `--enrichir` | Active l'enrichissement après la synchronisation |
 | `--limite=N` | N'enrichit pas plus de N outils par exécution. Seuls les succès comptent : un outil en échec ne compte pas dans la limite, mais n'est essayé qu'une fois par exécution |
 | `--sans-page` | Enrichit aussi les outils dont la page est inaccessible ou presque vide, à partir de leur seule description (ils portent alors `page_lue: false`). Voir [Pages inaccessibles](#pages-inaccessibles-ou-presque-vides) |
-| `--nouveaux-tags` | Autorise le modèle à proposer de nouveaux tags (justification obligatoire); ils sont ajoutés à `tags.json` |
+| `--nouveaux-tags` | Autorise le modèle à proposer de nouveaux tags, au plus 2 par outil selon sa consigne (justification obligatoire, validée par le script); ils sont ajoutés à `tags.json` |
 | `--dry-run` | Liste les outils concernés sans appeler l'API |
 
 **Configuration :** `OPENAI_API_KEY` dans `.env` (voir `.env.example`), et `OPENAI_MODEL` pour changer le modèle (`gpt-6-astra` par défaut). Compter environ 20 secondes par outil (mesuré sur quelques outils).
 
-**Confidentialité :** pour chaque outil, le script télécharge la page publique (`lien`), en extrait le texte (limité à 6 000 caractères) et les liens vers des forges de code, puis envoie à l'API OpenAI (Responses API, sortie JSON structurée) le nom, la catégorie, le lien, la description et cet extrait. Quand l'évaluation diffère du répertoire, le second appel y ajoute les deux évaluations. Les tags sont limités au vocabulaire de `tags.json`. La page est lue d'abord : voir [Pages inaccessibles ou presque vides](#pages-inaccessibles-ou-presque-vides).
+**Confidentialité :** pour chaque outil, le script télécharge la page publique (`lien`), en extrait le texte (limité à 6 000 caractères) et les liens vers des dépôts de code (GitHub, GitLab, Codeberg, Framagit, Bitbucket, SourceHut, SourceForge, et les hôtes `gitlab.*`, `git.*`, `forge.*` ou `gitea.*`), puis envoie à l'API OpenAI (Responses API, sortie JSON structurée) le nom, la catégorie, le lien, la description et cet extrait. Quand l'évaluation diffère du répertoire, le second appel y ajoute les deux évaluations. Les tags sont limités au vocabulaire de `tags.json`. La page est lue d'abord : voir [Pages inaccessibles ou presque vides](#pages-inaccessibles-ou-presque-vides).
 
 **Validation :** chaque réponse est vérifiée avant d'être écrite :
 
