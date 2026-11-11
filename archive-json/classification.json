@@ -1,0 +1,850 @@
+[
+  {
+    "nom": "Matomo",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🔗"
+    ],
+    "confiance": "élevée",
+    "evidences": {
+      "📍": 6,
+      "🏢": -3,
+      "🔗": 1
+    }
+  },
+  {
+    "nom": "Klipfolio",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🏢"
+    ],
+    "confiance": "faible",
+    "evidences": {
+      "📍": 0,
+      "🏢": 0,
+      "🔗": 0
+    }
+  },
+  {
+    "nom": "cDox",
+    "score": 3,
+    "criteres": [
+      "📍",
+      "🏢",
+      "🔗"
+    ],
+    "confiance": "élevée",
+    "evidences": {
+      "📍": 4.5,
+      "🏢": 3,
+      "🔗": 3
+    }
+  },
+  {
+    "nom": "Antidote",
+    "score": 3,
+    "criteres": [
+      "📍",
+      "🏢",
+      "🔗"
+    ],
+    "confiance": "élevée",
+    "evidences": {
+      "📍": 1.5,
+      "🏢": 3,
+      "🔗": 0
+    }
+  },
+  {
+    "nom": "CryptPad",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🔗"
+    ],
+    "confiance": "élevée",
+    "evidences": {
+      "📍": 6,
+      "🏢": 0,
+      "🔗": 2
+    }
+  },
+  {
+    "nom": "OnlyOffice",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🔗"
+    ],
+    "confiance": "élevée",
+    "evidences": {
+      "📍": 3,
+      "🏢": -3,
+      "🔗": 2
+    }
+  },
+  {
+    "nom": "Collabora Online",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🔗"
+    ],
+    "confiance": "élevée",
+    "evidences": {
+      "📍": 3,
+      "🏢": -3,
+      "🔗": 2
+    }
+  },
+  {
+    "nom": "La Digitale",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🔗"
+    ],
+    "confiance": "élevée",
+    "evidences": {
+      "📍": 6,
+      "🏢": -3,
+      "🔗": 2
+    }
+  },
+  {
+    "nom": "Euro-Office",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🔗"
+    ],
+    "confiance": "élevée",
+    "evidences": {
+      "📍": 6,
+      "🏢": -3,
+      "🔗": 2
+    }
+  },
+  {
+    "nom": "Framapad",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🔗"
+    ],
+    "confiance": "élevée",
+    "evidences": {
+      "📍": 6,
+      "🏢": -3,
+      "🔗": 1
+    }
+  },
+  {
+    "nom": "Jami",
+    "score": 3,
+    "criteres": [
+      "📍",
+      "🏢",
+      "🔗"
+    ],
+    "confiance": "élevée",
+    "evidences": {
+      "📍": 4.5,
+      "🏢": 3,
+      "🔗": 3
+    }
+  },
+  {
+    "nom": "Mattermost",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🔗"
+    ],
+    "confiance": "élevée",
+    "evidences": {
+      "📍": 3,
+      "🏢": -3,
+      "🔗": 5
+    }
+  },
+  {
+    "nom": "Jitsi Meet",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🔗"
+    ],
+    "confiance": "élevée",
+    "evidences": {
+      "📍": 6,
+      "🏢": -3,
+      "🔗": 3
+    }
+  },
+  {
+    "nom": "En commun",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🏢"
+    ],
+    "confiance": "moyenne",
+    "evidences": {
+      "📍": 1.5,
+      "🏢": 3,
+      "🔗": 0
+    }
+  },
+  {
+    "nom": "Mastodon",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🔗"
+    ],
+    "confiance": "élevée",
+    "evidences": {
+      "📍": 3,
+      "🏢": -3,
+      "🔗": 4
+    }
+  },
+  {
+    "nom": "Discourse",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🔗"
+    ],
+    "confiance": "élevée",
+    "evidences": {
+      "📍": 3,
+      "🏢": -3,
+      "🔗": 2
+    }
+  },
+  {
+    "nom": "Kashoo",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🏢"
+    ],
+    "confiance": "moyenne",
+    "evidences": {
+      "📍": 1.5,
+      "🏢": 3,
+      "🔗": 0
+    }
+  },
+  {
+    "nom": "Elodia",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🏢"
+    ],
+    "confiance": "moyenne",
+    "evidences": {
+      "📍": 1.5,
+      "🏢": 3,
+      "🔗": 0
+    }
+  },
+  {
+    "nom": "Zeffy",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🏢"
+    ],
+    "confiance": "moyenne",
+    "evidences": {
+      "📍": 1.5,
+      "🏢": 3,
+      "🔗": 0
+    }
+  },
+  {
+    "nom": "CanaDon",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🏢"
+    ],
+    "confiance": "moyenne",
+    "evidences": {
+      "📍": 1.5,
+      "🏢": 3,
+      "🔗": 0
+    }
+  },
+  {
+    "nom": "Webnames.ca",
+    "score": 3,
+    "criteres": [
+      "📍",
+      "🏢",
+      "🔗"
+    ],
+    "confiance": "élevée",
+    "evidences": {
+      "📍": 1.5,
+      "🏢": 3,
+      "🔗": 0
+    }
+  },
+  {
+    "nom": "Penpot",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🔗"
+    ],
+    "confiance": "élevée",
+    "evidences": {
+      "📍": 3,
+      "🏢": -3,
+      "🔗": 2
+    }
+  },
+  {
+    "nom": "La Bibli",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🏢"
+    ],
+    "confiance": "moyenne",
+    "evidences": {
+      "📍": 1.5,
+      "🏢": 3,
+      "🔗": 0
+    }
+  },
+  {
+    "nom": "Omeka S",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🔗"
+    ],
+    "confiance": "élevée",
+    "evidences": {
+      "📍": 3,
+      "🏢": -3,
+      "🔗": 2
+    }
+  },
+  {
+    "nom": "Leantime",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🔗"
+    ],
+    "confiance": "élevée",
+    "evidences": {
+      "📍": 3,
+      "🏢": -3,
+      "🔗": 2
+    }
+  },
+  {
+    "nom": "OpenProject",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🔗"
+    ],
+    "confiance": "élevée",
+    "evidences": {
+      "📍": 6,
+      "🏢": -3,
+      "🔗": 2
+    }
+  },
+  {
+    "nom": "Taiga",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🔗"
+    ],
+    "confiance": "élevée",
+    "evidences": {
+      "📍": 3,
+      "🏢": -3,
+      "🔗": 2
+    }
+  },
+  {
+    "nom": "Vikunja",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🔗"
+    ],
+    "confiance": "élevée",
+    "evidences": {
+      "📍": 3,
+      "🏢": -3,
+      "🔗": 2
+    }
+  },
+  {
+    "nom": "Member365",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🏢"
+    ],
+    "confiance": "faible",
+    "evidences": {
+      "📍": 1.5,
+      "🏢": 3,
+      "🔗": 1
+    }
+  },
+  {
+    "nom": "CiviCRM",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🔗"
+    ],
+    "confiance": "élevée",
+    "evidences": {
+      "📍": 3,
+      "🏢": -3,
+      "🔗": 2
+    }
+  },
+  {
+    "nom": "Le point de vente",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🏢"
+    ],
+    "confiance": "moyenne",
+    "evidences": {
+      "📍": 1.5,
+      "🏢": 3,
+      "🔗": 0
+    }
+  },
+  {
+    "nom": "Mobilizon",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🔗"
+    ],
+    "confiance": "élevée",
+    "evidences": {
+      "📍": 0,
+      "🏢": -3,
+      "🔗": 3
+    }
+  },
+  {
+    "nom": "eZsign",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🏢"
+    ],
+    "confiance": "moyenne",
+    "evidences": {
+      "📍": 1.5,
+      "🏢": 3,
+      "🔗": 0
+    }
+  },
+  {
+    "nom": "Paperless-ngx",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🔗"
+    ],
+    "confiance": "élevée",
+    "evidences": {
+      "📍": 3,
+      "🏢": -3,
+      "🔗": 2
+    }
+  },
+  {
+    "nom": "DocuSeal",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🔗"
+    ],
+    "confiance": "élevée",
+    "evidences": {
+      "📍": 3,
+      "🏢": -3,
+      "🔗": 2
+    }
+  },
+  {
+    "nom": "Envoke",
+    "score": 3,
+    "criteres": [
+      "📍",
+      "🏢",
+      "🔗"
+    ],
+    "confiance": "élevée",
+    "evidences": {
+      "📍": 1.5,
+      "🏢": 3,
+      "🔗": 0
+    }
+  },
+  {
+    "nom": "Cyberimpact",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🏢"
+    ],
+    "confiance": "moyenne",
+    "evidences": {
+      "📍": 1.5,
+      "🏢": 3,
+      "🔗": 0
+    }
+  },
+  {
+    "nom": "Dialogue Insight",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🏢"
+    ],
+    "confiance": "moyenne",
+    "evidences": {
+      "📍": 1.5,
+      "🏢": 3,
+      "🔗": 0
+    }
+  },
+  {
+    "nom": "Cakemail",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🏢"
+    ],
+    "confiance": "moyenne",
+    "evidences": {
+      "📍": 1.5,
+      "🏢": 3,
+      "🔗": 0
+    }
+  },
+  {
+    "nom": "Thunderbird",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🔗"
+    ],
+    "confiance": "élevée",
+    "evidences": {
+      "📍": 3,
+      "🏢": -3,
+      "🔗": 3
+    }
+  },
+  {
+    "nom": "Firefox",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🔗"
+    ],
+    "confiance": "élevée",
+    "evidences": {
+      "📍": 3,
+      "🏢": -3,
+      "🔗": 3
+    }
+  },
+  {
+    "nom": "Feuille de temps",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🏢"
+    ],
+    "confiance": "moyenne",
+    "evidences": {
+      "📍": 1.5,
+      "🏢": 3,
+      "🔗": 0
+    }
+  },
+  {
+    "nom": "Folks HR",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🏢"
+    ],
+    "confiance": "moyenne",
+    "evidences": {
+      "📍": 1.5,
+      "🏢": 3,
+      "🔗": 0
+    }
+  },
+  {
+    "nom": "CIRA Canadian Shield / Bouclier canadien",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🏢"
+    ],
+    "confiance": "moyenne",
+    "evidences": {
+      "📍": 1.5,
+      "🏢": 3,
+      "🔗": 0
+    }
+  },
+  {
+    "nom": "1Password",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🏢"
+    ],
+    "confiance": "moyenne",
+    "evidences": {
+      "📍": 1.5,
+      "🏢": 3,
+      "🔗": 0
+    }
+  },
+  {
+    "nom": "Bitwarden",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🔗"
+    ],
+    "confiance": "élevée",
+    "evidences": {
+      "📍": 6,
+      "🏢": -3,
+      "🔗": 2
+    }
+  },
+  {
+    "nom": "Vaultwarden",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🔗"
+    ],
+    "confiance": "élevée",
+    "evidences": {
+      "📍": 3,
+      "🏢": -3,
+      "🔗": 1
+    }
+  },
+  {
+    "nom": "2FAS Auth",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🔗"
+    ],
+    "confiance": "élevée",
+    "evidences": {
+      "📍": 3,
+      "🏢": -3,
+      "🔗": 4
+    }
+  },
+  {
+    "nom": "2FAS Pass",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🔗"
+    ],
+    "confiance": "élevée",
+    "evidences": {
+      "📍": 6,
+      "🏢": -3,
+      "🔗": 5
+    }
+  },
+  {
+    "nom": "Micrologic",
+    "score": 3,
+    "criteres": [
+      "📍",
+      "🏢",
+      "🔗"
+    ],
+    "confiance": "élevée",
+    "evidences": {
+      "📍": 4.5,
+      "🏢": 3,
+      "🔗": 0
+    }
+  },
+  {
+    "nom": "TitanFile",
+    "score": 3,
+    "criteres": [
+      "📍",
+      "🏢",
+      "🔗"
+    ],
+    "confiance": "élevée",
+    "evidences": {
+      "📍": 1.5,
+      "🏢": 3,
+      "🔗": 0
+    }
+  },
+  {
+    "nom": "La Réserve",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🏢"
+    ],
+    "confiance": "élevée",
+    "evidences": {
+      "📍": 4.5,
+      "🏢": 3,
+      "🔗": -3
+    }
+  },
+  {
+    "nom": "Nextcloud",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🔗"
+    ],
+    "confiance": "élevée",
+    "evidences": {
+      "📍": 6,
+      "🏢": -3,
+      "🔗": 1
+    }
+  },
+  {
+    "nom": "Sync.com",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🏢"
+    ],
+    "confiance": "faible",
+    "evidences": {
+      "📍": 1.5,
+      "🏢": 3,
+      "🔗": 1
+    }
+  },
+  {
+    "nom": "Manni",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🏢"
+    ],
+    "confiance": "moyenne",
+    "evidences": {
+      "📍": 1.5,
+      "🏢": 3,
+      "🔗": 0
+    }
+  },
+  {
+    "nom": "Fellow",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🏢"
+    ],
+    "confiance": "moyenne",
+    "evidences": {
+      "📍": 1.5,
+      "🏢": 3,
+      "🔗": 0
+    }
+  },
+  {
+    "nom": "Handy",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🔗"
+    ],
+    "confiance": "élevée",
+    "evidences": {
+      "📍": 3,
+      "🏢": -3,
+      "🔗": 4
+    }
+  },
+  {
+    "nom": "Obsidian",
+    "score": 3,
+    "criteres": [
+      "📍",
+      "🏢",
+      "🔗"
+    ],
+    "confiance": "élevée",
+    "evidences": {
+      "📍": 4.5,
+      "🏢": 3,
+      "🔗": 3
+    }
+  },
+  {
+    "nom": "Miniflux",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🔗"
+    ],
+    "confiance": "élevée",
+    "evidences": {
+      "📍": 3,
+      "🏢": -3,
+      "🔗": 2
+    }
+  },
+  {
+    "nom": "Wallabag",
+    "score": 2,
+    "criteres": [
+      "📍",
+      "🔗"
+    ],
+    "confiance": "élevée",
+    "evidences": {
+      "📍": 3,
+      "🏢": -3,
+      "🔗": 2
+    }
+  }
+]
