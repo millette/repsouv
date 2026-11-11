@@ -9,20 +9,40 @@ Extraction en JSON du [répertoire d'outils favorisant la souveraineté numériq
 
 Le répertoire rassemble 60 outils numériques répartis en 20 catégories, sélectionnés pour les besoins des OSBL des arts et de la culture. Chaque outil reçoit de 0 à 3 étoiles (un critère satisfait = une étoile); seuls ceux qui en ont au moins 2 y figurent.
 
-## Source et crédits
+## Source, crédits et licences
 
-Le contenu est l'œuvre des auteur·trices de la note, et non de ce dépôt :
+### Le répertoire d'origine
+
+Le contenu du répertoire est l'œuvre des auteur·trices de la note, et non de ce dépôt :
 
 > Sven Buridans, François Delnooz, Marie-Renee Duguay. (2026). *Répertoire d'outils favorisant la souveraineté numérique*. Praxis. <https://praxis.encommun.io/n/voRYZbuBYZKLejs8JyNkc5C4o7s/>
 
 - La note a été produite par [**La bande numérique**](https://fccf.ca/initiatives/la-bande-numerique/), une initiative de la [Fédération culturelle canadienne-française (FCCF)](https://fccf.ca/).
 - Elle est publiée sur **Praxis**, plateforme du projet [**En commun**](https://encommun.io/).
-- Sauf indication contraire, les contenus publics de Praxis portent la licence [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.fr). Les données dérivées de ce dépôt (`outils.json`, `criteres.json`) en sont des adaptations et sont à ce titre partagées dans les mêmes conditions, avec attribution aux auteur·trices ci-dessus.
+- Sauf indication contraire, les contenus publics de Praxis portent la licence [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.fr).
 
-Ce qui vient d'où :
+### Crédits
+
+- **Code source de cet outil** (scripts, tests, configuration) : [Robin Millette](https://robin.millette.info/).
+- **Fichiers JSON générés** (`outils.json`, `criteres.json`, `tags.json`) : les auteur·trices du répertoire cité ci-dessus (Sven Buridans, François Delnooz et Marie-Renee Duguay), pour le contenu d'origine, et [Robin Millette](https://robin.millette.info/), pour l'extraction, la classification, l'enrichissement et le vocabulaire de tags.
+
+### Licences
+
+| Ce qui | Licence |
+|---|---|
+| **Code source** (`*.ts`, `test/`, `package.json`, `tsconfig.json`) | [GNU Affero General Public License v3.0](https://www.gnu.org/licenses/agpl-3.0.html), identifiant SPDX `AGPL-3.0-only`. Texte complet dans [`LICENSE`](LICENSE). Chaque fichier `.ts` commence par les en-têtes `SPDX-License-Identifier` et `SPDX-FileCopyrightText` |
+| **Données** (`outils.json`, `criteres.json`, `tags.json`) | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.fr), identifiant SPDX `CC-BY-SA-4.0`. Texte complet dans [`LICENSE-CC-BY-SA-4.0`](LICENSE-CC-BY-SA-4.0). Le JSON n'admet pas de commentaires : chaque fichier déclare sa licence dans `meta.data_license`, que les scripts maintiennent (voir [Fichiers JSON](#fichiers-json)) |
+
+Les données sont des adaptations du répertoire d'origine : elles restent donc partagées dans les mêmes conditions que lui (CC BY-SA 4.0), avec attribution. Pour les réutiliser, créditer par exemple ainsi :
+
+> Données : Sven Buridans, François Delnooz et Marie-Renee Duguay, *Répertoire d'outils favorisant la souveraineté numérique* (Praxis, 2026), adaptées par [Robin Millette](https://robin.millette.info/). CC BY-SA 4.0.
+
+Les champs d'enrichissement résument des pages tierces (voir [D'où viennent les champs](#doù-viennent-les-champs)) : la licence des données ne se substitue pas à celle des sites des outils.
+
+### D'où viennent les champs
 
 - **De la source :** la catégorie, le nom, le score, le lien et la description de chaque outil, ainsi que les trois critères.
-- **Calculé par les scripts :** `derniere_modification`, `changement` et `removed` (voir `update.ts`).
+- **Calculé par les scripts :** `meta` (licence et dates des fichiers), `derniere_modification`, `changement` et `removed` (voir `update.ts` et `fichiers.ts`).
 - **Déduit par heuristique dans ce dépôt :** `criteres` et `confiance` (voir [Classification](#classification)).
 - **Généré par un modèle d'IA :** les champs d'enrichissement (voir [Enrichissement](#enrichissement-par-ia)). Ils résument des pages tierces et sont à vérifier avant de s'y fier ou de les diffuser, surtout la licence et le dépôt.
 
@@ -57,17 +77,43 @@ Enrichissement   update.ts --enrichir ──▶ API OpenAI ──▶ outils.json
 |---|---|
 | `outils.json`, `criteres.json`, `tags.json` | Les données (voir [Fichiers JSON](#fichiers-json)) |
 | `extract.ts`, `classify.ts`, `update.ts` | Les trois scripts du flux de travail |
-| `enrichir.ts`, `spdx.ts`, `progress.ts`, `ids.ts`, `cli.ts` | Modules utilisés par les scripts |
+| `enrichir.ts`, `fichiers.ts`, `temps.ts`, `spdx.ts`, `progress.ts`, `ids.ts`, `cli.ts` | Modules utilisés par les scripts |
 | `test/` | Les tests |
 | `package.json`, `nub.lock`, `tsconfig.json` | Dépendances, scripts npm et configuration TypeScript |
 | `.env.example` | Modèle du fichier `.env` (la clé OpenAI) |
+| `LICENSE` | Texte de la licence AGPL-3.0 du code |
+| `LICENSE-CC-BY-SA-4.0` | Texte de la licence CC BY-SA 4.0 des données (voir [Licences](#licences)) |
 | `.gitignore` | Ignore `.env` et `node_modules/` |
 
 ## Fichiers JSON
 
+Les trois fichiers de données ont la même structure : un objet dont le champ `meta` porte les métadonnées du fichier, suivi du tableau de données.
+
+```json
+{
+  "meta": {
+    "data_license": "CC-BY-SA-4.0",
+    "created_at": "2026-11-11T16:43:11-05:00",
+    "updated_at": "2026-11-11T16:48:12-05:00"
+  },
+  "outils": [ ... ]
+}
+```
+
+| Champ | Description |
+|---|---|
+| `meta.data_license` | Licence des données, toujours `CC-BY-SA-4.0` (identifiant SPDX). Les scripts la rétablissent si un fichier en porte une autre ou aucune |
+| `meta.created_at` | Date et heure de création du fichier. Fixée une fois, puis conservée par tous les scripts, même quand `extract` remplace le contenu |
+| `meta.updated_at` | Date et heure de la dernière modification du **contenu**. Un script qui réécrit le même contenu ne la change pas |
+| `outils`, `criteres` ou `tags` | Le tableau de données, nommé d'après le fichier |
+
+**Toutes les dates et heures sont locales, en heure de Toronto** (`America/Toronto`, heure d'été comprise), au format ISO 8601 avec le décalage : `-05:00` en hiver, `-04:00` en été. C'est le cas de `meta.created_at` et `meta.updated_at`, et aussi de `derniere_modification` de chaque outil. Cette dernière est la date affichée par la page d'origine (qui donne l'heure de l'Est, le même fuseau que Toronto) à laquelle on ajoute le décalage; elle ne se confond pas avec `meta.updated_at`, qui date des écritures du fichier.
+
+Les anciens formats sont reconnus et convertis dès qu'un script écrit le fichier (`update` ou `classify`) : un simple tableau, des métadonnées au premier niveau plutôt que dans `meta`, et des dates sans décalage (`2026-11-05T09:53` devient `2026-11-05T09:53:00-05:00`). Quand le fichier n'avait pas de dates de métadonnées, elles reçoivent la date du moment.
+
 ### `outils.json`
 
-Fichier unifié : un tableau de 60 outils (plus d'éventuels outils retirés). Chaque outil contient :
+Fichier unifié : le tableau `outils` contient 60 outils (plus d'éventuels outils retirés). Chaque outil contient :
 
 | Champ | Description |
 |---|---|
@@ -77,7 +123,7 @@ Fichier unifié : un tableau de 60 outils (plus d'éventuels outils retirés). C
 | `score` | Nombre d'étoiles ★ sur 3 |
 | `lien` | Lien externe de l'outil |
 | `description` | Description fournie par la source |
-| `derniere_modification` | Dernière date de modification connue (ISO, ex. `2026-11-05T09:53`) |
+| `derniere_modification` | Dernière date de modification connue : ISO 8601 en heure de Toronto, avec le décalage (ex. `2026-11-05T09:53:00-05:00`) |
 | `changement` | Dernier changement détecté par `update.ts` : `"nouveau"`, `"modification"`, `"retrait"` ou `"comeback"`; `null` si jamais modifié depuis l'import |
 | `removed` | Présent (`true`) seulement pour un outil disparu de la page; l'entrée est conservée, à la fin du tableau |
 | `criteres` | Identifiants (voir `criteres.json`) des critères que les étoiles représentent. Déduits, voir [Classification](#classification) |
@@ -101,7 +147,7 @@ La page n'affiche qu'une seule date pour toute la note. `derniere_modification` 
 
 ### `criteres.json`
 
-Les trois critères du répertoire (« trois critères simples et concrets »), sous forme de tableau de `{ id, icon, titre, description }` :
+Les trois critères du répertoire (« trois critères simples et concrets »), dans le tableau `criteres`, sous forme de `{ id, icon, titre, description }` :
 
 | `id` | `icon` | Question |
 |---|---|---|
@@ -113,7 +159,7 @@ Les `id` sont la forme courte utilisée dans les champs `criteres` de `outils.js
 
 ### `tags.json`
 
-Le vocabulaire restreint de tags : un tableau de `{ id, description }`, avec une description en français pour chaque tag (37 au départ). Chaque outil reçoit de 1 à 5 de ces tags, jamais plus.
+Le vocabulaire restreint de tags : le tableau `tags` contient des `{ id, description }`, avec une description en français pour chaque tag (37 au départ). Chaque outil reçoit de 1 à 5 de ces tags, jamais plus.
 
 De nouveaux tags peuvent s'ajouter après cette première phase, avec `--enrichir --nouveaux-tags`. Chaque tag ajouté doit être **justifié** : il porte alors en plus un champ `justification` (pourquoi aucun tag existant ne convient) et `propose_pour` (l'outil pour lequel il a été proposé). Un nouveau tag peut ne concerner qu'un seul outil.
 
@@ -127,7 +173,7 @@ Tous sont en TypeScript et se lancent avec `nub`. Les fonctions principales sont
 nub extract.ts [--force] <outils.json> [criteres.json] [url]
 ```
 
-Télécharge la page en ligne (`[url]`, par défaut celle du répertoire) et écrit les outils et, si demandé, les critères. Utilise [linkedom](https://github.com/WebReflection/linkedom) pour interroger le DOM. Lit la date de modification affichée sur la page; refuse une page sans date ou contenant deux outils de même nom. Un échec de téléchargement (réseau, erreur HTTP) n'écrit rien.
+Télécharge la page en ligne (`[url]`, par défaut celle du répertoire) et écrit les outils et, si demandé, les critères. Utilise [linkedom](https://github.com/WebReflection/linkedom) pour interroger le DOM. Lit la date de modification affichée sur la page (heure de l'Est) et lui ajoute le décalage de Toronto; refuse une page sans date ou contenant deux outils de même nom. Un échec de téléchargement (réseau, erreur HTTP) n'écrit rien.
 
 Si `criteres.json` est donné, il est réécrit lui aussi, sans protection : il ne dépend que de la page.
 
@@ -139,7 +185,7 @@ Les outils sont écrits **sans** classification ni enrichissement, et le fichier
 nub classify.ts <outils.json> [sortie.json]
 ```
 
-Ajoute `criteres` et `confiance` à chaque outil (réécrit `outils.json` en place si aucune sortie n'est donnée), en gardant tous les autres champs. Voir [Classification](#classification). Une option inconnue est refusée; seule `--force` est tolérée, sans effet, pour que `nub run build --force` ne laisse pas un fichier à moitié construit.
+Ajoute `criteres` et `confiance` à chaque outil (réécrit `outils.json` en place si aucune sortie n'est donnée), en gardant tous les autres champs. `meta.updated_at` ne change que si le contenu change. Voir [Classification](#classification). Une option inconnue est refusée; seule `--force` est tolérée, sans effet, pour que `nub run build --force` ne laisse pas un fichier à moitié construit.
 
 ### `update.ts`
 
@@ -155,13 +201,21 @@ Télécharge la page en ligne (`[url]`, par défaut celle du répertoire; le mê
 - absent de la page : `"retrait"` et `removed: true`, l'entrée est conservée;
 - identique : rien ne change, ni sa date ni son `changement`.
 
-Les outils nouveaux, modifiés, retirés ou de retour reçoivent la date de modification de la page; les nouveaux, modifiés et de retour sont reclassés. Les champs d'enrichissement d'un outil survivent à une modification ou à un retour. Le fichier n'est réécrit que s'il y a au moins un changement.
+Les outils nouveaux, modifiés, retirés ou de retour reçoivent la date de modification de la page; les nouveaux, modifiés et de retour sont reclassés. Les champs d'enrichissement d'un outil survivent à une modification ou à un retour. Le fichier n'est réécrit que s'il y a au moins un changement (ou si son format est à mettre à jour, par exemple un ancien tableau ou des dates sans décalage); `meta.updated_at` est alors mis à jour, et `tags.json` aussi quand de nouveaux tags s'ajoutent.
 
 Avec `--enrichir`, la synchronisation est suivie de l'[enrichissement](#enrichissement-par-ia). Une option inconnue est refusée.
 
 ### `enrichir.ts`
 
 Module de l'enrichissement : lecture de la page de l'outil, requêtes à l'API OpenAI, validation des réponses (`validerProposition`, `validerEcart`) et boucle `enrichirOutils`. Cette boucle reçoit ses générateurs en paramètres, ce qui permet de la tester sans réseau.
+
+### `fichiers.ts`
+
+Lecture et écriture des trois fichiers de données : `lireFichier`, `lireSiExiste` et `ecrireFichier` maintiennent `meta` (`data_license`, `created_at`, `updated_at`), décrit dans [Fichiers JSON](#fichiers-json), et reconnaissent les anciens formats. Tous les scripts qui lisent ou écrivent ces fichiers passent par ce module.
+
+### `temps.ts`
+
+Les dates et heures, toujours en heure de Toronto : `horodatage()` donne le moment présent (`2026-11-11T16:42:07-05:00`), `localVersIso()` ajoute à une date locale le décalage qui s'applique ce jour-là (heure d'été comprise), et `versHeureLocale()` convertit une date de l'ancien format, sans décalage. Sans dépendance : le calcul passe par `Intl`.
 
 ### `spdx.ts`
 
@@ -240,15 +294,15 @@ La page de chaque outil est lue avant tout appel à l'API. Elle est jugée inuti
 Les outils enrichis avec une page lisible portent `page_lue: true`. Pour refaire plus tard les outils enrichis sans page (une fois leur page redevenue accessible, ou après avoir changé de stratégie), supprimer leurs champs d'enrichissement, puis relancer `nub run enrichir` :
 
 ```sh
-# à faire après un commit de outils.json
-jaq 'map(if .page_lue == false then del(.description_longue, .tags, .source, .licence, .custom_license, .custom_license_url, .repo, .evaluation_enrichie, .page_lue) else . end)' outils.json > /tmp/outils.json && mv /tmp/outils.json outils.json
+# à faire après un commit de outils.json (meta.updated_at sera mis à jour à la prochaine écriture par un script)
+jaq '.outils |= map(if .page_lue == false then del(.description_longue, .tags, .source, .licence, .custom_license, .custom_license_url, .repo, .evaluation_enrichie, .page_lue) else . end)' outils.json > /tmp/outils.json && mv /tmp/outils.json outils.json
 ```
 
 ## Importer ou réimporter depuis le web
 
 `extract` et `build` servent à **construire `outils.json` depuis zéro** à partir de la page en ligne :
 
-- `nub run extract` télécharge la page et **réécrit `outils.json` en entier**, avec seulement les champs de la source. Il ne regarde jamais le fichier existant et ne fusionne rien.
+- `nub run extract` télécharge la page et **réécrit `outils.json` en entier**, avec seulement les champs de la source. Il ne fusionne rien : le contenu est remplacé. Il ne lit le fichier existant que pour le garde-fou ci-dessous et pour conserver `meta.created_at`.
 - `nub run build` enchaîne `extract` puis `classify` : le fichier produit est complet, avec `criteres` et `confiance`.
 
 C'est la voie de l'import initial. Ensuite, `update` fait la synchronisation courante : il télécharge la même page, mais compare, détecte les changements, conserve les dates des outils inchangés et ne touche jamais à l'enrichissement.
@@ -256,7 +310,7 @@ C'est la voie de l'import initial. Ensuite, `update` fait la synchronisation cou
 Parce que `extract` remplace tout, un réimport détruit :
 
 - l'**enrichissement** (descriptions longues, tags, licences, évaluations), qui coûte des appels à l'API OpenAI;
-- l'**historique des changements** (`changement`, `removed`) et les dates de `update` : tous les outils reçoivent la date de modification actuelle de la page, avec `changement: null`.
+- l'**historique des changements** (`changement`, `removed`) et les dates de `update` : tous les outils reçoivent la date de modification actuelle de la page, avec `changement: null`. Le fichier garde en revanche son `meta.created_at`, et son `meta.updated_at` n'est modifié que si le contenu diffère.
 
 C'est pourquoi `extract` refuse d'écraser un `outils.json` qui contient ce genre de travail. La classification n'est pas protégée : `classify` la recalcule toujours.
 
@@ -283,7 +337,7 @@ Si les `criteres` d'un outil déjà enrichi changent après un `classify`, son `
 | `nub run build:force` | Comme `build`, mais **remplace tout**, enrichissement et historique compris |
 | `nub run update` | `nub update.ts` : synchronise `outils.json` avec la page en ligne. Les options passent directement : `nub run update --dry-run` |
 | `nub run enrichir` | `nub update.ts --enrichir` : synchronise, puis enrichit les outils sans description longue. Par exemple : `nub run enrichir --limite=5` |
-| `nub run test` | Lance les six fichiers de tests |
+| `nub run test` | Lance les neuf fichiers de tests |
 | `nub run typecheck` | `tsrs -p .` : vérifie les types avec [tsrs](https://www.npmjs.com/package/tsrs), un portage en Rust de `tsc` |
 
 ## Tests
@@ -291,26 +345,32 @@ Si les `criteres` d'un outil déjà enrichi changent après un `classify`, son `
 Dans `test/`, avec `node:test` lancé par `nub` :
 
 - `classify.test.ts` : cas de classification connus, un nombre de critères égal au score pour les 60 outils, et les options de la ligne de commande.
-- `extract.test.ts` : conversion de date, cohérence de `criteres.json` et `outils.json`, rejet d'une page sans date, téléchargement (sur un serveur local, sans réseau), erreurs de téléchargement, et le garde-fou contre l'écrasement (avec et sans `--force`).
+- `extract.test.ts` : conversion de la date de la page en heure de Toronto, normalisation des dates des outils, cohérence de `criteres.json` et `outils.json`, rejet d'une page sans date, téléchargement (sur un serveur local, sans réseau), erreurs de téléchargement, et le garde-fou contre l'écrasement (avec et sans `--force`).
 - `update.test.ts` : nouveau, modification, retrait, comeback, conservation des dates des outils inchangés et des champs d'enrichissement.
 - `enrichir.test.ts` : vocabulaire de `tags.json`, validation (tags, Markdown permis et interdit, licences SPDX et maison, évaluation), explication des écarts, extraction de la page, pages inaccessibles ou presque vides (avertissement, refus par défaut, `--sans-page`), enrichissement une seule fois, limite, reprise et échecs, avec de faux générateurs.
 - `spdx.test.ts` : licences SPDX valides et refusées.
 - `progress.test.ts` : barre en terminal et hors terminal, bornes, étiquette, `end()` idempotent, `message()`.
+- `temps.test.ts` : heure de Toronto (hiver, été, minuit, passage à l'heure d'été), décalage ajouté à une date locale, conversion des dates de l'ancien format.
+- `fichiers.test.ts` : structure et `meta` des fichiers de données (création, contenu inchangé ou modifié, anciens formats, licence corrigée, données normalisées), et conformité des trois fichiers du dépôt.
+- `en-tetes.test.ts` : chaque fichier `.ts` porte les en-têtes SPDX, la licence du code est la même dans `package.json`, et les deux textes de licence sont présents.
 
 ## Utiliser les données
 
 Pour obtenir le répertoire courant, ignorer les outils portant `removed`. Pour les logiciels libres, filtrer sur `source` (`libre` ou `partiel`) et utiliser `licence` (ou `custom_license`) et `repo`. Par exemple, avec [jaq](https://github.com/01mf02/jaq) :
 
 ```sh
+# licence et dates du fichier
+jaq '.meta' outils.json
+
 # outils actuellement au répertoire
-jaq '[.[] | select(.removed | not)]' outils.json
+jaq '[.outils[] | select(.removed | not)]' outils.json
 
 # logiciels libres enrichis, avec leur licence et leur dépôt
-jaq '.[] | select(.source == "libre" or .source == "partiel") | {nom, licence, custom_license, repo}' outils.json
+jaq '.outils[] | select(.source == "libre" or .source == "partiel") | {nom, licence, custom_license, repo}' outils.json
 
 # outils enrichis sans page lisible (résultat moins fiable)
-jaq '.[] | select(.page_lue == false) | .nom' outils.json
+jaq '.outils[] | select(.page_lue == false) | .nom' outils.json
 
 # outils portant un tag
-jaq '.[] | select((.tags // []) | index("chiffrement")) | .nom' outils.json
+jaq '.outils[] | select((.tags // []) | index("chiffrement")) | .nom' outils.json
 ```

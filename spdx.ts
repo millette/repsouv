@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Validation des identifiants de licence SPDX (https://spdx.org/licenses/).
 import { createRequire } from "node:module";
 import parse from "spdx-expression-parse";

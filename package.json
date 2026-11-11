@@ -1,6 +1,11 @@
 {
   "name": "outils-souverainete-numerique",
   "private": true,
+  "license": "AGPL-3.0-only",
+  "author": {
+    "name": "Robin Millette",
+    "url": "https://robin.millette.info/"
+  },
   "type": "module",
   "scripts": {
     "extract": "nub extract.ts outils.json criteres.json",
@@ -8,7 +13,7 @@
     "build": "nub run extract && nub run classify",
     "build:force": "nub run extract --force && nub run classify",
     "update": "nub update.ts",
-    "test": "nub test/classify.test.ts && nub test/extract.test.ts && nub test/update.test.ts && nub test/enrichir.test.ts && nub test/progress.test.ts && nub test/spdx.test.ts",
+    "test": "nub test/classify.test.ts && nub test/extract.test.ts && nub test/update.test.ts && nub test/enrichir.test.ts && nub test/progress.test.ts && nub test/spdx.test.ts && nub test/en-tetes.test.ts && nub test/fichiers.test.ts && nub test/temps.test.ts",
     "typecheck": "tsrs -p .",
     "enrichir": "nub update.ts --enrichir"
   },

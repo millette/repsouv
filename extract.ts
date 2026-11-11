@@ -1,14 +1,18 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Extrait les outils et les critères du répertoire de souveraineté numérique vers du JSON,
 // à partir de la page en ligne (téléchargée à chaque exécution).
 // Source: https://praxis.encommun.io/n/voRYZbuBYZKLejs8JyNkc5C4o7s/
 // Usage: nub extract.ts [--force] <outils.json> [criteres.json] [url]
-// Les outils sont écrits sans classification; lancer ensuite classify.ts.
+// Les outils sont écrits sans classification; lancer ensuite classify.ts. Les fichiers écrits portent
+// leurs métadonnées (data_license, created_at, updated_at): voir fichiers.ts.
 // ATTENTION: le fichier de sortie est remplacé en entier. Sans --force, le script refuse d'écraser
 // un outils.json qui contient du travail impossible à retrouver (enrichissement, historique des
 // changements). Pour suivre la page sans rien perdre, utiliser update.ts.
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { parseHTML } from "linkedom";
 import { lancer } from "./cli.ts";
+import { ecrireFichier, lireFichier, lireSiExiste, type Lu } from "./fichiers.ts";
+import { localVersIso, versHeureLocale } from "./temps.ts";
 import { ID_PAR_ICONE, type CritereId } from "./ids.ts";
 
 export type ConfianceEvaluation = "élevée" | "moyenne" | "faible";
@@ -32,7 +36,7 @@ export interface Outil {
   score: number;
   lien: string;
   description: string;
-  /** Dernière date de modification connue (ISO, heure locale du site). */
+  /** Dernière date de modification connue: ISO 8601 en heure de Toronto, avec décalage (2026-11-05T09:53:00-05:00). */
   derniere_modification: string;
   /** Nature du dernier changement détecté par update.ts; null si jamais modifié depuis l'import. */
   changement: Changement | null;
@@ -72,7 +76,7 @@ export interface Critere {
 export interface Repertoire {
   outils: Outil[];
   criteres: Critere[];
-  /** Date de modification affichée sur la page, en ISO (ex.: 2026-11-05T09:53). */
+  /** Date de modification affichée sur la page, en ISO avec décalage (ex.: 2026-11-05T09:53:00-05:00). */
   modification: string;
 }
 
@@ -81,13 +85,15 @@ const MOIS = [
   "juillet", "août", "septembre", "octobre", "novembre", "décembre",
 ];
 
-/** « 5 novembre 2026 09:53 » → « 2026-11-05T09:53 ». */
+/**
+ * « 5 novembre 2026 09:53 » → « 2026-11-05T09:53:00-05:00 ». La page affiche l'heure locale de l'Est
+ * (même fuseau que Toronto, avec la même heure d'été): on lui ajoute le décalage de Toronto.
+ */
 export function dateIso(affichee: string): string {
   const m = /^(\d{1,2}) (\S+) (\d{4}) (\d{2}):(\d{2})$/.exec(affichee.trim());
   const mois = m ? MOIS.indexOf(m[2]!.toLowerCase()) + 1 : 0;
   if (!m || !mois) throw new Error(`Date inattendue: « ${affichee} »`);
-  const p = (n: string | number) => String(n).padStart(2, "0");
-  return `${m[3]}-${p(mois)}-${p(m[1]!)}T${m[4]}:${m[5]}`;
+  return localVersIso(Number(m[3]), mois, Number(m[1]), Number(m[4]), Number(m[5]));
 }
 
 const texte = (n: { textContent: string | null } | null | undefined) => n?.textContent?.trim() ?? "";
@@ -185,6 +191,17 @@ export function travailAPerdre(outils: Partial<Outil>[]): string[] {
   ];
 }
 
+/** Met `derniere_modification` au format courant (ancien format: 2026-11-05T09:53, sans décalage). */
+export const normaliserOutils = <T extends Outil>(outils: T[]): T[] =>
+  outils.map((o) => {
+    const date = versHeureLocale(o.derniere_modification);
+    return date === o.derniere_modification ? o : { ...o, derniere_modification: date };
+  });
+
+/** Lit outils.json en mettant ses dates au format courant. */
+export const lireOutils = <T extends Outil = Outil>(chemin: string): Lu<T> =>
+  lireFichier<T>(chemin, "outils", undefined, normaliserOutils);
+
 if (import.meta.main) {
   await lancer(async () => {
     const args = process.argv.slice(2);
@@ -196,14 +213,10 @@ if (import.meta.main) {
     const [dstOutils, dstCriteres] = positionnels.filter((a) => !estUrl(a));
     if (!dstOutils) throw new Error("Usage: nub extract.ts [--force] <outils.json> [criteres.json] [url]");
 
-    if (!force && existsSync(dstOutils)) {
-      let existants: Partial<Outil>[] = [];
-      try {
-        existants = JSON.parse(readFileSync(dstOutils, "utf8"));
-      } catch {
-        /* fichier illisible: rien à protéger */
-      }
-      const perte = travailAPerdre(existants);
+    // Un fichier absent ou illisible n'a rien à protéger. Le fichier existant sert aussi à conserver created_at.
+    const existant = lireSiExiste<Outil>(dstOutils, "outils", normaliserOutils);
+    if (!force && existant) {
+      const perte = travailAPerdre(existant.donnees);
       if (perte.length) {
         console.error(
           `Refus d'écraser ${dstOutils}: il contient du travail qui serait perdu (${perte.join("; ")}).\n` +
@@ -214,10 +227,10 @@ if (import.meta.main) {
     }
 
     const { outils, criteres, modification } = await telechargerRepertoire(url);
-    writeFileSync(dstOutils, JSON.stringify(outils, null, 2));
+    ecrireFichier(dstOutils, "outils", outils, existant);
     console.log(outils.length, "outils (modification:", modification + ")");
     if (dstCriteres) {
-      writeFileSync(dstCriteres, JSON.stringify(criteres, null, 2));
+      ecrireFichier(dstCriteres, "criteres", criteres, lireSiExiste<Critere>(dstCriteres, "criteres"));
       console.log(criteres.length, "critères");
     }
   });

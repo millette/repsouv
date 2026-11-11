@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Classe les étoiles de chaque outil selon les trois critères du répertoire.
 // Source: https://praxis.encommun.io/n/voRYZbuBYZKLejs8JyNkc5C4o7s/
 // Usage: nub classify.ts <outils.json> [sortie.json]   (sans sortie, réécrit outils.json en place)
@@ -8,9 +10,9 @@
 //     critères aux indices les plus forts (3 étoiles = les trois; 2 = on écarte le plus faible).
 //  3. Sans score, on retient les critères dont l'indice atteint SEUIL.
 //  4. La confiance dépend de l'écart entre le dernier critère retenu et le premier écarté.
-import { readFileSync, writeFileSync } from "node:fs";
 import { lancer } from "./cli.ts";
-import type { Outil } from "./extract.ts";
+import { ecrireFichier, lireSiExiste } from "./fichiers.ts";
+import { lireOutils, normaliserOutils, type Outil } from "./extract.ts";
 import { CONTROLE, DEPENDANCE, DONNEES, type CritereId } from "./ids.ts";
 
 export { CONTROLE, DEPENDANCE, DONNEES };
@@ -99,9 +101,10 @@ if (import.meta.main) {
     if (inconnue) throw new Error(`Option inconnue: ${inconnue}`);
     const [src, dst = src] = args.filter((a) => !a.startsWith("--"));
     if (!src || !dst) throw new Error("Usage: nub classify.ts <outils.json> [sortie.json]");
-    const outils: Outil[] = JSON.parse(readFileSync(src, "utf8"));
-    const res: OutilClasse[] = outils.map((o) => ({ ...o, ...classer(o.description, o.score) }));
-    writeFileSync(dst, JSON.stringify(res, null, 2));
+    const lu = lireOutils(src);
+    const res: OutilClasse[] = lu.donnees.map((o) => ({ ...o, ...classer(o.description, o.score) }));
+    // En place, le fichier lu sert d'état précédent; vers un autre fichier, c'est celui-là s'il existe déjà.
+    ecrireFichier(dst, "outils", res, dst === src ? lu : lireSiExiste<OutilClasse>(dst, "outils", normaliserOutils));
     console.log(res.length, "outils classés");
   });
 }

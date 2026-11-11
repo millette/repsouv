@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { existsSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
@@ -6,20 +8,32 @@ import type { AddressInfo } from "node:net";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { test } from "node:test";
-import { dateIso, estUrl, extraire, telechargerRepertoire, travailAPerdre } from "../extract.ts";
+import { dateIso, estUrl, extraire, normaliserOutils, telechargerRepertoire, travailAPerdre } from "../extract.ts";
+import { lireFichier } from "../fichiers.ts";
 import { ID_PAR_ICONE } from "../ids.ts";
 
-test("dateIso convertit la date française", () => {
-  assert.equal(dateIso("5 novembre 2026 09:53"), "2026-11-05T09:53");
+test("dateIso convertit la date française en heure de Toronto, avec le décalage de la saison", () => {
+  assert.equal(dateIso("5 novembre 2026 09:53"), "2026-11-05T09:53:00-05:00");
+  assert.equal(dateIso("5 juillet 2026 10:00"), "2026-07-05T10:00:00-04:00");
+});
+test("normaliserOutils: met derniere_modification au format courant sans toucher au reste", () => {
+  const outils = [
+    { nom: "a", derniere_modification: "2026-11-05T09:53" },
+    { nom: "b", derniere_modification: "2026-07-05T10:00:00-04:00" },
+  ] as never[];
+  const [a, b] = normaliserOutils(outils) as { nom: string; derniere_modification: string }[];
+  assert.equal(a!.derniere_modification, "2026-11-05T09:53:00-05:00");
+  assert.equal(a!.nom, "a");
+  assert.equal(b!.derniere_modification, "2026-07-05T10:00:00-04:00");
 });
 test("criteres.json: chaque critère a un id correspondant à son icône", () => {
-  const criteres: { id: string; icon: string }[] = JSON.parse(readFileSync("criteres.json", "utf8"));
+  const criteres = lireFichier<{ id: string; icon: string }>("criteres.json", "criteres").donnees;
   assert.equal(criteres.length, 3);
   for (const c of criteres) assert.equal(ID_PAR_ICONE[c.icon], c.id);
 });
 test("outils.json: critères désignés par id, un par étoile", () => {
   const ids = new Set(Object.values(ID_PAR_ICONE));
-  const outils: { nom: string; score: number; criteres: string[] }[] = JSON.parse(readFileSync("outils.json", "utf8"));
+  const outils = lireFichier<{ nom: string; score: number; criteres: string[] }>("outils.json", "outils").donnees;
   assert.equal(outils.length, 60);
   for (const o of outils) {
     assert.equal(o.criteres.length, o.score, o.nom);
@@ -83,7 +97,8 @@ test("telechargerRepertoire: télécharge la page et en extrait les outils", asy
   const r = await avecServeur(200, PAGE, (url) => telechargerRepertoire(url));
   assert.equal(r.outils.length, 1);
   assert.equal(r.outils[0]!.nom, "X");
-  assert.equal(r.modification, "2026-11-05T09:53");
+  assert.equal(r.modification, "2026-11-05T09:53:00-05:00");
+  assert.equal(r.outils[0]!.derniere_modification, "2026-11-05T09:53:00-05:00");
 });
 test("telechargerRepertoire: une erreur HTTP est signalée avec l'URL et le code", async () => {
   await avecServeur(404, "introuvable", (url) =>
@@ -105,8 +120,13 @@ test("CLI: télécharge la page et écrit outils.json et criteres.json", async (
   const [outils, criteres] = [join(dossier, "outils.json"), join(dossier, "criteres.json")];
   const r = await avecServeur(200, PAGE, (url) => lancer(outils, criteres, url));
   assert.equal(r.status, 0, r.stderr);
-  assert.equal(JSON.parse(readFileSync(outils, "utf8"))[0].nom, "X");
-  assert.deepEqual(JSON.parse(readFileSync(criteres, "utf8")), []);
+  const fichierOutils = JSON.parse(readFileSync(outils, "utf8"));
+  assert.equal(fichierOutils.meta.data_license, "CC-BY-SA-4.0");
+  assert.equal(fichierOutils.outils[0].nom, "X");
+  assert.equal(fichierOutils.meta.created_at, fichierOutils.meta.updated_at);
+  const fichierCriteres = JSON.parse(readFileSync(criteres, "utf8"));
+  assert.equal(fichierCriteres.meta.data_license, "CC-BY-SA-4.0");
+  assert.deepEqual(fichierCriteres.criteres, []);
 });
 test("CLI: refuse d'écraser un outils.json enrichi sans --force, puis l'écrase avec --force", async () => {
   const sortie = join(dossierTemporaire(), "outils.json");
@@ -122,7 +142,7 @@ test("CLI: refuse d'écraser un outils.json enrichi sans --force, puis l'écrase
 
     const force = await lancer("--force", sortie, url);
     assert.equal(force.status, 0, force.stderr);
-    const outils = JSON.parse(readFileSync(sortie, "utf8"));
+    const outils = JSON.parse(readFileSync(sortie, "utf8")).outils;
     assert.equal(outils[0].nom, "X");
     assert.equal(outils[0].description_longue, undefined);
   });
@@ -154,4 +174,22 @@ test("CLI: une option inconnue ou l'absence de fichier de sortie est refusée", 
   const sortie = join(dossierTemporaire(), "outils.json");
   assert.match((await lancer("--forse", sortie)).stderr, /Option inconnue/);
   assert.match((await lancer()).stderr, /Usage/);
+});
+test("CLI: un réimport garde created_at, et updated_at ne change que si le contenu change", async () => {
+  const sortie = join(dossierTemporaire(), "outils.json");
+  await avecServeur(200, PAGE, async (url) => {
+    assert.equal((await lancer(sortie, url)).status, 0);
+    const premier = JSON.parse(readFileSync(sortie, "utf8"));
+    assert.equal((await lancer(sortie, url)).status, 0);
+    const deuxieme = JSON.parse(readFileSync(sortie, "utf8"));
+    assert.deepEqual(deuxieme, premier); // même page: rien ne bouge, dates comprises
+  });
+  const autrePage = PAGE.replace("Une description.", "Une autre description.");
+  await avecServeur(200, autrePage, async (url) => {
+    const avant = JSON.parse(readFileSync(sortie, "utf8"));
+    assert.equal((await lancer(sortie, url)).status, 0);
+    const apres = JSON.parse(readFileSync(sortie, "utf8"));
+    assert.equal(apres.meta.created_at, avant.meta.created_at);
+    assert.equal(apres.outils[0].description, "Une autre description.");
+  });
 });

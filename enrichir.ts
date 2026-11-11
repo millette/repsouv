@@ -1,11 +1,14 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Enrichissement des outils avec l'API OpenAI: description longue en français, tags
 // (vocabulaire restreint de tags.json) et, pour les logiciels libres, source/licence/repo
 // (avec custom_license et custom_license_url pour les licences absentes de la liste SPDX).
 // Utilisé par `update.ts --enrichir`. Les fonctions sont pures ou reçoivent leurs dépendances
 // (générateur, rappel de sauvegarde) pour pouvoir être testées sans réseau.
-import { readFileSync, writeFileSync } from "node:fs";
+import { existsSync } from "node:fs";
 import { parseHTML } from "linkedom";
 import type { ConfianceEvaluation, Critere, EvaluationEnrichie, Outil } from "./extract.ts";
+import { ecrireFichier, lireFichier, lireSiExiste } from "./fichiers.ts";
 import { CONTROLE, DEPENDANCE, DONNEES } from "./ids.ts";
 import { problemeLicenceSpdx } from "./spdx.ts";
 
@@ -60,12 +63,15 @@ export type Generateur = (
   contexte: { tags: Tag[]; criteres: Critere[]; autoriserNouveauxTags: boolean; rappel?: string },
 ) => Promise<unknown>;
 
-export const chargerCriteres = (fichier: string): Critere[] => JSON.parse(readFileSync(fichier, "utf8"));
+export const chargerCriteres = (fichier: string): Critere[] => lireFichier<Critere>(fichier, "criteres").donnees;
 
 // ---------- tags.json ----------
 
-export const chargerTags = (fichier: string): Tag[] => JSON.parse(readFileSync(fichier, "utf8"));
-export const sauverTags = (fichier: string, tags: Tag[]) => writeFileSync(fichier, JSON.stringify(tags, null, 2) + "\n");
+export const chargerTags = (fichier: string): Tag[] => lireFichier<Tag>(fichier, "tags").donnees;
+/** Écrit tags.json en maintenant ses métadonnées (licence des données, created_at, updated_at). */
+export const sauverTags = (fichier: string, tags: Tag[]) => {
+  ecrireFichier(fichier, "tags", tags, existsSync(fichier) ? lireSiExiste<Tag>(fichier, "tags") : null);
+};
 
 // ---------- validation ----------
 

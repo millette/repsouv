@@ -1,14 +1,17 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { copyFileSync, mkdtempSync, readFileSync } from "node:fs";
+import { copyFileSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { test } from "node:test";
 import type { Outil } from "../extract.ts";
+import { lireFichier } from "../fichiers.ts";
 import { CONTROLE, DEPENDANCE, DONNEES, classer } from "../classify.ts";
 
 const outils = new Map(
-  (JSON.parse(readFileSync("outils.json", "utf8")) as Outil[]).map((o) => [o.nom, o]),
+  lireFichier<Outil>("outils.json", "outils").donnees.map((o) => [o.nom, o]),
 );
 const criteres = (nom: string) => {
   const o = outils.get(nom)!;
@@ -44,7 +47,7 @@ test("CLI: --force est accepté sans effet (nub run build --force le transmet à
   const f = copie();
   const r = spawnSync("nub", [classifyTs, f, "--force"], { encoding: "utf8" });
   assert.equal(r.status, 0, r.stderr);
-  assert.equal(JSON.parse(readFileSync(f, "utf8")).length, 60);
+  assert.equal(JSON.parse(readFileSync(f, "utf8")).outils.length, 60);
 });
 test("CLI: une autre option est refusée et le fichier reste intact", () => {
   const f = copie();
@@ -52,4 +55,20 @@ test("CLI: une autre option est refusée et le fichier reste intact", () => {
   const r = spawnSync("nub", [classifyTs, f, "--bogus"], { encoding: "utf8" });
   assert.notEqual(r.status, 0);
   assert.equal(readFileSync(f, "utf8"), avant);
+});
+test("CLI: un fichier inchangé garde ses métadonnées, un ancien tableau est converti avec la licence des données", () => {
+  const f = copie();
+  const avant = JSON.parse(readFileSync(f, "utf8"));
+  spawnSync("nub", [classifyTs, f], { encoding: "utf8" });
+  const apres = JSON.parse(readFileSync(f, "utf8"));
+  assert.equal(apres.meta.updated_at, avant.meta.updated_at);
+  assert.equal(apres.meta.created_at, avant.meta.created_at);
+  assert.equal(apres.meta.data_license, "CC-BY-SA-4.0");
+
+  writeFileSync(f, JSON.stringify(avant.outils));
+  spawnSync("nub", [classifyTs, f], { encoding: "utf8" });
+  const converti = JSON.parse(readFileSync(f, "utf8"));
+  assert.equal(converti.meta.data_license, "CC-BY-SA-4.0");
+  assert.equal(converti.outils.length, 60);
+  assert.match(converti.meta.created_at, /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}-0[45]:00$/);
 });

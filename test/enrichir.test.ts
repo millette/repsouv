@@ -1,9 +1,14 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 import assert from "node:assert/strict";
+import { mkdtempSync, readFileSync } from "node:fs";
 import { createServer } from "node:http";
 import type { AddressInfo } from "node:net";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { test } from "node:test";
 import {
-  aEnrichir, chargerCriteres, chargerTags, enrichirOutils, extraireContenu, instructions, instructionsEcart, lireContenu, MAX_TAGS, MIN_EXTRAIT, obtenirPage, problemesMarkdown,
+  aEnrichir, chargerCriteres, chargerTags, enrichirOutils, extraireContenu, instructions, instructionsEcart, lireContenu, MAX_TAGS, MIN_EXTRAIT, obtenirPage, problemesMarkdown, sauverTags,
   schemaReponse, validerEcart, validerProposition, type Expliqueur, type Generateur, type Tag,
 } from "../enrichir.ts";
 import type { Outil } from "../extract.ts";
@@ -466,4 +471,21 @@ test("lireContenu: lit une page, et lève une erreur avec la raison sinon", asyn
   assert.ok(c.extrait.length >= MIN_EXTRAIT);
   await avecServeur(403, "interdit", (url) => assert.rejects(lireContenu(url), /HTTP 403/));
   await assert.rejects(lireContenu("http://127.0.0.1:1/"), /./);
+});
+
+test("tags.json: sauverTags maintient la licence des données et les dates (updated_at seulement si les tags changent)", () => {
+  const f = join(mkdtempSync(join(tmpdir(), "tags-")), "tags.json");
+  sauverTags(f, [{ id: "a", description: "A." }]);
+  const premier = JSON.parse(readFileSync(f, "utf8"));
+  assert.equal(premier.meta.data_license, "CC-BY-SA-4.0");
+  assert.equal(premier.meta.created_at, premier.meta.updated_at);
+  assert.deepEqual(chargerTags(f), [{ id: "a", description: "A." }]);
+
+  sauverTags(f, [{ id: "a", description: "A." }]);
+  assert.deepEqual(JSON.parse(readFileSync(f, "utf8")), premier);
+
+  sauverTags(f, [{ id: "a", description: "A." }, { id: "b", description: "B.", justification: "Parce que.", propose_pour: "x" }]);
+  const apres = JSON.parse(readFileSync(f, "utf8"));
+  assert.equal(apres.meta.created_at, premier.meta.created_at);
+  assert.equal(apres.tags.length, 2);
 });

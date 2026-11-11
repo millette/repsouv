@@ -1,910 +1,917 @@
-[
-  {
-    "categorie": "Analyse et mesure",
-    "icone": "📊",
-    "nom": "Matomo",
-    "score": 2,
-    "lien": "https://matomo.org/",
-    "description": "Alternative à Google Analytics, l'outil permet de mesurer la fréquentation et les usages d’un site. Il est d'origine internationale mais offre le contrôle des données et peut être auto-hébergé sur l’infrastructure de son choix.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "dependance"
-    ],
-    "confiance": "élevée"
+{
+  "meta": {
+    "data_license": "CC-BY-SA-4.0",
+    "created_at": "2026-11-11T16:43:11-05:00",
+    "updated_at": "2026-11-11T16:48:12-05:00"
   },
-  {
-    "categorie": "Analyse et mesure",
-    "icone": "📊",
-    "nom": "Klipfolio",
-    "score": 2,
-    "lien": "https://www.klipfolio.com/v4",
-    "description": "Disponible uniquement en anglais, cet outil permet de visualiser des données provenant de différentes sources, de suivre des indicateurs de performance (KPI) et de faciliter le suivi des activités et la prise de décision.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "controle"
-    ],
-    "confiance": "faible"
-  },
-  {
-    "categorie": "Bureautique et collaboration",
-    "icone": "📝",
-    "nom": "cDox",
-    "score": 3,
-    "lien": "https://cdox.studio/?lang=fr-CA",
-    "description": "Outil canadien de rédaction et de tableur collaboratifs permettant de créer, modifier et partager des documents à plusieurs. Les données sont hébergées au Canada sur des serveurs indépendants et peuvent être exportées dans des formats standards.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "controle",
-      "dependance"
-    ],
-    "confiance": "élevée"
-  },
-  {
-    "categorie": "Bureautique et collaboration",
-    "icone": "📝",
-    "nom": "Antidote",
-    "score": 3,
-    "lien": "https://www.antidote.info/fr/",
-    "description": "Outil québécois d’aide à la rédaction en français et en anglais combinant correcteur avancé, dictionnaires et guides linguistiques. S’intègre aux principaux logiciels de bureautique et propose également des fonctions de reformulation assistées par IA.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "controle",
-      "dependance"
-    ],
-    "confiance": "élevée"
-  },
-  {
-    "categorie": "Bureautique et collaboration",
-    "icone": "📝",
-    "nom": "CryptPad",
-    "score": 2,
-    "lien": "https://cryptpad.org/",
-    "description": "Suite collaborative chiffrée permettant de créer et partager documents, feuilles de calcul, présentations, formulaires, tableaux Kanban et tableaux blancs. Le chiffrement de bout en bout empêche l’hébergeur de lire le contenu des documents. L'outil peut être auto-hébergé ou utilisé via une instance québécoise.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "dependance"
-    ],
-    "confiance": "élevée"
-  },
-  {
-    "categorie": "Bureautique et collaboration",
-    "icone": "📝",
-    "nom": "OnlyOffice",
-    "score": 2,
-    "lien": "https://www.onlyoffice.com/",
-    "description": "Suite bureautique permettant de créer, modifier et partager des feuilles de calcul, présentations et autres documents avec des fonctions de collaboration en temps réel. Cet outil, d'origine internationale, est libre et auto-hébergeable pour conserver la maîtrise de ses données.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "dependance"
-    ],
-    "confiance": "élevée"
-  },
-  {
-    "categorie": "Bureautique et collaboration",
-    "icone": "📝",
-    "nom": "Collabora Online",
-    "score": 2,
-    "lien": "https://www.collaboraonline.com/",
-    "description": "Suite bureautique internationale libre permettant de créer et de modifier des documents texte, des feuilles de calcul, des présentations et des dessins directement dans un navigateur, seul ou à plusieurs en temps réel. Elle peut être auto-hébergée et intégrée à des plateformes comme Nextcloud pour faciliter le travail collaboratif.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "dependance"
-    ],
-    "confiance": "élevée"
-  },
-  {
-    "categorie": "Bureautique et collaboration",
-    "icone": "📝",
-    "nom": "La Digitale",
-    "score": 2,
-    "lien": "https://ladigitale.dev/",
-    "description": "Ensemble d’outils numériques libres et gratuits pour créer, modifier et partager des contenus, collaborer et animer des ateliers ou des formations. Propose notamment des tableaux blancs, des documents collaboratifs, des outils multimédias, des quiz et des activités participatives. Conçu en France mais auto-hébergeable au Canada.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "dependance"
-    ],
-    "confiance": "élevée"
-  },
-  {
-    "categorie": "Bureautique et collaboration",
-    "icone": "📝",
-    "nom": "Euro-Office",
-    "score": 2,
-    "lien": "https://github.com/Euro-Office",
-    "description": "Suite bureautique « open source » d'origine internationale pour modifier à plusieurs des documents, tableurs, présentations et PDF. Conçue pour être intégrée à des solutions comme Nextcloud, elle peut être auto-hébergée sur l’infrastructure choisie par l’organisation.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "dependance"
-    ],
-    "confiance": "élevée"
-  },
-  {
-    "categorie": "Bureautique et collaboration",
-    "icone": "📝",
-    "nom": "Framapad",
-    "score": 2,
-    "lien": "https://framapad.org/abc/fr/",
-    "description": "Éditeur de texte collaboratif en ligne permettant à plusieurs personnes de rédiger simultanément un document, avec identification des contributions par couleur, historique des modifications et export des contenus. Bien que français, il s'agit d'un logiciel libre qui peut être installé sur un serveur canadien.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "dependance"
-    ],
-    "confiance": "élevée"
-  },
-  {
-    "categorie": "Communication et collaboration d’équipe",
-    "icone": "💬",
-    "nom": "Jami",
-    "score": 3,
-    "lien": "https://jami.net/",
-    "description": "Outil québécois de communication chiffrée permettant d’échanger des messages, passer des appels audio et vidéo, organiser des visioconférences, partager son écran et des fichiers. Son architecture pair-à-pair évite de faire transiter les conversations par un serveur central.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "controle",
-      "dependance"
-    ],
-    "confiance": "élevée"
-  },
-  {
-    "categorie": "Communication et collaboration d’équipe",
-    "icone": "💬",
-    "nom": "Mattermost",
-    "score": 2,
-    "lien": "https://mattermost.com/",
-    "description": "Messagerie collaborative open source pour les équipes, avec canaux, messages, partage de fichiers, appels et automatisations. Cet outil non canadien peut cependant être auto-hébergé sur l’infrastructure de l’organisation, y compris dans un environnement privé ou totalement déconnecté.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "dependance"
-    ],
-    "confiance": "élevée"
-  },
-  {
-    "categorie": "Communication et collaboration d’équipe",
-    "icone": "💬",
-    "nom": "Jitsi Meet",
-    "score": 2,
-    "lien": "https://jitsi.org/jitsi-meet/",
-    "description": "Solution libre de visioconférence permettant d’organiser des réunions vidéo, partager son écran et échanger par clavardage. Cet outil international peut être utilisé gratuitement en ligne ou auto-hébergé sur l’infrastructure de son choix, sans compte utilisateur obligatoire.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "dependance"
-    ],
-    "confiance": "élevée"
-  },
-  {
-    "categorie": "Communautés, réseaux et partage des connaissances",
-    "icone": "🌐",
-    "nom": "En commun",
-    "score": 2,
-    "lien": "https://encommun.io/",
-    "description": "Provenant du Québec, cet ensemble de plateformes collaboratives, dont Passerelles et Praxis, permet notamment aux organismes de créer des communautés, d’échanger, de partager des ressources et de diffuser leurs connaissances.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "controle"
-    ],
-    "confiance": "moyenne"
-  },
-  {
-    "categorie": "Communautés, réseaux et partage des connaissances",
-    "icone": "🌐",
-    "nom": "Mastodon",
-    "score": 2,
-    "lien": "https://joinmastodon.org/fr",
-    "description": "Réseau social permettant de publier, suivre et échanger avec des communautés réparties sur des serveurs indépendants. Bien que d’origine allemande, Mastodon est un réseau social libre et décentralisé qui peut être hébergé au Canada, permettant ainsi de mieux maîtriser les données.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "dependance"
-    ],
-    "confiance": "élevée"
-  },
-  {
-    "categorie": "Communautés, réseaux et partage des connaissances",
-    "icone": "🌐",
-    "nom": "Discourse",
-    "score": 2,
-    "lien": "https://www.discourse.org/",
-    "description": "Plateforme libre permettant de créer des forums de discussion et des communautés en ligne, avec espaces thématiques, modération, notifications et recherche. L'outil n'est pas canadien mais peut être auto-hébergé pour garder la maîtrise des échanges et des données des membres.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "dependance"
-    ],
-    "confiance": "élevée"
-  },
-  {
-    "categorie": "Comptabilité et finances",
-    "icone": "💰",
-    "nom": "Kashoo",
-    "score": 2,
-    "lien": "https://kashoo.com/",
-    "description": "Disponible uniquement en anglais, ce logiciel de comptabilité canadien, destiné aux petites organisations, permet de suivre revenus et dépenses, envoyer des factures, enregistrer les paiements, rapprocher les comptes bancaires et produire les principaux rapports financiers.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "controle"
-    ],
-    "confiance": "moyenne"
-  },
-  {
-    "categorie": "Financement, subventions et dons",
-    "icone": "🤝",
-    "nom": "Elodia",
-    "score": 2,
-    "lien": "https://www.elodia.app/",
-    "description": "Plateforme québécoise utilisant l’intelligence artificielle pour aider les artistes et organismes culturels à trouver des subventions, préparer leurs demandes et gérer leurs échéances.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "controle"
-    ],
-    "confiance": "moyenne"
-  },
-  {
-    "categorie": "Financement, subventions et dons",
-    "icone": "🤝",
-    "nom": "Zeffy",
-    "score": 2,
-    "lien": "https://www.zeffy.com/fr-ca",
-    "description": "Plateforme québécoise de collecte de fonds permettant aux OBNL de recevoir des dons, gérer des campagnes, organiser des événements et suivre leurs donateurs. Gratuite pour les organismes.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "controle"
-    ],
-    "confiance": "moyenne"
-  },
-  {
-    "categorie": "Financement, subventions et dons",
-    "icone": "🤝",
-    "nom": "CanaDon",
-    "score": 2,
-    "lien": "https://www.canadahelps.org/fr/",
-    "description": "Plateforme canadienne de collecte de dons destinée aux organismes de bienfaisance enregistrés. Elle permet de recevoir des contributions, créer des campagnes, gérer les donateurs et produire des reçus fiscaux.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "controle"
-    ],
-    "confiance": "moyenne"
-  },
-  {
-    "categorie": "Création et gestion de contenus numériques",
-    "icone": "🎨",
-    "nom": "Webnames.ca",
-    "score": 3,
-    "lien": "https://www.webnames.ca/",
-    "description": "Outil canadien de noms de domaine, hébergement Web, WordPress et courriel professionnel pour créer et exploiter une présence en ligne. Offre aussi certificats SSL, DNS, sauvegardes, migration de sites et accompagnement technique.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "controle",
-      "dependance"
-    ],
-    "confiance": "élevée"
-  },
-  {
-    "categorie": "Création et gestion de contenus numériques",
-    "icone": "🎨",
-    "nom": "Penpot",
-    "score": 2,
-    "lien": "https://penpot.app/",
-    "description": "Disponible uniquement en anglais, cette plateforme de conception graphique collaborative permet de créer des interfaces, des maquettes, des prototypes interactifs et des systèmes de design. Elle est non canadienne mais libre et peut être auto-hébergée pour maîtriser le stockage et le partage des projets.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "dependance"
-    ],
-    "confiance": "élevée"
-  },
-  {
-    "categorie": "Gestion de collections et de contenus culturels",
-    "icone": "🏛️",
-    "nom": "La Bibli",
-    "score": 2,
-    "lien": "https://labibli.com/",
-    "description": "Outil canadien de gestion de bibliothèque pour les organismes permettant de cataloguer les livres par code-barres, publier la collection en ligne et suivre les prêts, retours et rappels. Peut reprendre un fichier Excel existant.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "controle"
-    ],
-    "confiance": "moyenne"
-  },
-  {
-    "categorie": "Gestion de collections et de contenus culturels",
-    "icone": "🏛️",
-    "nom": "Omeka S",
-    "score": 2,
-    "lien": "https://omeka.org/",
-    "description": "Plateforme libre non canadienne permettant aux institutions culturelles de gérer, documenter et publier des collections numériques. Elle facilite l'organisation des métadonnées, la mise en relation des ressources et la création d'expositions ou de sites patrimoniaux, avec auto-hébergement possible.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "dependance"
-    ],
-    "confiance": "élevée"
-  },
-  {
-    "categorie": "Gestion de projets et des tâches",
-    "icone": "📋",
-    "nom": "Leantime",
-    "score": 2,
-    "lien": "https://leantime.io/",
-    "description": "Logiciel de gestion de projets permettant de définir des objectifs, planifier les activités, organiser les tâches et suivre les échéances. Non canadien, il propose une édition libre et auto-hébergeable.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "dependance"
-    ],
-    "confiance": "élevée"
-  },
-  {
-    "categorie": "Gestion de projets et des tâches",
-    "icone": "📋",
-    "nom": "OpenProject",
-    "score": 2,
-    "lien": "https://www.openproject.org/",
-    "description": "Logiciel libre non canadien de gestion de projets permettant de planifier les tâches, échéances, responsabilités et calendriers, avec notamment des diagrammes de Gantt. Sa version communautaire auto-hébergeable permet de conserver les données sur une infrastructure choisie.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "dependance"
-    ],
-    "confiance": "élevée"
-  },
-  {
-    "categorie": "Gestion de projets et des tâches",
-    "icone": "📋",
-    "nom": "Taiga",
-    "score": 2,
-    "lien": "https://taiga.io/",
-    "description": "Logiciel libre de gestion de projets collaboratifs basé sur les méthodes agiles, proposant des tableaux Kanban, des tâches, des cycles de travail et un suivi de l'avancement. Il n'est pas canadien mais peut être auto-hébergé.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "dependance"
-    ],
-    "confiance": "élevée"
-  },
-  {
-    "categorie": "Gestion de projets et des tâches",
-    "icone": "📋",
-    "nom": "Vikunja",
-    "score": 2,
-    "lien": "https://vikunja.io/",
-    "description": "Logiciel libre non canadien mais auto-hébergeable de gestion des tâches et projets offrant des listes, tableaux Kanban, échéances et vues chronologiques. Adapté au travail individuel ou en équipe.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "dependance"
-    ],
-    "confiance": "élevée"
-  },
-  {
-    "categorie": "Gestion de la relation, des membres et CRM",
-    "icone": "👥",
-    "nom": "Member365",
-    "score": 2,
-    "lien": "https://member365.com/",
-    "description": "Outil canadien de gestion des membres conçu pour les associations et OBNL. Centralise adhésions, renouvellements, paiements, événements, communications et dossiers des membres et offre un portail libre-service ainsi que des outils de suivi et de rapport.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "controle"
-    ],
-    "confiance": "faible"
-  },
-  {
-    "categorie": "Gestion de la relation, des membres et CRM",
-    "icone": "👥",
-    "nom": "CiviCRM",
-    "score": 2,
-    "lien": "https://civicrm.org/",
-    "description": "Logiciel libre non canadien destiné aux associations et OBNL pour gérer leurs membres, donateurs, contacts, événements et communications. Il s'intègre à plusieurs systèmes de gestion de sites Web et peut être auto-hébergé.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "dependance"
-    ],
-    "confiance": "élevée"
-  },
-  {
-    "categorie": "Gestion d’événements et billetterie",
-    "icone": "🎟️",
-    "nom": "Le point de vente",
-    "score": 2,
-    "lien": "http://www.lepointdevente.com/",
-    "description": "Solution québécoise de billetterie et de gestion d’événements permettant de vendre et valider des billets, gérer les inscriptions et les ventes, analyser les données de clientèle et intégrer la billetterie au site Web de l’organisateur.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "controle"
-    ],
-    "confiance": "moyenne"
-  },
-  {
-    "categorie": "Gestion d’événements et billetterie",
-    "icone": "🎟️",
-    "nom": "Mobilizon",
-    "score": 2,
-    "lien": "https://mobilizon.org/",
-    "description": "Outil non canadien de gestion d’événements et de groupes permettant de publier des activités, créer des pages communautaires et mobiliser des participants. Son fonctionnement fédéré permet à différentes instances indépendantes de communiquer entre elles.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "dependance"
-    ],
-    "confiance": "élevée"
-  },
-  {
-    "categorie": "Gestion documentaire et signature électronique",
-    "icone": "📁",
-    "nom": "eZsign",
-    "score": 2,
-    "lien": "https://www.ezsign.com/fr/",
-    "description": "Solution québécoise de signature électronique permettant de faire signer contrats, ententes et autres documents à distance, de suivre leur progression et de conserver une piste d’audit. Offre des intégrations et des fonctions d’automatisation pour les organisations. Les OBNL admissibles, notamment ceux œuvrant en arts et culture, bénéficient d'un rabais de 50 %.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "controle"
-    ],
-    "confiance": "moyenne"
-  },
-  {
-    "categorie": "Gestion documentaire et signature électronique",
-    "icone": "📁",
-    "nom": "Paperless-ngx",
-    "score": 2,
-    "lien": "https://docs.paperless-ngx.com/",
-    "description": "Disponible uniquement en anglais, ce logiciel libre permet de numériser, classer, indexer et retrouver facilement des documents grâce à la reconnaissance optique de caractères (OCR). Il n'est pas canadien mais auto-hébergeable.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "dependance"
-    ],
-    "confiance": "élevée"
-  },
-  {
-    "categorie": "Gestion documentaire et signature électronique",
-    "icone": "📁",
-    "nom": "DocuSeal",
-    "score": 2,
-    "lien": "https://www.docuseal.com/fr",
-    "description": "Plateforme libre de signature électronique permettant de préparer, envoyer, remplir et signer des documents numériques, avec gestion de plusieurs signataires. Non canadienne, elle propose une édition auto-hébergeable.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "dependance"
-    ],
-    "confiance": "élevée"
-  },
-  {
-    "categorie": "Marketing par courriel",
-    "icone": "📣",
-    "nom": "Envoke",
-    "score": 3,
-    "lien": "https://envoke.com/",
-    "description": "Outil canadien d’envoi d’infolettres et de communications destiné notamment aux associations et organismes publics. Permet de gérer les contacts, abonnements et consentements, créer des courriels et formulaires.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "controle",
-      "dependance"
-    ],
-    "confiance": "élevée"
-  },
-  {
-    "categorie": "Marketing par courriel",
-    "icone": "📣",
-    "nom": "Cyberimpact",
-    "score": 2,
-    "lien": "http://www.cyberimpact.com/",
-    "description": "Outil québécois de marketing par courriel permettant de créer et envoyer des infolettres, gérer les contacts et consentements, automatiser des campagnes et analyser leurs résultats.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "controle"
-    ],
-    "confiance": "moyenne"
-  },
-  {
-    "categorie": "Marketing par courriel",
-    "icone": "📣",
-    "nom": "Dialogue Insight",
-    "score": 2,
-    "lien": "https://www.dialoginsight.com/",
-    "description": "Solution québécoise de marketing relationnel permettant de gérer les contacts, envoyer des courriels et communications multicanales, automatiser des campagnes, personnaliser les messages et analyser les comportements afin d’améliorer l’engagement des publics.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "controle"
-    ],
-    "confiance": "moyenne"
-  },
-  {
-    "categorie": "Marketing par courriel",
-    "icone": "📣",
-    "nom": "Cakemail",
-    "score": 2,
-    "lien": "https://www.cakemail.ca/",
-    "description": "Outil québécois de marketing par courriel permettant de créer des infolettres, gérer des listes de contacts, automatiser des campagnes et suivre leurs résultats. Propose aussi l’envoi de courriels transactionnels par API ou SMTP.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "controle"
-    ],
-    "confiance": "moyenne"
-  },
-  {
-    "categorie": "Messagerie électronique",
-    "icone": "✉️",
-    "nom": "Thunderbird",
-    "score": 2,
-    "lien": "https://www.thunderbird.net/fr",
-    "description": "Client de messagerie permettant de gérer courriels, calendriers et contacts depuis une application de bureau ou mobile. Avec ce logiciel non canadien, les messages restent chez le fournisseur de courriel choisi et peuvent aussi être conservés localement sur l’appareil.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "dependance"
-    ],
-    "confiance": "élevée"
-  },
-  {
-    "categorie": "Navigation Web",
-    "icone": "🧭",
-    "nom": "Firefox",
-    "score": 2,
-    "lien": "https://www.firefox.com/fr",
-    "description": "Navigateur Internet non canadien axé sur la protection de la vie privée permettant de consulter des sites, gérer onglets, favoris et mots de passe, traduire des pages et limiter le pistage. Les données de navigation peuvent rester entièrement sur l’appareil.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "dependance"
-    ],
-    "confiance": "élevée"
-  },
-  {
-    "categorie": "Ressources humaines et gestion du temps",
-    "icone": "⏱️",
-    "nom": "Feuille de temps",
-    "score": 2,
-    "lien": "https://feuilledetemps.ca/",
-    "description": "Outil canadien de gestion des feuilles de temps conçu avec des OSBL. Centralise les heures de travail, vacances, congés et heures supplémentaires, suit le temps par projet et produit des rapports pour la paie et les redditions de comptes.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "controle"
-    ],
-    "confiance": "moyenne"
-  },
-  {
-    "categorie": "Ressources humaines et gestion du temps",
-    "icone": "⏱️",
-    "nom": "Folks HR",
-    "score": 2,
-    "lien": "https://folksrh.com/",
-    "description": "Solution RH conçue au Québec permettant de centraliser les dossiers employés, gérer vacances, absences et temps supplémentaire, automatiser l’intégration, suivre les évaluations de rendement et produire des rapports pour faciliter la gestion quotidienne des équipes.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "controle"
-    ],
-    "confiance": "moyenne"
-  },
-  {
-    "categorie": "Sécurité et gestion des accès",
-    "icone": "🔐",
-    "nom": "CIRA Canadian Shield / Bouclier canadien",
-    "score": 2,
-    "lien": "https://www.cira.ca/fr/canadian-shield/",
-    "description": "Service DNS canadien et gratuit qui protège la navigation en bloquant des domaines associés à l’hameçonnage, aux logiciels malveillants et aux escroqueries. Peut protéger les appareils d’un organisme grâce à une configuration DNS ou aux applications de CIRA.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "controle"
-    ],
-    "confiance": "moyenne"
-  },
-  {
-    "categorie": "Sécurité et gestion des accès",
-    "icone": "🔐",
-    "nom": "1Password",
-    "score": 2,
-    "lien": "https://1password.com/fr/",
-    "description": "Gestionnaire canadien de mots de passe pour individus et équipes permettant de stocker et partager identifiants, clés d’accès et autres secrets dans des coffres chiffrés, de générer des mots de passe et de gérer les accès aux comptes de l’organisation.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "controle"
-    ],
-    "confiance": "moyenne"
-  },
-  {
-    "categorie": "Sécurité et gestion des accès",
-    "icone": "🔐",
-    "nom": "Bitwarden",
-    "score": 2,
-    "lien": "https://bitwarden.com/",
-    "description": "Gestionnaire de mots de passe non canadien libre permettant de stocker, générer et partager mots de passe, clés d’accès et informations sensibles dans un coffre chiffré. Disponible dans le nuage ou en auto-hébergement sur l’infrastructure de son choix.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "dependance"
-    ],
-    "confiance": "élevée"
-  },
-  {
-    "categorie": "Sécurité et gestion des accès",
-    "icone": "🔐",
-    "nom": "Vaultwarden",
-    "score": 2,
-    "lien": "https://github.com/dani-garcia/vaultwarden",
-    "description": "Gestionnaire de mots de passe libre et léger, compatible avec les applications Bitwarden (voir ci-dessus). Non canadien, il permet de stocker et partager mots de passe et autres informations sensibles sur un serveur contrôlé par l’organisation.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "dependance"
-    ],
-    "confiance": "élevée"
-  },
-  {
-    "categorie": "Sécurité et gestion des accès",
-    "icone": "🔐",
-    "nom": "2FAS Auth",
-    "score": 2,
-    "lien": "https://2fas.com/auth/",
-    "description": "Application d’authentification à deux facteurs non canadienne qui génère localement des codes temporaires pour sécuriser les connexions aux comptes en ligne. Fonctionne hors ligne, sans compte utilisateur, avec sauvegarde facultative chiffrée dans iCloud ou Google Drive.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "dependance"
-    ],
-    "confiance": "élevée"
-  },
-  {
-    "categorie": "Sécurité et gestion des accès",
-    "icone": "🔐",
-    "nom": "2FAS Pass",
-    "score": 2,
-    "lien": "https://2fas.com/pass/",
-    "description": "Disponible uniquement en anglais, ce gestionnaire de mots de passe non canadien « local-first » stocke le coffre chiffré sur l’appareil. La synchronisation est facultative et peut passer par une infrastructure auto-hébergée, sans compte utilisateur obligatoire.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "dependance"
-    ],
-    "confiance": "élevée"
-  },
-  {
-    "categorie": "Stockage, infonuagique et sauvegarde",
-    "icone": "☁️",
-    "nom": "Micrologic",
-    "score": 3,
-    "lien": "http://www.micrologic.ca/",
-    "description": "Fournisseur québécois de services infonuagiques et d’infrastructures technologiques. Son environnement Cirrus permet d’héberger applications et données au Canada, avec des services de sécurité, de sauvegarde, de continuité et d’accompagnement.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "controle",
-      "dependance"
-    ],
-    "confiance": "élevée"
-  },
-  {
-    "categorie": "Stockage, infonuagique et sauvegarde",
-    "icone": "☁️",
-    "nom": "TitanFile",
-    "score": 3,
-    "lien": "https://www.titanfile.com/",
-    "description": "Outil canadien sécurisé de partage de fichiers et de communications permettant d’échanger des documents sensibles avec des partenaires externes, organiser les échanges par dossiers et projets et suivre les accès et téléchargements.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "controle",
-      "dependance"
-    ],
-    "confiance": "élevée"
-  },
-  {
-    "categorie": "Stockage, infonuagique et sauvegarde",
-    "icone": "☁️",
-    "nom": "La Réserve",
-    "score": 2,
-    "lien": "https://sylvea.ca/solutions-resilientes/",
-    "description": "Service canadien de sauvegarde automatisée des données de Google Workspace et Microsoft 365, permettant de conserver des copies chiffrées au Canada et de récupérer des documents perdus ou supprimés. Il renforce la maîtrise des sauvegardes sans supprimer la dépendance aux plateformes d'origine.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "controle"
-    ],
-    "confiance": "élevée"
-  },
-  {
-    "categorie": "Stockage, infonuagique et sauvegarde",
-    "icone": "☁️",
-    "nom": "Nextcloud",
-    "score": 2,
-    "lien": "https://nextcloud.com/",
-    "description": "Suite collaborative non canadienne permettant de stocker et partager des fichiers, gérer calendriers, contacts et tâches, communiquer en équipe et collaborer sur des documents grâce à des suites bureautiques intégrées. Peut être auto-hébergée sur l’infrastructure choisie.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "dependance"
-    ],
-    "confiance": "élevée"
-  },
-  {
-    "categorie": "Stockage, infonuagique et sauvegarde",
-    "icone": "☁️",
-    "nom": "Sync.com",
-    "score": 2,
-    "lien": "https://www.sync.com/",
-    "description": "Disponible uniquement en anglais, ce service canadien de stockage infonuagique permet de sauvegarder, synchroniser et partager des fichiers en toute sécurité. Propose le chiffrement de bout en bout, la récupération de fichiers supprimés et des espaces collaboratifs pour les équipes.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "controle"
-    ],
-    "confiance": "faible"
-  },
-  {
-    "categorie": "Transcription et assistance aux réunions",
-    "icone": "🎙️",
-    "nom": "Manni",
-    "score": 2,
-    "lien": "https://www.manni.app/fr/home",
-    "description": "Outil québécois de transcription de réunions par IA. Il enregistre les échanges sans ajouter de participant aux appels, génère automatiquement des comptes rendus et des plans d’action et permet de retrouver des informations dans les transcriptions.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "controle"
-    ],
-    "confiance": "moyenne"
-  },
-  {
-    "categorie": "Transcription et assistance aux réunions",
-    "icone": "🎙️",
-    "nom": "Fellow",
-    "score": 2,
-    "lien": "https://fellow.ai/",
-    "description": "Assistant de réunions conçu au Canada enregistre et transcrit les échanges, génère automatiquement notes, résumés et actions à suivre et centralise les comptes rendus. L'interface est en anglais mais le français est bien pris en charge par la reconnaissance vocale.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "controle"
-    ],
-    "confiance": "moyenne"
-  },
-  {
-    "categorie": "Transcription et assistance aux réunions",
-    "icone": "🎙️",
-    "nom": "Handy",
-    "score": 2,
-    "lien": "https://handy.computer/",
-    "description": "Outil non canadien, gratuit et libre de dictée vocale qui transcrit la parole directement dans n’importe quel champ de texte. La reconnaissance vocale s’effectue localement sur l’ordinateur, sans envoyer les enregistrements ou transcriptions dans le nuage. L'interface est en anglais mais le français est bien pris en charge par la reconnaissance vocale.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "dependance"
-    ],
-    "confiance": "élevée"
-  },
-  {
-    "categorie": "Veille et gestion de l’information",
-    "icone": "🔎",
-    "nom": "Obsidian",
-    "score": 3,
-    "lien": "https://obsidian.md/",
-    "description": "Outil canadien de prise de notes et d’organisation des connaissances permettant de relier documents, idées et ressources dans une base personnelle ou partagée. Les notes sont conservées sous forme de fichiers Markdown directement sur l’appareil.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "controle",
-      "dependance"
-    ],
-    "confiance": "élevée"
-  },
-  {
-    "categorie": "Veille et gestion de l’information",
-    "icone": "🔎",
-    "nom": "Miniflux",
-    "score": 2,
-    "lien": "https://miniflux.app/",
-    "description": "Lecteur de flux RSS non canadien, libre et minimaliste permettant de suivre l’actualité de plusieurs sites Web depuis une seule interface, d’organiser ses abonnements et de lire les articles sans publicité ni traçage. Disponible en auto-hébergement ou en service hébergé.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "dependance"
-    ],
-    "confiance": "élevée"
-  },
-  {
-    "categorie": "Veille et gestion de l’information",
-    "icone": "🔎",
-    "nom": "Wallabag",
-    "score": 2,
-    "lien": "https://wallabag.org/",
-    "description": "Outil non canadien libre permettant de sauvegarder des articles et des pages Web pour les lire plus tard, sans publicité ni distractions. Les contenus peuvent être classés, annotés et consultés sur différents appareils. Il peut être auto-hébergé pour conserver la maîtrise de ses archives.",
-    "derniere_modification": "2026-11-05T09:53",
-    "changement": null,
-    "criteres": [
-      "donnees",
-      "dependance"
-    ],
-    "confiance": "élevée"
-  }
-]
+  "outils": [
+    {
+      "categorie": "Analyse et mesure",
+      "icone": "📊",
+      "nom": "Matomo",
+      "score": 2,
+      "lien": "https://matomo.org/",
+      "description": "Alternative à Google Analytics, l'outil permet de mesurer la fréquentation et les usages d’un site. Il est d'origine internationale mais offre le contrôle des données et peut être auto-hébergé sur l’infrastructure de son choix.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "élevée"
+    },
+    {
+      "categorie": "Analyse et mesure",
+      "icone": "📊",
+      "nom": "Klipfolio",
+      "score": 2,
+      "lien": "https://www.klipfolio.com/v4",
+      "description": "Disponible uniquement en anglais, cet outil permet de visualiser des données provenant de différentes sources, de suivre des indicateurs de performance (KPI) et de faciliter le suivi des activités et la prise de décision.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "controle"
+      ],
+      "confiance": "faible"
+    },
+    {
+      "categorie": "Bureautique et collaboration",
+      "icone": "📝",
+      "nom": "cDox",
+      "score": 3,
+      "lien": "https://cdox.studio/?lang=fr-CA",
+      "description": "Outil canadien de rédaction et de tableur collaboratifs permettant de créer, modifier et partager des documents à plusieurs. Les données sont hébergées au Canada sur des serveurs indépendants et peuvent être exportées dans des formats standards.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "controle",
+        "dependance"
+      ],
+      "confiance": "élevée"
+    },
+    {
+      "categorie": "Bureautique et collaboration",
+      "icone": "📝",
+      "nom": "Antidote",
+      "score": 3,
+      "lien": "https://www.antidote.info/fr/",
+      "description": "Outil québécois d’aide à la rédaction en français et en anglais combinant correcteur avancé, dictionnaires et guides linguistiques. S’intègre aux principaux logiciels de bureautique et propose également des fonctions de reformulation assistées par IA.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "controle",
+        "dependance"
+      ],
+      "confiance": "élevée"
+    },
+    {
+      "categorie": "Bureautique et collaboration",
+      "icone": "📝",
+      "nom": "CryptPad",
+      "score": 2,
+      "lien": "https://cryptpad.org/",
+      "description": "Suite collaborative chiffrée permettant de créer et partager documents, feuilles de calcul, présentations, formulaires, tableaux Kanban et tableaux blancs. Le chiffrement de bout en bout empêche l’hébergeur de lire le contenu des documents. L'outil peut être auto-hébergé ou utilisé via une instance québécoise.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "élevée"
+    },
+    {
+      "categorie": "Bureautique et collaboration",
+      "icone": "📝",
+      "nom": "OnlyOffice",
+      "score": 2,
+      "lien": "https://www.onlyoffice.com/",
+      "description": "Suite bureautique permettant de créer, modifier et partager des feuilles de calcul, présentations et autres documents avec des fonctions de collaboration en temps réel. Cet outil, d'origine internationale, est libre et auto-hébergeable pour conserver la maîtrise de ses données.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "élevée"
+    },
+    {
+      "categorie": "Bureautique et collaboration",
+      "icone": "📝",
+      "nom": "Collabora Online",
+      "score": 2,
+      "lien": "https://www.collaboraonline.com/",
+      "description": "Suite bureautique internationale libre permettant de créer et de modifier des documents texte, des feuilles de calcul, des présentations et des dessins directement dans un navigateur, seul ou à plusieurs en temps réel. Elle peut être auto-hébergée et intégrée à des plateformes comme Nextcloud pour faciliter le travail collaboratif.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "élevée"
+    },
+    {
+      "categorie": "Bureautique et collaboration",
+      "icone": "📝",
+      "nom": "La Digitale",
+      "score": 2,
+      "lien": "https://ladigitale.dev/",
+      "description": "Ensemble d’outils numériques libres et gratuits pour créer, modifier et partager des contenus, collaborer et animer des ateliers ou des formations. Propose notamment des tableaux blancs, des documents collaboratifs, des outils multimédias, des quiz et des activités participatives. Conçu en France mais auto-hébergeable au Canada.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "élevée"
+    },
+    {
+      "categorie": "Bureautique et collaboration",
+      "icone": "📝",
+      "nom": "Euro-Office",
+      "score": 2,
+      "lien": "https://github.com/Euro-Office",
+      "description": "Suite bureautique « open source » d'origine internationale pour modifier à plusieurs des documents, tableurs, présentations et PDF. Conçue pour être intégrée à des solutions comme Nextcloud, elle peut être auto-hébergée sur l’infrastructure choisie par l’organisation.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "élevée"
+    },
+    {
+      "categorie": "Bureautique et collaboration",
+      "icone": "📝",
+      "nom": "Framapad",
+      "score": 2,
+      "lien": "https://framapad.org/abc/fr/",
+      "description": "Éditeur de texte collaboratif en ligne permettant à plusieurs personnes de rédiger simultanément un document, avec identification des contributions par couleur, historique des modifications et export des contenus. Bien que français, il s'agit d'un logiciel libre qui peut être installé sur un serveur canadien.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "élevée"
+    },
+    {
+      "categorie": "Communication et collaboration d’équipe",
+      "icone": "💬",
+      "nom": "Jami",
+      "score": 3,
+      "lien": "https://jami.net/",
+      "description": "Outil québécois de communication chiffrée permettant d’échanger des messages, passer des appels audio et vidéo, organiser des visioconférences, partager son écran et des fichiers. Son architecture pair-à-pair évite de faire transiter les conversations par un serveur central.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "controle",
+        "dependance"
+      ],
+      "confiance": "élevée"
+    },
+    {
+      "categorie": "Communication et collaboration d’équipe",
+      "icone": "💬",
+      "nom": "Mattermost",
+      "score": 2,
+      "lien": "https://mattermost.com/",
+      "description": "Messagerie collaborative open source pour les équipes, avec canaux, messages, partage de fichiers, appels et automatisations. Cet outil non canadien peut cependant être auto-hébergé sur l’infrastructure de l’organisation, y compris dans un environnement privé ou totalement déconnecté.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "élevée"
+    },
+    {
+      "categorie": "Communication et collaboration d’équipe",
+      "icone": "💬",
+      "nom": "Jitsi Meet",
+      "score": 2,
+      "lien": "https://jitsi.org/jitsi-meet/",
+      "description": "Solution libre de visioconférence permettant d’organiser des réunions vidéo, partager son écran et échanger par clavardage. Cet outil international peut être utilisé gratuitement en ligne ou auto-hébergé sur l’infrastructure de son choix, sans compte utilisateur obligatoire.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "élevée"
+    },
+    {
+      "categorie": "Communautés, réseaux et partage des connaissances",
+      "icone": "🌐",
+      "nom": "En commun",
+      "score": 2,
+      "lien": "https://encommun.io/",
+      "description": "Provenant du Québec, cet ensemble de plateformes collaboratives, dont Passerelles et Praxis, permet notamment aux organismes de créer des communautés, d’échanger, de partager des ressources et de diffuser leurs connaissances.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "controle"
+      ],
+      "confiance": "moyenne"
+    },
+    {
+      "categorie": "Communautés, réseaux et partage des connaissances",
+      "icone": "🌐",
+      "nom": "Mastodon",
+      "score": 2,
+      "lien": "https://joinmastodon.org/fr",
+      "description": "Réseau social permettant de publier, suivre et échanger avec des communautés réparties sur des serveurs indépendants. Bien que d’origine allemande, Mastodon est un réseau social libre et décentralisé qui peut être hébergé au Canada, permettant ainsi de mieux maîtriser les données.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "élevée"
+    },
+    {
+      "categorie": "Communautés, réseaux et partage des connaissances",
+      "icone": "🌐",
+      "nom": "Discourse",
+      "score": 2,
+      "lien": "https://www.discourse.org/",
+      "description": "Plateforme libre permettant de créer des forums de discussion et des communautés en ligne, avec espaces thématiques, modération, notifications et recherche. L'outil n'est pas canadien mais peut être auto-hébergé pour garder la maîtrise des échanges et des données des membres.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "élevée"
+    },
+    {
+      "categorie": "Comptabilité et finances",
+      "icone": "💰",
+      "nom": "Kashoo",
+      "score": 2,
+      "lien": "https://kashoo.com/",
+      "description": "Disponible uniquement en anglais, ce logiciel de comptabilité canadien, destiné aux petites organisations, permet de suivre revenus et dépenses, envoyer des factures, enregistrer les paiements, rapprocher les comptes bancaires et produire les principaux rapports financiers.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "controle"
+      ],
+      "confiance": "moyenne"
+    },
+    {
+      "categorie": "Financement, subventions et dons",
+      "icone": "🤝",
+      "nom": "Elodia",
+      "score": 2,
+      "lien": "https://www.elodia.app/",
+      "description": "Plateforme québécoise utilisant l’intelligence artificielle pour aider les artistes et organismes culturels à trouver des subventions, préparer leurs demandes et gérer leurs échéances.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "controle"
+      ],
+      "confiance": "moyenne"
+    },
+    {
+      "categorie": "Financement, subventions et dons",
+      "icone": "🤝",
+      "nom": "Zeffy",
+      "score": 2,
+      "lien": "https://www.zeffy.com/fr-ca",
+      "description": "Plateforme québécoise de collecte de fonds permettant aux OBNL de recevoir des dons, gérer des campagnes, organiser des événements et suivre leurs donateurs. Gratuite pour les organismes.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "controle"
+      ],
+      "confiance": "moyenne"
+    },
+    {
+      "categorie": "Financement, subventions et dons",
+      "icone": "🤝",
+      "nom": "CanaDon",
+      "score": 2,
+      "lien": "https://www.canadahelps.org/fr/",
+      "description": "Plateforme canadienne de collecte de dons destinée aux organismes de bienfaisance enregistrés. Elle permet de recevoir des contributions, créer des campagnes, gérer les donateurs et produire des reçus fiscaux.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "controle"
+      ],
+      "confiance": "moyenne"
+    },
+    {
+      "categorie": "Création et gestion de contenus numériques",
+      "icone": "🎨",
+      "nom": "Webnames.ca",
+      "score": 3,
+      "lien": "https://www.webnames.ca/",
+      "description": "Outil canadien de noms de domaine, hébergement Web, WordPress et courriel professionnel pour créer et exploiter une présence en ligne. Offre aussi certificats SSL, DNS, sauvegardes, migration de sites et accompagnement technique.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "controle",
+        "dependance"
+      ],
+      "confiance": "élevée"
+    },
+    {
+      "categorie": "Création et gestion de contenus numériques",
+      "icone": "🎨",
+      "nom": "Penpot",
+      "score": 2,
+      "lien": "https://penpot.app/",
+      "description": "Disponible uniquement en anglais, cette plateforme de conception graphique collaborative permet de créer des interfaces, des maquettes, des prototypes interactifs et des systèmes de design. Elle est non canadienne mais libre et peut être auto-hébergée pour maîtriser le stockage et le partage des projets.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "élevée"
+    },
+    {
+      "categorie": "Gestion de collections et de contenus culturels",
+      "icone": "🏛️",
+      "nom": "La Bibli",
+      "score": 2,
+      "lien": "https://labibli.com/",
+      "description": "Outil canadien de gestion de bibliothèque pour les organismes permettant de cataloguer les livres par code-barres, publier la collection en ligne et suivre les prêts, retours et rappels. Peut reprendre un fichier Excel existant.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "controle"
+      ],
+      "confiance": "moyenne"
+    },
+    {
+      "categorie": "Gestion de collections et de contenus culturels",
+      "icone": "🏛️",
+      "nom": "Omeka S",
+      "score": 2,
+      "lien": "https://omeka.org/",
+      "description": "Plateforme libre non canadienne permettant aux institutions culturelles de gérer, documenter et publier des collections numériques. Elle facilite l'organisation des métadonnées, la mise en relation des ressources et la création d'expositions ou de sites patrimoniaux, avec auto-hébergement possible.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "élevée"
+    },
+    {
+      "categorie": "Gestion de projets et des tâches",
+      "icone": "📋",
+      "nom": "Leantime",
+      "score": 2,
+      "lien": "https://leantime.io/",
+      "description": "Logiciel de gestion de projets permettant de définir des objectifs, planifier les activités, organiser les tâches et suivre les échéances. Non canadien, il propose une édition libre et auto-hébergeable.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "élevée"
+    },
+    {
+      "categorie": "Gestion de projets et des tâches",
+      "icone": "📋",
+      "nom": "OpenProject",
+      "score": 2,
+      "lien": "https://www.openproject.org/",
+      "description": "Logiciel libre non canadien de gestion de projets permettant de planifier les tâches, échéances, responsabilités et calendriers, avec notamment des diagrammes de Gantt. Sa version communautaire auto-hébergeable permet de conserver les données sur une infrastructure choisie.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "élevée"
+    },
+    {
+      "categorie": "Gestion de projets et des tâches",
+      "icone": "📋",
+      "nom": "Taiga",
+      "score": 2,
+      "lien": "https://taiga.io/",
+      "description": "Logiciel libre de gestion de projets collaboratifs basé sur les méthodes agiles, proposant des tableaux Kanban, des tâches, des cycles de travail et un suivi de l'avancement. Il n'est pas canadien mais peut être auto-hébergé.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "élevée"
+    },
+    {
+      "categorie": "Gestion de projets et des tâches",
+      "icone": "📋",
+      "nom": "Vikunja",
+      "score": 2,
+      "lien": "https://vikunja.io/",
+      "description": "Logiciel libre non canadien mais auto-hébergeable de gestion des tâches et projets offrant des listes, tableaux Kanban, échéances et vues chronologiques. Adapté au travail individuel ou en équipe.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "élevée"
+    },
+    {
+      "categorie": "Gestion de la relation, des membres et CRM",
+      "icone": "👥",
+      "nom": "Member365",
+      "score": 2,
+      "lien": "https://member365.com/",
+      "description": "Outil canadien de gestion des membres conçu pour les associations et OBNL. Centralise adhésions, renouvellements, paiements, événements, communications et dossiers des membres et offre un portail libre-service ainsi que des outils de suivi et de rapport.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "controle"
+      ],
+      "confiance": "faible"
+    },
+    {
+      "categorie": "Gestion de la relation, des membres et CRM",
+      "icone": "👥",
+      "nom": "CiviCRM",
+      "score": 2,
+      "lien": "https://civicrm.org/",
+      "description": "Logiciel libre non canadien destiné aux associations et OBNL pour gérer leurs membres, donateurs, contacts, événements et communications. Il s'intègre à plusieurs systèmes de gestion de sites Web et peut être auto-hébergé.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "élevée"
+    },
+    {
+      "categorie": "Gestion d’événements et billetterie",
+      "icone": "🎟️",
+      "nom": "Le point de vente",
+      "score": 2,
+      "lien": "http://www.lepointdevente.com/",
+      "description": "Solution québécoise de billetterie et de gestion d’événements permettant de vendre et valider des billets, gérer les inscriptions et les ventes, analyser les données de clientèle et intégrer la billetterie au site Web de l’organisateur.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "controle"
+      ],
+      "confiance": "moyenne"
+    },
+    {
+      "categorie": "Gestion d’événements et billetterie",
+      "icone": "🎟️",
+      "nom": "Mobilizon",
+      "score": 2,
+      "lien": "https://mobilizon.org/",
+      "description": "Outil non canadien de gestion d’événements et de groupes permettant de publier des activités, créer des pages communautaires et mobiliser des participants. Son fonctionnement fédéré permet à différentes instances indépendantes de communiquer entre elles.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "élevée"
+    },
+    {
+      "categorie": "Gestion documentaire et signature électronique",
+      "icone": "📁",
+      "nom": "eZsign",
+      "score": 2,
+      "lien": "https://www.ezsign.com/fr/",
+      "description": "Solution québécoise de signature électronique permettant de faire signer contrats, ententes et autres documents à distance, de suivre leur progression et de conserver une piste d’audit. Offre des intégrations et des fonctions d’automatisation pour les organisations. Les OBNL admissibles, notamment ceux œuvrant en arts et culture, bénéficient d'un rabais de 50 %.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "controle"
+      ],
+      "confiance": "moyenne"
+    },
+    {
+      "categorie": "Gestion documentaire et signature électronique",
+      "icone": "📁",
+      "nom": "Paperless-ngx",
+      "score": 2,
+      "lien": "https://docs.paperless-ngx.com/",
+      "description": "Disponible uniquement en anglais, ce logiciel libre permet de numériser, classer, indexer et retrouver facilement des documents grâce à la reconnaissance optique de caractères (OCR). Il n'est pas canadien mais auto-hébergeable.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "élevée"
+    },
+    {
+      "categorie": "Gestion documentaire et signature électronique",
+      "icone": "📁",
+      "nom": "DocuSeal",
+      "score": 2,
+      "lien": "https://www.docuseal.com/fr",
+      "description": "Plateforme libre de signature électronique permettant de préparer, envoyer, remplir et signer des documents numériques, avec gestion de plusieurs signataires. Non canadienne, elle propose une édition auto-hébergeable.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "élevée"
+    },
+    {
+      "categorie": "Marketing par courriel",
+      "icone": "📣",
+      "nom": "Envoke",
+      "score": 3,
+      "lien": "https://envoke.com/",
+      "description": "Outil canadien d’envoi d’infolettres et de communications destiné notamment aux associations et organismes publics. Permet de gérer les contacts, abonnements et consentements, créer des courriels et formulaires.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "controle",
+        "dependance"
+      ],
+      "confiance": "élevée"
+    },
+    {
+      "categorie": "Marketing par courriel",
+      "icone": "📣",
+      "nom": "Cyberimpact",
+      "score": 2,
+      "lien": "http://www.cyberimpact.com/",
+      "description": "Outil québécois de marketing par courriel permettant de créer et envoyer des infolettres, gérer les contacts et consentements, automatiser des campagnes et analyser leurs résultats.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "controle"
+      ],
+      "confiance": "moyenne"
+    },
+    {
+      "categorie": "Marketing par courriel",
+      "icone": "📣",
+      "nom": "Dialogue Insight",
+      "score": 2,
+      "lien": "https://www.dialoginsight.com/",
+      "description": "Solution québécoise de marketing relationnel permettant de gérer les contacts, envoyer des courriels et communications multicanales, automatiser des campagnes, personnaliser les messages et analyser les comportements afin d’améliorer l’engagement des publics.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "controle"
+      ],
+      "confiance": "moyenne"
+    },
+    {
+      "categorie": "Marketing par courriel",
+      "icone": "📣",
+      "nom": "Cakemail",
+      "score": 2,
+      "lien": "https://www.cakemail.ca/",
+      "description": "Outil québécois de marketing par courriel permettant de créer des infolettres, gérer des listes de contacts, automatiser des campagnes et suivre leurs résultats. Propose aussi l’envoi de courriels transactionnels par API ou SMTP.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "controle"
+      ],
+      "confiance": "moyenne"
+    },
+    {
+      "categorie": "Messagerie électronique",
+      "icone": "✉️",
+      "nom": "Thunderbird",
+      "score": 2,
+      "lien": "https://www.thunderbird.net/fr",
+      "description": "Client de messagerie permettant de gérer courriels, calendriers et contacts depuis une application de bureau ou mobile. Avec ce logiciel non canadien, les messages restent chez le fournisseur de courriel choisi et peuvent aussi être conservés localement sur l’appareil.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "élevée"
+    },
+    {
+      "categorie": "Navigation Web",
+      "icone": "🧭",
+      "nom": "Firefox",
+      "score": 2,
+      "lien": "https://www.firefox.com/fr",
+      "description": "Navigateur Internet non canadien axé sur la protection de la vie privée permettant de consulter des sites, gérer onglets, favoris et mots de passe, traduire des pages et limiter le pistage. Les données de navigation peuvent rester entièrement sur l’appareil.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "élevée"
+    },
+    {
+      "categorie": "Ressources humaines et gestion du temps",
+      "icone": "⏱️",
+      "nom": "Feuille de temps",
+      "score": 2,
+      "lien": "https://feuilledetemps.ca/",
+      "description": "Outil canadien de gestion des feuilles de temps conçu avec des OSBL. Centralise les heures de travail, vacances, congés et heures supplémentaires, suit le temps par projet et produit des rapports pour la paie et les redditions de comptes.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "controle"
+      ],
+      "confiance": "moyenne"
+    },
+    {
+      "categorie": "Ressources humaines et gestion du temps",
+      "icone": "⏱️",
+      "nom": "Folks HR",
+      "score": 2,
+      "lien": "https://folksrh.com/",
+      "description": "Solution RH conçue au Québec permettant de centraliser les dossiers employés, gérer vacances, absences et temps supplémentaire, automatiser l’intégration, suivre les évaluations de rendement et produire des rapports pour faciliter la gestion quotidienne des équipes.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "controle"
+      ],
+      "confiance": "moyenne"
+    },
+    {
+      "categorie": "Sécurité et gestion des accès",
+      "icone": "🔐",
+      "nom": "CIRA Canadian Shield / Bouclier canadien",
+      "score": 2,
+      "lien": "https://www.cira.ca/fr/canadian-shield/",
+      "description": "Service DNS canadien et gratuit qui protège la navigation en bloquant des domaines associés à l’hameçonnage, aux logiciels malveillants et aux escroqueries. Peut protéger les appareils d’un organisme grâce à une configuration DNS ou aux applications de CIRA.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "controle"
+      ],
+      "confiance": "moyenne"
+    },
+    {
+      "categorie": "Sécurité et gestion des accès",
+      "icone": "🔐",
+      "nom": "1Password",
+      "score": 2,
+      "lien": "https://1password.com/fr/",
+      "description": "Gestionnaire canadien de mots de passe pour individus et équipes permettant de stocker et partager identifiants, clés d’accès et autres secrets dans des coffres chiffrés, de générer des mots de passe et de gérer les accès aux comptes de l’organisation.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "controle"
+      ],
+      "confiance": "moyenne"
+    },
+    {
+      "categorie": "Sécurité et gestion des accès",
+      "icone": "🔐",
+      "nom": "Bitwarden",
+      "score": 2,
+      "lien": "https://bitwarden.com/",
+      "description": "Gestionnaire de mots de passe non canadien libre permettant de stocker, générer et partager mots de passe, clés d’accès et informations sensibles dans un coffre chiffré. Disponible dans le nuage ou en auto-hébergement sur l’infrastructure de son choix.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "élevée"
+    },
+    {
+      "categorie": "Sécurité et gestion des accès",
+      "icone": "🔐",
+      "nom": "Vaultwarden",
+      "score": 2,
+      "lien": "https://github.com/dani-garcia/vaultwarden",
+      "description": "Gestionnaire de mots de passe libre et léger, compatible avec les applications Bitwarden (voir ci-dessus). Non canadien, il permet de stocker et partager mots de passe et autres informations sensibles sur un serveur contrôlé par l’organisation.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "élevée"
+    },
+    {
+      "categorie": "Sécurité et gestion des accès",
+      "icone": "🔐",
+      "nom": "2FAS Auth",
+      "score": 2,
+      "lien": "https://2fas.com/auth/",
+      "description": "Application d’authentification à deux facteurs non canadienne qui génère localement des codes temporaires pour sécuriser les connexions aux comptes en ligne. Fonctionne hors ligne, sans compte utilisateur, avec sauvegarde facultative chiffrée dans iCloud ou Google Drive.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "élevée"
+    },
+    {
+      "categorie": "Sécurité et gestion des accès",
+      "icone": "🔐",
+      "nom": "2FAS Pass",
+      "score": 2,
+      "lien": "https://2fas.com/pass/",
+      "description": "Disponible uniquement en anglais, ce gestionnaire de mots de passe non canadien « local-first » stocke le coffre chiffré sur l’appareil. La synchronisation est facultative et peut passer par une infrastructure auto-hébergée, sans compte utilisateur obligatoire.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "élevée"
+    },
+    {
+      "categorie": "Stockage, infonuagique et sauvegarde",
+      "icone": "☁️",
+      "nom": "Micrologic",
+      "score": 3,
+      "lien": "http://www.micrologic.ca/",
+      "description": "Fournisseur québécois de services infonuagiques et d’infrastructures technologiques. Son environnement Cirrus permet d’héberger applications et données au Canada, avec des services de sécurité, de sauvegarde, de continuité et d’accompagnement.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "controle",
+        "dependance"
+      ],
+      "confiance": "élevée"
+    },
+    {
+      "categorie": "Stockage, infonuagique et sauvegarde",
+      "icone": "☁️",
+      "nom": "TitanFile",
+      "score": 3,
+      "lien": "https://www.titanfile.com/",
+      "description": "Outil canadien sécurisé de partage de fichiers et de communications permettant d’échanger des documents sensibles avec des partenaires externes, organiser les échanges par dossiers et projets et suivre les accès et téléchargements.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "controle",
+        "dependance"
+      ],
+      "confiance": "élevée"
+    },
+    {
+      "categorie": "Stockage, infonuagique et sauvegarde",
+      "icone": "☁️",
+      "nom": "La Réserve",
+      "score": 2,
+      "lien": "https://sylvea.ca/solutions-resilientes/",
+      "description": "Service canadien de sauvegarde automatisée des données de Google Workspace et Microsoft 365, permettant de conserver des copies chiffrées au Canada et de récupérer des documents perdus ou supprimés. Il renforce la maîtrise des sauvegardes sans supprimer la dépendance aux plateformes d'origine.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "controle"
+      ],
+      "confiance": "élevée"
+    },
+    {
+      "categorie": "Stockage, infonuagique et sauvegarde",
+      "icone": "☁️",
+      "nom": "Nextcloud",
+      "score": 2,
+      "lien": "https://nextcloud.com/",
+      "description": "Suite collaborative non canadienne permettant de stocker et partager des fichiers, gérer calendriers, contacts et tâches, communiquer en équipe et collaborer sur des documents grâce à des suites bureautiques intégrées. Peut être auto-hébergée sur l’infrastructure choisie.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "élevée"
+    },
+    {
+      "categorie": "Stockage, infonuagique et sauvegarde",
+      "icone": "☁️",
+      "nom": "Sync.com",
+      "score": 2,
+      "lien": "https://www.sync.com/",
+      "description": "Disponible uniquement en anglais, ce service canadien de stockage infonuagique permet de sauvegarder, synchroniser et partager des fichiers en toute sécurité. Propose le chiffrement de bout en bout, la récupération de fichiers supprimés et des espaces collaboratifs pour les équipes.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "controle"
+      ],
+      "confiance": "faible"
+    },
+    {
+      "categorie": "Transcription et assistance aux réunions",
+      "icone": "🎙️",
+      "nom": "Manni",
+      "score": 2,
+      "lien": "https://www.manni.app/fr/home",
+      "description": "Outil québécois de transcription de réunions par IA. Il enregistre les échanges sans ajouter de participant aux appels, génère automatiquement des comptes rendus et des plans d’action et permet de retrouver des informations dans les transcriptions.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "controle"
+      ],
+      "confiance": "moyenne"
+    },
+    {
+      "categorie": "Transcription et assistance aux réunions",
+      "icone": "🎙️",
+      "nom": "Fellow",
+      "score": 2,
+      "lien": "https://fellow.ai/",
+      "description": "Assistant de réunions conçu au Canada enregistre et transcrit les échanges, génère automatiquement notes, résumés et actions à suivre et centralise les comptes rendus. L'interface est en anglais mais le français est bien pris en charge par la reconnaissance vocale.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "controle"
+      ],
+      "confiance": "moyenne"
+    },
+    {
+      "categorie": "Transcription et assistance aux réunions",
+      "icone": "🎙️",
+      "nom": "Handy",
+      "score": 2,
+      "lien": "https://handy.computer/",
+      "description": "Outil non canadien, gratuit et libre de dictée vocale qui transcrit la parole directement dans n’importe quel champ de texte. La reconnaissance vocale s’effectue localement sur l’ordinateur, sans envoyer les enregistrements ou transcriptions dans le nuage. L'interface est en anglais mais le français est bien pris en charge par la reconnaissance vocale.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "élevée"
+    },
+    {
+      "categorie": "Veille et gestion de l’information",
+      "icone": "🔎",
+      "nom": "Obsidian",
+      "score": 3,
+      "lien": "https://obsidian.md/",
+      "description": "Outil canadien de prise de notes et d’organisation des connaissances permettant de relier documents, idées et ressources dans une base personnelle ou partagée. Les notes sont conservées sous forme de fichiers Markdown directement sur l’appareil.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "controle",
+        "dependance"
+      ],
+      "confiance": "élevée"
+    },
+    {
+      "categorie": "Veille et gestion de l’information",
+      "icone": "🔎",
+      "nom": "Miniflux",
+      "score": 2,
+      "lien": "https://miniflux.app/",
+      "description": "Lecteur de flux RSS non canadien, libre et minimaliste permettant de suivre l’actualité de plusieurs sites Web depuis une seule interface, d’organiser ses abonnements et de lire les articles sans publicité ni traçage. Disponible en auto-hébergement ou en service hébergé.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "élevée"
+    },
+    {
+      "categorie": "Veille et gestion de l’information",
+      "icone": "🔎",
+      "nom": "Wallabag",
+      "score": 2,
+      "lien": "https://wallabag.org/",
+      "description": "Outil non canadien libre permettant de sauvegarder des articles et des pages Web pour les lire plus tard, sans publicité ni distractions. Les contenus peuvent être classés, annotés et consultés sur différents appareils. Il peut être auto-hébergé pour conserver la maîtrise de ses archives.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "élevée"
+    }
+  ]
+}

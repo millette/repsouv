@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Met à jour outils.json depuis le répertoire en ligne.
 // Usage: nub update.ts [--dry-run] [--enrichir [--nouveaux-tags] [--sans-page] [--limite=N]] [outils.json] [url]
 //
@@ -22,14 +24,14 @@
 //   --sans-page     : enrichit quand même, à partir de la description seule; l'outil porte alors page_lue: false.
 //   --nouveaux-tags : le modèle peut proposer de nouveaux tags (justification obligatoire, ajoutés à tags.json).
 //   --limite=N      : n'enrichit pas plus de N outils par exécution.
-import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { classer, type OutilClasse } from "./classify.ts";
 import {
   aEnrichir, chargerCriteres, chargerTags, enrichirOutils, expliqueurOpenAI, generateurOpenAI, MODELE_PAR_DEFAUT, sauverTags,
 } from "./enrichir.ts";
 import { lancer } from "./cli.ts";
-import { CHAMPS_ENRICHIS, telechargerRepertoire, type Changement, type Outil } from "./extract.ts";
+import { ecrireFichier, type Lu } from "./fichiers.ts";
+import { CHAMPS_ENRICHIS, lireOutils, telechargerRepertoire, type Changement, type Outil } from "./extract.ts";
 import { createProgress } from "./progress.ts";
 
 const CHAMPS_COMPARES = ["categorie", "icone", "score", "lien", "description"] as const;
@@ -107,7 +109,9 @@ if (import.meta.main) {
     const [fichier = "outils.json", url] = args.filter((a) => !a.startsWith("--"));
 
     const { outils: page, modification } = await telechargerRepertoire(url);
-    const existants: OutilClasse[] = JSON.parse(readFileSync(fichier, "utf8"));
+    // Fichier de départ, puis dernier état écrit: les métadonnées (updated_at) sont maintenues par ecrireFichier.
+    let courant: Lu<OutilClasse> = lireOutils<OutilClasse>(fichier);
+    const existants = courant.donnees;
 
     const { outils, resume } = mettreAJour(existants, page, modification);
     const total = Object.values(resume).reduce((n, noms) => n + noms.length, 0);
@@ -115,8 +119,8 @@ if (import.meta.main) {
     for (const [type, noms] of Object.entries(resume)) {
       if (noms.length) console.log(`  ${type}: ${noms.join(", ")}`);
     }
-    if (total && !dryRun) {
-      writeFileSync(fichier, JSON.stringify(outils, null, 2));
+    if ((total || courant.aCorriger) && !dryRun) {
+      courant = ecrireFichier(fichier, "outils", outils, courant);
       console.log(`${fichier} mis à jour`);
     }
 
@@ -145,7 +149,7 @@ if (import.meta.main) {
           accepterSansPage: sansPage,
           ...(limite !== undefined && { limite }),
           apresChaque: (os, ts) => {
-            writeFileSync(fichier, JSON.stringify(os, null, 2));
+            courant = ecrireFichier(fichier, "outils", os as OutilClasse[], courant);
             if (ts.length !== nbTags) sauverTags(fichierTags, ts);
           },
           // En terminal, le nom de l'outil en cours s'affiche sur la barre; sinon, sur une ligne de journal.
