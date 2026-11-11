@@ -24,11 +24,11 @@ Ce qui vient d'où :
 - **De la source :** la catégorie, le nom, le score, le lien et la description de chaque outil, ainsi que les trois critères.
 - **Calculé par les scripts :** `derniere_modification`, `changement` et `removed` (voir `update.ts`).
 - **Déduit par heuristique dans ce dépôt :** `criteres` et `confiance` (voir [Classification](#classification)).
-- **Généré par un modèle d'IA :** les champs d'enrichissement (voir [Enrichissement](#enrichissement-par-ia)). Ils sont à vérifier avant de s'y fier, surtout la licence et le dépôt.
+- **Généré par un modèle d'IA :** les champs d'enrichissement (voir [Enrichissement](#enrichissement-par-ia)). Ils résument des pages tierces et sont à vérifier avant de s'y fier ou de les diffuser, surtout la licence et le dépôt.
 
 ## Démarrage
 
-Prérequis : [nub](https://nubjs.com/), qui exécute le TypeScript directement. Les commandes `nub run` sont définies dans `package.json`.
+Prérequis : [nub](https://nubjs.com/), qui exécute le TypeScript directement, et un accès au réseau (`extract`, `update` et l'enrichissement téléchargent des pages en ligne). Les commandes `nub run` sont définies dans `package.json`.
 
 ```sh
 nub install                      # installe les dépendances
@@ -128,6 +128,8 @@ nub extract.ts [--force] <outils.json> [criteres.json] [url]
 
 Télécharge la page en ligne (`[url]`, par défaut celle du répertoire) et écrit les outils et, si demandé, les critères. Utilise [linkedom](https://github.com/WebReflection/linkedom) pour interroger le DOM. Lit la date de modification affichée sur la page; refuse une page sans date ou contenant deux outils de même nom. Un échec de téléchargement (réseau, erreur HTTP) n'écrit rien.
 
+Si `criteres.json` est donné, il est réécrit lui aussi, sans protection : il ne dépend que de la page.
+
 Les outils sont écrits **sans** classification ni enrichissement, et le fichier de sortie est **entièrement remplacé**. Sans `--force`, le script refuse d'écraser un `outils.json` qui contient des champs d'enrichissement ou un historique de changement (`changement`, `removed`). Voir [Importer ou réimporter depuis le web](#importer-ou-réimporter-depuis-le-web).
 
 ### `classify.ts`
@@ -144,7 +146,7 @@ Ajoute `criteres` et `confiance` à chaque outil (réécrit `outils.json` en pla
 nub update.ts [--dry-run] [--enrichir [--nouveaux-tags] [--limite=N]] [outils.json] [url]
 ```
 
-Télécharge la page en ligne (`[url]`, par défaut celle du répertoire; le même téléchargement qu'`extract.ts`), la compare à `outils.json` (par défaut `./outils.json`) et met le fichier à jour. `--dry-run` affiche les changements sans écrire. Pour chaque outil :
+Télécharge la page en ligne (`[url]`, par défaut celle du répertoire; le même téléchargement qu'`extract.ts`), la compare à `outils.json` (par défaut `./outils.json`, qui doit exister : pour un premier import, utiliser `nub run build`) et met le fichier à jour. `--dry-run` affiche les changements sans écrire. Pour chaque outil :
 
 - absent du fichier : `changement: "nouveau"`;
 - marqué `removed` et de retour sur la page : `"comeback"`, et `removed` disparaît;
@@ -175,7 +177,7 @@ Barre de progression minimale sur une ligne, sans dépendance : `createProgress(
 
 ### `cli.ts`
 
-`lancer(principal)` exécute le corps d'un script en ligne de commande : une erreur s'affiche en un message clair (`Erreur: …`), sans trace de pile, et donne le code de sortie 1. Utilisé par `extract.ts`, `classify.ts` et `update.ts`.
+`lancer(principal)` exécute le corps d'un script en ligne de commande : toute erreur (option invalide, fichier manquant, réseau, erreur HTTP) s'affiche en un message clair (`Erreur: …`), sans trace de pile, et donne le code de sortie 1. Utilisé par `extract.ts`, `classify.ts` et `update.ts`.
 
 ### `ids.ts`
 
@@ -189,11 +191,13 @@ La page ne dit pas quelle étoile correspond à quel critère. `classify.ts` le 
 2. Le `score` connu fixe le nombre de critères satisfaits : 3 étoiles = les trois critères; 2 = on écarte celui dont l'indice est le plus faible.
 3. `confiance` reflète l'écart entre le dernier critère retenu et le premier écarté.
 
+Pour une description sans score connu, la fonction exportée `classer(description)` retient les critères dont l'indice atteint un seuil, et la confiance est `"indéterminée"`.
+
 C'est une heuristique, pas une vérité : un critère retenu avec une confiance « faible » ou « moyenne » est une hypothèse (par exemple, un fournisseur canadien à 2 étoiles est supposé héberger au Canada). L'enrichissement fournit un second avis indépendant (`evaluation_enrichie`) pour repérer les cas douteux.
 
 ## Enrichissement par IA
 
-`update.ts --enrichir` génère, **une seule fois** par outil, les champs décrits plus haut : description longue, tags, `source`, `licence` (ou `custom_license`), `repo` et `evaluation_enrichie`. Un outil qui a déjà une `description_longue` n'est jamais régénéré, même si sa description courte change. Les outils retirés sont ignorés.
+`update.ts --enrichir` génère, **une seule fois** par outil, les champs décrits plus haut : description longue, tags, `source`, `licence` (ou `custom_license`), `repo` et `evaluation_enrichie`. Un outil qui a déjà une `description_longue` n'est jamais régénéré, même si sa description courte change. Les outils retirés sont ignorés. L'enrichissement s'exécute aussi quand la page n'a pas changé. Quand tous les outils sont déjà enrichis, aucun appel n'est fait et la clé n'est pas nécessaire.
 
 | Option | Effet |
 |---|---|
@@ -204,7 +208,7 @@ C'est une heuristique, pas une vérité : un critère retenu avec une confiance 
 
 **Configuration :** `OPENAI_API_KEY` dans `.env` (voir `.env.example`), et `OPENAI_MODEL` pour changer le modèle (`gpt-6-astra` par défaut). Compter environ 20 secondes par outil (mesuré sur quelques outils).
 
-**Confidentialité :** pour chaque outil, le script télécharge la page publique (`lien`), en extrait le texte et les liens vers des forges de code, puis envoie à l'API OpenAI (Responses API, sortie JSON structurée) le nom, la catégorie, le lien, la description et cet extrait. Quand l'évaluation diffère du répertoire, le second appel y ajoute les deux évaluations. Les tags sont limités au vocabulaire de `tags.json`.
+**Confidentialité :** pour chaque outil, le script télécharge la page publique (`lien`), en extrait le texte et les liens vers des forges de code, puis envoie à l'API OpenAI (Responses API, sortie JSON structurée) le nom, la catégorie, le lien, la description et cet extrait. Quand l'évaluation diffère du répertoire, le second appel y ajoute les deux évaluations. Les tags sont limités au vocabulaire de `tags.json`. Si la page de l'outil est inaccessible, l'enrichissement se fait quand même à partir de la description seule et des connaissances du modèle, donc avec moins de fiabilité.
 
 **Validation :** chaque réponse est vérifiée avant d'être écrite :
 
@@ -278,4 +282,15 @@ Dans `test/`, avec `node:test` lancé par `nub` :
 
 ## Utiliser les données
 
-Pour obtenir le répertoire courant, ignorer les outils portant `removed`. Pour les logiciels libres, filtrer sur `source` (`libre` ou `partiel`) et utiliser `licence` (ou `custom_license`) et `repo`.
+Pour obtenir le répertoire courant, ignorer les outils portant `removed`. Pour les logiciels libres, filtrer sur `source` (`libre` ou `partiel`) et utiliser `licence` (ou `custom_license`) et `repo`. Par exemple, avec [jaq](https://github.com/01mf02/jaq) :
+
+```sh
+# outils actuellement au répertoire
+jaq '[.[] | select(.removed | not)]' outils.json
+
+# logiciels libres enrichis, avec leur licence et leur dépôt
+jaq '.[] | select(.source == "libre" or .source == "partiel") | {nom, licence, custom_license, repo}' outils.json
+
+# outils portant un tag
+jaq '.[] | select((.tags // []) | index("chiffrement")) | .nom' outils.json
+```
