@@ -46,6 +46,7 @@ Les champs d'enrichissement résument des pages tierces (voir [D'où viennent le
 
 - **De la source :** la catégorie, le nom, le score, le lien et la description de chaque outil, ainsi que les trois critères.
 - **Rédigé pour ce dépôt :** le vocabulaire de `tags.json` (identifiants et descriptions des 37 tags de départ).
+- **Calculé et généré par les scripts :** `sommaire.md` et `graphiques/` (statistiques calculées à partir des données, plus un résumé rédigé par un modèle d'IA).
 - **Calculé par les scripts :** `meta` (licence et dates des fichiers), `derniere_modification`, `changement`, `removed` et `enrichi_le` (voir `update.ts`, `enrichir.ts` et `fichiers.ts`).
 - **Déduit par heuristique dans ce dépôt :** `criteres` et `confiance` (voir [Classification](#classification)).
 - **Généré par un modèle d'IA :** les champs d'enrichissement (voir [Enrichissement](#enrichissement-par-ia)). Ils résument des pages tierces et sont à vérifier avant de s'y fier ou de les diffuser, surtout la licence et le dépôt.
@@ -90,7 +91,7 @@ Sommaire         outils.json ──▶ sommaire.ts ──▶ sommaire.md + graph
 | `.env.example` | Modèle du fichier `.env` (la clé OpenAI) |
 | `LICENSE` | Texte de la licence AGPL-3.0 du code |
 | `LICENSE-CC-BY-SA-4.0` | Texte de la licence CC BY-SA 4.0 des données (voir [Licences](#licences)) |
-| `.gitignore` | Ignore `.env`, `node_modules/` et `pre-enrichir-outils.json` (copie de sauvegarde, voir [Enrichissement par IA](#enrichissement-par-ia)) |
+| `.gitignore` | Ignore `.env`, `node_modules/`, le dossier local `.claude` et des copies de sauvegarde (`pre-enrichir-outils.json`, voir [Enrichissement par IA](#enrichissement-par-ia), et `orig-sommaire.md`) |
 
 ## Fichiers JSON
 
@@ -173,7 +174,7 @@ De nouveaux tags peuvent s'ajouter après cette première phase, avec `--enrichi
 
 ## Scripts
 
-Les trois scripts (`extract.ts`, `classify.ts` et `update.ts`) se lancent avec `nub`; les autres fichiers sont des modules, utilisés par les scripts et par les tests. Tout est en TypeScript. Les fonctions principales sont exportées pour être réutilisables; le code de ligne de commande ne s'exécute que lorsque le script est lancé directement.
+Les quatre scripts (`extract.ts`, `classify.ts`, `update.ts` et `sommaire.ts`) se lancent avec `nub`; les autres fichiers sont des modules, utilisés par les scripts et par les tests. Tout est en TypeScript. Les fonctions principales sont exportées pour être réutilisables; le code de ligne de commande ne s'exécute que lorsque le script est lancé directement.
 
 ### `extract.ts`
 
@@ -232,7 +233,7 @@ Le résumé (stdout) et le journal avec la barre de progression (stderr) sont co
 nub sommaire.ts [--sans-resume] [--sans-graphiques] [outils.json] [sommaire.md]
 ```
 
-Écrit `sommaire.md` et le dossier `graphiques/` (par défaut dans le dossier de `outils.json`) : voir [Sommaire statistique](#sommaire-statistique).
+Écrit `sommaire.md` (par défaut dans le dossier de `outils.json`) et, à côté, le dossier `graphiques/` : voir [Sommaire statistique](#sommaire-statistique).
 
 ### `enrichir.ts`
 
@@ -273,7 +274,7 @@ Couleurs ANSI sans dépendance : `couleursActives(flux, env, sansCouleur)` déci
 
 ### `cli.ts`
 
-`lancer(principal)` exécute le corps d'un script en ligne de commande : toute erreur (option invalide, fichier manquant, réseau, erreur HTTP) s'affiche en un message clair (`Erreur: …`, en rouge dans un terminal), sans trace de pile, et donne le code de sortie 1. Utilisé par `extract.ts`, `classify.ts` et `update.ts`.
+`lancer(principal)` exécute le corps d'un script en ligne de commande : toute erreur (option invalide, fichier manquant, réseau, erreur HTTP) s'affiche en un message clair (`Erreur: …`, en rouge dans un terminal), sans trace de pile, et donne le code de sortie 1. Utilisé par `extract.ts`, `classify.ts`, `update.ts` et `sommaire.ts`.
 
 ### `ids.ts`
 
@@ -368,7 +369,7 @@ Le calcul est local; seul le résumé passe par le réseau. Pour le rédiger, le
 | Option | Effet |
 |---|---|
 | `--sans-resume` | Omet le résumé : aucun appel à l'API, aucune clé nécessaire |
-| `--sans-graphiques` | Omet les graphiques : vl-convert n'est pas nécessaire |
+| `--sans-graphiques` | Omet les graphiques : vl-convert n'est pas nécessaire, et le dossier `graphiques/` n'est pas touché (il garde les images des exécutions précédentes, que le nouveau sommaire n'insère pas) |
 
 ### Graphiques
 
@@ -387,7 +388,7 @@ Les graphiques sont des spécifications Vega-Lite construites à partir des stat
 
 Un graphique sans données est omis (par exemple, sans outil enrichi, ni licences, ni forges, ni tags), et les fichiers d'un graphique qui n'est plus produit sont supprimés du dossier (les autres fichiers y restent). Chaque image du sommaire a un texte alternatif qui résume son contenu. Les graphiques ne contiennent que des statistiques déjà publiées dans le sommaire; aucune donnée ne quitte l'ordinateur pour les produire.
 
-**Installer vl-convert** : `cargo install vl-convert`, ou télécharger un binaire sur la [page des versions](https://github.com/vega/vl-convert/releases). Le programme doit être dans le `PATH`. Le script vérifie sa présence au début, avant tout appel à l'API, et propose `--sans-graphiques` s'il est absent. Les spécifications visent Vega-Lite 6.1, la version de `vl-convert` 1.9.
+**Installer vl-convert** : `cargo install vl-convert`, ou télécharger un binaire sur la [page des versions](https://github.com/vega/vl-convert/releases). Le programme doit être dans le `PATH`. Le script vérifie sa présence au début, avant tout appel à l'API, et propose `--sans-graphiques` s'il est absent. Les spécifications visent Vega-Lite 6.1, la version la plus récente que gère `vl-convert` 1.9.
 
 Le dépôt contient un `sommaire.md` déjà généré ([le consulter](sommaire.md)); il reflète l'état des données au moment où il a été produit, et son introduction donne la date de génération. Le résumé rédigé par l'IA est différent à chaque exécution : régénérer le sommaire en change le texte, même si les données n'ont pas bougé.
 
