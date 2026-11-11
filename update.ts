@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Met à jour outils.json depuis le répertoire en ligne.
-// Usage: nub update.ts [--dry-run] [--sans-couleur] [--enrichir [--nouveaux-tags] [--sans-page] [--limite=N]] [outils.json] [url]
+// Usage: nub update.ts [--dry-run] [--sans-couleur] [--enrichir [--nouveaux-tags] [--sans-page] [--sans-sommaire] [--limite=N]] [outils.json] [url]
 //
 // Pour chaque outil, selon la comparaison avec la page en ligne:
 //   - absent du fichier → changement "nouveau"
@@ -25,6 +25,12 @@
 //   --nouveaux-tags : le modèle peut proposer de nouveaux tags (justification obligatoire, ajoutés à tags.json).
 //   --limite=N      : n'enrichit pas plus de N outils par exécution.
 //
+// Sommaire: avec --enrichir (hors --dry-run), le sommaire (sommaire.md et graphiques/, voir sommaire.ts) est
+// mis à jour automatiquement à la fin, mais SEULEMENT si quelque chose a changé (un outil nouveau, modifié ou
+// retiré, ou au moins un outil enrichi). Il faut pour cela la clé OPENAI_API_KEY et vl-convert; s'ils manquent,
+// un avertissement le dit et le sommaire existant reste tel quel. Si le résumé ne peut pas être rédigé, le sommaire
+// existant est aussi conservé (code de sortie 1). --sans-sommaire désactive cette mise à jour.
+//
 // Couleurs (terminal seulement): résumé sur stdout, journal et barre sur stderr; chaque flux est coloré
 // s'il est un terminal. NO_COLOR ou --sans-couleur les désactive, FORCE_COLOR les impose. Hors terminal,
 // le texte est identique, sans aucun code de couleur.
@@ -38,7 +44,9 @@ import {
 import { lancer } from "./cli.ts";
 import { ecrireFichier, lireFichier, type Lu } from "./fichiers.ts";
 import { CHAMPS_ENRICHIS, telechargerRepertoire, type Changement, type Outil } from "./extract.ts";
+import { verifierVlConvert } from "./graphiques.ts";
 import { createProgress } from "./progress.ts";
+import { genererSommaire } from "./sommaire.ts";
 
 const CHAMPS_COMPARES = ["categorie", "icone", "score", "lien", "description"] as const;
 
@@ -98,6 +106,27 @@ export function mettreAJour(
   return { outils, resume };
 }
 
+// ---------- sommaire automatique ----------
+
+/** Le sommaire est mis à jour avec --enrichir, hors simulation et sans --sans-sommaire, et seulement si quelque chose a changé. */
+export function sommaireNecessaire(o: { enrichir: boolean; dryRun: boolean; changements: number; enrichis: number; sansSommaire?: boolean }): boolean {
+  return o.enrichir && !o.dryRun && !o.sansSommaire && (o.changements > 0 || o.enrichis > 0);
+}
+
+/**
+ * Pourquoi on ne peut pas mettre le sommaire à jour (clé API absente, vl-convert introuvable), ou null s'il
+ * le peut. Dans ce cas, on le saute plutôt que d'écraser un bon sommaire par un sommaire amputé.
+ */
+export function raisonDeSauterSommaire(cle: string | undefined, verifierVl: () => unknown): string | null {
+  if (!cle) return "OPENAI_API_KEY absente, nécessaire pour rédiger le résumé";
+  try {
+    verifierVl();
+  } catch (e) {
+    return (e as Error).message;
+  }
+  return null;
+}
+
 // ---------- présentation (couleurs) ----------
 
 /** Les lignes du résumé de la synchronisation: la date de la page, le nombre de changements, puis chaque type. */
@@ -135,13 +164,14 @@ if (import.meta.main) {
     const enrichir = args.includes("--enrichir");
     const nouveauxTags = args.includes("--nouveaux-tags");
     const sansPage = args.includes("--sans-page");
+    const sansSommaire = args.includes("--sans-sommaire");
     const limiteArg = args.find((a) => a.startsWith("--limite="));
     const limite = limiteArg ? Number(limiteArg.slice("--limite=".length)) : undefined;
     const sansCouleur = args.includes("--sans-couleur");
-    const connues = ["--dry-run", "--sans-couleur", "--enrichir", "--nouveaux-tags", "--sans-page", "--limite"];
+    const connues = ["--dry-run", "--sans-couleur", "--enrichir", "--nouveaux-tags", "--sans-page", "--sans-sommaire", "--limite"];
     const inconnue = args.find((a) => a.startsWith("--") && !connues.some((o) => a === o || a.startsWith(`${o}=`)));
     if (inconnue) throw new Error(`Option inconnue: ${inconnue}`);
-    if ((nouveauxTags || sansPage) && !enrichir) throw new Error("--nouveaux-tags et --sans-page nécessitent --enrichir");
+    if ((nouveauxTags || sansPage || sansSommaire) && !enrichir) throw new Error("--nouveaux-tags, --sans-page et --sans-sommaire nécessitent --enrichir");
     if (limite !== undefined && !(Number.isInteger(limite) && limite > 0)) throw new Error("--limite=N: entier positif attendu");
     const [fichier = "outils.json", url] = args.filter((a) => !a.startsWith("--"));
 
@@ -154,6 +184,7 @@ if (import.meta.main) {
     let courant: Lu<OutilClasse> = lireFichier<OutilClasse>(fichier, "outils");
     const existants = courant.donnees;
 
+    let nbEnrichis = 0;
     const { outils, resume } = mettreAJour(existants, page, modification);
     const total = Object.values(resume).reduce((n, noms) => n + noms.length, 0);
     for (const ligne of lignesResume(resume, modification, sortie)) console.log(ligne);
@@ -201,6 +232,7 @@ if (import.meta.main) {
           journal: (message, niveau = "info") => progression.message(ligneJournal(message, niveau, suivi)),
         });
         progression.end();
+        nbEnrichis = resultat.enrichis.length;
         const enrichis = resultat.enrichis.length ? sortie.gras(sortie.vert(String(resultat.enrichis.length))) : "0";
         const echecs = resultat.erreurs.length ? sortie.gras(sortie.rouge(String(resultat.erreurs.length))) : sortie.vert("0");
         console.log(`Enrichis: ${enrichis}; échecs: ${echecs}`);
@@ -208,6 +240,35 @@ if (import.meta.main) {
         if (resultat.sansPage.length) console.log(`${sortie.jaune("Enrichis sans page lisible (page_lue: false)")}: ${resultat.sansPage.join(", ")}`);
         if (tags.length > nbTags) console.log(`${sortie.cyan("Nouveaux tags")}: ${tags.slice(nbTags).map((t) => t.id).join(", ")}`);
         if (resultat.erreurs.length) process.exitCode = 1;
+      }
+    }
+
+    if (enrichir && !dryRun && sansSommaire && (total > 0 || nbEnrichis > 0)) {
+      console.error(suivi.attenue("Sommaire non mis à jour (--sans-sommaire); lancer `nub run sommaire` pour le mettre à jour."));
+    }
+    if (sommaireNecessaire({ enrichir, dryRun, changements: total, enrichis: nbEnrichis, sansSommaire })) {
+      const raison = raisonDeSauterSommaire(process.env.OPENAI_API_KEY, verifierVlConvert);
+      if (raison) {
+        console.error(suivi.jaune(`Sommaire non mis à jour: ${raison}. Le sommaire existant est conservé; relancer \`nub run sommaire\` ensuite.`));
+      } else {
+        console.error(suivi.attenue("Mise à jour du sommaire..."));
+        try {
+          const r = await genererSommaire({
+            source: fichier,
+            cle: process.env.OPENAI_API_KEY,
+            modele: process.env.OPENAI_MODEL || undefined,
+            conserverSiEchec: true,
+            journal: (message) => console.error(suivi.jaune(message)),
+          });
+          if (r.ecrit) console.log(`${sortie.vert(r.destination)} mis à jour (${r.graphiques} graphique(s))`);
+          else {
+            console.error(suivi.rouge(`Sommaire non mis à jour, le résumé n'a pas pu être rédigé: ${r.erreur}`));
+            process.exitCode = 1;
+          }
+        } catch (e) {
+          console.error(suivi.rouge(`Sommaire non mis à jour: ${(e as Error).message}`));
+          process.exitCode = 1;
+        }
       }
     }
   });

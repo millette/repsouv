@@ -2,10 +2,14 @@
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Ces tests n'utilisent que des données fictives: ni outils.json, ni réseau, ni ligne de commande.
 import assert from "node:assert/strict";
+import { existsSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { test } from "node:test";
 import { CRITERES, D0, D1, entree, enrichi, META, outil, OUTILS, sansDate, TAGS } from "./donnees-fictives.ts";
+import { ecrireFichier } from "../fichiers.ts";
 import {
-  calculerStatistiques, chargeResume, familleLicence, forgeDe, produireResume, rendreMarkdown, validerResume,
+  calculerStatistiques, chargeResume, familleLicence, forgeDe, genererSommaire, produireResume, rendreMarkdown, validerResume,
   type Entree, type GenerateurResume,
 } from "../sommaire.ts";
 
@@ -226,4 +230,89 @@ test("rendu: sans graphiques, aucune image; l'image précède son tableau", () =
   const avec = rendreMarkdown(calculerStatistiques(entree()), { genereLe: GENERE_LE, graphiques: [GRAPHIQUE("statut-code-source")] });
   assert.ok(avec.indexOf("statut-code-source.png") < avec.indexOf("| Statut | Outils |"));
   assert.doesNotMatch(avec, /undefined|NaN|\[object/);
+});
+
+// ---------- genererSommaire (avec un faux générateur et un faux convertisseur: ni réseau, ni vl-convert) ----------
+
+const PARAS = { paragraphes: [PARA, PARA, PARA] };
+const dossierDeDonnees = () => {
+  const d = mkdtempSync(join(tmpdir(), "sommaire-"));
+  ecrireFichier(join(d, "outils.json"), "outils", OUTILS, null, "2026-11-11T16:00:00-05:00");
+  ecrireFichier(join(d, "tags.json"), "tags", TAGS, null, "2026-11-11T16:00:00-05:00");
+  ecrireFichier(join(d, "criteres.json"), "criteres", CRITERES, null, "2026-11-11T16:00:00-05:00");
+  return d;
+};
+const fauxConvertir = (appels: string[]) => (_spec: unknown, svg: string, png: string) => {
+  appels.push(png);
+  writeFileSync(svg, "<svg/>");
+  writeFileSync(png, "png");
+};
+
+test("genererSommaire: écrit sommaire.md avec le résumé et les images, et graphiques/ à côté", async () => {
+  const d = dossierDeDonnees();
+  const converties: string[] = [];
+  const r = await genererSommaire({ source: join(d, "outils.json"), generer: async () => PARAS, convertir: fauxConvertir(converties), modele: "gpt-test" });
+  assert.equal(r.ecrit, true);
+  assert.equal(r.resume, "oui");
+  assert.equal(r.destination, join(d, "sommaire.md"));
+  const md = readFileSync(join(d, "sommaire.md"), "utf8");
+  assert.match(md, /## Résumé/);
+  assert.ok(md.includes(PARA));
+  assert.match(md, /gpt-test/);
+  assert.match(md, /!\[.*\]\(graphiques\/statut-code-source\.png\)/);
+  assert.equal(r.graphiques, converties.length);
+  assert.ok(existsSync(join(d, "graphiques", "statut-code-source.png")));
+});
+test("genererSommaire: sans résumé, le générateur n'est pas appelé; sans graphiques, le convertisseur non plus", async () => {
+  const d = dossierDeDonnees();
+  let generations = 0;
+  const converties: string[] = [];
+  const r = await genererSommaire({ source: join(d, "outils.json"), sansResume: true, sansGraphiques: true, generer: async () => (generations++, PARAS), convertir: fauxConvertir(converties) });
+  assert.equal(generations, 0);
+  assert.equal(converties.length, 0);
+  assert.equal(r.resume, "non");
+  assert.equal(r.graphiques, 0);
+  assert.equal(existsSync(join(d, "graphiques")), false);
+  assert.doesNotMatch(readFileSync(join(d, "sommaire.md"), "utf8"), /## Résumé|!\[/);
+});
+test("genererSommaire: une clé API absente est refusée avant tout travail, sauf sans résumé", async () => {
+  const d = dossierDeDonnees();
+  await assert.rejects(genererSommaire({ source: join(d, "outils.json"), sansGraphiques: true }), /OPENAI_API_KEY absente/);
+  assert.equal(existsSync(join(d, "sommaire.md")), false);
+  assert.equal((await genererSommaire({ source: join(d, "outils.json"), sansGraphiques: true, sansResume: true })).ecrit, true);
+});
+test("genererSommaire: résumé impossible, comportement par défaut: sommaire écrit avec une note, résultat « echec »", async () => {
+  const d = dossierDeDonnees();
+  const r = await genererSommaire({ source: join(d, "outils.json"), generer: async () => ({ paragraphes: [] }), convertir: fauxConvertir([]) });
+  assert.equal(r.ecrit, true);
+  assert.equal(r.resume, "echec");
+  assert.match(r.erreur!, /3 ou 4/);
+  assert.match(readFileSync(join(d, "sommaire.md"), "utf8"), /n'a pas pu être rédigé/);
+});
+test("genererSommaire: résumé impossible avec conserverSiEchec: rien n'est écrit, le sommaire existant et les graphiques sont conservés", async () => {
+  const d = dossierDeDonnees();
+  writeFileSync(join(d, "sommaire.md"), "ancien sommaire");
+  const converties: string[] = [];
+  const r = await genererSommaire({ source: join(d, "outils.json"), conserverSiEchec: true, generer: async () => { throw new Error("OpenAI HTTP 500"); }, convertir: fauxConvertir(converties) });
+  assert.equal(r.ecrit, false);
+  assert.equal(r.resume, "echec");
+  assert.match(r.erreur!, /HTTP 500/);
+  assert.equal(readFileSync(join(d, "sommaire.md"), "utf8"), "ancien sommaire");
+  assert.equal(converties.length, 0);
+  assert.equal(existsSync(join(d, "graphiques")), false);
+});
+test("genererSommaire: une réponse invalide puis valide est acceptée, la raison du rejet est journalisée", async () => {
+  const d = dossierDeDonnees();
+  const reponses = [{ paragraphes: [PARA] }, PARAS];
+  const journal: string[] = [];
+  const r = await genererSommaire({ source: join(d, "outils.json"), sansGraphiques: true, generer: async () => reponses.shift(), journal: (m) => journal.push(m) });
+  assert.equal(r.resume, "oui");
+  assert.match(journal[0]!, /Résumé rejeté \(3 ou 4 paragraphes attendus\)/);
+});
+test("genererSommaire: destination personnalisée, graphiques/ créé à côté", async () => {
+  const d = dossierDeDonnees();
+  const sortie = join(d, "ailleurs.md");
+  await genererSommaire({ source: join(d, "outils.json"), sortie, sansResume: true, convertir: fauxConvertir([]) });
+  assert.ok(existsSync(sortie));
+  assert.ok(existsSync(join(d, "graphiques", "statut-code-source.png")));
 });

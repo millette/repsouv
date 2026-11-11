@@ -16,7 +16,7 @@ import { writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import type { OutilClasse } from "./classify.ts";
 import { lancer } from "./cli.ts";
-import { construireGraphiques, ecrireGraphiques, verifierVlConvert, type GraphiqueEcrit } from "./graphiques.ts";
+import { construireGraphiques, ecrireGraphiques, verifierVlConvert, type Convertisseur, type GraphiqueEcrit } from "./graphiques.ts";
 import { appelerOpenAI, chargerCriteres, chargerTags, MODELE_PAR_DEFAUT, obtenirValide, problemesMarkdown } from "./enrichir.ts";
 import { lireFichier } from "./fichiers.ts";
 import {
@@ -287,6 +287,85 @@ export function produireResume(charge: ChargeResume, generer: GenerateurResume, 
   return obtenirValide((rappel) => generer(charge, rappel), validerResume, rejet);
 }
 
+// ---------- génération du sommaire ----------
+
+export interface OptionsSommaire {
+  /** outils.json; tags.json et criteres.json sont lus dans le même dossier. */
+  source: string;
+  /** sommaire.md; par défaut dans le dossier de `source`. Le dossier graphiques/ est créé à côté. */
+  sortie?: string;
+  sansResume?: boolean;
+  sansGraphiques?: boolean;
+  /**
+   * Si le résumé ne peut pas être rédigé: `true` n'écrit rien (le sommaire existant est conservé, graphiques
+   * compris); `false` (par défaut) écrit le sommaire avec une note à la place du résumé.
+   */
+  conserverSiEchec?: boolean;
+  cle?: string | undefined;
+  modele?: string | undefined;
+  /** Générateur du résumé et convertisseur des graphiques: par défaut OpenAI et vl-convert (injectables pour les tests). */
+  generer?: GenerateurResume;
+  convertir?: Convertisseur;
+  /** Messages de suivi (une réponse de l'IA rejetée, par exemple). */
+  journal?: (message: string) => void;
+}
+
+export interface ResultatSommaire {
+  ecrit: boolean;
+  destination: string;
+  graphiques: number;
+  resume: "oui" | "non" | "echec";
+  erreur?: string;
+  statistiques: Statistiques;
+}
+
+/**
+ * Calcule les statistiques, rédige le résumé, écrit les graphiques puis le sommaire. Les vérifications qui ne
+ * coûtent rien (clé API, vl-convert) passent avant l'appel à l'API, et les graphiques ne sont écrits qu'une fois
+ * le résumé obtenu, pour qu'un échec avec `conserverSiEchec` ne laisse rien de modifié.
+ */
+export async function genererSommaire(o: OptionsSommaire): Promise<ResultatSommaire> {
+  const journal = o.journal ?? (() => {});
+  if (!o.sansResume && !o.generer && !o.cle) {
+    throw new Error("OPENAI_API_KEY absente (voir .env.example); utiliser --sans-resume pour omettre le résumé");
+  }
+  if (!o.sansGraphiques && !o.convertir) verifierVlConvert();
+
+  const dossier = dirname(o.source);
+  const lu = lireFichier<OutilClasse>(o.source, "outils");
+  const statistiques = calculerStatistiques({
+    outils: lu.donnees,
+    tags: chargerTags(join(dossier, "tags.json")),
+    criteres: chargerCriteres(join(dossier, "criteres.json")),
+    meta: lu.meta,
+  });
+  const destination = o.sortie ?? join(dossier, "sommaire.md");
+
+  let resume: ResumeIA = null;
+  if (!o.sansResume) {
+    const modele = o.modele ?? MODELE_PAR_DEFAUT;
+    const generer = o.generer ?? generateurResumeOpenAI(o.cle!, modele);
+    try {
+      resume = { paragraphes: await produireResume(chargeResume(statistiques, lu.donnees), generer, (r) => journal(`Résumé rejeté (${r}), nouvel essai`)), modele, date: horodatage() };
+    } catch (e) {
+      resume = { erreur: (e as Error).message };
+      if (o.conserverSiEchec) return { ecrit: false, destination, graphiques: 0, resume: "echec", erreur: resume.erreur, statistiques };
+    }
+  }
+
+  const graphiques = o.sansGraphiques ? [] : ecrireGraphiques(construireGraphiques(statistiques), join(dirname(destination), "graphiques"), o.convertir);
+  writeFileSync(destination, rendreMarkdown(statistiques, { genereLe: horodatage(), resume, graphiques }));
+  const erreur = resume && "erreur" in resume ? resume.erreur : undefined;
+  return {
+    ecrit: true,
+    destination,
+    graphiques: graphiques.length,
+    resume: erreur !== undefined ? "echec" : resume ? "oui" : "non",
+    ...(erreur !== undefined ? { erreur } : {}),
+    statistiques,
+  };
+}
+
 // ---------- ligne de commande ----------
 
 if (import.meta.main) {
@@ -297,38 +376,17 @@ if (import.meta.main) {
     const inconnue = args.find((a) => a.startsWith("--") && a !== "--sans-resume" && a !== "--sans-graphiques");
     if (inconnue) throw new Error(`Option inconnue: ${inconnue}`);
     const [source = "outils.json", sortie] = args.filter((a) => !a.startsWith("--"));
-    const dossier = dirname(source);
-    const cle = process.env.OPENAI_API_KEY;
-    if (!sansResume && !cle) throw new Error("OPENAI_API_KEY absente (voir .env.example); utiliser --sans-resume pour omettre le résumé");
-    // Les vérifications qui ne coûtent rien passent avant l'appel à l'API.
-    if (!sansGraphiques) verifierVlConvert();
-
-    const lu = lireFichier<OutilClasse>(source, "outils");
-    const statistiques = calculerStatistiques({
-      outils: lu.donnees,
-      tags: chargerTags(join(dossier, "tags.json")),
-      criteres: chargerCriteres(join(dossier, "criteres.json")),
-      meta: lu.meta,
+    const r = await genererSommaire({
+      source,
+      ...(sortie !== undefined && { sortie }),
+      sansResume,
+      sansGraphiques,
+      cle: process.env.OPENAI_API_KEY,
+      modele: process.env.OPENAI_MODEL || undefined,
+      journal: (message) => console.error(message),
     });
-
-    const destination = sortie ?? join(dossier, "sommaire.md");
-    const graphiques = sansGraphiques ? [] : ecrireGraphiques(construireGraphiques(statistiques), join(dirname(destination), "graphiques"));
-
-    let resume: ResumeIA = null;
-    if (!sansResume) {
-      const modele = process.env.OPENAI_MODEL || MODELE_PAR_DEFAUT;
-      try {
-        const paragraphes = await produireResume(chargeResume(statistiques, lu.donnees), generateurResumeOpenAI(cle!, modele), (raison) =>
-          console.error(`Résumé rejeté (${raison}), nouvel essai`),
-        );
-        resume = { paragraphes, modele, date: horodatage() };
-      } catch (e) {
-        resume = { erreur: (e as Error).message };
-        process.exitCode = 1;
-      }
-    }
-
-    writeFileSync(destination, rendreMarkdown(statistiques, { genereLe: horodatage(), resume, graphiques }));
-    console.log(`${destination} écrit (${statistiques.total} outils, ${statistiques.enrichissement.enrichis} enrichis, ${graphiques.length} graphique(s), résumé: ${resume && "paragraphes" in resume ? "oui" : "non"})`);
+    if (r.resume === "echec") process.exitCode = 1;
+    const { statistiques: s } = r;
+    console.log(`${r.destination} écrit (${s.total} outils, ${s.enrichissement.enrichis} enrichis, ${r.graphiques} graphique(s), résumé: ${r.resume === "oui" ? "oui" : "non"})`);
   });
 }

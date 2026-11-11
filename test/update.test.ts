@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { classer, type OutilClasse } from "../classify.ts";
 import { creerCouleurs } from "../couleurs.ts";
-import { ligneJournal, lignesResume, mettreAJour } from "../update.ts";
+import { ligneJournal, lignesResume, mettreAJour, raisonDeSauterSommaire, sommaireNecessaire } from "../update.ts";
 
 const base = (nom: string, extra: Partial<OutilClasse> = {}): OutilClasse => {
   const o = {
@@ -132,4 +132,28 @@ test("ligneJournal: succès en vert (nom en gras), avertissement en jaune, erreu
   assert.match(ligneJournal("  Matomo: ÉCHEC", "erreur", AVEC), /^  \x1b\[1m\x1b\[31mMatomo\x1b\[39m\x1b\[22m: \x1b\[31mÉCHEC\x1b\[39m$/);
   assert.equal(ligneJournal("Fin", "info", AVEC), "\x1b[2mFin\x1b[22m");
   assert.equal(ligneJournal("Pas de nom", "erreur", AVEC), "\x1b[31mPas de nom\x1b[39m");
+});
+
+// ---------- sommaire automatique ----------
+
+test("sommaireNecessaire: seulement avec --enrichir, hors simulation, et si quelque chose a changé", () => {
+  const base = { enrichir: true, dryRun: false, changements: 0, enrichis: 0 };
+  assert.equal(sommaireNecessaire({ ...base, changements: 2 }), true); // outils nouveaux, modifiés ou retirés
+  assert.equal(sommaireNecessaire({ ...base, enrichis: 3 }), true); // outils enrichis
+  assert.equal(sommaireNecessaire({ ...base, changements: 1, enrichis: 1 }), true);
+  assert.equal(sommaireNecessaire(base), false); // rien n'a changé
+  assert.equal(sommaireNecessaire({ ...base, changements: 2, enrichis: 3, enrichir: false }), false); // sans --enrichir
+  assert.equal(sommaireNecessaire({ ...base, changements: 2, enrichis: 3, dryRun: true }), false); // simulation
+  assert.equal(sommaireNecessaire({ ...base, changements: 2, enrichis: 3, sansSommaire: true }), false); // --sans-sommaire
+  assert.equal(sommaireNecessaire({ ...base, changements: 2, sansSommaire: false }), true);
+});
+test("raisonDeSauterSommaire: clé API absente, vl-convert introuvable, ou rien à signaler", () => {
+  const present = () => "vl-convert 1.9.0";
+  const absent = () => {
+    throw new Error("vl-convert est introuvable");
+  };
+  assert.equal(raisonDeSauterSommaire("sk-test", present), null);
+  assert.match(raisonDeSauterSommaire(undefined, present)!, /OPENAI_API_KEY absente/);
+  assert.match(raisonDeSauterSommaire("", present)!, /OPENAI_API_KEY absente/);
+  assert.match(raisonDeSauterSommaire("sk-test", absent)!, /vl-convert est introuvable/);
 });
