@@ -31,7 +31,9 @@ import { createProgress } from "./progress.ts";
 export const URL_REPERTOIRE = "https://praxis.encommun.io/n/voRYZbuBYZKLejs8JyNkc5C4o7s/";
 
 const CHAMPS_COMPARES = ["categorie", "icone", "score", "lien", "description"] as const;
-const CHAMPS_ENRICHIS = ["description_longue", "tags", "source", "licence", "repo", "evaluation_enrichie"] as const;
+const CHAMPS_ENRICHIS = [
+  "description_longue", "tags", "source", "licence", "custom_license", "custom_license_url", "repo", "evaluation_enrichie",
+] as const;
 
 /** Les champs d'enrichissement d'un outil existant, à reporter sur sa version à jour de la page. */
 const enrichissementDe = (o: OutilClasse): Partial<Outil> =>

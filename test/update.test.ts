@@ -60,7 +60,7 @@ test("removed n'apparaît que sur les outils retirés", () => {
 });
 test("modification: les champs d'enrichissement sont conservés", () => {
   const enrichi: OutilClasse = {
-    ...base("a"), description_longue: "Longue.", tags: ["gratuit"], source: "libre", licence: "MIT", repo: "https://github.com/x/y",
+    ...base("a"), description_longue: "Longue.", tags: ["gratuit"], source: "libre", licence: null, custom_license: "Licence maison", custom_license_url: "https://example.org/l", repo: "https://github.com/x/y",
     evaluation_enrichie: { score: 2, criteres: ["donnees", "controle"], confiance: "faible" },
   };
   const page = { ...base("a"), description: "Nouvelle description." };
@@ -71,6 +71,8 @@ test("modification: les champs d'enrichissement sont conservés", () => {
   assert.deepEqual(outils[0]!.tags, ["gratuit"]);
   assert.equal(outils[0]!.repo, "https://github.com/x/y");
   assert.equal(outils[0]!.evaluation_enrichie?.confiance, "faible");
+  assert.equal(outils[0]!.custom_license, "Licence maison");
+  assert.equal(outils[0]!.custom_license_url, "https://example.org/l");
 });
 test("comeback: les champs d'enrichissement sont conservés", () => {
   const retire: OutilClasse = { ...base("a"), description_longue: "Longue.", removed: true, changement: "retrait" };

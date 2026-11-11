@@ -7,16 +7,19 @@
     "classify": "nub classify.ts outils.json",
     "build": "nub run extract && nub run classify",
     "update": "nub update.ts",
-    "test": "nub test/classify.test.ts && nub test/extract.test.ts && nub test/update.test.ts && nub test/enrichir.test.ts && nub test/progress.test.ts",
+    "test": "nub test/classify.test.ts && nub test/extract.test.ts && nub test/update.test.ts && nub test/enrichir.test.ts && nub test/progress.test.ts && nub test/spdx.test.ts",
     "typecheck": "tsrs -p .",
     "enrichir": "nub update.ts --enrichir"
   },
   "dependencies": {
-    "linkedom": "^0.18.15"
+    "linkedom": "^0.18.15",
+    "spdx-expression-parse": "^5.0.0",
+    "spdx-license-ids": "^3.0.24"
   },
   "devDependencies": {
     "@nubjs/types": "^0.10.0",
     "@types/node": "^26.6.6",
+    "@types/spdx-expression-parse": "^4.0.0",
     "tsrs": "^0.24.0-ts7.1.0-beta"
   }
 }

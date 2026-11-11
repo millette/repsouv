@@ -15,7 +15,8 @@ const CRITERES = chargerCriteres("criteres.json");
 const evaluation = (extra: Record<string, unknown> = {}) => ({ score: 2, criteres: ["donnees", "dependance"], confiance: "moyenne", ...extra });
 const valide = (extra: Record<string, unknown> = {}) => ({
   description_longue: "Une description.", tags: ["gratuit"], source: "libre",
-  licence: "MIT", repo: "https://github.com/x/y", evaluation_enrichie: evaluation(), nouveaux_tags: [], ...extra,
+  licence: "MIT", custom_license: null, custom_license_url: null, repo: "https://github.com/x/y",
+  evaluation_enrichie: evaluation(), nouveaux_tags: [], ...extra,
 });
 const outil = (nom: string, extra: Partial<Outil> = {}): Outil => ({
   categorie: "C", icone: "🧪", nom, score: 2, lien: `https://${nom}.example/`,
@@ -293,4 +294,77 @@ test("début: annonce le nom de chaque outil traité, dans l'ordre, sans annonce
   const outils = [outil("a"), outil("b", { description_longue: "existante" }), outil("c")];
   await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer: async () => valide(), lire: sansPage, debut: (n) => vus.push(n) });
   assert.deepEqual(vus, ["a", "c"]);
+});
+
+test("licence: seules les expressions SPDX valides sont acceptées", () => {
+  for (const ok of ["MIT", "AGPL-3.0-or-later", "GPL-2.0-only", "MIT OR Apache-2.0", "GPL-2.0-only WITH Classpath-exception-2.0"]) {
+    assert.equal(validerProposition(valide({ licence: ok }), VOCAB, false).licence, ok, ok);
+  }
+  const mauvais: [string, RegExp][] = [
+    ["GNU Affero General Public License v3.0", /SPDX/],
+    ["agpl-3.0-or-later", /SPDX/],
+    ["BSL-1.1", /SPDX/],
+    ["GPL-3.0", /déprécié/],
+    ["GPL-2.0+", /dépréciée/],
+    ["LicenseRef-maison", /custom_license/],
+  ];
+  for (const [licence, re] of mauvais) {
+    assert.throws(() => validerProposition(valide({ licence }), VOCAB, false), re, licence);
+  }
+});
+test("licence: null reste permis (propriétaire, inconnue)", () => {
+  assert.equal(validerProposition(valide({ licence: null, repo: null }), VOCAB, false).licence, null);
+});
+test("licence: un nom en toutes lettres est redemandé avec la raison, puis accepté", async () => {
+  const rappels: (string | undefined)[] = [];
+  const reponses = [valide({ licence: "GNU Affero General Public License v3.0" }), valide({ licence: "AGPL-3.0-only" })];
+  const generer: Generateur = async (_o, _c, ctx) => (rappels.push(ctx.rappel), reponses.shift());
+  const outils = [outil("a")];
+  await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer, lire: sansPage });
+  assert.match(rappels[1]!, /SPDX/);
+  assert.equal(outils[0]!.licence, "AGPL-3.0-only");
+});
+test("instructions: la licence doit être SPDX et jamais un nom en toutes lettres", () => {
+  assert.match(instructions(VOCAB, CRITERES, false), /UNIQUEMENT une expression de licence SPDX/);
+});
+
+const maison = (extra: Record<string, unknown> = {}) =>
+  valide({ source: "source-disponible", licence: null, custom_license: "Sustainable Use License", custom_license_url: "https://example.org/licence", ...extra });
+
+test("licence maison: nom et URL sont acceptés quand licence est null", () => {
+  const p = validerProposition(maison(), VOCAB, false);
+  assert.equal(p.licence, null);
+  assert.equal(p.custom_license, "Sustainable Use License");
+  assert.equal(p.custom_license_url, "https://example.org/licence");
+});
+test("licence maison: l'URL est facultative", () => {
+  const p = validerProposition(maison({ custom_license_url: null }), VOCAB, false);
+  assert.equal(p.custom_license_url, null);
+  assert.equal(p.custom_license, "Sustainable Use License");
+});
+test("licence maison: custom_license_url exige custom_license et doit être une URL http(s)", () => {
+  assert.throws(() => validerProposition(maison({ custom_license: null }), VOCAB, false), /exige custom_license/);
+  assert.throws(() => validerProposition(maison({ custom_license_url: "licence.txt" }), VOCAB, false), /custom_license_url/);
+});
+test("licence maison: exclusive avec licence SPDX, et un identifiant SPDX n'est pas une licence maison", () => {
+  assert.throws(() => validerProposition(maison({ licence: "MIT" }), VOCAB, false), /exclusifs/);
+  assert.throws(() => validerProposition(maison({ custom_license: "MIT" }), VOCAB, false), /identifiant SPDX, il va dans licence/);
+});
+test("licence maison: un logiciel propriétaire n'en a pas", () => {
+  assert.throws(() => validerProposition(maison({ source: "proprietaire", repo: null }), VOCAB, false), /propriétaire/);
+});
+test("licence maison: les champs sont requis par le schéma et expliqués au modèle", () => {
+  const s = schemaReponse(VOCAB, false) as any;
+  for (const c of ["custom_license", "custom_license_url"]) assert.ok(s.required.includes(c), c);
+  assert.match(instructions(VOCAB, CRITERES, false), /custom_license_url/);
+});
+test("licence maison: un LicenseRef dans licence est redemandé avec la consigne de passer par custom_license", async () => {
+  const rappels: (string | undefined)[] = [];
+  const reponses = [valide({ source: "source-disponible", licence: "LicenseRef-Maison" }), maison()];
+  const generer: Generateur = async (_o, _c, ctx) => (rappels.push(ctx.rappel), reponses.shift());
+  const outils = [outil("a")];
+  await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer, lire: sansPage });
+  assert.match(rappels[1]!, /custom_license/);
+  assert.equal(outils[0]!.custom_license, "Sustainable Use License");
+  assert.equal(outils[0]!.licence, null);
 });

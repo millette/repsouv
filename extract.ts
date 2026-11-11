@@ -40,8 +40,12 @@ export interface Outil {
   tags?: string[];
   /** Statut du code source. */
   source?: "libre" | "partiel" | "source-disponible" | "proprietaire";
-  /** Licence du logiciel (identifiant SPDX si possible); null si propriétaire ou inconnue. */
+  /** Expression de licence SPDX valide (voir spdx.ts); null si propriétaire, inconnue ou sans identifiant SPDX. */
   licence?: string | null;
+  /** Nom ou identifiant d'une licence qui n'est pas dans la liste SPDX; exclusif avec `licence`. */
+  custom_license?: string | null;
+  /** URL du texte de la licence maison, quand elle est disponible; exige `custom_license`. */
+  custom_license_url?: string | null;
   /** URL du dépôt de code source, sur n'importe quelle forge; null si aucun. */
   repo?: string | null;
   /** Second avis sur score et critères, à comparer à `score` et `criteres` du répertoire. */
