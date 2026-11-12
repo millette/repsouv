@@ -1,0 +1,216 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "outils.json: outils du répertoire",
+  "type": "object",
+  "properties": {
+    "meta": {
+      "type": "object",
+      "properties": {
+        "data_license": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}[+-]\\d{2}:\\d{2}$"
+        },
+        "updated_at": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}[+-]\\d{2}:\\d{2}$"
+        }
+      },
+      "required": [
+        "data_license",
+        "created_at",
+        "updated_at"
+      ],
+      "additionalProperties": false
+    },
+    "outils": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "categorie": {
+            "type": "string"
+          },
+          "icone": {
+            "type": "string"
+          },
+          "nom": {
+            "type": "string"
+          },
+          "score": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 3
+          },
+          "lien": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "derniere_modification": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}[+-]\\d{2}:\\d{2}$"
+          },
+          "changement": {
+            "enum": [
+              "comeback",
+              "modification",
+              "nouveau",
+              "retrait",
+              null
+            ]
+          },
+          "removed": {
+            "const": true
+          },
+          "description_longue": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "maxItems": 5,
+            "uniqueItems": true
+          },
+          "source": {
+            "enum": [
+              "libre",
+              "partiel",
+              "proprietaire",
+              "source-disponible"
+            ]
+          },
+          "licence": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "custom_license": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "custom_license_url": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "repo": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "evaluation_enrichie": {
+            "type": "object",
+            "properties": {
+              "score": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 3
+              },
+              "criteres": {
+                "type": "array",
+                "items": {
+                  "enum": [
+                    "controle",
+                    "dependance",
+                    "donnees"
+                  ]
+                },
+                "maxItems": 3,
+                "uniqueItems": true
+              },
+              "confiance": {
+                "enum": [
+                  "faible",
+                  "moyenne",
+                  "élevée"
+                ]
+              },
+              "ecart": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "score",
+              "criteres",
+              "confiance"
+            ],
+            "additionalProperties": false
+          },
+          "page_lue": {
+            "type": "boolean"
+          },
+          "enrichi_le": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}[+-]\\d{2}:\\d{2}$"
+          },
+          "criteres": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "controle",
+                "dependance",
+                "donnees"
+              ]
+            },
+            "maxItems": 3,
+            "uniqueItems": true
+          },
+          "confiance": {
+            "enum": [
+              "faible",
+              "indéterminée",
+              "moyenne",
+              "élevée"
+            ]
+          }
+        },
+        "required": [
+          "categorie",
+          "icone",
+          "nom",
+          "score",
+          "lien",
+          "description",
+          "derniere_modification",
+          "changement",
+          "criteres",
+          "confiance"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "meta",
+    "outils"
+  ],
+  "additionalProperties": false
+}

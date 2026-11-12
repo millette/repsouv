@@ -1,0 +1,4 @@
+{
+  "extends": "./tsconfig.json",
+  "include": ["generer-schemas.ts"]
+}

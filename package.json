@@ -13,10 +13,12 @@
     "build": "nub run extract && nub run classify",
     "build:force": "nub run extract --force && nub run classify",
     "update": "nub update.ts",
-    "test": "nub test/classify.test.ts && nub test/extract.test.ts && nub test/update.test.ts && nub test/enrichir.test.ts && nub test/progress.test.ts && nub test/spdx.test.ts && nub test/en-tetes.test.ts && nub test/fichiers.test.ts && nub test/temps.test.ts && nub test/sommaire.test.ts && nub test/couleurs.test.ts && nub test/graphiques.test.ts",
+    "test": "nub test/classify.test.ts && nub test/extract.test.ts && nub test/update.test.ts && nub test/enrichir.test.ts && nub test/progress.test.ts && nub test/spdx.test.ts && nub test/en-tetes.test.ts && nub test/fichiers.test.ts && nub test/temps.test.ts && nub test/sommaire.test.ts && nub test/couleurs.test.ts && nub test/graphiques.test.ts && nub test/schemas.test.ts && nub run schemas:verifier",
     "typecheck": "tsrs -p .",
     "enrichir": "nub update.ts --enrichir",
-    "sommaire": "nub sommaire.ts"
+    "sommaire": "nub sommaire.ts",
+    "schemas": "tsdown && nub dist/generer-schemas.mjs",
+    "schemas:verifier": "tsdown && nub dist/generer-schemas.mjs --verifier"
   },
   "dependencies": {
     "linkedom": "^0.18.15",
@@ -26,9 +28,15 @@
     "vega-lite": "^6.5.0"
   },
   "devDependencies": {
+    "@mionjs/bin-compiler": "0.14.0",
+    "@mionjs/devtools": "0.14.0",
+    "@mionjs/run-types": "0.14.0",
     "@nubjs/types": "^0.10.0",
     "@types/node": "^26.6.6",
     "@types/spdx-expression-parse": "^4.0.0",
+    "ajv": "8.20.0",
+    "ajv-formats": "3.0.1",
+    "tsdown": "0.23.7",
     "tsrs": "^0.24.0-ts7.1.0-beta"
   }
 }

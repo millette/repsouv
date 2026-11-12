@@ -5,4 +5,5 @@ pre-enrichir-outils.json
 orig-sommaire.md
 .agents
 skills-lock.json
-
+dist/
+.mion/
