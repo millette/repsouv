@@ -16,7 +16,8 @@ Les étapes du projet et les décisions prises, par date, d'après l'historique 
 | 2026-11-12 09:00 | Confirmation des critères par OpenAI et Claude sur les 57 outils enrichis, règle A, citation à l'appui (`confirmations/`, puis `criteres_confirmes`) |
 | 2026-11-12 11:39 | Création de `categories.json` (20 catégories, descriptions rédigées par IA à 11:42) |
 | 2026-11-12 12:35 à 13:03 | Réimport complet dans un dossier vide (`update`, import initial) : `outils.json`, `categories.json` et `criteres.json` sont recréés (`meta.created_at` 12:35), 57 outils enrichis (12:36 à 12:55) puis vérifiés (jusqu'à 13:01), 20 catégories décrites (13:02) |
-| 2026-11-12 13:34 | Dernière génération de `sommaire.md` |
+| 2026-11-12 15:06 | `update` sans changement sur la page : les 3 outils non enrichis sont retentés sans succès (`echecs_enrichissement` à 2 ; abandon à 3) |
+| 2026-11-12 15:08 | Dernière génération de `sommaire.md` |
 
 ## 2026-11-11
 
@@ -49,7 +50,7 @@ Les étapes du projet et les décisions prises, par date, d'après l'historique 
 - **`categories.json`** : les catégories deviennent un fichier de données (`id` en slug du nom, `nom`, `icone`, `description` rédigée par IA dans `update`), et `outils.json` ne garde que l'identifiant dans `categorie` (le champ `icone` disparaît). Les schémas annotent la relation et un test la vérifie.
 - **Documentation** scindée en trois fichiers : README (source, crédits, usage, données), `implementation.md` (scripts, classification, enrichissement, sommaire, tests, dépannage) et ce fichier.
 - **Expérience `spike-mion` retirée** du dépôt (ses conclusions sont consignées ci-dessus).
-- **Réimport complet** (12:35 à 13:03) dans un dossier vide, pour éprouver `update` de bout en bout : 60 outils, 57 enrichis et vérifiés en 27 minutes (les mêmes 3 abandonnés après 3 échecs), 20 catégories décrites. Comparé à l'import précédent : source et classification identiques, verdicts identiques sur « données » et « contrôle » et sur 54 outils sur 57 pour « dépendance », tags et licences légèrement différents (texte généré). Les fichiers de données et `enrichi_le` datent désormais de ce réimport. Au passage, correction de `meta.updated_at`, qui restait figé pendant l'enrichissement (`ecrireFichier` retourne une copie des données).
+- **Réimport complet** (12:35 à 13:03) dans un dossier vide, pour éprouver `update` de bout en bout : 60 outils, 57 enrichis et vérifiés en 27 minutes (les 3 mêmes outils non enrichis, page inaccessible ou vide, un échec chacun), 20 catégories décrites. Comparé à l'import précédent : source et classification identiques, verdicts identiques sur « données » et « contrôle » et sur 54 outils sur 57 pour « dépendance », tags et licences légèrement différents (texte généré). Les fichiers de données et `enrichi_le` datent désormais de ce réimport. Au passage, correction de `meta.updated_at`, qui restait figé pendant l'enrichissement (`ecrireFichier` retourne une copie des données).
 - **Skill `charting-vega-lite` versionné** (`.claude/skills/`, MIT, oaustegard/claude-skills) avec son texte de licence dans `LICENSES/MIT.txt` et son annotation REUSE ; `.gitignore` n'ignore plus `.claude`.
 - **Barre de progression de `sommaire.ts`** (résumé, graphiques, écriture), partagée avec la mise à jour automatique par `update` ; option `--sans-couleur` pour `sommaire`.
 - **Temps restant** sur les barres de progression de `update` (enrichissement, vérification, descriptions de catégories, qui reçoit sa barre) : estimé au rythme moyen observé, formaté en français par `duree.ts` avec `Temporal.Duration` et `Intl.DurationFormat`, natifs dans Node.js 26.

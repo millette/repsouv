@@ -21,7 +21,7 @@ nub run licences                 # vérifie la conformité REUSE des licences (u
 nub run update --dry-run         # (ou node update.ts --dry-run) montre ce que update ferait (changements, outils à enrichir, jetons et coût estimés), sans rien écrire
 nub run update                   # synchronise les données avec la page, enrichit par IA les outils qui ne le sont pas encore, vérifie leurs critères, décrit les catégories (OPENAI_API_KEY), puis met le sommaire à jour si quelque chose a changé
 nub run update --accepter-couts  # premier import hors terminal: accepte les coûts d'enrichissement sans la confirmation interactive
-nub run sommaire                 # (ou node sommaire.ts) écrit sommaire.md et graphiques/ (--sans-resume, --sans-graphiques pour s'en passer)
+nub run sommaire                 # (ou node sommaire.ts) écrit sommaire.md et graphiques/ (--sans-resume, --sans-graphiques pour s'en passer, --sans-couleur)
 ```
 
 Pour l'enrichissement et le résumé du sommaire, copier `.env.example` vers `.env` et y mettre la clé `OPENAI_API_KEY` (`.env` est ignoré par Git ; les scripts le lisent eux-mêmes dans le dossier courant, voir [`env.ts`](#envts)) ; `.env.example` dit où créer la clé sur le compte OpenAI (<https://platform.openai.com/api-keys>) et où vérifier le crédit. `OPENAI_MODEL` change le modèle (`gpt-6-astra` par défaut).
@@ -358,7 +358,7 @@ Si le `score` ou les `criteres` d'un outil déjà enrichi changent, après un `c
 | Commande | Effet |
 |---|---|
 | `nub run update` ou `node update.ts` | `node update.ts` : synchronise `outils.json`, `categories.json` et `criteres.json` avec la page en ligne (import initial si `outils.json` manque), enrichit, vérifie et décrit ce qui ne l'est pas encore. Les options passent directement : `nub run update --dry-run` pour l'aperçu et l'estimation des coûts, `nub run update --accepter-couts` pour un premier import hors terminal |
-| `nub run sommaire` ou `node sommaire.ts` | `node sommaire.ts` : écrit `sommaire.md` et `graphiques/` (`--sans-resume` évite l'appel à l'API, `--sans-graphiques` évite vl-convert) |
+| `nub run sommaire` ou `node sommaire.ts` | `node sommaire.ts` : écrit `sommaire.md` et `graphiques/` (`--sans-resume` évite l'appel à l'API, `--sans-graphiques` évite vl-convert, `--sans-couleur` laisse la barre de progression sans couleur) |
 | `nub run schemas` | `obuild && nub dist/generer-schemas.mjs` : régénère `schemas/*.schema.json` à partir des types (voir [Schémas JSON](#schémas-json)) |
 | `nub run schemas:verifier` | Comme `schemas`, mais sans rien écrire : échoue si les schémas commités sont périmés |
 | `nub run licences` | `uvx reuse lint` : vérifie que chaque fichier suivi déclare sa licence et son droit d'auteur ([REUSE](https://reuse.software/) 3.3). Demande [uv](https://docs.astral.sh/uv/) et un accès réseau la première fois ; non inclus dans `nub run test` |
