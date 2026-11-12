@@ -14,7 +14,7 @@ Les étapes du projet et les décisions prises, par date, d'après l'historique 
 | 2026-11-11 16:43 | Création des trois fichiers de données (`meta.created_at`), avec `meta` et les dates en heure de Toronto |
 | 2026-11-11 17:29 à 17:43 | Enrichissement par IA de 57 outils sur 60 ; les 3 autres (En commun, Paperless-ngx, CIRA Canadian Shield) ont une page inaccessible ou vide |
 | 2026-11-12 09:00 | Confirmation des critères par OpenAI et Claude sur les 57 outils enrichis, règle A, citation à l'appui (`confirmations/`, puis `criteres_confirmes`) |
-| 2026-11-12 09:12 | Dernière génération de `sommaire.md` |
+| 2026-11-12 10:26 | Dernière génération de `sommaire.md` |
 
 ## 2026-11-11
 
@@ -42,6 +42,7 @@ Les étapes du projet et les décisions prises, par date, d'après l'historique 
 - **Options de `update` réduites** : `--sommaire`, `--sans-sommaire` et `--limite` retirés ; le sommaire se met à jour avec `--enrichir` seulement, et `update` seul avertit. Nouveau champ `echecs_enrichissement` : après 3 échecs consécutifs (`--max-echecs=N`), un outil n'est plus tenté.
 - **`update` enrichit toujours** : `--enrichir` et `--sans-page` retirés ; un outil dont la page est illisible n'est jamais enrichi. `--dry-run` affiche l'aperçu et une estimation des jetons et du coût (`prix.ts`, borne haute). Au premier import, confirmation dans le terminal (1. accepter les coûts, 2. simulation, 3. arrêter), ou `--accepter-couts` hors terminal. Les jetons réels de chaque enrichissement sont comptés et affichés.
 - **Champ `page_lue` retiré** des données, du code, des schémas et des docs : plus rien ne pouvait produire `false`, et `true` était devenu implicite (un outil enrichi a toujours eu sa page lue).
+- **Démarrage rapide** dans le README (installation de nub, Node 26 épinglé dans `.node-version`, clé OpenAI et où la créer, coûts et `--dry-run`), instructions dans `.env.example`.
 - **Documentation** scindée en trois fichiers : README (source, crédits, usage, données), `implementation.md` (scripts, classification, enrichissement, sommaire, tests, dépannage) et ce fichier.
 
 ## Décisions

@@ -12,7 +12,19 @@ Le [sommaire statistique](sommaire.md) qui en résulte distingue 24 logiciels li
 
 *Statut du code source des outils du répertoire, d'après [`sommaire.md`](sommaire.md) (image produite par `nub run sommaire`).*
 
-**Sommaire :** [Source, crédits et licences](#source-crédits-et-licences) · [Usage en bref](#usage-en-bref) · [Fichiers JSON](#fichiers-json) · [Sommaire statistique](#sommaire-statistique) · [Utiliser les données](#utiliser-les-données) · [Documentation](#documentation)
+**Sommaire :** [Démarrage rapide](#démarrage-rapide) · [Source, crédits et licences](#source-crédits-et-licences) · [Autres commandes](#autres-commandes) · [Fichiers JSON](#fichiers-json) · [Sommaire statistique](#sommaire-statistique) · [Utiliser les données](#utiliser-les-données) · [Documentation](#documentation)
+
+## Démarrage rapide
+
+Les mises à jour peuvent **coûter de l'argent** : l'enrichissement par IA et le résumé du sommaire passent par l'API OpenAI, facturée à l'usage. Le premier `nub run update` est le plus coûteux (il enrichit tous les outils du répertoire : environ 14 $ en borne haute, 1,50 $ constaté pour 57 outils) ; les suivants ne paient que les outils nouveaux et, s'il y a eu des changements, un résumé. `nub run update --dry-run` chiffre le travail et le coût estimés sans rien dépenser ni écrire, et le premier import demande une confirmation avant de dépenser.
+
+1. **Installer [nub](https://nubjs.com/)** au besoin, l'exécuteur TypeScript et gestionnaire de paquets du projet : `curl -fsSL https://nubjs.com/install.sh | bash` (aussi par Homebrew, npm ou mise, voir le site).
+2. **Node.js 26** : rien à faire, nub lit `.node-version` (`26`) et télécharge cette version au besoin.
+3. **Cloner le dépôt** et s'y placer : `git clone <url du dépôt> && cd outils-souverainete-numerique`.
+4. **Configurer la clé OpenAI** : `cp .env.example .env`, puis mettre la clé dans `OPENAI_API_KEY=`. Avec un compte OpenAI, la clé se crée sur <https://platform.openai.com/api-keys> (« Create new secret key » ; elle commence par `sk-` et n'est affichée qu'une fois) et le crédit se vérifie sur <https://platform.openai.com/account/billing/overview>. Le fichier `.env` est ignoré par Git et la clé n'est transmise qu'à `api.openai.com`. Sans clé, `update` synchronise les données mais saute l'enrichissement et le résumé.
+5. **Installer les dépendances** : `nub install`. Pour les graphiques du sommaire, installer aussi [vl-convert](https://github.com/vega/vl-convert) (`cargo install vl-convert` ou un binaire de ses versions, dans le `PATH`) ; sans lui, le sommaire est sauté par `update` et `nub run sommaire --sans-graphiques` reste possible.
+6. **Premier import** : `nub run update --dry-run` pour voir ce qui serait fait et le coût estimé, puis `nub run update`, qui crée `outils.json` et `criteres.json` depuis la page en ligne, enrichit les outils par IA (après confirmation des coûts : 1 pour poursuivre, 2 pour une simulation, 3 pour arrêter) et génère `sommaire.md` et `graphiques/`. Le dépôt contenant déjà ces fichiers, cette étape ne s'applique qu'à partir d'un dossier vide ; sur un clone, `nub run update` se contente de mettre à jour.
+7. **Mises à jour** : `nub run update`, aussi souvent que voulu. Il compare la page en ligne aux données, enrichit les outils nouveaux et régénère le sommaire et les graphiques seulement si quelque chose a changé ; une page inchangée ne coûte rien.
 
 ## Source, crédits et licences
 
@@ -57,12 +69,11 @@ Les champs d'enrichissement résument des pages tierces (voir [D'où viennent le
 - **Vérifié par un modèle d'IA, citation à l'appui :** `criteres_confirmes` (voir [`confirmer.ts`](implementation.md#confirmerts)). La citation permet de contrôler chaque verdict ; le verdict lui-même reste celui d'un modèle.
 - **Généré par un modèle d'IA :** les champs d'enrichissement (voir [Enrichissement](implementation.md#enrichissement-par-ia)). Ils résument des pages tierces et sont à vérifier avant de s'y fier ou de les diffuser, surtout la licence et le dépôt.
 
-## Usage en bref
+## Autres commandes
 
-Prérequis : [nub](https://nubjs.com/), qui exécute le TypeScript directement, et un accès au réseau (`update` et l'enrichissement téléchargent des pages en ligne). Le sommaire a besoin de [vl-convert](https://github.com/vega/vl-convert) pour ses graphiques, l'enrichissement et le résumé du sommaire d'une clé `OPENAI_API_KEY` dans `.env` (copier `.env.example`). Tout le reste, dont le flux de travail, les scripts, leurs options et le dépannage, est dans [implementation.md](implementation.md).
+Tout ce que le [démarrage rapide](#démarrage-rapide) ne couvre pas (flux de travail, scripts, options, dépannage) est dans [implementation.md](implementation.md). Les commandes `nub run` sont définies dans `package.json` :
 
 ```sh
-nub install                      # installe les dépendances
 nub run test                     # lance les tests (et vérifie que les schémas JSON sont à jour)
 nub run typecheck                # vérifie les types
 nub run schemas                  # régénère schemas/*.schema.json à partir des types
@@ -192,7 +203,7 @@ jaq '.outils[] | select(.criteres_confirmes and (.criteres_confirmes.criteres | 
 
 | Fichier | Contenu |
 |---|---|
-| [README.md](README.md) | Ce fichier : la source, les crédits et licences, l'usage en bref, les fichiers de données et comment les utiliser |
+| [README.md](README.md) | Ce fichier : le démarrage rapide, la source, les crédits et licences, les commandes, les fichiers de données et comment les utiliser |
 | [implementation.md](implementation.md) | Le flux de travail, le contenu du dépôt, les schémas, chaque script et ses options, la classification et ses analyses, l'enrichissement, la génération du sommaire, les scripts npm, les tests, le dépannage et les conventions de documentation |
 | [historique.md](historique.md) | Les étapes du projet et les décisions prises, par date |
 | [sommaire.md](sommaire.md) | Le sommaire statistique généré (données, dates, catégories, statuts, licences, critères, forges, tags, fiabilité) |
