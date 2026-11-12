@@ -6,11 +6,12 @@
 // « indéterminé », avec une citation copiée mot pour mot des textes fournis. Une citation introuvable rejette la réponse.
 // Les jetons et le coût en dollars de chaque appel sont comptés et inscrits dans le fichier de sortie.
 //
-// Usage: nub confirmer.ts --fournisseur=openai|claude [--modele=M] [--limite=N] [--budget=USD] [--sortie=F] [--dry-run] [outils.json]
+// Usage: nub confirmer.ts --fournisseur=openai|claude [--modele=M] [--limite=N] [--budget=USD] [--sortie=F] [--regle=A] [--liste=noms.json] [--dry-run] [outils.json]
 //   - openai : API OpenAI (Responses), clé OPENAI_API_KEY (.env); modèle par défaut: celui de l'enrichissement.
 //   - claude : CLI `claude -p` (aucune clé ANTHROPIC_API_KEY requise: utilise la session Claude Code), isolée du projet
 //              (--strict-mcp-config, --setting-sources "", aucun outil). Le coût est celui que rapporte la CLI (prix catalogue).
 //   - --budget : arrêt avant l'appel suivant quand le coût cumulé l'atteint (15 $ par défaut).
+//   - --regle=A ajoute aux consignes une précision de lecture d'un critère (voir REGLES); --liste=F limite aux outils nommés dans F (tableau JSON).
 //   - La sortie est reprise: les outils déjà confirmés dans le fichier de sortie ne sont pas redemandés (ni repayés).
 import { spawn } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -149,16 +150,28 @@ export function schemaConfirmation() {
   };
 }
 
-export function instructions(criteres: Critere[] = []): string {
+/**
+ * Précisions de lecture d'un critère, ajoutées aux consignes après sa définition (criteres.json, texte des auteurs du répertoire,
+ * n'est jamais modifié). Règle A: la nationalité mentionnée suffit pour « controle » (essai de l'analyse de classification).
+ */
+export const REGLES: Readonly<Record<string, Partial<Record<CritereId, string>>>> = {
+  A: {
+    controle:
+      "« confirme » si les textes indiquent que l'outil est canadien ou québécois (conçu, édité ou exploité par une entreprise ou un organisme du Canada ou du Québec): la nationalité mentionnée suffit comme preuve, sans exiger de détail sur la propriété. « infirme » si les textes indiquent une origine étrangère (par exemple « d'origine internationale » ou « non canadien ») ou une filiale d'une organisation étrangère, même si l'outil est offert au Canada. « indetermine » si les textes ne mentionnent aucune nationalité.",
+  },
+};
+
+export function instructions(criteres: Critere[] = [], precisions: Partial<Record<CritereId, string>> = {}): string {
   const definitions = IDS_CRITERES.map((id) => {
     const c = criteres.find((x) => x.id === id);
     return `- ${id}${c ? ` (${c.titre}): ${c.description}` : ""}`;
   }).join("\n");
+  const complements = IDS_CRITERES.filter((id) => precisions[id]).map((id) => `Précision pour ${id}: ${precisions[id]}`).join("\n");
   return `Tu vérifies, pour un outil numérique, si chacun des trois critères de souveraineté numérique est satisfait, d'après les seuls textes fournis (description du répertoire, titre, méta-description et extrait de la page de l'outil).
 
 Les trois critères:
 ${definitions}
-
+${complements ? `\n${complements}\n` : ""}
 Pour chaque critère, réponds par un statut:
 - "confirme": les textes établissent que le critère est satisfait;
 - "infirme": les textes établissent qu'il ne l'est pas;
@@ -170,7 +183,7 @@ Pour "confirme" et "infirme", « preuve » est une citation copiée mot pour mot
 /** Les textes de l'outil dans lesquels une citation doit se trouver. */
 export const textesSource = (outil: OutilClasse, contenu: Contenu): string[] => [outil.description, contenu.titre, contenu.meta_description, contenu.extrait];
 
-export function requeteOutil(outil: OutilClasse, contenu: Contenu, criteres: Critere[] | undefined, rappel?: string): Requete {
+export function requeteOutil(outil: OutilClasse, contenu: Contenu, criteres: Critere[] | undefined, rappel?: string, precisions?: Partial<Record<CritereId, string>>): Requete {
   const messages = [
     JSON.stringify({
       nom: outil.nom,
@@ -181,7 +194,7 @@ export function requeteOutil(outil: OutilClasse, contenu: Contenu, criteres: Cri
     }),
   ];
   if (rappel) messages.push(`Ta tentative précédente a été rejetée: ${rappel}. Corrige ce problème.`);
-  return { nom: "confirmation_criteres", schema: schemaConfirmation(), instructions: instructions(criteres), messages, maxTokens: 4000 };
+  return { nom: "confirmation_criteres", schema: schemaConfirmation(), instructions: instructions(criteres, precisions), messages, maxTokens: 4000 };
 }
 
 // ---------- boucle ----------
@@ -204,6 +217,8 @@ export interface OptionsConfirmation {
   fournisseur: Fournisseur;
   lirePage: (url: string) => Promise<Contenu | null>;
   criteres?: Critere[];
+  /** Précisions de lecture de certains critères (voir REGLES). */
+  precisions?: Partial<Record<CritereId, string>>;
   limite?: number;
   budgetUsd?: number;
   journal?: (message: string) => void;
@@ -236,7 +251,7 @@ export async function confirmerOutils(
   outils: OutilClasse[],
   options: OptionsConfirmation,
 ): Promise<{ resultats: Resultat[]; totaux: Totaux; arret: "budget" | null }> {
-  const { fournisseur, lirePage, criteres, budgetUsd, journal } = options;
+  const { fournisseur, lirePage, criteres, precisions, budgetUsd, journal } = options;
   const resultats: Resultat[] = [];
   const totaux: Totaux = { appels: 0, ...vide, cout_usd: 0, echecs: 0 };
   const budgetAtteint = () => budgetUsd !== undefined && totaux.cout_usd >= budgetUsd;
@@ -263,7 +278,7 @@ export async function confirmerOutils(
         }
         resultat.tentatives = essai;
         try {
-          const appel = await fournisseur.appeler(requeteOutil(outil, contenu, criteres, rappel));
+          const appel = await fournisseur.appeler(requeteOutil(outil, contenu, criteres, rappel, precisions));
           usage = sommeUsage(usage, appel.usage);
           cout += appel.cout_usd;
           totaux.appels++;
@@ -286,6 +301,15 @@ export async function confirmerOutils(
     options.apres?.(resultat, totaux);
   }
   return { resultats, totaux, arret };
+}
+
+/** Les outils dont le nom est dans la liste, dans l'ordre du répertoire; un nom absent du répertoire est une erreur. */
+export function selectionnerOutils(outils: OutilClasse[], noms: string[]): OutilClasse[] {
+  const connus = new Set(outils.map((o) => o.nom));
+  const inconnu = noms.find((n) => !connus.has(n));
+  if (inconnu !== undefined) throw new Error(`outil inconnu: ${inconnu}`);
+  const voulus = new Set(noms);
+  return outils.filter((o) => voulus.has(o.nom));
 }
 
 // ---------- fournisseurs ----------
@@ -373,7 +397,7 @@ if (import.meta.main) {
   await lancer(async () => {
     const args = process.argv.slice(2);
     const option = (nom: string) => args.find((a) => a.startsWith(`--${nom}=`))?.slice(nom.length + 3);
-    const connues = ["--dry-run", "--fournisseur", "--modele", "--limite", "--budget", "--sortie"];
+    const connues = ["--dry-run", "--fournisseur", "--modele", "--limite", "--budget", "--sortie", "--regle", "--liste"];
     const inconnue = args.find((a) => a.startsWith("--") && !connues.some((o) => a === o || a.startsWith(`${o}=`)));
     if (inconnue) throw new Error(`Option inconnue: ${inconnue}`);
     const nomFournisseur = option("fournisseur");
@@ -381,13 +405,18 @@ if (import.meta.main) {
     const modele = option("modele") ?? (nomFournisseur === "openai" ? process.env.OPENAI_MODEL || MODELE_PAR_DEFAUT : "claude-fable-5-2");
     const limite = option("limite") ? Number(option("limite")) : undefined;
     const budgetUsd = Number(option("budget") ?? 15);
+    const regle = option("regle");
+    if (regle !== undefined && !REGLES[regle]) throw new Error(`--regle inconnue: ${regle} (connues: ${Object.keys(REGLES).join(", ")})`);
+    const fichierListe = option("liste");
     const fichierOutils = args.find((a) => !a.startsWith("--")) ?? "outils.json";
     const sortie = option("sortie") ?? join(DOSSIER, `confirmations-${nomFournisseur}.json`);
     const criteres = lireFichier<Critere>(join(dirname(fichierOutils), "criteres.json"), "criteres").donnees;
 
     const deja: Resultat[] = existsSync(sortie) ? (JSON.parse(readFileSync(sortie, "utf8")).resultats as Resultat[]).filter((r) => r.confirmation) : [];
     const faits = new Set(deja.map((r) => r.nom));
-    const outils = lireFichier<OutilClasse>(fichierOutils, "outils").donnees.filter((o) => o.evaluation_enrichie && !o.removed && o.page_lue !== false && !faits.has(o.nom));
+    let candidats = lireFichier<OutilClasse>(fichierOutils, "outils").donnees.filter((o) => o.evaluation_enrichie && !o.removed && o.page_lue !== false);
+    if (fichierListe) candidats = selectionnerOutils(candidats, JSON.parse(readFileSync(fichierListe, "utf8")) as string[]);
+    const outils = candidats.filter((o) => !faits.has(o.nom));
     console.error(`${nomFournisseur} ${modele}: ${outils.length} outil(s) à confirmer (${deja.length} déjà faits), budget ${budgetUsd} $`);
     if (args.includes("--dry-run")) return;
     if (PRIX[modele] === undefined) console.error(`Avertissement: pas de prix connu pour ${modele}${nomFournisseur === "openai" ? ": le coût sera NaN" : ""}`);
@@ -413,11 +442,11 @@ if (import.meta.main) {
       return pages[url]!;
     };
     const ecrire = (resultats: Resultat[], totaux: Totaux, arret: string | null) =>
-      writeFileSync(sortie, `${JSON.stringify({ meta: { fournisseur: nomFournisseur, modele, prix: PRIX[modele] ?? null, date: new Date().toISOString(), arret }, totaux, resultats }, null, 2)}\n`);
+      writeFileSync(sortie, `${JSON.stringify({ meta: { fournisseur: nomFournisseur, modele, regle: regle ?? null, prix: PRIX[modele] ?? null, date: new Date().toISOString(), arret }, totaux, resultats }, null, 2)}\n`);
 
     const nouveaux: Resultat[] = [];
     const resume = await confirmerOutils(outils, {
-      fournisseur, lirePage, criteres, ...(limite === undefined ? {} : { limite }), budgetUsd,
+      fournisseur, lirePage, criteres, ...(regle ? { precisions: REGLES[regle]! } : {}), ...(limite === undefined ? {} : { limite }), budgetUsd,
       journal: (m) => console.error(m),
       apres: (r, t) => { nouveaux.push(r); ecrire([...deja, ...nouveaux], totauxDe([...deja, ...nouveaux]), null); void t; },
     });

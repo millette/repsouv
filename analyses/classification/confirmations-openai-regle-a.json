@@ -1,0 +1,571 @@
+{
+  "meta": {
+    "fournisseur": "openai",
+    "modele": "gpt-6-astra",
+    "regle": "A",
+    "prix": {
+      "entree": 10,
+      "cache_lecture": 1,
+      "sortie": 50
+    },
+    "date": "2026-11-12T12:58:34.550Z",
+    "arret": null
+  },
+  "totaux": {
+    "appels": 21,
+    "entree": 39898,
+    "sortie": 2363,
+    "cache_lecture": 0,
+    "cache_ecriture": 0,
+    "cout_usd": 0.51713,
+    "echecs": 0
+  },
+  "resultats": [
+    {
+      "nom": "cDox",
+      "lien": "https://cdox.studio/?lang=fr-CA",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Vos documents ne quittent jamais le Canada."
+        },
+        "controle": {
+          "statut": "confirme",
+          "preuve": "Outil canadien de rédaction et de tableur collaboratifs permettant de créer, modifier et partager des documents à plusieurs."
+        },
+        "dependance": {
+          "statut": "confirme",
+          "preuve": "Tous les documents sont stockés et traités sur des serveurs bare metal indépendants à Montréal, Québec, sous les lois canadiennes, avec des sauvegardes chaque nuit à Toronto."
+        }
+      },
+      "usage": {
+        "entree": 2257,
+        "sortie": 204,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.03277
+    },
+    {
+      "nom": "Antidote",
+      "lien": "https://www.antidote.info/fr/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Le logiciel s’installe localement sur votre ordinateur Windows ou Mac."
+        },
+        "controle": {
+          "statut": "confirme",
+          "preuve": "Outil québécois d’aide à la rédaction en français et en anglais combinant correcteur avancé, dictionnaires et guides linguistiques."
+        },
+        "dependance": {
+          "statut": "confirme",
+          "preuve": "Antidote Mobile Il vous suit partout et n’a pas besoin de connexion Internet pour fonctionner."
+        }
+      },
+      "usage": {
+        "entree": 2224,
+        "sortie": 195,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.03199
+    },
+    {
+      "nom": "Jami",
+      "lien": "https://jami.net/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Users who are on the same local network can communicate with Jami even if they are disconnected from the internet."
+        },
+        "controle": {
+          "statut": "confirme",
+          "preuve": "Outil québécois de communication chiffrée"
+        },
+        "dependance": {
+          "statut": "confirme",
+          "preuve": "Jami is completely peer-to-peer and doesn't require a server for relaying data between users."
+        }
+      },
+      "usage": {
+        "entree": 1553,
+        "sortie": 258,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02843
+    },
+    {
+      "nom": "Kashoo",
+      "lien": "https://kashoo.com/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "controle": {
+          "statut": "confirme",
+          "preuve": "Disponible uniquement en anglais, ce logiciel de comptabilité canadien, destiné aux petites organisations, permet de suivre revenus et dépenses, envoyer des factures, enregistrer les paiements, rapprocher les comptes bancaires et produire les principaux rapports financiers."
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 1811,
+        "sortie": 103,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02326
+    },
+    {
+      "nom": "Elodia",
+      "lien": "https://www.elodia.app/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "controle": {
+          "statut": "confirme",
+          "preuve": "Plateforme québécoise utilisant l’intelligence artificielle pour aider les artistes et organismes culturels à trouver des subventions, préparer leurs demandes et gérer leurs échéances."
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 1791,
+        "sortie": 88,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02231
+    },
+    {
+      "nom": "Zeffy",
+      "lien": "https://www.zeffy.com/fr-ca",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "controle": {
+          "statut": "confirme",
+          "preuve": "Plateforme québécoise de collecte de fonds permettant aux OBNL de recevoir des dons, gérer des campagnes, organiser des événements et suivre leurs donateurs."
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 2276,
+        "sortie": 86,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02706
+    },
+    {
+      "nom": "CanaDon",
+      "lien": "https://www.canadahelps.org/fr/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "controle": {
+          "statut": "confirme",
+          "preuve": "Plateforme canadienne de collecte de dons destinée aux organismes de bienfaisance enregistrés."
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 1533,
+        "sortie": 73,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.01898
+    },
+    {
+      "nom": "La Bibli",
+      "lien": "https://labibli.com/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Par défaut, La Bibli est hébergée à Toronto : vos données et celles de vos membres ne quittent pas le Canada, et ne sont revendues à personne."
+        },
+        "controle": {
+          "statut": "confirme",
+          "preuve": "La Bibli est développée au Nouveau-Brunswick par Aynils."
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 2259,
+        "sortie": 134,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02929
+    },
+    {
+      "nom": "Member365",
+      "lien": "https://member365.com/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "controle": {
+          "statut": "confirme",
+          "preuve": "Outil canadien de gestion des membres conçu pour les associations et OBNL."
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 1882,
+        "sortie": 71,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02237
+    },
+    {
+      "nom": "Le point de vente",
+      "lien": "http://www.lepointdevente.com/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "controle": {
+          "statut": "confirme",
+          "preuve": "Solution québécoise de billetterie et de gestion d’événements"
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 2450,
+        "sortie": 70,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.028
+    },
+    {
+      "nom": "eZsign",
+      "lien": "https://www.ezsign.com/fr/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "100% données hébergées au Canada. Toujours."
+        },
+        "controle": {
+          "statut": "confirme",
+          "preuve": "Solution québécoise de signature électronique"
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 2251,
+        "sortie": 106,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02781
+    },
+    {
+      "nom": "Envoke",
+      "lien": "https://envoke.com/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Data in Canada"
+        },
+        "controle": {
+          "statut": "confirme",
+          "preuve": "Envoke is a Canadian email marketing and communications software."
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 1407,
+        "sortie": 67,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.01742
+    },
+    {
+      "nom": "Cyberimpact",
+      "lien": "http://www.cyberimpact.com/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Contact data hosted exclusively on Canadian servers"
+        },
+        "controle": {
+          "statut": "confirme",
+          "preuve": "Outil québécois de marketing par courriel"
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 1994,
+        "sortie": 71,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02349
+    },
+    {
+      "nom": "Dialogue Insight",
+      "lien": "https://www.dialoginsight.com/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "controle": {
+          "statut": "confirme",
+          "preuve": "Solution québécoise de marketing relationnel"
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 1868,
+        "sortie": 63,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02183
+    },
+    {
+      "nom": "Cakemail",
+      "lien": "https://www.cakemail.ca/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Your contact lists and campaign data are stored on Canadian servers, under Canadian and Québec privacy law."
+        },
+        "controle": {
+          "statut": "confirme",
+          "preuve": "Outil québécois de marketing par courriel"
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 1548,
+        "sortie": 82,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.01958
+    },
+    {
+      "nom": "1Password",
+      "lien": "https://1password.com/fr/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "controle": {
+          "statut": "confirme",
+          "preuve": "Gestionnaire canadien de mots de passe pour individus et équipes"
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 1300,
+        "sortie": 67,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.01635
+    },
+    {
+      "nom": "TitanFile",
+      "lien": "https://www.titanfile.com/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Data residency in the US, Canada, or Europe"
+        },
+        "controle": {
+          "statut": "confirme",
+          "preuve": "Outil canadien sécurisé de partage de fichiers et de communications"
+        },
+        "dependance": {
+          "statut": "infirme",
+          "preuve": "When data is uploaded to TitanFile, it is encrypted and stored on ISO-certified AWS and Azure data centers."
+        }
+      },
+      "usage": {
+        "entree": 2067,
+        "sortie": 152,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02827
+    },
+    {
+      "nom": "La Réserve",
+      "lien": "https://sylvea.ca/solutions-resilientes/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Vos données sauvegardées chaque nuit, sur des serveurs au Canada, mutualisés entre OSBL."
+        },
+        "controle": {
+          "statut": "confirme",
+          "preuve": "Service canadien de sauvegarde automatisée des données de Google Workspace et Microsoft 365"
+        },
+        "dependance": {
+          "statut": "infirme",
+          "preuve": "Il renforce la maîtrise des sauvegardes sans supprimer la dépendance aux plateformes d'origine."
+        }
+      },
+      "usage": {
+        "entree": 1707,
+        "sortie": 143,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02422
+    },
+    {
+      "nom": "Sync.com",
+      "lien": "https://www.sync.com/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "controle": {
+          "statut": "confirme",
+          "preuve": "Disponible uniquement en anglais, ce service canadien de stockage infonuagique permet de sauvegarder, synchroniser et partager des fichiers en toute sécurité."
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 1494,
+        "sortie": 84,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.01914
+    },
+    {
+      "nom": "Manni",
+      "lien": "https://www.manni.app/fr/home",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Vos données restent au Canada."
+        },
+        "controle": {
+          "statut": "confirme",
+          "preuve": "Outil québécois de transcription de réunions par IA."
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 2183,
+        "sortie": 130,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02833
+    },
+    {
+      "nom": "Obsidian",
+      "lien": "https://obsidian.md/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Les notes sont conservées sous forme de fichiers Markdown directement sur l’appareil."
+        },
+        "controle": {
+          "statut": "confirme",
+          "preuve": "Outil canadien de prise de notes et d’organisation des connaissances permettant de relier documents, idées et ressources dans une base personnelle ou partagée."
+        },
+        "dependance": {
+          "statut": "confirme",
+          "preuve": "Obsidian stores notes privately on your device, so you can access them quickly, even offline."
+        }
+      },
+      "usage": {
+        "entree": 2043,
+        "sortie": 116,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02623
+    }
+  ]
+}

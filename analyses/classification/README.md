@@ -98,3 +98,23 @@ nub confirmer.ts --fournisseur=claude --budget=10                # exécution co
 nub analyses/classification/analyser-confirmations.ts outils.json
 nub analyses/classification/essais/base.ts outils.json           # mesure de base; voir aussi essai-a à essai-d
 ```
+
+## Règle A pour « contrôle » : la nationalité mentionnée suffit
+
+Suite du désaccord sur « contrôle » : les consignes de `confirmer.ts` reçoivent une précision (`REGLES.A`, option `--regle=A`), sans toucher à `criteres.json` (texte des auteurs du répertoire, que `extract.ts` réécrit depuis la page). Règle A : « confirmé » si les textes disent que l'outil est canadien ou québécois, sans exiger de détail sur la propriété ; « infirmé » si origine étrangère ou filiale étrangère ; « indéterminé » sinon. Relancée sur les 21 outils où les deux IA divergeaient (`liste-desaccord-controle.json`, option `--liste`). Résultats détaillés : [`resultats-regle-a.md`](resultats-regle-a.md).
+
+| | OpenAI `gpt-6-astra` | Claude `claude-fable-5-2` |
+|---|---|---|
+| Appels | 21 | 21 |
+| Jetons en entrée | 39 898 | 91 688 (dont 33 550 lus du cache) |
+| Jetons en sortie | 2 363 | 4 631 |
+| **Coût** | **0,5171 $** | **1,1218 $** |
+| Durée (les deux en parallèle) | environ 4 minutes | |
+
+Constats :
+- **Accord total sur ces 21 outils :** avec la règle A, OpenAI passe de 21 « indéterminé » à 21 « confirmé », et Claude reste à 21 « confirmé ». Les deux IA ont donc le même verdict pour les 21 (contre 0 au départ, par construction : ces outils avaient été choisis pour leur désaccord).
+- **C'est en partie tautologique :** la règle A dit aux IA de faire ce que `classify.ts` fait déjà (« québécois » ou « canadien » vaut preuve), et `criteres` retient « contrôle » pour ces 21 outils. L'accord mesure que les IA suivent la consigne, pas que le contrôle canadien est établi : `evaluation_enrichie` ne le retenait que pour 14 des 21.
+- **Variabilité faible :** pour « données » et « dépendance », dont les consignes n'ont pas changé, un seul verdict sur 126 (21 outils × 3 critères × 2 fournisseurs, moins « contrôle ») a changé entre les deux exécutions (Claude, « données »). Le changement d'OpenAI sur « contrôle » est donc dû à la règle, pas au hasard.
+- **Aucune citation rejetée,** aucun nouvel essai.
+
+Ce que ça dit : le critère « contrôle » n'est pas mesurable à partir des descriptions sans une convention de lecture ; la règle A en est une, raisonnable pour un répertoire qui qualifie lui-même ses outils de « canadiens », mais elle ne vérifie pas la propriété. Pour aller plus loin, il faudrait des sources sur la propriété des entreprises (registre, page « à propos »), ou une validation humaine d'un échantillon.

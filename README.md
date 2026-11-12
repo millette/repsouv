@@ -232,14 +232,15 @@ Variante de `classify.ts` : mêmes options, mêmes `criteres` (le test vérifie 
 ### `confirmer.ts`
 
 ```sh
-nub confirmer.ts --fournisseur=openai|claude [--modele=M] [--limite=N] [--budget=USD] [--sortie=F] [--dry-run] [outils.json]
+nub confirmer.ts --fournisseur=openai|claude [--modele=M] [--limite=N] [--budget=USD] [--sortie=F] [--regle=A] [--liste=noms.json] [--dry-run] [outils.json]
 ```
 
 Pour chaque outil enrichi, donne à une IA la page de l'outil et les trois critères (sans le score ni les critères du répertoire) et lui demande, critère par critère, « confirmé », « infirmé » ou « indéterminé », avec une **citation copiée mot pour mot** des textes fournis. Une citation introuvable rejette la réponse (redemandée une fois). C'est la piste 1 de l'[analyse de classification](analyses/classification/README.md) ; le résultat n'est pas écrit dans `outils.json` mais dans `analyses/classification/confirmations-<fournisseur>.json`.
 
 - `openai` : API OpenAI (Responses), clé `OPENAI_API_KEY` ; modèle par défaut celui de l'enrichissement. `claude` : la commande `claude -p` (aucune clé `ANTHROPIC_API_KEY`, mais la session Claude Code ; isolée du projet, sans outil), modèle par défaut `claude-fable-5-2`.
 - **Coût :** les jetons et le coût en dollars de chaque appel sont inscrits dans la sortie (`totaux`). Pour OpenAI, le coût est calculé avec les prix de `PRIX` ; pour `claude`, c'est le coût au prix catalogue que rapporte la CLI. `--budget` (15 $ par défaut) arrête avant l'appel suivant quand le coût cumulé l'atteint.
-- **Reprise :** les outils déjà confirmés dans le fichier de sortie ne sont pas redemandés.
+- **Reprise :** les outils déjà confirmés dans le fichier de sortie ne sont pas redemandés. `--liste=F` limite aux outils nommés dans `F` (tableau JSON de noms).
+- **Règles de lecture :** `--regle=A` ajoute aux consignes une précision pour le critère « contrôle » (la nationalité mentionnée suffit, sauf origine ou filiale étrangère), sans modifier `criteres.json`. Les règles sont dans `REGLES` ; leur effet est mesuré dans l'[analyse](analyses/classification/README.md).
 - **Confidentialité :** le nom, la catégorie, le lien, la description et l'extrait de la page (6 000 caractères au plus) de chaque outil sont envoyés au fournisseur choisi.
 
 ### `update.ts`

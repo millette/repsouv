@@ -4,7 +4,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import {
-  accordEnsembles, coutOpenAI, confirmerOutils, ensembleConfirme, lireSortieClaude, normaliserTexte, PRIX, validerConfirmation,
+  accordEnsembles, coutOpenAI, confirmerOutils, ensembleConfirme, instructions, lireSortieClaude, normaliserTexte, PRIX, REGLES, selectionnerOutils, validerConfirmation,
   totauxDe, type Appel, type Confirmation, type Fournisseur, type Requete, type Usage,
 } from "../confirmer.ts";
 import type { Contenu } from "../enrichir.ts";
@@ -156,4 +156,33 @@ test("totauxDe: somme les jetons, les coûts, les appels (tentatives) et les éc
     { nom: "C", lien: "c", tentatives: 0, echec: "page inaccessible (HTTP 403)" },
   ]);
   assert.deepEqual(t, { appels: 3, entree: 300, sortie: 20, cache_lecture: 2, cache_ecriture: 0, cout_usd: 0.04, echecs: 1 });
+});
+
+// ---------- règle A pour « contrôle » ----------
+
+test("REGLES.A précise « controle » seulement: la nationalité mentionnée suffit, sauf filiale ou origine étrangère", () => {
+  assert.deepEqual(Object.keys(REGLES.A!), ["controle"]);
+  const regle = REGLES.A!.controle!;
+  assert.match(regle, /québécois/);
+  assert.match(regle, /filiale/);
+  assert.match(regle, /indetermine/);
+});
+
+test("instructions: sans règle, aucune précision; avec la règle A, la précision de « controle » suit sa définition", () => {
+  assert.doesNotMatch(instructions([]), /Précision/);
+  const avec = instructions([], REGLES.A);
+  assert.match(avec, /Précision pour controle/);
+  assert.doesNotMatch(avec, /Précision pour donnees|Précision pour dependance/);
+});
+
+test("confirmerOutils: la règle choisie est transmise dans les consignes de chaque requête", async () => {
+  const requetes: Requete[] = [];
+  await confirmerOutils([outil("A", "https://a")], { fournisseur: fournisseur([], 0.01, requetes), lirePage, precisions: REGLES.A! });
+  assert.match(requetes[0]!.instructions, /Précision pour controle/);
+});
+
+test("selectionnerOutils garde les outils de la liste, dans l'ordre du répertoire, et refuse un nom inconnu", () => {
+  const outils = [outil("A", "https://a"), outil("B", "https://b"), outil("C", "https://c")];
+  assert.deepEqual(selectionnerOutils(outils, ["C", "A"]).map((o) => o.nom), ["A", "C"]);
+  assert.throws(() => selectionnerOutils(outils, ["A", "Z"]), /inconnu.*Z/);
 });
