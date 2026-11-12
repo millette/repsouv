@@ -18,6 +18,21 @@ SPDX-FileCopyrightText = [
 ]
 SPDX-License-Identifier = "CC-BY-SA-4.0"
 
+# Banc d'essai des modèles (analyse-effort/): le script porte son en-tête; l'analyse est de la documentation, les résultats
+# JSON (outils enrichis par chaque variante) sont dérivés des données.
+[[annotations]]
+path = ["analyse-effort/analyse.md"]
+SPDX-FileCopyrightText = "2026 Robin Millette <https://robin.millette.info/>"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+[[annotations]]
+path = ["analyse-effort/*.json"]
+SPDX-FileCopyrightText = [
+  "2026 Sven Buridans, François Delnooz, Marie-Renee Duguay (Praxis), Répertoire d'outils favorisant la souveraineté numérique",
+  "2026 Robin Millette <https://robin.millette.info/>",
+]
+SPDX-License-Identifier = "CC-BY-SA-4.0"
+
 # Skill Claude Code « charting-vega-lite », copié tel quel depuis https://github.com/oaustegard/claude-skills (MIT).
 [[annotations]]
 path = [".claude/**"]

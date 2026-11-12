@@ -7,7 +7,7 @@ import { test } from "node:test";
 import { problemeLicenceSpdx } from "../spdx.ts";
 
 const LICENCE_CODE = "AGPL-3.0-or-later";
-const sources = [".", "test", "test/donnees"].flatMap((d) => readdirSync(d).filter((f) => f.endsWith(".ts")).map((f) => (d === "." ? f : `${d}/${f}`)));
+const sources = [".", "test", "test/donnees", "analyse-effort"].flatMap((d) => readdirSync(d).filter((f) => f.endsWith(".ts")).map((f) => (d === "." ? f : `${d}/${f}`)));
 
 test("la licence du code est un identifiant SPDX valide, le même dans package.json", () => {
   assert.equal(problemeLicenceSpdx(LICENCE_CODE), null);

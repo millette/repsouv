@@ -5,7 +5,7 @@
 import { dirname, join, normalize } from "node:path";
 
 /** Les fichiers Markdown rédigés à la main. */
-export const FICHIERS_REDIGES = ["README.md", "implementation.md", "historique.md"] as const;
+export const FICHIERS_REDIGES = ["README.md", "implementation.md", "historique.md", "analyse-effort/analyse.md"] as const;
 /** Les fichiers Markdown générés par un script (absents avant le premier `nub run update`). */
 export const FICHIERS_GENERES = ["sommaire.md"] as const;
 export const FICHIERS_MD = [...FICHIERS_REDIGES, ...FICHIERS_GENERES] as const;

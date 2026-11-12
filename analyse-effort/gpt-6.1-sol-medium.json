@@ -1,0 +1,1066 @@
+{
+  "resume": {
+    "modele": "gpt-6.1-sol",
+    "effort": "medium",
+    "outils": 20,
+    "enrichis": 20,
+    "verifies": 20,
+    "rejets": 0,
+    "echecs": 0,
+    "source": 19,
+    "licence": 19,
+    "repo": 19,
+    "eval_score": 19,
+    "eval_criteres": 19,
+    "tags_identiques": 10,
+    "tags_jaccard_moyen": 0.84,
+    "verdict_donnees": 20,
+    "verdict_controle": 20,
+    "verdict_dependance": 19,
+    "usage": {
+      "gpt-6.1-sol": {
+        "entree": 118711,
+        "sortie": 16532,
+        "cache_lecture": 43149,
+        "cache_ecriture": 0,
+        "raisonnement": 3546
+      }
+    },
+    "cout": 0.3207589,
+    "couts": "118 711 jetons en entrée (dont 43 149 en cache), 16 532 en sortie (dont 3 546 de raisonnement), ≈ 0,32 $ (gpt-6.1-sol)",
+    "duree_enrichissement_s": 319,
+    "duree_totale_s": 404,
+    "duree_moyenne_outil_s": 16
+  },
+  "journal": [
+    "  2FAS Auth: securite-acces, application-mobile, hors-ligne, vie-privee, gratuit (libre)",
+    "  CiviCRM: gestion-contacts-membres, dons-paiements, evenements-billetterie, courriel-infolettres, auto-hebergeable (libre)",
+    "  Discourse: communaute-reseau-social, auto-hebergeable, messagerie-visioconference, api-integrations (libre)",
+    "  Firefox: navigation-web, vie-privee, gratuit, application-bureau, application-mobile (libre)",
+    "  Jami: messagerie-visioconference, chiffrement, federe-decentralise, vie-privee, hors-ligne (libre)",
+    "  Leantime: gestion-projets-taches, auto-hebergeable, notes-veille, rapports-analytique, intelligence-artificielle (partiel)",
+    "  Mattermost: messagerie-visioconference, auto-hebergeable, automatisation, api-integrations, application-mobile (partiel)",
+    "  Nextcloud: auto-hebergeable, stockage-partage-fichiers, collaboration-temps-reel, messagerie-visioconference, redaction-documents (libre)",
+    "  OpenProject: gestion-projets-taches, auto-hebergeable, gratuit, rapports-analytique, api-integrations (partiel)",
+    "  Thunderbird: courriel-infolettres, application-bureau, application-mobile, hors-ligne, vie-privee (libre)",
+    "  1Password: securite-acces, chiffrement, application-bureau, application-mobile (proprietaire)",
+    "  Cakemail: courriel-infolettres, automatisation, api-integrations, rapports-analytique, gratuit (proprietaire)",
+    "  Cyberimpact: courriel-infolettres, automatisation, gestion-contacts-membres, api-integrations, gratuit (proprietaire)",
+    "    évaluation différente du répertoire: 1/3 [donnees] (confiance moyenne) contre 2/3",
+    "  Elodia: subventions, intelligence-artificielle, redaction-documents (proprietaire)",
+    "    évaluation différente du répertoire: 0/3 [] (confiance faible) contre 2/3",
+    "  Fellow: transcription-reunions, intelligence-artificielle, api-integrations, securite-acces, vie-privee (proprietaire)",
+    "    évaluation différente du répertoire: 1/3 [controle] (confiance moyenne) contre 2/3",
+    "  Kashoo: comptabilite-facturation, rapports-analytique, api-integrations, anglais-seulement, securite-acces (proprietaire)",
+    "    évaluation différente du répertoire: 0/3 [] (confiance moyenne) contre 2/3",
+    "  La Bibli: collections-patrimoine, automatisation (proprietaire)",
+    "  Manni: transcription-reunions, intelligence-artificielle, application-bureau, automatisation, api-integrations (proprietaire)",
+    "    évaluation différente du répertoire: 1/3 [donnees] (confiance moyenne) contre 2/3",
+    "  Micrologic: domaines-hebergement-web, stockage-partage-fichiers, sauvegarde, securite-acces (proprietaire)",
+    "    évaluation différente du répertoire: 2/3 [donnees, controle] (confiance moyenne) contre 3/3",
+    "  TitanFile: stockage-partage-fichiers, chiffrement, securite-acces (proprietaire)",
+    "    évaluation différente du répertoire: 2/3 [donnees, controle] (confiance moyenne) contre 3/3",
+    "  2FAS Auth: donnees, dependance",
+    "  CiviCRM: donnees, dependance",
+    "  Discourse: donnees, dependance",
+    "  Firefox: donnees",
+    "  Jami: donnees, controle, dependance",
+    "  Leantime: donnees",
+    "  Mattermost: donnees, dependance",
+    "  Nextcloud: donnees, dependance",
+    "  OpenProject: donnees, dependance",
+    "  Thunderbird: donnees",
+    "  1Password: controle",
+    "  Cakemail: donnees, controle",
+    "  Cyberimpact: donnees, controle",
+    "  Elodia: controle",
+    "  Fellow: controle",
+    "  Kashoo: controle",
+    "  La Bibli: donnees, controle",
+    "  Manni: donnees, controle",
+    "  Micrologic: donnees, controle",
+    "  TitanFile: donnees, controle"
+  ],
+  "outils": [
+    {
+      "categorie": "securite-et-gestion-des-acces",
+      "nom": "2FAS Auth",
+      "score": 2,
+      "lien": "https://2fas.com/auth/",
+      "description": "Application d’authentification à deux facteurs non canadienne qui génère localement des codes temporaires pour sécuriser les connexions aux comptes en ligne. Fonctionne hors ligne, sans compte utilisateur, avec sauvegarde facultative chiffrée dans iCloud ou Google Drive.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": "nouveau",
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "élevée",
+      "description_longue": "2FAS Auth est une application mobile gratuite et à code source ouvert qui génère des codes temporaires d’authentification à deux facteurs. Ces codes servent à ajouter une étape de vérification à la connexion aux comptes en ligne compatibles. Pour un OSBL, elle peut notamment servir à protéger les comptes utilisés pour les communications, l’administration ou les activités de l’organisme.\n\nL’application fonctionne **hors ligne**, conserve les données localement sur l’appareil et ne nécessite pas de compte utilisateur, de numéro de téléphone ni d’adresse courriel. L’éditeur indique également qu’elle ne contient pas de dispositifs de pistage. Son interface est proposée en plusieurs langues.\n\nLe transfert et la restauration des données d’authentification peuvent se faire au moyen de fichiers d’exportation 2FAS. Une synchronisation facultative avec iCloud ou Google Drive permet aussi de les retrouver en cas de perte ou de remplacement du téléphone. Ces services externes ne sont donc pas nécessaires pour générer les codes au quotidien.\n\nUne **extension de navigateur** permet de transmettre un code après confirmation dans l’application mobile, sans le recopier manuellement. Les communications entre le téléphone et le navigateur sont chiffrées de bout en bout. Cette fonction nécessite l’association des deux appareils et l’activation des notifications poussées.\n\nPour une organisation qui souhaite conserver ses données sur ses propres appareils, l’utilisation locale sans synchronisation infonuagique constitue une option distincte des sauvegardes chez Apple ou Google.",
+      "tags": [
+        "securite-acces",
+        "application-mobile",
+        "hors-ligne",
+        "vie-privee",
+        "gratuit"
+      ],
+      "source": "libre",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/twofas/2fas-android",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "élevée"
+      },
+      "enrichi_le": "2026-11-12T16:23:21-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "preuves": {
+          "donnees": "Data stored locally, not sent to third-party servers",
+          "dependance": "Fonctionne hors ligne, sans compte utilisateur, avec sauvegarde facultative chiffrée dans iCloud ou Google Drive."
+        },
+        "infirmes": {
+          "controle": "Application d’authentification à deux facteurs non canadienne"
+        },
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-12T16:28:29-05:00"
+      }
+    },
+    {
+      "categorie": "gestion-de-la-relation-des-membres-et-crm",
+      "nom": "CiviCRM",
+      "score": 2,
+      "lien": "https://civicrm.org/",
+      "description": "Logiciel libre non canadien destiné aux associations et OBNL pour gérer leurs membres, donateurs, contacts, événements et communications. Il s'intègre à plusieurs systèmes de gestion de sites Web et peut être auto-hébergé.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": "nouveau",
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "élevée",
+      "description_longue": "CiviCRM est un **logiciel libre de gestion de la relation avec les publics**, conçu pour les organismes sans but lucratif, les associations et les organisations de mobilisation. Il centralise les coordonnées des contacts et les communications, tout en permettant de gérer les membres, les donateurs, les contributions et les inscriptions aux événements.\n\nPour un OSBL des arts et de la culture, il peut servir à regrouper les relations avec les membres, les personnes donatrices et les participants aux activités. Ses fonctions de communication et d’automatisation peuvent soutenir le suivi des campagnes de financement et certaines tâches administratives. CiviCRM s’intègre notamment à WordPress, Drupal, Joomla et Backdrop.\n\n**Le choix de l’hébergement appartient à l’organisation.** Le logiciel peut être installé sur sa propre infrastructure ou hébergé par un prestataire, notamment au Canada. L’installation et l’exploitation autonome demandent toutefois des compétences techniques. Un réseau de partenaires propose des services de mise en place, d’hébergement et d’accompagnement. CiviCRM Spark constitue une autre offre pour démarrer avec une solution hébergée.\n\nLe logiciel libre peut être téléchargé sans frais de licence, mais l’hébergement, la configuration, la maintenance et l’accompagnement peuvent entraîner des coûts. Le site propose de la documentation, des démonstrations et des webinaires pour explorer l’outil avant son implantation. La présence d’un événement à Montréal ne signifie pas que le projet est sous contrôle canadien.",
+      "tags": [
+        "gestion-contacts-membres",
+        "dons-paiements",
+        "evenements-billetterie",
+        "courriel-infolettres",
+        "auto-hebergeable"
+      ],
+      "source": "libre",
+      "licence": "AGPL-3.0-only",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/civicrm/civicrm-core",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "élevée"
+      },
+      "enrichi_le": "2026-11-12T16:23:37-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "preuves": {
+          "donnees": "Or download, install, and host CiviCRM on your own hosting infrastructure (experts only!).",
+          "dependance": "CiviCRM gives you total freedom in your choice of host. You're not tied to a particular data centre or country."
+        },
+        "infirmes": {
+          "controle": "Logiciel libre non canadien destiné aux associations et OBNL"
+        },
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-12T16:28:35-05:00"
+      }
+    },
+    {
+      "categorie": "communautes-reseaux-et-partage-des-connaissances",
+      "nom": "Discourse",
+      "score": 2,
+      "lien": "https://www.discourse.org/",
+      "description": "Plateforme libre permettant de créer des forums de discussion et des communautés en ligne, avec espaces thématiques, modération, notifications et recherche. L'outil n'est pas canadien mais peut être auto-hébergé pour garder la maîtrise des échanges et des données des membres.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": "nouveau",
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "élevée",
+      "description_longue": "Discourse est une plateforme libre de forums de discussion et de communautés en ligne. Elle permet d’organiser les échanges par sujets, catégories et étiquettes, puis de retrouver les contributions grâce à la recherche. Pour un OSBL des arts et de la culture, elle peut servir d’espace d’entraide entre membres, de lieu de consultation ou de base de connaissances alimentée par les discussions.\n\nLa plateforme combine **discussions structurées, clavardage en temps réel et messagerie privée**. Les membres peuvent partager des fichiers et participer aux échanges par courriel. Selon la configuration et les extensions utilisées, il est aussi possible de recueillir des idées, de faire voter les membres et de suivre leur progression à l’aide de statuts.\n\nLes responsables disposent d’outils de modération, de groupes, de rôles et d’un tableau de bord d’administration. L’apparence et les fonctionnalités peuvent être adaptées au moyen de thèmes et d’extensions. Des intégrations et des mécanismes d’authentification unique permettent de relier la communauté à d’autres systèmes. Certaines fonctions de gestion communautaire font appel à l’intelligence artificielle.\n\n**Discourse peut être auto-hébergé ou utilisé avec un hébergement géré payant.** Son code source public peut être examiné et modifié, et la plateforme permet l’exportation des données. L’auto-hébergement sur une infrastructure canadienne offre une possibilité de conserver les échanges et les données des membres au Canada. Cette formule demande toutefois de prévoir les compétences et les ressources nécessaires à l’installation, aux mises à jour, aux sauvegardes et à l’administration du service.",
+      "tags": [
+        "communaute-reseau-social",
+        "auto-hebergeable",
+        "messagerie-visioconference",
+        "api-integrations"
+      ],
+      "source": "libre",
+      "licence": "GPL-2.0-or-later",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/discourse/discourse",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "élevée"
+      },
+      "enrichi_le": "2026-11-12T16:23:51-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "preuves": {
+          "donnees": "L'outil n'est pas canadien mais peut être auto-hébergé pour garder la maîtrise des échanges et des données des membres.",
+          "dependance": "The entire Discourse codebase is freely available on GitHub. No black boxes, no vendor lock-in, no surprises. Audit it, fork it, extend it."
+        },
+        "infirmes": {
+          "controle": "L'outil n'est pas canadien"
+        },
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-12T16:28:41-05:00"
+      }
+    },
+    {
+      "categorie": "navigation-web",
+      "nom": "Firefox",
+      "score": 2,
+      "lien": "https://www.firefox.com/fr",
+      "description": "Navigateur Internet non canadien axé sur la protection de la vie privée permettant de consulter des sites, gérer onglets, favoris et mots de passe, traduire des pages et limiter le pistage. Les données de navigation peuvent rester entièrement sur l’appareil.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": "nouveau",
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "élevée",
+      "description_longue": "Firefox est un **navigateur Web libre et gratuit**, développé par Mozilla, une organisation américaine. Disponible en français sur ordinateur, téléphone et tablette, il permet de consulter des sites, de gérer des favoris et des mots de passe et d’organiser la navigation avec des groupes d’onglets. Pour un OSBL culturel, il peut servir aux recherches, à la veille et à l’utilisation quotidienne de services en ligne.\n\nLe navigateur intègre un **blocage de nombreux traqueurs** activé par défaut. Son mode lecture réduit les éléments périphériques des articles, tandis que l’incrustation vidéo permet de conserver une vidéo visible pendant d’autres activités. Des extensions et des thèmes permettent d’adapter ses fonctions et son apparence. Firefox propose aussi des fonctions d’édition de PDF et l’importation de favoris, de mots de passe et d’historique depuis un autre navigateur.\n\nFirefox peut être utilisé sans compte. Les favoris, l’historique et les mots de passe peuvent rester sur l’appareil, sans activation de la synchronisation. Une synchronisation chiffrée entre appareils est également proposée. Ce stockage local ne signifie toutefois pas que la navigation est sans échanges de données avec les sites visités ou les services activés.\n\nLes fonctionnalités d’intelligence artificielle présentées par Mozilla sont facultatives et peuvent être désactivées. Pour une organisation canadienne, Firefox offre ainsi un contrôle local sur les données de navigation, mais son développement demeure sous contrôle étranger.",
+      "tags": [
+        "navigation-web",
+        "vie-privee",
+        "gratuit",
+        "application-bureau",
+        "application-mobile"
+      ],
+      "source": "libre",
+      "licence": "MPL-2.0",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/mozilla-firefox/firefox",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "élevée"
+      },
+      "enrichi_le": "2026-11-12T16:24:12-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees"
+        ],
+        "preuves": {
+          "donnees": "Les données de navigation peuvent rester entièrement sur l’appareil."
+        },
+        "infirmes": {
+          "controle": "Navigateur Internet non canadien"
+        },
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-12T16:28:44-05:00"
+      }
+    },
+    {
+      "categorie": "communication-et-collaboration-d-equipe",
+      "nom": "Jami",
+      "score": 3,
+      "lien": "https://jami.net/",
+      "description": "Outil québécois de communication chiffrée permettant d’échanger des messages, passer des appels audio et vidéo, organiser des visioconférences, partager son écran et des fichiers. Son architecture pair-à-pair évite de faire transiter les conversations par un serveur central.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": "nouveau",
+      "criteres": [
+        "donnees",
+        "controle",
+        "dependance"
+      ],
+      "confiance": "élevée",
+      "description_longue": "Jami est un logiciel libre de communication développé par Savoir-faire Linux, une entreprise établie à Montréal. Il permet d’échanger des messages instantanés, de passer des appels audio et vidéo, de participer à des conversations de groupe et d’organiser des visioconférences. Le partage d’écran, le transfert de fichiers, la diffusion de médias et l’enregistrement de messages audio ou vidéo font également partie de ses fonctions.\n\nSon architecture **pair-à-pair** permet aux appareils de communiquer directement, sans serveur central chargé de relayer les conversations. Les communications sont chiffrées de bout en bout. La création d’un compte ne nécessite pas de renseignements personnels, et plusieurs appareils peuvent être associés au même compte. Sur un même réseau local, les utilisateurs peuvent communiquer même sans connexion à Internet.\n\nPour un OSBL culturel, Jami peut servir aux échanges internes, aux rencontres à distance et au partage de documents entre collègues ou partenaires. Son fonctionnement distribué permet de conserver les données sur les appareils utilisés plutôt que dans un service centralisé. Il faut toutefois distinguer cette architecture d’une garantie que tous les échanges restent au Canada, notamment lorsque des participants se trouvent à l’étranger.\n\nJami est gratuit, sans publicité et distribué sous licence **GPL-3.0-or-later**. Il est disponible sur Linux, Windows, macOS, Android, Android TV et iOS. Il peut aussi fonctionner comme client SIP et propose une plateforme d’extensions.",
+      "tags": [
+        "messagerie-visioconference",
+        "chiffrement",
+        "federe-decentralise",
+        "vie-privee",
+        "hors-ligne"
+      ],
+      "source": "libre",
+      "licence": "GPL-3.0-or-later",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://git.jami.net/savoirfairelinux/jami-daemon",
+      "evaluation_enrichie": {
+        "score": 3,
+        "criteres": [
+          "donnees",
+          "controle",
+          "dependance"
+        ],
+        "confiance": "élevée"
+      },
+      "enrichi_le": "2026-11-12T16:24:25-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "controle",
+          "dependance"
+        ],
+        "preuves": {
+          "donnees": "Users who are on the same local network can communicate with Jami even if they are disconnected from the internet.",
+          "controle": "Outil québécois de communication chiffrée",
+          "dependance": "Users who are on the same local network can communicate with Jami even if they are disconnected from the internet."
+        },
+        "infirmes": {},
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-12T16:28:50-05:00"
+      }
+    },
+    {
+      "categorie": "gestion-de-projets-et-des-taches",
+      "nom": "Leantime",
+      "score": 2,
+      "lien": "https://leantime.io/",
+      "description": "Logiciel de gestion de projets permettant de définir des objectifs, planifier les activités, organiser les tâches et suivre les échéances. Non canadien, il propose une édition libre et auto-hébergeable.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": "nouveau",
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "élevée",
+      "description_longue": "Leantime est un outil de **gestion de projets et de tâches** qui combine planification collective et organisation personnelle. Il est conçu en tenant compte de la neurodivergence, notamment du trouble du déficit de l’attention avec ou sans hyperactivité. Cette orientation se traduit par des fonctions de structuration du travail et de priorisation, sans constituer une garantie d’efficacité pour chaque personne.\n\nLes équipes peuvent organiser leurs tâches en tableaux Kanban, en tableaux de données ou en listes, avec des sous-tâches et des dépendances. Les jalons regroupent des tâches autour d’une date et s’affichent sur une chronologie de type Gantt. Des espaces de documentation, de collecte d’idées et de rétrospective permettent de conserver le contexte des projets. Le suivi du temps et les rapports servent à examiner les heures consacrées au travail.\n\nUn **tableau de bord personnel** rassemble les tâches de plusieurs projets. Il propose des notes privées, des tableaux blancs et la planification de plages de travail à partir d’un calendrier iCalendar. Le site présente aussi des fonctions d’intelligence artificielle pour décomposer des tâches, adapter des descriptions de projets et générer des rapports d’avancement.\n\nPour un OSBL culturel, Leantime peut servir à coordonner une production, une programmation ou les activités d’une équipe. Une édition libre peut être **auto-hébergée**, notamment avec Docker, ce qui permet de choisir une infrastructure canadienne. L’installation, les mises à jour et les sauvegardes restent alors à la charge de l’organisme ou de son prestataire. La disponibilité des fonctions doit être vérifiée selon l’édition et les modules retenus.",
+      "tags": [
+        "gestion-projets-taches",
+        "auto-hebergeable",
+        "notes-veille",
+        "rapports-analytique",
+        "intelligence-artificielle"
+      ],
+      "source": "partiel",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/leantime/leantime",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "moyenne"
+      },
+      "enrichi_le": "2026-11-12T16:24:42-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees"
+        ],
+        "preuves": {
+          "donnees": "Non canadien, il propose une édition libre et auto-hébergeable."
+        },
+        "infirmes": {
+          "controle": "Non canadien, il propose une édition libre et auto-hébergeable."
+        },
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-12T16:28:53-05:00"
+      }
+    },
+    {
+      "categorie": "communication-et-collaboration-d-equipe",
+      "nom": "Mattermost",
+      "score": 2,
+      "lien": "https://mattermost.com/",
+      "description": "Messagerie collaborative open source pour les équipes, avec canaux, messages, partage de fichiers, appels et automatisations. Cet outil non canadien peut cependant être auto-hébergé sur l’infrastructure de l’organisation, y compris dans un environnement privé ou totalement déconnecté.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": "nouveau",
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "élevée",
+      "description_longue": "Mattermost est une plateforme de communication et de collaboration d’équipe qui regroupe des canaux de discussion, des messages directs, des fils de conversation et le partage de fichiers. L’historique des échanges est consultable par recherche. L’outil est accessible sur le Web ainsi que par des applications de bureau et mobiles.\n\nPour un OSBL culturel, il peut servir à centraliser les échanges d’une équipe, à organiser les discussions par projet et à conserver les documents partagés dans leur contexte. La plateforme propose aussi des appels audio et le partage d’écran. Des fonctions d’automatisation permettent de structurer des procédures récurrentes avec des listes de vérification et des déclencheurs provenant d’autres systèmes. Une API REST, des webhooks et des intégrations permettent de relier Mattermost à d’autres outils.\n\n**Le choix du déploiement est un élément central de l’offre.** Mattermost peut être installé sur l’infrastructure de l’organisation, dans un nuage privé ou dans un environnement entièrement déconnecté. Un déploiement sur une infrastructure canadienne permet donc de conserver les données au Canada. Cette option implique toutefois de prévoir l’administration du serveur, les mises à jour et la maintenance.\n\nMattermost combine du code libre et des fonctionnalités commerciales. La disponibilité des fonctions avancées de gouvernance, de fédération, d’automatisation ou d’intelligence artificielle doit être vérifiée selon l’édition retenue. Pour les fonctions d’IA, l’éditeur indique qu’il est possible de choisir un fournisseur de modèles ou d’utiliser un modèle auto-hébergé.",
+      "tags": [
+        "messagerie-visioconference",
+        "auto-hebergeable",
+        "automatisation",
+        "api-integrations",
+        "application-mobile"
+      ],
+      "source": "partiel",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/mattermost/mattermost",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "élevée"
+      },
+      "enrichi_le": "2026-11-12T16:24:57-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "preuves": {
+          "donnees": "Cet outil non canadien peut cependant être auto-hébergé sur l’infrastructure de l’organisation, y compris dans un environnement privé ou totalement déconnecté.",
+          "dependance": "Every capability runs entirely inside your perimeter, including in classified & air-gapped networks."
+        },
+        "infirmes": {
+          "controle": "Cet outil non canadien"
+        },
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-12T16:28:56-05:00"
+      }
+    },
+    {
+      "categorie": "stockage-infonuagique-et-sauvegarde",
+      "nom": "Nextcloud",
+      "score": 2,
+      "lien": "https://nextcloud.com/",
+      "description": "Suite collaborative non canadienne permettant de stocker et partager des fichiers, gérer calendriers, contacts et tâches, communiquer en équipe et collaborer sur des documents grâce à des suites bureautiques intégrées. Peut être auto-hébergée sur l’infrastructure choisie.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": "nouveau",
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "élevée",
+      "description_longue": "Nextcloud est une **plateforme libre de stockage et de collaboration** qui peut être installée sur l’infrastructure choisie par une organisation. Sa suite Nextcloud Hub réunit le partage de fichiers, les communications d’équipe, les calendriers, les contacts, le courriel et l’édition collaborative de documents. L’accès se fait par navigateur ainsi que par des applications pour ordinateur et appareils mobiles.\n\nNextcloud Files permet de stocker, synchroniser et partager des fichiers, avec des mécanismes de contrôle des accès. Nextcloud Talk propose la messagerie, les appels audio et vidéo et le partage d’écran. Nextcloud Office, fondé sur LibreOffice, permet de travailler à plusieurs sur des textes, des feuilles de calcul et des présentations, notamment dans les formats DOCX, XLSX et PPTX.\n\nPour un OSBL culturel, ces fonctions peuvent servir à centraliser les documents administratifs, partager des dossiers de production et coordonner le travail entre équipes. Des outils complémentaires permettent d’automatiser des processus internes. La plateforme propose aussi un assistant d’intelligence artificielle pouvant fonctionner localement, avec des fonctions de génération de contenu, de résumé et de traduction.\n\n**L’auto-hébergement permet de choisir où résident les données**, y compris sur une infrastructure au Canada. Il implique toutefois de prévoir l’administration du serveur, les mises à jour et les sauvegardes, ou de confier ces responsabilités à un prestataire. Nextcloud est développé par une entreprise allemande : le choix d’un hébergement canadien ne signifie donc pas que l’éditeur est sous contrôle canadien. Le logiciel libre peut être utilisé sans abonnement de soutien; des services commerciaux sont également proposés.",
+      "tags": [
+        "auto-hebergeable",
+        "stockage-partage-fichiers",
+        "collaboration-temps-reel",
+        "messagerie-visioconference",
+        "redaction-documents"
+      ],
+      "source": "libre",
+      "licence": "AGPL-3.0-or-later",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/nextcloud/server",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "élevée"
+      },
+      "enrichi_le": "2026-11-12T16:25:09-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "preuves": {
+          "donnees": "Peut être auto-hébergée sur l’infrastructure choisie.",
+          "dependance": "Governments are moving away from foreign cloud providers amid rising concerns about digital sovereignty and are opting for secure self hosted cloud file storage platforms."
+        },
+        "infirmes": {
+          "controle": "Suite collaborative non canadienne"
+        },
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-12T16:29:04-05:00"
+      }
+    },
+    {
+      "categorie": "gestion-de-projets-et-des-taches",
+      "nom": "OpenProject",
+      "score": 2,
+      "lien": "https://www.openproject.org/",
+      "description": "Logiciel libre non canadien de gestion de projets permettant de planifier les tâches, échéances, responsabilités et calendriers, avec notamment des diagrammes de Gantt. Sa version communautaire auto-hébergeable permet de conserver les données sur une infrastructure choisie.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": "nouveau",
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "élevée",
+      "description_longue": "OpenProject est un logiciel de **gestion de projets** qui prend en charge les approches classiques, agiles et hybrides. Il permet de structurer les activités, d’attribuer des tâches, de définir des échéances et de suivre l’avancement du travail dans un espace centralisé.\n\nLa planification s’appuie notamment sur des **diagrammes de Gantt**, des tableaux agiles et des fonctions adaptées aux méthodes Scrum et Kanban. Un planificateur d’équipe permet de visualiser l’attribution des tâches dans un calendrier hebdomadaire ou sur deux semaines. Le logiciel propose également le suivi du temps et des coûts, ainsi qu’une API pour les intégrations.\n\nPour un OSBL culturel, ces fonctions peuvent servir à coordonner une production, une exposition ou une programmation, en répartissant les responsabilités et en suivant les étapes de réalisation.\n\nL’édition **Community est gratuite et auto-hébergeable**. Elle permet d’installer OpenProject sur l’infrastructure de l’organisme ou chez un hébergeur choisi, y compris au Canada. Cette formule demande toutefois des compétences techniques pour l’installation et l’exploitation. Les offres Enterprise ajoutent notamment du soutien, des modules complémentaires et des fonctions de sécurité, avec une formule auto-hébergée ou un service infonuagique géré.\n\nL’hébergement proposé par OpenProject se situe dans l’Union européenne, avec une possibilité d’hébergement en Allemagne. Pour conserver les données au Canada, il faut donc privilégier une installation sur une infrastructure canadienne plutôt que cette offre infonuagique.",
+      "tags": [
+        "gestion-projets-taches",
+        "auto-hebergeable",
+        "gratuit",
+        "rapports-analytique",
+        "api-integrations"
+      ],
+      "source": "partiel",
+      "licence": "GPL-3.0-only",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/opf/openproject",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "élevée"
+      },
+      "enrichi_le": "2026-11-12T16:25:29-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "preuves": {
+          "donnees": "Sa version communautaire auto-hébergeable permet de conserver les données sur une infrastructure choisie.",
+          "dependance": "OpenProject can be installed on-premises in your own organizations’s infrastructure, giving you complete control over your data and allowing you to manage it 100% yourself."
+        },
+        "infirmes": {
+          "controle": "Logiciel libre non canadien de gestion de projets permettant de planifier les tâches, échéances, responsabilités et calendriers, avec notamment des diagrammes de Gantt."
+        },
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-12T16:29:10-05:00"
+      }
+    },
+    {
+      "categorie": "messagerie-electronique",
+      "nom": "Thunderbird",
+      "score": 2,
+      "lien": "https://www.thunderbird.net/fr",
+      "description": "Client de messagerie permettant de gérer courriels, calendriers et contacts depuis une application de bureau ou mobile. Avec ce logiciel non canadien, les messages restent chez le fournisseur de courriel choisi et peuvent aussi être conservés localement sur l’appareil.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": "nouveau",
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "élevée",
+      "description_longue": "Thunderbird est un **logiciel libre et gratuit de messagerie électronique**, lié à la famille Mozilla et financé par des dons. Disponible en français sur Windows, macOS et Linux, l’application de bureau permet de réunir courriels, agendas et contacts. Une application mobile est également proposée sur Android, notamment par Google Play et F-Droid.\n\nSur ordinateur, Thunderbird permet de gérer plusieurs comptes séparément ou dans une boîte de réception unifiée. Les filtres, les étiquettes et les options de personnalisation facilitent le classement et la consultation des messages. Pour un OSBL culturel, il peut servir à regrouper les échanges associés à différentes adresses de l’organisme dans une même interface.\n\n**Thunderbird est un client de messagerie, et non un service d’hébergement de courriel.** Les messages restent chez le fournisseur choisi et peuvent aussi être conservés localement sur l’appareil. Les messages téléchargés sont consultables hors ligne; une connexion reste nécessaire pour envoyer et recevoir de nouveaux courriels. Le lieu d’hébergement et les conditions de confidentialité dépendent donc aussi du fournisseur de messagerie et de la configuration des comptes.\n\nLe logiciel est développé hors du Canada, mais son utilisation n’impose pas un fournisseur de courriel étranger. Il peut être associé à une infrastructure de messagerie canadienne. La conservation de copies locales nécessite toutefois de prévoir la protection de l’appareil et la sauvegarde des données.",
+      "tags": [
+        "courriel-infolettres",
+        "application-bureau",
+        "application-mobile",
+        "hors-ligne",
+        "vie-privee"
+      ],
+      "source": "libre",
+      "licence": "MPL-2.0",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://hg.mozilla.org/comm-central/",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "élevée"
+      },
+      "enrichi_le": "2026-11-12T16:25:44-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees"
+        ],
+        "preuves": {
+          "donnees": "les messages restent chez le fournisseur de courriel choisi et peuvent aussi être conservés localement sur l’appareil."
+        },
+        "infirmes": {
+          "controle": "Avec ce logiciel non canadien"
+        },
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-12T16:29:14-05:00"
+      }
+    },
+    {
+      "categorie": "securite-et-gestion-des-acces",
+      "nom": "1Password",
+      "score": 2,
+      "lien": "https://1password.com/fr/",
+      "description": "Gestionnaire canadien de mots de passe pour individus et équipes permettant de stocker et partager identifiants, clés d’accès et autres secrets dans des coffres chiffrés, de générer des mots de passe et de gérer les accès aux comptes de l’organisation.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": "nouveau",
+      "criteres": [
+        "donnees",
+        "controle"
+      ],
+      "confiance": "moyenne",
+      "description_longue": "1Password est un **gestionnaire de mots de passe et de secrets** développé par une entreprise canadienne. Il permet de conserver des identifiants, des clés d’accès et d’autres renseignements sensibles dans des coffres chiffrés, puis de partager certains éléments avec les personnes autorisées. Il propose aussi la génération de mots de passe et des applications pour ordinateur et appareils mobiles, ainsi que des extensions de navigateur.\n\nPour un OSBL culturel, il peut servir à organiser les accès aux comptes de l’organisme : billetterie, réseaux sociaux, outils administratifs ou services de stockage. Les coffres partagés permettent de distinguer les accès selon les équipes et les responsabilités. La gestion des autorisations facilite l’attribution et le retrait des accès lors de changements de personnel.\n\nLa page présente également une gamme de fonctions destinées aux entreprises : gestion des secrets utilisés par les machines et les agents d’intelligence artificielle, délivrance d’identifiants temporaires, accès privilégiés et suivi des applications en ligne. Ces fonctions relèvent de produits ou de forfaits distincts et ne doivent pas être présumées incluses dans tous les abonnements.\n\n**1Password est un service propriétaire sur abonnement**, et non une solution auto-hébergeable. Une région d’hébergement canadienne est proposée; l’organisation doit vérifier la région associée à son compte et les conditions applicables aux données.",
+      "tags": [
+        "securite-acces",
+        "chiffrement",
+        "application-bureau",
+        "application-mobile"
+      ],
+      "source": "proprietaire",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": null,
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "controle"
+        ],
+        "confiance": "moyenne"
+      },
+      "enrichi_le": "2026-11-12T16:25:57-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "controle"
+        ],
+        "preuves": {
+          "controle": "Gestionnaire canadien de mots de passe pour individus et équipes"
+        },
+        "infirmes": {},
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-12T16:29:16-05:00"
+      }
+    },
+    {
+      "categorie": "marketing-par-courriel",
+      "nom": "Cakemail",
+      "score": 2,
+      "lien": "https://www.cakemail.ca/",
+      "description": "Outil québécois de marketing par courriel permettant de créer des infolettres, gérer des listes de contacts, automatiser des campagnes et suivre leurs résultats. Propose aussi l’envoi de courriels transactionnels par API ou SMTP.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": "nouveau",
+      "criteres": [
+        "donnees",
+        "controle"
+      ],
+      "confiance": "moyenne",
+      "description_longue": "Cakemail est une plateforme québécoise de marketing par courriel qui permet de créer des infolettres, de gérer des listes de contacts et de suivre les résultats des envois. Pour un OSBL des arts et de la culture, elle peut servir à communiquer avec ses membres, son public ou ses partenaires.\n\nLa plateforme propose des modèles de courriels, des fonctions de segmentation des contacts, l’automatisation de campagnes et des outils d’analyse des résultats. Elle permet également l’envoi de courriels transactionnels par API ou SMTP. Des formulaires d’inscription et des outils de gestion des listes aident à recueillir et à suivre le consentement des personnes abonnées selon les exigences de la Loi canadienne anti-pourriel (LCAP). Ces fonctions ne remplacent toutefois pas les responsabilités de l’organisme en matière de conformité.\n\n**Pour les clients canadiens, Cakemail indique que les listes de contacts et les données de campagne sont hébergées au Canada**, sous les lois canadiennes et québécoises relatives à la protection des renseignements personnels. La facturation en dollars canadiens est offerte, et le soutien est disponible en français et en anglais.\n\nIl est possible de créer un compte gratuitement, sans carte de crédit. Une aide à la migration des contacts, des modèles et des automatisations est également proposée sans frais pour certains comptes, après approbation au cas par cas. L’extrait fourni ne précise pas les limites du compte gratuit ni les conditions détaillées des forfaits.",
+      "tags": [
+        "courriel-infolettres",
+        "automatisation",
+        "api-integrations",
+        "rapports-analytique",
+        "gratuit"
+      ],
+      "source": "proprietaire",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": null,
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "controle"
+        ],
+        "confiance": "moyenne"
+      },
+      "enrichi_le": "2026-11-12T16:26:09-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "controle"
+        ],
+        "preuves": {
+          "donnees": "Your contact lists and campaign data are stored on Canadian servers, under Canadian and Québec privacy law.",
+          "controle": "Outil québécois de marketing par courriel"
+        },
+        "infirmes": {},
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-12T16:29:19-05:00"
+      }
+    },
+    {
+      "categorie": "marketing-par-courriel",
+      "nom": "Cyberimpact",
+      "score": 2,
+      "lien": "http://www.cyberimpact.com/",
+      "description": "Outil québécois de marketing par courriel permettant de créer et envoyer des infolettres, gérer les contacts et consentements, automatiser des campagnes et analyser leurs résultats.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": "nouveau",
+      "criteres": [
+        "donnees",
+        "controle"
+      ],
+      "confiance": "moyenne",
+      "description_longue": "Cyberimpact est une plateforme québécoise de marketing par courriel qui permet de créer des infolettres, de gérer des listes de contacts et de suivre les résultats des campagnes. Pour un OSBL culturel, elle peut servir à diffuser une programmation, annoncer des activités ou maintenir le lien avec ses publics.\n\nL’éditeur de courriels fonctionne par glisser-déposer et propose des modèles réutilisables ainsi que des mises en page adaptées aux appareils mobiles. La plateforme comprend aussi des formulaires d’inscription, des fenêtres contextuelles, des pages de destination, des fonctions de segmentation et des automatisations à plusieurs étapes. Des intégrations et une API permettent de synchroniser les contacts avec d’autres outils.\n\n**La gestion des consentements** comprend un historique horodaté et exportable pour chaque contact, la gestion des désabonnements et l’ajout des coordonnées de l’expéditeur dans le pied de page. Ces fonctions visent à soutenir le respect de la Loi canadienne anti-pourriel et des règles de protection des renseignements personnels, sans remplacer les obligations de l’organisme. Le fournisseur indique que les données des contacts sont hébergées exclusivement sur des serveurs canadiens.\n\nUne formule gratuite couvre jusqu’à 250 contacts, avec un nombre illimité d’envois et d’utilisateurs. Les forfaits payants sont facturés en dollars canadiens et varient selon le nombre de contacts. Certaines fonctions, notamment l’automatisation marketing, dépendent du forfait. Le soutien est offert en français et en anglais par une équipe située au Canada; dans la formule gratuite, il est limité à une période d’essai de 30 jours.",
+      "tags": [
+        "courriel-infolettres",
+        "automatisation",
+        "gestion-contacts-membres",
+        "api-integrations",
+        "gratuit"
+      ],
+      "source": "proprietaire",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": null,
+      "evaluation_enrichie": {
+        "score": 1,
+        "criteres": [
+          "donnees"
+        ],
+        "confiance": "moyenne",
+        "ecart": "L’écart porte sur le contrôle canadien, retenu dans les critères déduits du répertoire avec une confiance moyenne, mais non retenu dans l’évaluation enrichie. La présentation de Cyberimpact comme une plateforme canadienne avec une équipe au Canada ne suffit pas à établir qui contrôle l’entreprise, il faudrait vérifier sa propriété et son éventuelle société mère. Les deux évaluations retiennent le critère des données, la page affirmant que les données de contacts sont hébergées exclusivement sur des serveurs canadiens. Aucune ne retient l’indépendance technologique, que l’extrait ne permet pas d’établir sans précisions sur les fournisseurs et les infrastructures indispensables au fonctionnement."
+      },
+      "enrichi_le": "2026-11-12T16:26:26-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "controle"
+        ],
+        "preuves": {
+          "donnees": "Contact data hosted exclusively on Canadian servers",
+          "controle": "Outil québécois de marketing par courriel"
+        },
+        "infirmes": {},
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-12T16:29:22-05:00"
+      }
+    },
+    {
+      "categorie": "financement-subventions-et-dons",
+      "nom": "Elodia",
+      "score": 2,
+      "lien": "https://www.elodia.app/",
+      "description": "Plateforme québécoise utilisant l’intelligence artificielle pour aider les artistes et organismes culturels à trouver des subventions, préparer leurs demandes et gérer leurs échéances.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": "nouveau",
+      "criteres": [
+        "donnees",
+        "controle"
+      ],
+      "confiance": "moyenne",
+      "description_longue": "Elodia est une plateforme québécoise d’aide à la recherche et à la rédaction de demandes de subventions culturelles utilisant l’intelligence artificielle. Elle s’adresse aux artistes, aux collectifs, aux OSBL, aux festivals et aux entreprises culturelles. **La page annonce un lancement en novembre 2026** : les fonctionnalités décrites sont donc à considérer dans ce contexte.\n\nLe parcours présenté commence par un diagnostic destiné à repérer les programmes correspondant au profil de la personne ou de l’organisme, notamment auprès du CALQ, de la SODEC, de Musicaction et de FACTOR. Un catalogue permet également de consulter des programmes et leurs prochaines dates limites. L’accès au catalogue complet est annoncé comme nécessitant une inscription gratuite.\n\nUne fonction appelée « Mémoire » centralise l’historique, la démarche artistique et les renseignements sur les projets. Ces informations servent ensuite à proposer des réponses aux questions des formulaires de demande. La plateforme présente aussi une analyse automatisée du dossier et du budget, ainsi qu’une option de révision par une personne spécialisée en financement culturel.\n\nPour un organisme culturel, l’usage envisagé est de réutiliser ses informations et de préparer ses dossiers dans un même espace. **Le dépôt demeure une étape externe** : les réponses et documents doivent être transférés dans le portail concerné, puis soumis. L’extrait fourni ne précise ni les tarifs des forfaits, ni le lieu d’hébergement des données, ni les réponses aux questions de confidentialité affichées sur la page.",
+      "tags": [
+        "subventions",
+        "intelligence-artificielle",
+        "redaction-documents"
+      ],
+      "source": "proprietaire",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": null,
+      "evaluation_enrichie": {
+        "score": 0,
+        "criteres": [],
+        "confiance": "faible",
+        "ecart": "L’écart entre les deux étoiles du répertoire et le zéro de l’évaluation enrichie porte sur la conservation des données au Canada et le contrôle canadien, deux critères attribués au répertoire par déduction automatique, avec une confiance moyenne. La présentation d’Elodia comme plateforme québécoise peut suggérer un contrôle canadien, mais l’extrait ne confirme ni sa propriété ni la localisation de l’hébergement. Les deux évaluations ne retiennent pas le critère d’indépendance technologique, mais la présence d’IA ne suffit pas à établir une dépendance étrangère sans connaître ses fournisseurs. Le zéro, assorti d’une faible confiance, traduit donc surtout un manque de preuves dans l’extrait : des renseignements sur la propriété, les options d’hébergement et les fournisseurs techniques permettraient de trancher."
+      },
+      "enrichi_le": "2026-11-12T16:26:42-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "controle"
+        ],
+        "preuves": {
+          "controle": "Plateforme québécoise utilisant l’intelligence artificielle pour aider les artistes et organismes culturels à trouver des subventions, préparer leurs demandes et gérer leurs échéances."
+        },
+        "infirmes": {},
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-12T16:29:24-05:00"
+      }
+    },
+    {
+      "categorie": "transcription-et-assistance-aux-reunions",
+      "nom": "Fellow",
+      "score": 2,
+      "lien": "https://fellow.ai/",
+      "description": "Assistant de réunions conçu au Canada enregistre et transcrit les échanges, génère automatiquement notes, résumés et actions à suivre et centralise les comptes rendus. L'interface est en anglais mais le français est bien pris en charge par la reconnaissance vocale.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": "nouveau",
+      "criteres": [
+        "donnees",
+        "controle"
+      ],
+      "confiance": "moyenne",
+      "description_longue": "Fellow est un **assistant de réunions fondé sur l’intelligence artificielle**, développé par une entreprise canadienne. Il enregistre et transcrit les échanges, produit des résumés et repère automatiquement les actions à suivre. Il centralise les transcriptions ainsi que les enregistrements audio et vidéo. Son interface est en anglais, tandis que la reconnaissance vocale prend notamment en charge le français.\n\nL’outil s’utilise avec **Zoom, Microsoft Teams et Google Meet**, ainsi que pour des conversations en personne. Selon le mode choisi, la capture peut se faire avec ou sans robot de réunion. Pour un OSBL culturel, ces fonctions peuvent servir à documenter des réunions d’équipe, des comités ou des rencontres de production et à préparer les suivis.\n\nFellow propose des mécanismes de gouvernance : règles d’enregistrement, permissions selon les rôles, authentification unique, journaux d’audit et politiques de conservation configurables. Les personnes peuvent interrompre puis reprendre la capture. L’éditeur affirme que les données de réunion ne servent à entraîner ni ses modèles d’IA ni ceux de ses fournisseurs. La disponibilité des fonctions avancées doit être vérifiée selon l’offre retenue.\n\nDes intégrations permettent de transmettre le contexte des réunions à des outils d’IA, à des systèmes de gestion de contacts et à d’autres applications. **L’origine canadienne du fournisseur ne garantit toutefois pas un hébergement au Canada** : l’extrait fourni ne précise pas les lieux de stockage disponibles. Avant de traiter des échanges confidentiels, il convient de vérifier l’hébergement, les conditions d’accès et le consentement à l’enregistrement.",
+      "tags": [
+        "transcription-reunions",
+        "intelligence-artificielle",
+        "api-integrations",
+        "securite-acces",
+        "vie-privee"
+      ],
+      "source": "proprietaire",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": null,
+      "evaluation_enrichie": {
+        "score": 1,
+        "criteres": [
+          "controle"
+        ],
+        "confiance": "moyenne",
+        "ecart": "L’écart porte sur le critère des données, attribué au répertoire par déduction avec une confiance moyenne, mais non retenu dans l’évaluation enrichie : l’extrait ne précise pas si un hébergement au Canada est possible. Les garanties de sécurité, de conservation et de non-utilisation des données pour entraîner l’IA ne permettent pas de déterminer leur lieu d’hébergement. Les deux évaluations retiennent le contrôle canadien, même si la mention « conçu au Canada » ne suffit pas à établir la propriété de l’entreprise, et aucune ne retient l’absence de dépendance étrangère. Une confirmation des régions d’hébergement offertes, de la propriété de l’entreprise et des fournisseurs indispensables au fonctionnement permettrait de trancher."
+      },
+      "enrichi_le": "2026-11-12T16:27:02-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "controle"
+        ],
+        "preuves": {
+          "controle": "Assistant de réunions conçu au Canada"
+        },
+        "infirmes": {},
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-12T16:29:27-05:00"
+      }
+    },
+    {
+      "categorie": "comptabilite-et-finances",
+      "nom": "Kashoo",
+      "score": 2,
+      "lien": "https://kashoo.com/",
+      "description": "Disponible uniquement en anglais, ce logiciel de comptabilité canadien, destiné aux petites organisations, permet de suivre revenus et dépenses, envoyer des factures, enregistrer les paiements, rapprocher les comptes bancaires et produire les principaux rapports financiers.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": "nouveau",
+      "criteres": [
+        "donnees",
+        "controle"
+      ],
+      "confiance": "moyenne",
+      "description_longue": "Kashoo est un **logiciel de comptabilité en ligne**, d’origine canadienne et disponible uniquement en anglais, destiné aux petites entreprises et aux travailleurs autonomes. Il permet de créer des factures, de suivre les revenus, les dépenses et les comptes fournisseurs, de rapprocher les opérations bancaires et de produire des rapports financiers. Il comprend un grand livre en partie double, le suivi des taxes de vente et la gestion de plusieurs devises.\n\nLes transactions bancaires peuvent être récupérées par l’intermédiaire de **Plaid** ou importées à partir de fichiers CSV et OFX. Des intégrations avec Stripe, Square et PaymentEvolution sont également annoncées. Le paiement des factures en ligne passe notamment par Stripe. L’importation de contacts, de factures clients et de factures fournisseurs n’est toutefois pas prise en charge selon la page fournie.\n\nL’abonnement inclut un nombre illimité d’utilisateurs, avec différents niveaux d’autorisation pour le personnel et les responsables de la comptabilité. Chaque organisation supplémentaire nécessite son propre abonnement. Un essai de 14 jours est proposé sans carte de crédit; les prix sont affichés en dollars américains.\n\nPour un OSBL culturel, Kashoo peut servir à la tenue des livres courante et au suivi financier de projets. La page ne documente pas de fonctions propres à la comptabilité des organismes subventionnés. Elle annonce l’authentification à deux facteurs, le chiffrement des échanges par TLS, des sauvegardes quotidiennes et l’exportation des données, mais ne précise pas leur lieu d’hébergement.",
+      "tags": [
+        "comptabilite-facturation",
+        "rapports-analytique",
+        "api-integrations",
+        "anglais-seulement",
+        "securite-acces"
+      ],
+      "source": "proprietaire",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": null,
+      "evaluation_enrichie": {
+        "score": 0,
+        "criteres": [],
+        "confiance": "moyenne",
+        "ecart": "L’écart porte sur les critères « donnees » et « controle », attribués au répertoire par déduction avec une confiance moyenne : la description présente Kashoo comme canadien, mais l’extrait ne confirme ni un hébergement possible au Canada ni le contrôle canadien de l’entreprise. Les intégrations à Plaid, Stripe et Square soulèvent une question de dépendance à des fournisseurs étrangers, sans prouver qu’elles sont indispensables, notamment puisque l’import de fichiers est proposé. Pour départager les évaluations, il faudrait vérifier la localisation des données et des sauvegardes, la propriété actuelle de Kashoo et ses infrastructures essentielles, sans assimiler une information absente à un critère non satisfait."
+      },
+      "enrichi_le": "2026-11-12T16:27:19-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "controle"
+        ],
+        "preuves": {
+          "controle": "ce logiciel de comptabilité canadien"
+        },
+        "infirmes": {},
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-12T16:29:35-05:00"
+      }
+    },
+    {
+      "categorie": "gestion-de-collections-et-de-contenus-culturels",
+      "nom": "La Bibli",
+      "score": 2,
+      "lien": "https://labibli.com/",
+      "description": "Outil canadien de gestion de bibliothèque pour les organismes permettant de cataloguer les livres par code-barres, publier la collection en ligne et suivre les prêts, retours et rappels. Peut reprendre un fichier Excel existant.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": "nouveau",
+      "criteres": [
+        "donnees",
+        "controle"
+      ],
+      "confiance": "moyenne",
+      "description_longue": "La Bibli est un logiciel Web de gestion de bibliothèque destiné aux organismes à but non lucratif. Il réunit le **catalogage des livres, la publication de la collection et le suivi des prêts**. Pour un organisme culturel qui possède une bibliothèque de référence ou une collection accessible à ses membres, il permet de remplacer un suivi par tableur.\n\nL’ajout d’un livre se fait par saisie de son ISBN ou lecture de son code-barres. Le logiciel récupère le titre, le nom de l’auteur ou de l’autrice, l’éditeur, le résumé et la couverture. Une collection existante peut être reprise à partir d’un fichier Excel, CSV ou d’un export de PMB. Cet accompagnement est compris dans l’abonnement jusqu’à 3 000 titres.\n\nLe catalogue peut être partagé par un lien ou intégré au site Web de l’organisme. Les membres peuvent y rechercher des livres par titre, par auteur ou autrice et par catégorie, ainsi que consulter leur disponibilité. L’organisme peut mettre en avant des nouveautés ou des sélections.\n\nLa gestion des prêts comprend les dates de retour attendues, le repérage des retards et des **rappels automatiques** aux personnes concernées. Un récapitulatif des retards peut aussi être envoyé chaque matin aux responsables.\n\nLa Bibli est développée au Nouveau-Brunswick par Aynils, avec un soutien en français. Selon l’éditeur, l’hébergement se fait par défaut à Toronto et les données restent au Canada. L’abonnement annoncé coûte 30 $ US par mois ou 330 $ US par an, avec un premier mois gratuit et sans limite de titres au catalogue.",
+      "tags": [
+        "collections-patrimoine",
+        "automatisation"
+      ],
+      "source": "proprietaire",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": null,
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "controle"
+        ],
+        "confiance": "moyenne"
+      },
+      "enrichi_le": "2026-11-12T16:27:33-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "controle"
+        ],
+        "preuves": {
+          "donnees": "Par défaut, La Bibli est hébergée à Toronto : vos données et celles de vos membres ne quittent pas le Canada, et ne sont revendues à personne.",
+          "controle": "La Bibli est développée au Nouveau-Brunswick par Aynils."
+        },
+        "infirmes": {},
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-12T16:29:38-05:00"
+      }
+    },
+    {
+      "categorie": "transcription-et-assistance-aux-reunions",
+      "nom": "Manni",
+      "score": 2,
+      "lien": "https://www.manni.app/fr/home",
+      "description": "Outil québécois de transcription de réunions par IA. Il enregistre les échanges sans ajouter de participant aux appels, génère automatiquement des comptes rendus et des plans d’action et permet de retrouver des informations dans les transcriptions.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": "nouveau",
+      "criteres": [
+        "donnees",
+        "controle"
+      ],
+      "confiance": "moyenne",
+      "description_longue": "Manni est une application de transcription et de prise de notes assistées par intelligence artificielle pour **Mac et Windows**. Elle capture l’audio des réunions depuis l’ordinateur, sans ajouter de robot participant à l’appel. Le fournisseur indique que la reconnaissance vocale tient compte notamment de l’accent québécois, du français de France, de l’anglais canadien et du vocabulaire technique.\n\nL’application se connecte à Google Calendar ou à Outlook Calendar pour détecter les réunions et démarrer automatiquement l’enregistrement. Elle est présentée comme compatible avec Zoom, Microsoft Teams et Google Meet. À la fin de l’appel, elle fournit une transcription et des notes structurées. Des modèles de résumé personnalisables permettent d’adapter les comptes rendus; une interface conversationnelle sert à poser des questions sur le contenu des transcriptions et à retrouver des informations.\n\nPour un OSBL culturel, ces fonctions peuvent servir à documenter des réunions d’équipe, des échanges de production ou des entrevues. **L’absence de robot dans l’appel ne dispense pas d’informer les personnes concernées de l’enregistrement** et de vérifier les règles applicables.\n\nLe fournisseur affirme que les données restent sur des serveurs au Canada et annonce une conformité à la Loi 25 et à la LPRPDE. La capture locale ne signifie toutefois pas que tout le traitement se fait hors ligne : la page décrit un envoi vers un tableau de bord. Un essai gratuit de sept jours est annoncé.",
+      "tags": [
+        "transcription-reunions",
+        "intelligence-artificielle",
+        "application-bureau",
+        "automatisation",
+        "api-integrations"
+      ],
+      "source": "proprietaire",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": null,
+      "evaluation_enrichie": {
+        "score": 1,
+        "criteres": [
+          "donnees"
+        ],
+        "confiance": "moyenne",
+        "ecart": "L’écart porte sur le contrôle canadien : le répertoire le suppose à partir de la description d’un « outil québécois », tandis que l’évaluation enrichie ne le retient pas, faute d’information explicite sur la propriété de l’entreprise. Les deux évaluations retiennent la conservation des données au Canada, appuyée par la mention « Vos données restent au Canada », et aucune ne retient l’indépendance envers les fournisseurs étrangers, que l’application locale ne suffit pas à démontrer. Pour trancher, il faudrait confirmer la structure de propriété de Manni et documenter ses fournisseurs d’hébergement et d’IA ainsi que le caractère indispensable ou facultatif des intégrations étrangères, les critères attribués au répertoire restant des hypothèses déduites avec une confiance moyenne."
+      },
+      "enrichi_le": "2026-11-12T16:27:50-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "controle"
+        ],
+        "preuves": {
+          "donnees": "Vos données restent au Canada.",
+          "controle": "Outil québécois de transcription de réunions par IA."
+        },
+        "infirmes": {},
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-12T16:29:41-05:00"
+      }
+    },
+    {
+      "categorie": "stockage-infonuagique-et-sauvegarde",
+      "nom": "Micrologic",
+      "score": 3,
+      "lien": "http://www.micrologic.ca/",
+      "description": "Fournisseur québécois de services infonuagiques et d’infrastructures technologiques. Son environnement Cirrus permet d’héberger applications et données au Canada, avec des services de sécurité, de sauvegarde, de continuité et d’accompagnement.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": "nouveau",
+      "criteres": [
+        "donnees",
+        "controle",
+        "dependance"
+      ],
+      "confiance": "élevée",
+      "description_longue": "Micrologic est un fournisseur québécois de services infonuagiques et d’infrastructures informatiques. Son environnement **Cirrus** permet d’héberger des applications et des données au Canada. L’entreprise se présente comme étant à propriété entièrement canadienne et affirme que les données confiées à son nuage demeurent hébergées au pays, sous juridiction canadienne.\n\nSon offre comprend de l’**infrastructure-service (IaaS)**, de l’infrastructure réservée, du stockage objet, un service de fichiers et de la plateforme-service (PaaS). Elle propose aussi des services de migration des charges de travail, de sauvegarde hors site, de sauvegarde en voûte isolée et d’archivage. La sauvegarde de Microsoft 365 et la reprise après sinistre figurent également au catalogue.\n\nPour un OSBL culturel, ces services peuvent notamment répondre à des besoins d’hébergement d’applications, de conservation de fichiers et de continuité des activités. Il s’agit d’une offre d’infrastructure et de services techniques, plutôt que d’un logiciel spécialisé dans la gestion culturelle. Micrologic propose des services-conseils, du déploiement, de l’exploitation et différentes formes d’assistance.\n\nL’offre couvre aussi la cybersécurité, dont la protection réseau, la protection des postes et la gestion des clés de chiffrement. **L’hébergement canadien et la propriété canadienne sont explicitement annoncés**, mais l’extrait ne précise pas l’ensemble des dépendances technologiques de la plateforme. Il ne fournit pas non plus de tarifs ni de conditions particulières pour les OSBL; les coûts, le niveau d’accompagnement et les modalités de récupération des données sont donc à vérifier auprès du fournisseur.",
+      "tags": [
+        "domaines-hebergement-web",
+        "stockage-partage-fichiers",
+        "sauvegarde",
+        "securite-acces"
+      ],
+      "source": "proprietaire",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": null,
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "controle"
+        ],
+        "confiance": "moyenne",
+        "ecart": "L’écart porte uniquement sur le critère de dépendance : le répertoire lui attribue une étoile, selon une déduction de confiance élevée, tandis que l’évaluation enrichie ne le retient pas. La page affirme un hébergement intégral au Canada et une propriété 100 % canadienne, ce qui appuie les deux critères communs, mais le vocabulaire de « cloud souverain » ne démontre pas à lui seul l’absence de dépendances étrangères importantes. La mention des technologies NVIDIA soulève une question sans suffire à établir une dépendance indispensable au service évalué. Une documentation sur l’architecture, les fournisseurs essentiels et la capacité de fonctionner sans leurs services permettrait de trancher ce point."
+      },
+      "enrichi_le": "2026-11-12T16:28:08-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "controle"
+        ],
+        "preuves": {
+          "donnees": "Nous vous assurons que l’intégralité de vos données sera hébergée en sol canadien, garantissant ainsi que vos informations sensibles ne quitteront jamais le pays.",
+          "controle": "Fièrement une entreprise à propriété 100% canadienne"
+        },
+        "infirmes": {},
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-12T16:29:46-05:00"
+      }
+    },
+    {
+      "categorie": "stockage-infonuagique-et-sauvegarde",
+      "nom": "TitanFile",
+      "score": 3,
+      "lien": "https://www.titanfile.com/",
+      "description": "Outil canadien sécurisé de partage de fichiers et de communications permettant d’échanger des documents sensibles avec des partenaires externes, organiser les échanges par dossiers et projets et suivre les accès et téléchargements.",
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": "nouveau",
+      "criteres": [
+        "donnees",
+        "controle",
+        "dependance"
+      ],
+      "confiance": "élevée",
+      "description_longue": "TitanFile est une plateforme canadienne de **partage sécurisé de fichiers et de communications**. Elle permet de créer des espaces de travail pour échanger des documents et des messages avec des collègues, des partenaires ou d’autres contacts externes. Pour un OSBL culturel, ces espaces peuvent notamment servir à transmettre des documents confidentiels ou des fichiers audiovisuels volumineux.\n\nLe service prend en charge les vidéos, les enregistrements audio, les PDF et les photos. L’éditeur annonce la possibilité de transférer des fichiers de plus de 100 Go et de téléverser des structures de dossiers sans les compresser au préalable. Les capacités de stockage et les modalités applicables sont à vérifier selon l’abonnement retenu.\n\nLa sécurité comprend le **chiffrement des données en transit et au repos**, l’authentification multifacteur, des contrôles d’accès granulaires et des journaux d’audit. Les responsables d’un abonnement peuvent également configurer des politiques de mots de passe. L’éditeur indique une conformité aux normes ISO 27001 et SOC 2 Type II, ainsi qu’aux exigences de la LPRPDE et de la réglementation américaine HIPAA.\n\nTitanFile propose une résidence des données au Canada, aux États-Unis ou en Europe. Les fichiers sont stockés dans des centres de données d’AWS et d’Azure : le choix d’un hébergement canadien ne supprime donc pas la dépendance à ces fournisseurs étrangers. Il s’agit d’un service propriétaire, et le contenu fourni ne présente pas de possibilité d’auto-hébergement.",
+      "tags": [
+        "stockage-partage-fichiers",
+        "chiffrement",
+        "securite-acces"
+      ],
+      "source": "proprietaire",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": null,
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "controle"
+        ],
+        "confiance": "moyenne",
+        "ecart": "L’écart entre les 3 étoiles du répertoire et les 2 étoiles de l’évaluation enrichie porte sur la dépendance : la page indique un stockage sur AWS et Azure, des infrastructures de fournisseurs étrangers, ce qui motive le retrait de ce critère dans l’évaluation enrichie. La résidence des données au Canada est annoncée, mais la description « outil canadien » ne suffit pas à établir le contrôle canadien de l’entreprise, retenu dans les deux évaluations. Les critères attribués au répertoire restent des hypothèses déduites automatiquement, même avec une confiance élevée : une documentation sur les dépendances techniques, les modalités de résidence des données et la propriété de l’entreprise permettrait de trancher."
+      },
+      "enrichi_le": "2026-11-12T16:28:25-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "controle"
+        ],
+        "preuves": {
+          "donnees": "Data residency in the US, Canada, or Europe",
+          "controle": "Outil canadien sécurisé de partage de fichiers et de communications"
+        },
+        "infirmes": {
+          "dependance": "When data is uploaded to TitanFile, it is encrypted and stored on ISO-certified AWS and Azure data centers."
+        },
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-12T16:29:49-05:00"
+      }
+    }
+  ]
+}
