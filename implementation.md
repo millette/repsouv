@@ -57,8 +57,9 @@ Schémas          schemas-types.ts ──▶ obuild + RunTypes ──▶ generer
 | `.node-version` | Majeure de Node.js (`26`) pour les gestionnaires de versions qui ne lisent pas `package.json` ; `devEngines.runtime` et `engines.node` disent la même chose (`>=26 <27`), et `versions.test.ts` tient les trois d'accord |
 | `LICENSE` | Texte de la licence AGPL-3.0 du code |
 | `LICENSE-CC-BY-SA-4.0` | Texte de la licence CC BY-SA 4.0 des données (voir [Licences](README.md#licences)) |
-| `LICENSES/`, `REUSE.toml` | Les mêmes textes de licence, nommés par identifiant SPDX (`AGPL-3.0-or-later.txt`, `CC-BY-SA-4.0.txt`), et la déclaration de licence des fichiers sans en-tête, selon la spécification [REUSE](https://reuse.software/) (voir [Licences](README.md#licences)) |
-| `.gitignore` | Ignore `.env`, `node_modules/`, `dist/` et `.mion/` (sorties de la génération des schémas), les dossiers locaux `.claude` et `.agents` (et `skills-lock.json`), et des copies de sauvegarde (`pre-enrichir-outils.json`, voir [Enrichissement par IA](#enrichissement-par-ia), et `orig-sommaire.md`) |
+| `LICENSES/`, `REUSE.toml` | Les mêmes textes de licence, nommés par identifiant SPDX (`AGPL-3.0-or-later.txt`, `CC-BY-SA-4.0.txt`, `MIT.txt`), et la déclaration de licence des fichiers sans en-tête, selon la spécification [REUSE](https://reuse.software/) (voir [Licences](README.md#licences)) |
+| `.claude/skills/charting-vega-lite/` | Skill Claude Code (MIT, [oaustegard/claude-skills](https://github.com/oaustegard/claude-skills)) qui guide la rédaction des spécifications Vega-Lite de `graphiques.ts` pendant le développement ; sans rôle à l'exécution |
+| `.gitignore` | Ignore `.env`, `node_modules/`, `dist/` et `.mion/` (sorties de la génération des schémas), et des copies de sauvegarde (`pre-enrichir-outils.json`, voir [Enrichissement par IA](#enrichissement-par-ia), et `orig-sommaire.md`) |
 
 ## Schémas JSON
 

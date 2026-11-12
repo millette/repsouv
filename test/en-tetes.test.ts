@@ -41,6 +41,7 @@ test("chaque schéma JSON déclare la licence du code dans $comment, et REUSE.to
 test("LICENSES/ contient le texte de chaque licence utilisée, nommé par identifiant SPDX (convention REUSE)", () => {
   assert.match(readFileSync("LICENSES/AGPL-3.0-or-later.txt", "utf8"), /GNU AFFERO GENERAL PUBLIC LICENSE\s+Version 3, 19 November 2007/);
   assert.match(readFileSync("LICENSES/CC-BY-SA-4.0.txt", "utf8"), /Attribution-ShareAlike 4\.0 International/);
+  assert.match(readFileSync("LICENSES/MIT.txt", "utf8"), /^MIT License/);
 });
 test("REUSE.toml déclare CC-BY-SA-4.0 pour les données et leurs dérivés, et la licence du code pour le reste", () => {
   const reuse = readFileSync("REUSE.toml", "utf8");
@@ -48,6 +49,8 @@ test("REUSE.toml déclare CC-BY-SA-4.0 pour les données et leurs dérivés, et 
     assert.ok(reuse.includes(`"${chemin}"`), `annoté: ${chemin}`);
   }
   assert.match(reuse, /SPDX-License-Identifier = "CC-BY-SA-4\.0"/);
+  assert.ok(reuse.includes("\".claude/**\""), "annoté: .claude/** (skill charting-vega-lite, MIT)");
+  assert.match(reuse, /SPDX-License-Identifier = "MIT"/);
   for (const chemin of ["README.md", "implementation.md", "historique.md", "package.json", "tsconfig.json", "tsconfig.schemas.json", "nub.lock", ".gitignore", ".env.example"]) {
     assert.ok(reuse.includes(`"${chemin}"`), `annoté: ${chemin}`);
   }

@@ -17,3 +17,9 @@ SPDX-FileCopyrightText = [
   "2026 Robin Millette <https://robin.millette.info/>",
 ]
 SPDX-License-Identifier = "CC-BY-SA-4.0"
+
+# Skill Claude Code « charting-vega-lite », copié tel quel depuis https://github.com/oaustegard/claude-skills (MIT).
+[[annotations]]
+path = [".claude/**"]
+SPDX-FileCopyrightText = "2025 Oskar Austegard <https://github.com/oaustegard/claude-skills>"
+SPDX-License-Identifier = "MIT"
