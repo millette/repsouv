@@ -37,7 +37,7 @@ Le contenu du répertoire est l'œuvre des auteur·trices de la note, et non de 
 
 | Ce qui | Licence |
 |---|---|
-| **Code source** (`*.ts`, `test/`, `package.json`, `tsconfig.json`) | [GNU Affero General Public License v3.0](https://www.gnu.org/licenses/agpl-3.0.html), identifiant SPDX `AGPL-3.0-or-later` (version 3 de la licence ou toute version ultérieure). Texte complet dans [`LICENSE`](LICENSE). Chaque fichier `.ts` commence par les en-têtes `SPDX-License-Identifier` et `SPDX-FileCopyrightText` |
+| **Code source, configuration et documentation** (`*.ts`, `test/`, `package.json`, `nub.lock`, `tsconfig*.json`, `README.md`) | [GNU Affero General Public License v3.0](https://www.gnu.org/licenses/agpl-3.0.html), identifiant SPDX `AGPL-3.0-or-later` (version 3 de la licence ou toute version ultérieure). Texte complet dans [`LICENSE`](LICENSE). Chaque fichier `.ts` commence par les en-têtes `SPDX-License-Identifier` et `SPDX-FileCopyrightText` |
 | **Schémas JSON** (`schemas/*.schema.json`) | Même licence que le code, `AGPL-3.0-or-later`. Le JSON n'admet pas de commentaires : chaque schéma la déclare dans son mot-clé standard `$comment` (ajouté par `generer-schemas.ts`), et `REUSE.toml` la déclare pour `schemas/**` selon la spécification [REUSE](https://reuse.software/) |
 | **Données** (`outils.json`, `criteres.json`, `tags.json`) et ce qui en est dérivé : le **sommaire** (`sommaire.md`) et ses **graphiques** (`graphiques/`) | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.fr), identifiant SPDX `CC-BY-SA-4.0`. Texte complet dans [`LICENSE-CC-BY-SA-4.0`](LICENSE-CC-BY-SA-4.0). Le JSON n'admet pas de commentaires : chaque fichier déclare sa licence dans `meta.data_license`, que les scripts maintiennent (voir [Fichiers JSON](#fichiers-json)) |
 
@@ -64,8 +64,10 @@ Prérequis : [nub](https://nubjs.com/), qui exécute le TypeScript directement, 
 
 ```sh
 nub install                      # installe les dépendances
-nub run test                     # lance les tests
+nub run test                     # lance les tests (et vérifie que les schémas JSON sont à jour)
 nub run typecheck                # vérifie les types
+nub run schemas                  # régénère schemas/*.schema.json à partir des types
+nub run licences                 # vérifie la conformité REUSE des licences (uvx reuse lint; demande uv)
 nub run update --dry-run         # compare outils.json à la page en ligne, sans rien écrire
 nub run update                   # synchronise outils.json avec la page en ligne
 nub run update --sommaire        # idem, puis met à jour le sommaire si la synchronisation a détecté des changements
@@ -82,6 +84,7 @@ Import initial   page en ligne ──▶ extract.ts ──▶ classify.ts ──
 Suivi courant    page en ligne ──▶ update.ts ──▶ outils.json   (nouveau, modification, retrait, comeback)   [──▶ sommaire avec --sommaire]
 Enrichissement   update.ts --enrichir ──▶ API OpenAI ──▶ outils.json (+ tags.json si de nouveaux tags) ──▶ sommaire (si quelque chose a changé)
 Sommaire         outils.json ──▶ sommaire.ts ──▶ sommaire.md + graphiques/   (vl-convert; résumé: API OpenAI)
+Schémas          schemas-types.ts ──▶ obuild + RunTypes ──▶ generer-schemas.ts ──▶ schemas/*.schema.json   (à relancer après un changement de type)
 ```
 
 `extract` et `update` téléchargent la page en ligne (le dépôt n'en contient aucune copie). Après l'import initial, `update` suffit pour suivre le répertoire. Voir [Importer ou réimporter depuis le web](#importer-ou-réimporter-depuis-le-web) avant de relancer `extract` ou `build`.
@@ -101,7 +104,7 @@ Sommaire         outils.json ──▶ sommaire.ts ──▶ sommaire.md + graph
 | `LICENSE` | Texte de la licence AGPL-3.0 du code |
 | `LICENSE-CC-BY-SA-4.0` | Texte de la licence CC BY-SA 4.0 des données (voir [Licences](#licences)) |
 | `LICENSES/`, `REUSE.toml` | Les mêmes textes de licence, nommés par identifiant SPDX (`AGPL-3.0-or-later.txt`, `CC-BY-SA-4.0.txt`), et la déclaration de licence des fichiers sans en-tête, selon la spécification [REUSE](https://reuse.software/) (voir [Licences](#licences)) |
-| `.gitignore` | Ignore `.env`, `node_modules/`, `dist/` et `.mion/` (sorties de la génération des schémas), le dossier local `.claude` et des copies de sauvegarde (`pre-enrichir-outils.json`, voir [Enrichissement par IA](#enrichissement-par-ia), et `orig-sommaire.md`) |
+| `.gitignore` | Ignore `.env`, `node_modules/`, `dist/` et `.mion/` (sorties de la génération des schémas), les dossiers locaux `.claude` et `.agents` (et `skills-lock.json`), et des copies de sauvegarde (`pre-enrichir-outils.json`, voir [Enrichissement par IA](#enrichissement-par-ia), et `orig-sommaire.md`) |
 
 ## Fichiers JSON
 
@@ -158,7 +161,7 @@ Champs ajoutés par l'[enrichissement](#enrichissement-par-ia), absents tant que
 | `custom_license` | Nom ou identifiant d'une licence absente de la liste SPDX (licence maison ou propre à l'éditeur), tel que l'éditeur l'écrit. Exclusif avec `licence`; `null` si la licence est SPDX, si le logiciel est propriétaire ou si elle est inconnue |
 | `custom_license_url` | URL du texte de la licence maison, quand elle est disponible; `null` sinon. Exige `custom_license` |
 | `repo` | URL du dépôt de code source, sur n'importe quelle forge (GitHub, GitLab, Codeberg, Framagit…); `null` si aucun ou inconnu |
-| `enrichi_le` | Date et heure de l'enrichissement de l'outil (ISO 8601, heure de Toronto). Les 41 outils enrichis avant l'ajout de ce champ portent la date de substitution `2026-11-11T17:29:24-05:00` (celle du premier enrichissement daté), qui n'est pas leur date exacte; la date des enrichissements suivants est exacte |
+| `enrichi_le` | Date et heure de l'enrichissement de l'outil (ISO 8601, heure de Toronto). Les 41 outils enrichis avant l'ajout de ce champ portent la date de substitution `2026-11-11T17:29:24-05:00` (celle du premier enrichissement daté), qui n'est pas leur date exacte; la date des enrichissements suivants est exacte. Dans `outils.json`, 42 outils portent cette valeur : les 41 de substitution et le premier enrichissement daté |
 | `page_lue` | `true` si la page de l'outil a servi à l'enrichissement; `false` si l'outil a été enrichi sans page lisible (option `--sans-page`), à partir de sa seule description : résultat moins fiable, voir [Pages inaccessibles](#pages-inaccessibles-ou-presque-vides) |
 | `evaluation_enrichie` | Second avis du modèle sur la souveraineté de l'outil : `score` (nombre de critères satisfaits, de 0 à 3, égal à `criteres.length`), `criteres` (identifiants de `criteres.json`) et `confiance` (`"élevée"`, `"moyenne"` ou `"faible"`). S'y ajoute `ecart`, une explication en français de la différence, seulement quand cette évaluation diffère du `score` et des `criteres` du répertoire |
 
@@ -186,7 +189,7 @@ De nouveaux tags peuvent s'ajouter après cette première phase, avec `--enrichi
 
 Le dossier `schemas/` contient un [JSON Schema](https://json-schema.org/) (draft 2020-12) par fichier de données : `schemas/outils.schema.json`, `schemas/criteres.schema.json` et `schemas/tags.schema.json`. Ils décrivent la structure complète (`meta` puis le tableau de données), les valeurs permises (`source`, `changement`, `confiance`, identifiants de critères), le type de chaque champ, et refusent les clés inconnues, comme le font les scripts. Chacun porte sa licence (`AGPL-3.0-or-later`) dans `$comment`, ce que les validateurs ignorent.
 
-Ils sont générés, pas écrits à la main : les types TypeScript (`schemas-types.ts`, qui s'appuie sur `Outil`, `OutilClasse`, `Critere`, `Tag` et `Metadonnees`) sont convertis par [mion RunTypes](https://mion.io/runtypes) (`createJsonSchemaFn<T>()`), empaqueté par [obuild](https://github.com/unjs/obuild) avec le plugin RunTypes pour rolldown (`build.config.ts`). Après un changement de type, `nub run schemas` régénère les trois fichiers, et `nub run schemas:verifier` échoue si les fichiers commités sont périmés (il est aussi lancé par `nub run test`).
+Ils sont générés, pas écrits à la main : les types TypeScript (`schemas-types.ts`, qui s'appuie sur `Outil`, `OutilClasse`, `Critere`, `Tag` et `Metadonnees`) sont convertis par [mion RunTypes](https://mion.io/runtypes) (`createJsonSchemaFn<T>()`), le générateur étant empaqueté par [obuild](https://github.com/unjs/obuild) avec le plugin RunTypes pour rolldown (`build.config.ts`). Après un changement de type, `nub run schemas` régénère les trois fichiers, et `nub run schemas:verifier` échoue si les fichiers commités sont périmés (il est aussi lancé par `nub run test`).
 
 Ce que les types ne disent pas est ajouté par `affiner-schema.ts`, par nom de champ : `score` entier de 0 à 3, `tags` de 1 à 5 identifiants distincts, `criteres` d'au plus 3 identifiants distincts, dates `derniere_modification`, `enrichi_le`, `created_at` et `updated_at` au format ISO 8601 avec décalage. Les règles qui croisent plusieurs champs ou fichiers (licence SPDX valide, `custom_license` exclusif avec `licence`, tags présents dans `tags.json`, `score` égal au nombre de critères) ne sont pas dans les schémas : elles restent dans les scripts et les tests.
 
@@ -194,7 +197,7 @@ Les schémas valent pour du JSON ordinaire : les types du dépôt (chaînes, nom
 
 ## Scripts
 
-Les quatre scripts (`extract.ts`, `classify.ts`, `update.ts` et `sommaire.ts`) se lancent avec `nub`; les autres fichiers sont des modules, utilisés par les scripts et par les tests. Tout est en TypeScript. Les fonctions principales sont exportées pour être réutilisables; le code de ligne de commande ne s'exécute que lorsque le script est lancé directement.
+Les quatre scripts (`extract.ts`, `classify.ts`, `update.ts` et `sommaire.ts`) se lancent avec `nub`; `generer-schemas.ts` est un cinquième programme, qui ne se lance que par `nub run schemas` (il doit d'abord être empaqueté, voir plus bas); les autres fichiers sont des modules, utilisés par les scripts et par les tests. Tout est en TypeScript. Les fonctions principales sont exportées pour être réutilisables; le code de ligne de commande ne s'exécute que lorsque le script est lancé directement.
 
 ### `extract.ts`
 
@@ -250,7 +253,7 @@ Un enrichissement par lots (`--limite=N`) met donc le sommaire à jour à chaque
 **Avertissement.** Chaque fois que des changements ont eu lieu (un outil nouveau, modifié ou retiré, ou un outil enrichi) **sans** que le sommaire soit mis à jour, `update.ts` le dit, pour qu'on ne laisse pas un sommaire en retard sans le savoir :
 
 - `nub run update` seul : « Le sommaire n'est plus à jour (des changements ont été détectés): lancer `nub run sommaire`, ou ajouter --sommaire à update »;
-- avec `--sans-sommaire` : le même message, qui mentionne le flag;
+- avec `--sans-sommaire` : « Le sommaire n'est plus à jour (… , --sans-sommaire): lancer `nub run sommaire` », où la parenthèse dit « des outils ont été enrichis » ou « des changements ont été détectés » selon le cas;
 - clé ou `vl-convert` manquant, ou résumé impossible : les messages décrits plus haut.
 
 L'avertissement est jaune, n'est pas une erreur (le code de sortie n'est pas modifié) et n'apparaît pas quand rien n'a changé, ni avec `--dry-run`, où rien n'est écrit.
@@ -323,7 +326,7 @@ Module partagé : les trois identifiants de critères (`donnees`, `controle`, `d
 
 ### `generer-schemas.ts`
 
-Génère `schemas/*.schema.json` à partir des types de `schemas-types.ts` avec `createJsonSchemaFn<T>()` de RunTypes, en mode `portable` (sans les mots-clés propres à RunTypes), puis applique `affiner()` (de `affiner-schema.ts`). Il ne s'exécute pas directement : les appels `createJsonSchemaFn<T>()` ne fonctionnent qu'après la transformation du plugin RunTypes, donc `nub run schemas` empaquette d'abord le script avec obuild (`dist/generer-schemas.mjs`, ignoré par git) puis l'exécute. `--verifier` n'écrit rien et échoue si un schéma commité diffère de celui que les types produisent. Le plugin écrit aussi des fichiers intermédiaires dans `.mion/` (ignoré par git). `tsconfig.schemas.json` limite la compilation du plugin au seul point d'entrée.
+Génère `schemas/*.schema.json` à partir des types de `schemas-types.ts` avec `createJsonSchemaFn<T>()` de RunTypes, en mode `portable` (sans les mots-clés propres à RunTypes), puis applique `affiner()` (de `affiner-schema.ts`). Il ne s'exécute pas directement : les appels `createJsonSchemaFn<T>()` ne fonctionnent qu'après la transformation du plugin RunTypes, donc `nub run schemas` empaquette d'abord le script avec obuild (`dist/generer-schemas.mjs`, ignoré par git, avec un fichier `THIRD-PARTY-LICENSES.md.gz` que produit obuild) puis l'exécute. `--verifier` n'écrit rien et échoue si un schéma commité diffère de celui que les types produisent. Le plugin écrit aussi des fichiers intermédiaires dans `.mion/` (ignoré par git). `tsconfig.schemas.json` limite la compilation du plugin au seul point d'entrée.
 
 ## Classification
 
@@ -505,7 +508,7 @@ Dans `test/`, avec `node:test` lancé par `nub` :
 - `sommaire.test.ts` : statistiques (statuts, licences, familles, tags, critères par statut, forges, dates), rendu Markdown (sections, images insérées dans leur section, cas sans outil enrichi), validation du résumé et nouvelle tentative, `genererSommaire` (écriture, options, conservation du sommaire existant en cas d'échec), avec des données fictives (jamais `outils.json`, jamais le réseau).
 - `graphiques.test.ts` : spécifications Vega-Lite (données incluses, champs existants, pourcentages, graphiques omis sans données), écriture et nettoyage des fichiers, message si vl-convert est absent, et conversion réelle en SVG et PNG (ignorée si vl-convert n'est pas installé). Les données fictives des tests sont dans `donnees-fictives.ts`.
 - `schemas.test.ts` : les trois fichiers de données réels sont valides selon les schémas (avec Ajv, indépendant de RunTypes), et des variantes invalides sont refusées (clé inconnue, `score` hors de 0 à 3, `source` ou `changement` inconnus, tags en trop ou en double, date non ISO, `meta` manquant).
-- `en-tetes.test.ts` : chaque fichier `.ts` porte les en-têtes SPDX, la licence du code est la même dans `package.json`, les deux textes de licence sont présents, et chaque schéma JSON déclare la licence du code dans `$comment` (et `REUSE.toml` pour `schemas/**`), `LICENSES/` contient les deux textes, et `REUSE.toml` annote les données (CC-BY-SA-4.0) et le reste des fichiers sans en-tête (AGPL-3.0-or-later).
+- `en-tetes.test.ts` : chaque fichier `.ts` porte les en-têtes SPDX; la licence du code est la même dans `package.json`; les deux textes de licence sont présents, à la racine (`LICENSE*`) et dans `LICENSES/`; chaque schéma JSON déclare la licence du code dans `$comment`; et `REUSE.toml` annote `schemas/**` et le reste des fichiers sans en-tête (AGPL-3.0-or-later), ainsi que les données et leurs dérivés (CC-BY-SA-4.0). Ce test ne remplace pas `nub run licences`, qui contrôle tous les fichiers.
 
 ## Dépannage
 
@@ -521,6 +524,7 @@ Dans `test/`, avec `node:test` lancé par `nub` :
 | `Sommaire non mis à jour: …` | Après `--enrichir` ou `--sommaire`, le sommaire n'a pas pu être mis à jour : clé ou vl-convert manquant (avertissement, rien n'est modifié) ou résumé impossible à rédiger (le sommaire existant est conservé, code de sortie 1). Régler le problème, puis lancer `nub run sommaire` (ou le désactiver avec `--sans-sommaire`) |
 | `vl-convert est introuvable …` | Le sommaire a besoin de vl-convert pour ses graphiques. L'installer (voir [Graphiques](#graphiques)) ou utiliser `nub run sommaire --sans-graphiques` |
 | `vl-convert vl2svg: …` ou `vl-convert vl2png: …` | vl-convert a refusé une spécification de graphique : le message de vl-convert dit pourquoi. Vérifier sa version (`vl-convert --version`, 1.9 ou plus) |
+| `Schémas périmés ou absents: …` | `nub run schemas:verifier` (ou `nub run test`) a trouvé un schéma commité qui diffère de celui que les types produisent. Lancer `nub run schemas`, puis commiter `schemas/` |
 | `Option inconnue: …` | Option mal orthographiée. Les options valides sont décrites dans la section de chaque script |
 
 ## Utiliser les données
