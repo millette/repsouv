@@ -1,9 +1,5 @@
 node_modules/
 .env
-.claude
-.agents
-skills-lock.json
 dist/
 .mion/
-actual-data/
 
