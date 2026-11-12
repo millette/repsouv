@@ -15,6 +15,7 @@ import { dirname, join } from "node:path";
 import { parseHTML } from "linkedom";
 import { lancer } from "./cli.ts";
 import { ecrireFichier, lireFichier, lireSiExiste, type Lu } from "./fichiers.ts";
+import { ID_PRAXIS } from "./ids.ts";
 import { localVersIso } from "./temps.ts";
 import { categoriesDepuis, slug, type Categorie } from "./categories.ts";
 import { ID_PAR_ICONE, type CritereId } from "./ids.ts";
@@ -53,7 +54,17 @@ export interface Outil {
   /** Identifiant de la catégorie: categories[].id de categories.json (slug du nom). */
   categorie: string;
   nom: string;
+  /** Nombre d'étoiles (0 à 3) donné par la source; estimé (voir score_estime) quand la source n'en donne pas. */
   score: number;
+  /**
+   * Présent (true) quand la source ne donne pas d'étoiles: score, criteres et confiance viennent de l'évaluation enrichie
+   * (ou, avant l'enrichissement, de la classification par seuil de la description).
+   */
+  score_estime?: true;
+  /** Identifiant de la source de l'outil: sources[].id de sources.json (« praxis » pour le répertoire Praxis). */
+  source_repertoire_id: string;
+  /** Services, souvent propriétaires, auxquels l'outil se substitue (URL), quand la source le dit (FACiL). */
+  alternative_a?: string[];
   lien: string;
   description: string;
   /** Dernière date de modification connue: ISO 8601 en heure de Toronto, avec décalage (2026-11-05T09:53:00-05:00). */
@@ -176,6 +187,7 @@ export function extraire(html: string): Repertoire {
         description: texte(desc),
         derniere_modification: modification,
         changement: null,
+        source_repertoire_id: ID_PRAXIS,
       });
     }
   }

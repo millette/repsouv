@@ -27,7 +27,7 @@ test("les textes des licences sont présents: AGPL-3.0 pour le code, CC BY-SA 4.
 });
 test("chaque schéma JSON déclare la licence du code dans $comment, et REUSE.toml la déclare pour schemas/**", () => {
   const schemas = readdirSync("schemas").filter((f) => f.endsWith(".schema.json"));
-  assert.equal(schemas.length, 4, `schémas trouvés: ${schemas.join(", ")}`);
+  assert.equal(schemas.length, 5, `schémas trouvés: ${schemas.join(", ")}`);
   for (const f of schemas) {
     const { $comment } = JSON.parse(readFileSync(`schemas/${f}`, "utf8")) as { $comment?: string };
     assert.match($comment ?? "", new RegExp(`^SPDX-License-Identifier: ${LICENCE_CODE}; SPDX-FileCopyrightText: \\d{4} Robin Millette <`), f);
@@ -45,7 +45,7 @@ test("LICENSES/ contient le texte de chaque licence utilisée, nommé par identi
 });
 test("REUSE.toml déclare CC-BY-SA-4.0 pour les données et leurs dérivés, et la licence du code pour le reste", () => {
   const reuse = readFileSync("REUSE.toml", "utf8");
-  for (const chemin of ["outils.json", "categories.json", "criteres.json", "tags.json", "sommaire.md", "graphiques/**"]) {
+  for (const chemin of ["outils.json", "categories.json", "criteres.json", "tags.json", "sources.json", "sommaire.md", "graphiques/**"]) {
     assert.ok(reuse.includes(`"${chemin}"`), `annoté: ${chemin}`);
   }
   assert.match(reuse, /SPDX-License-Identifier = "CC-BY-SA-4\.0"/);

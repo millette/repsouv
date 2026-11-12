@@ -8,7 +8,7 @@ import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import { Ajv2020 } from "ajv/dist/2020.js";
 import formats from "ajv-formats";
-import { CATEGORIES, CRITERES, enrichi, META, OUTILS, TAGS } from "./donnees-fictives.ts";
+import { CATEGORIES, CRITERES, enrichi, META, OUTILS, SOURCES, TAGS } from "./donnees-fictives.ts";
 
 const addFormats = formats.default;
 const lire = (chemin: string) => JSON.parse(readFileSync(chemin, "utf8"));
@@ -18,6 +18,7 @@ const outils = compiler("outils");
 const criteres = compiler("criteres");
 const tags = compiler("tags");
 const categories = compiler("categories");
+const sources = compiler("sources");
 
 const copie = <T>(x: T): T => structuredClone(x);
 /** Fichiers fictifs complets (« Maison » reçoit un tag: le schéma en exige de 1 à 5). */
@@ -26,6 +27,7 @@ const donnees = {
   criteres: { meta: META, criteres: CRITERES },
   tags: { meta: META, tags: TAGS },
   categories: { meta: META, categories: CATEGORIES },
+  sources: { meta: META, sources: SOURCES },
 };
 /** Un outil complet (enrichi), comme base des variantes invalides. */
 const avec = (modifier: (o: Record<string, unknown>) => void) => {
@@ -41,6 +43,7 @@ test("les données fictives complètes sont valides", () => {
   assert.equal(criteres(donnees.criteres), true, JSON.stringify(criteres.errors));
   assert.equal(tags(donnees.tags), true, JSON.stringify(tags.errors));
   assert.equal(categories(donnees.categories), true, JSON.stringify(categories.errors));
+  assert.equal(sources(donnees.sources), true, JSON.stringify(sources.errors));
 });
 
 test("un fichier sans « meta », ou sans le tableau attendu, est refusé", () => {

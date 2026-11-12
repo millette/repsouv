@@ -9,7 +9,7 @@ import { interpreterChoix, ligneJournal, lignesEstimation, lignesResume, mettreA
 const base = (nom: string, extra: Partial<OutilClasse> = {}): OutilClasse => {
   const o = {
     categorie: "test", nom, score: 2, lien: `https://${nom}.example/`,
-    description: "Outil canadien.", derniere_modification: "2026-11-05T09:53", changement: null,
+    description: "Outil canadien.", derniere_modification: "2026-11-05T09:53", changement: null, source_repertoire_id: "praxis",
     ...extra,
   };
   return { ...o, ...classer(o.description, o.score) };
@@ -179,13 +179,14 @@ import { join } from "node:path";
 import { synchroniser } from "../update.ts";
 import type { Critere, Outil } from "../extract.ts";
 import { lireFichier } from "../fichiers.ts";
+import type { Source } from "../sources.ts";
 
 const CRITERES: Critere[] = [
   { id: "donnees", icon: "📍", titre: "Où peuvent rester les données ?", description: "Au Canada ?" },
   { id: "controle", icon: "🏢", titre: "Qui contrôle l'outil ?", description: "Canadien ?" },
   { id: "dependance", icon: "🔗", titre: "De qui dépend-il ?", description: "Étranger ?" },
 ];
-const brut = (nom: string): Outil => ({ categorie: "c", nom, score: 2, lien: `https://${nom}`, description: "Outil libre et auto-hébergé", derniere_modification: "", changement: null });
+const brut = (nom: string): Outil => ({ categorie: "c", nom, score: 2, lien: `https://${nom}`, description: "Outil libre et auto-hébergé", derniere_modification: "", changement: null, source_repertoire_id: "praxis" });
 const dossier = () => mkdtempSync(join(tmpdir(), "sync-"));
 
 test("synchroniser: sans outils.json, import initial: tous les outils sont « nouveau », classés, et criteres.json est créé", () => {
@@ -260,4 +261,33 @@ test("lignesEstimation: une ligne par poste au prix du modèle, le total, et le 
   assert.match(lignes[5]!, /^  total: .*≈ \d+,\d\d \$ \(gpt-6.1-terra\)$/);
   assert.match(lignes[6]!, /^  si chaque appel devait être repris par gpt-6.1-sol: jusqu'à ≈ \d+,\d\d \$ de plus$/);
   assert.equal(lignesEstimation(estimation, { outils: 1, usage }, { categories: 1, usage }, "gpt-6.1-terra", 10, creerCouleurs(false), null).length, 6);
+});
+
+test("mettreAJour: les outils d'une autre source sont conservés tels quels (jamais « retrait »), et un outil sans source est rattaché à Praxis", () => {
+  const facil = base("Planète", { source_repertoire_id: "facil", alternative_a: ["https://feedly.example/"], score_estime: true });
+  const ancien = base("A");
+  const sansSource = { ...base("B") } as Partial<OutilClasse> as OutilClasse;
+  delete (sansSource as Partial<OutilClasse>).source_repertoire_id;
+  const page = (o: OutilClasse): Outil => ({ categorie: o.categorie, nom: o.nom, score: o.score, lien: o.lien, description: o.description, derniere_modification: "", changement: null, source_repertoire_id: "praxis" });
+  const { outils, resume, migres } = mettreAJour([facil, ancien, sansSource], [page(ancien), page(sansSource)], NOUVELLE);
+  assert.deepEqual(resume, { nouveau: [], modification: [], retrait: [], comeback: [] });
+  assert.equal(migres, 1);
+  assert.deepEqual(outils.map((o) => [o.nom, o.source_repertoire_id]), [["A", "praxis"], ["B", "praxis"], ["Planète", "facil"]]);
+  assert.deepEqual(outils[2], facil);
+  const retrait = mettreAJour([facil, ancien], [], NOUVELLE);
+  assert.deepEqual(retrait.resume.retrait, ["A"]);
+  assert.equal(retrait.outils.find((o) => o.nom === "Planète")!.removed, undefined);
+});
+test("synchroniser: sources.json est créé à côté de outils.json avec la source Praxis, puis conservé tel quel", () => {
+  const d = mkdtempSync(join(tmpdir(), "sync-"));
+  const f = join(d, "outils.json");
+  const r = synchroniser(f, [brut("A")], CRITERES, NOUVELLE, false);
+  assert.equal(r.sourcesEcrites, true);
+  assert.deepEqual(r.sources.map((s) => s.id), ["praxis"]);
+  assert.deepEqual(lireFichier<Source>(join(d, "sources.json"), "sources").donnees[0]!.extracteur, "praxis");
+  const s = synchroniser(f, [brut("A")], CRITERES, NOUVELLE, false);
+  assert.equal(s.sourcesEcrites, false);
+  const sim = synchroniser(join(d, "ailleurs", "outils.json"), [brut("A")], CRITERES, NOUVELLE, true);
+  assert.equal(sim.sourcesEcrites, false);
+  assert.equal(existsSync(join(d, "ailleurs", "sources.json")), false);
 });

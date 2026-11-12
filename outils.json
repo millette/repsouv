@@ -2,7 +2,7 @@
   "meta": {
     "data_license": "CC-BY-SA-4.0",
     "created_at": "2026-11-12T12:35:52-05:00",
-    "updated_at": "2026-11-12T15:06:44-05:00"
+    "updated_at": "2026-11-12T17:11:36-05:00"
   },
   "outils": [
     {
@@ -54,7 +54,8 @@
         },
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:55:59-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "analyse-et-mesure",
@@ -96,7 +97,8 @@
         "infirmes": {},
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:56:02-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "bureautique-et-collaboration",
@@ -149,7 +151,8 @@
         "infirmes": {},
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:56:07-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "bureautique-et-collaboration",
@@ -202,7 +205,8 @@
         "infirmes": {},
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:56:11-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "bureautique-et-collaboration",
@@ -251,7 +255,8 @@
         },
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:56:28-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "bureautique-et-collaboration",
@@ -302,7 +307,8 @@
         },
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:56:35-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "bureautique-et-collaboration",
@@ -352,7 +358,8 @@
         },
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:56:46-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "bureautique-et-collaboration",
@@ -401,7 +408,8 @@
         },
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:56:50-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "bureautique-et-collaboration",
@@ -451,7 +459,8 @@
         },
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:57:00-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "bureautique-et-collaboration",
@@ -502,7 +511,8 @@
         },
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:57:07-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "communication-et-collaboration-d-equipe",
@@ -555,7 +565,8 @@
         "infirmes": {},
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:57:14-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "communication-et-collaboration-d-equipe",
@@ -606,7 +617,8 @@
         },
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:57:18-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "communication-et-collaboration-d-equipe",
@@ -656,7 +668,8 @@
         },
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:57:25-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "communautes-reseaux-et-partage-des-connaissances",
@@ -671,7 +684,8 @@
         "controle"
       ],
       "confiance": "moyenne",
-      "echecs_enrichissement": 2
+      "echecs_enrichissement": 2,
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "communautes-reseaux-et-partage-des-connaissances",
@@ -720,7 +734,8 @@
         },
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:57:30-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "communautes-reseaux-et-partage-des-connaissances",
@@ -770,7 +785,8 @@
         },
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:57:41-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "comptabilite-et-finances",
@@ -817,7 +833,8 @@
         "infirmes": {},
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:57:44-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "financement-subventions-et-dons",
@@ -860,7 +877,8 @@
         "infirmes": {},
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:57:47-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "financement-subventions-et-dons",
@@ -906,7 +924,8 @@
         "infirmes": {},
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:57:50-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "financement-subventions-et-dons",
@@ -950,7 +969,8 @@
         "infirmes": {},
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:57:53-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "creation-et-gestion-de-contenus-numeriques",
@@ -999,7 +1019,8 @@
         "infirmes": {},
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:57:58-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "creation-et-gestion-de-contenus-numeriques",
@@ -1048,7 +1069,8 @@
         },
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:58:05-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "gestion-de-collections-et-de-contenus-culturels",
@@ -1095,7 +1117,8 @@
         "infirmes": {},
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:58:08-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "gestion-de-collections-et-de-contenus-culturels",
@@ -1142,7 +1165,8 @@
         },
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:58:12-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "gestion-de-projets-et-des-taches",
@@ -1193,7 +1217,8 @@
         },
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:58:18-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "gestion-de-projets-et-des-taches",
@@ -1244,7 +1269,8 @@
         },
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:58:24-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "gestion-de-projets-et-des-taches",
@@ -1295,7 +1321,8 @@
         },
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:58:32-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "gestion-de-projets-et-des-taches",
@@ -1344,7 +1371,8 @@
         },
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:58:40-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "gestion-de-la-relation-des-membres-et-crm",
@@ -1391,7 +1419,8 @@
         "infirmes": {},
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:58:43-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "gestion-de-la-relation-des-membres-et-crm",
@@ -1442,7 +1471,8 @@
         },
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:58:49-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "gestion-d-evenements-et-billetterie",
@@ -1487,7 +1517,8 @@
         "infirmes": {},
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:58:57-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "gestion-d-evenements-et-billetterie",
@@ -1536,7 +1567,8 @@
         },
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:59:03-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "gestion-documentaire-et-signature-electronique",
@@ -1584,7 +1616,8 @@
         "infirmes": {},
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:59:06-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "gestion-documentaire-et-signature-electronique",
@@ -1599,7 +1632,8 @@
         "dependance"
       ],
       "confiance": "élevée",
-      "echecs_enrichissement": 2
+      "echecs_enrichissement": 2,
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "gestion-documentaire-et-signature-electronique",
@@ -1648,7 +1682,8 @@
         },
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:59:12-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "marketing-par-courriel",
@@ -1699,7 +1734,8 @@
         "infirmes": {},
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:59:15-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "marketing-par-courriel",
@@ -1748,7 +1784,8 @@
         "infirmes": {},
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:59:18-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "marketing-par-courriel",
@@ -1795,7 +1832,8 @@
         "infirmes": {},
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:59:21-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "marketing-par-courriel",
@@ -1843,7 +1881,8 @@
         "infirmes": {},
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:59:24-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "messagerie-electronique",
@@ -1892,7 +1931,8 @@
         },
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:59:29-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "navigation-web",
@@ -1941,7 +1981,8 @@
         },
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:59:32-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "ressources-humaines-et-gestion-du-temps",
@@ -1989,7 +2030,8 @@
         "infirmes": {},
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:59:36-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "ressources-humaines-et-gestion-du-temps",
@@ -2034,7 +2076,8 @@
         "infirmes": {},
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:59:39-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "securite-et-gestion-des-acces",
@@ -2049,7 +2092,8 @@
         "controle"
       ],
       "confiance": "moyenne",
-      "echecs_enrichissement": 2
+      "echecs_enrichissement": 2,
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "securite-et-gestion-des-acces",
@@ -2095,7 +2139,8 @@
         "infirmes": {},
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:59:42-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "securite-et-gestion-des-acces",
@@ -2144,7 +2189,8 @@
         },
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:59:50-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "securite-et-gestion-des-acces",
@@ -2193,7 +2239,8 @@
         },
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:59:59-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "securite-et-gestion-des-acces",
@@ -2244,7 +2291,8 @@
         },
         "modele": "gpt-6-astra",
         "date": "2026-11-12T13:00:04-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "securite-et-gestion-des-acces",
@@ -2295,7 +2343,8 @@
         },
         "modele": "gpt-6-astra",
         "date": "2026-11-12T13:00:09-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "stockage-infonuagique-et-sauvegarde",
@@ -2345,7 +2394,8 @@
         "infirmes": {},
         "modele": "gpt-6-astra",
         "date": "2026-11-12T13:00:14-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "stockage-infonuagique-et-sauvegarde",
@@ -2397,7 +2447,8 @@
         },
         "modele": "gpt-6-astra",
         "date": "2026-11-12T13:00:20-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "stockage-infonuagique-et-sauvegarde",
@@ -2445,7 +2496,8 @@
         },
         "modele": "gpt-6-astra",
         "date": "2026-11-12T13:00:25-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "stockage-infonuagique-et-sauvegarde",
@@ -2496,7 +2548,8 @@
         },
         "modele": "gpt-6-astra",
         "date": "2026-11-12T13:00:38-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "stockage-infonuagique-et-sauvegarde",
@@ -2543,7 +2596,8 @@
         "infirmes": {},
         "modele": "gpt-6-astra",
         "date": "2026-11-12T13:00:44-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "transcription-et-assistance-aux-reunions",
@@ -2592,7 +2646,8 @@
         "infirmes": {},
         "modele": "gpt-6-astra",
         "date": "2026-11-12T13:00:50-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "transcription-et-assistance-aux-reunions",
@@ -2639,7 +2694,8 @@
         "infirmes": {},
         "modele": "gpt-6-astra",
         "date": "2026-11-12T13:00:54-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "transcription-et-assistance-aux-reunions",
@@ -2690,7 +2746,8 @@
         },
         "modele": "gpt-6-astra",
         "date": "2026-11-12T13:00:59-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "veille-et-gestion-de-l-information",
@@ -2743,7 +2800,8 @@
         "infirmes": {},
         "modele": "gpt-6-astra",
         "date": "2026-11-12T13:01:03-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "veille-et-gestion-de-l-information",
@@ -2793,7 +2851,8 @@
         },
         "modele": "gpt-6-astra",
         "date": "2026-11-12T13:01:06-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     },
     {
       "categorie": "veille-et-gestion-de-l-information",
@@ -2844,7 +2903,8 @@
         },
         "modele": "gpt-6-astra",
         "date": "2026-11-12T13:01:11-05:00"
-      }
+      },
+      "source_repertoire_id": "praxis"
     }
   ]
 }

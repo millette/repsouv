@@ -27,7 +27,7 @@ const valide = (extra: Record<string, unknown> = {}) => ({
 });
 const outil = (nom: string, extra: Partial<Outil> = {}): Outil => ({
   categorie: "c", nom, score: 2, lien: `https://${nom}.example/`,
-  description: "d", derniere_modification: "2026-11-05T09:53", changement: null, ...extra,
+  description: "d", derniere_modification: "2026-11-05T09:53", changement: null, source_repertoire_id: "praxis", ...extra,
 });
 const sansPage = async () => null;
 const pageOk = async () => ({ titre: "T", meta_description: "", extrait: "x".repeat(MIN_EXTRAIT), liens_depot: [] });

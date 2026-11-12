@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$comment": "SPDX-License-Identifier: AGPL-3.0-or-later; SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>",
+  "title": "sources.json: sources des outils (répertoires extraits, collections ajoutées à la main)",
+  "type": "object",
+  "properties": {
+    "meta": {
+      "type": "object",
+      "properties": {
+        "data_license": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}[+-]\\d{2}:\\d{2}$"
+        },
+        "updated_at": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}[+-]\\d{2}:\\d{2}$"
+        }
+      },
+      "required": [
+        "data_license",
+        "created_at",
+        "updated_at"
+      ],
+      "additionalProperties": false
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "nom": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "pattern": "^https?://\\S+$"
+          },
+          "extracteur": {
+            "enum": [
+              "facil",
+              "manuel",
+              "praxis"
+            ]
+          },
+          "pdc": {
+            "type": "string",
+            "pattern": "^https?://\\S+$"
+          },
+          "donnees": {
+            "type": "string",
+            "pattern": "^https?://\\S+$"
+          },
+          "soumis_par": {
+            "type": "object",
+            "properties": {
+              "nom": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string",
+                "pattern": "^https?://\\S+$"
+              },
+              "email": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?(\\.[A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?)+$"
+              }
+            },
+            "required": [
+              "nom"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "id",
+          "nom",
+          "url",
+          "extracteur"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "meta",
+    "sources"
+  ],
+  "additionalProperties": false
+}

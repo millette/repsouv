@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
-// Génère schemas/{outils,criteres,tags}.schema.json (JSON Schema 2020-12) à partir des types de
+// Génère schemas/{outils,categories,criteres,tags,sources}.schema.json (JSON Schema 2020-12) à partir des types de
 // schemas-types.ts, avec mion RunTypes. Les appels createJsonSchemaFn<T>() ne fonctionnent qu'après la
 // transformation faite par le plugin RunTypes: ce fichier est donc empaqueté par obuild (build.config.ts)
 // avant d'être exécuté, voir les scripts `schemas` et `schemas:verifier` de package.json.
@@ -10,7 +10,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { createJsonSchemaFn } from "@mionjs/run-types";
 import { affiner } from "./affiner-schema.ts";
-import type { FichierCategories, FichierCriteres, FichierOutils, FichierTags } from "./schemas-types.ts";
+import type { FichierCategories, FichierCriteres, FichierOutils, FichierSources, FichierTags } from "./schemas-types.ts";
 
 const DOSSIER = "schemas";
 const DIALECTE = "https://json-schema.org/draft/2020-12/schema";
@@ -22,6 +22,7 @@ const generateurs = {
   categories: { titre: "categories.json: catégories du répertoire", schema: createJsonSchemaFn<FichierCategories>() },
   criteres: { titre: "criteres.json: critères de souveraineté numérique", schema: createJsonSchemaFn<FichierCriteres>() },
   tags: { titre: "tags.json: vocabulaire des tags", schema: createJsonSchemaFn<FichierTags>() },
+  sources: { titre: "sources.json: sources des outils (répertoires extraits, collections ajoutées à la main)", schema: createJsonSchemaFn<FichierSources>() },
 };
 
 /** Texte du fichier de schéma. `portable` retire les mots-clés propres à RunTypes (jsType). */

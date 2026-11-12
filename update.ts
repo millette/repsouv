@@ -54,6 +54,7 @@ import { createInterface } from "node:readline/promises";
 import { chargerEnv } from "./env.ts";
 import { formaterDuree } from "./duree.ts";
 import { ecrireFichier, lireFichier, lireSiExiste, type Lu } from "./fichiers.ts";
+import { ID_PRAXIS, SOURCE_PRAXIS, sourcesAvec, type Source } from "./sources.ts";
 import { CHAMPS_ENRICHIS, telechargerRepertoire, type Changement, type Critere, type Outil } from "./extract.ts";
 import { verifierVlConvert } from "./graphiques.ts";
 import { createProgress, type Progress } from "./progress.ts";
@@ -77,13 +78,27 @@ export interface Resume {
   comeback: string[];
 }
 
+/**
+ * Met à jour les outils de la source `sourceId` d'après sa page: les outils des autres sources sont conservés tels
+ * quels, à la fin, dans leur ordre (jamais « retrait » pour eux). Un outil existant sans source (données d'avant
+ * sources.json) est rattaché à la source Praxis.
+ */
 export function mettreAJour(
   existants: OutilClasse[],
   page: Outil[],
   modification: string,
-): { outils: OutilClasse[]; resume: Resume } {
+  sourceId: string = ID_PRAXIS,
+): { outils: OutilClasse[]; resume: Resume; migres: number } {
   const resume: Resume = { nouveau: [], modification: [], retrait: [], comeback: [] };
-  const parNom = new Map(existants.map((o) => [o.nom, o]));
+  let migres = 0;
+  const rattaches = existants.map((o) => {
+    if (o.source_repertoire_id !== undefined) return o;
+    migres++;
+    return { ...o, source_repertoire_id: ID_PRAXIS };
+  });
+  const siens = rattaches.filter((o) => o.source_repertoire_id === sourceId);
+  const autres = rattaches.filter((o) => o.source_repertoire_id !== sourceId);
+  const parNom = new Map(siens.map((o) => [o.nom, o]));
   const enLigne = new Set(page.map((o) => o.nom));
   const outils: OutilClasse[] = [];
 
@@ -92,6 +107,7 @@ export function mettreAJour(
     return {
       ...o,
       ...(ancien && enrichissementDe(ancien)),
+      source_repertoire_id: sourceId,
       derniere_modification: modification,
       changement,
       ...classer(o.description, o.score),
@@ -110,7 +126,7 @@ export function mettreAJour(
       outils.push(ancien);
     }
   }
-  for (const e of existants) {
+  for (const e of siens) {
     if (enLigne.has(e.nom)) continue;
     if (e.removed) {
       outils.push(e);
@@ -119,7 +135,7 @@ export function mettreAJour(
       resume.retrait.push(e.nom);
     }
   }
-  return { outils, resume };
+  return { outils: [...outils, ...autres], resume, migres };
 }
 
 // ---------- synchronisation des fichiers ----------
@@ -139,6 +155,10 @@ export interface Synchronisation {
   categoriesEcrites: boolean;
   /** Dernier état écrit de outils.json (null en simulation d'un import initial), à passer aux écritures suivantes. */
   courant: Lu<OutilClasse> | null;
+  /** Les sources (sources.json): celles déjà connues, avec Praxis ajoutée si elle manquait. */
+  sources: Source[];
+  /** true si sources.json a été créé ou si Praxis y a été ajoutée (jamais en simulation). */
+  sourcesEcrites: boolean;
 }
 
 /**
@@ -149,9 +169,9 @@ export interface Synchronisation {
 export function synchroniser(fichier: string, page: Outil[], criteres: Critere[], modification: string, dryRun: boolean, categoriesPage: Categorie[] = []): Synchronisation {
   const importInitial = !existsSync(fichier);
   let courant: Lu<OutilClasse> | null = importInitial ? null : lireFichier<OutilClasse>(fichier, "outils");
-  const { outils, resume } = mettreAJour(courant?.donnees ?? [], page, modification);
+  const { outils, resume, migres } = mettreAJour(courant?.donnees ?? [], page, modification);
   const total = Object.values(resume).reduce((n, noms) => n + noms.length, 0);
-  const ecrit = !dryRun && (total > 0 || importInitial);
+  const ecrit = !dryRun && (total > 0 || importInitial || migres > 0);
   if (ecrit) courant = ecrireFichier(fichier, "outils", outils, courant);
   let criteresEcrits = false;
   if (!dryRun) {
@@ -168,7 +188,12 @@ export function synchroniser(fichier: string, page: Outil[], criteres: Critere[]
     const apres = ecrireFichier(cheminCategories, "categories", categories, connues);
     categoriesEcrites = connues === null || JSON.stringify(connues.donnees) !== JSON.stringify(apres.donnees);
   }
-  return { outils, resume, importInitial, ecrit, criteresEcrits, categories, categoriesEcrites, courant };
+  const cheminSources = join(dirname(fichier), "sources.json");
+  const sourcesConnues = lireSiExiste<Source>(cheminSources, "sources");
+  const sources = sourcesConnues?.donnees.some((s) => s.id === ID_PRAXIS) ? sourcesConnues.donnees : sourcesAvec(sourcesConnues?.donnees ?? [], { ...SOURCE_PRAXIS });
+  const sourcesEcrites = !dryRun && sources !== sourcesConnues?.donnees;
+  if (sourcesEcrites) ecrireFichier(cheminSources, "sources", sources, sourcesConnues);
+  return { outils, resume, importInitial, ecrit, criteresEcrits, categories, categoriesEcrites, courant, sources, sourcesEcrites };
 }
 
 // ---------- sommaire automatique ----------
@@ -342,6 +367,7 @@ if (import.meta.main) {
     if (sync.ecrit) console.log(`${sortie.vert(fichier)} mis à jour`);
     if (sync.criteresEcrits) console.log(`${sortie.vert(join(dirname(fichier), "criteres.json"))} mis à jour`);
     if (sync.categoriesEcrites) console.log(`${sortie.vert(join(dirname(fichier), "categories.json"))} mis à jour`);
+    if (sync.sourcesEcrites) console.log(`${sortie.vert(join(dirname(fichier), "sources.json"))} mis à jour`);
     const categories = sync.categories;
     let nbDecrites = 0;
 

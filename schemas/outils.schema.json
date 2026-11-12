@@ -44,8 +44,26 @@
             "minimum": 0,
             "maximum": 3
           },
+          "score_estime": {
+            "const": true
+          },
+          "source_repertoire_id": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+            "$comment": "identifiant d'une source: sources[].id de sources.json"
+          },
+          "alternative_a": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^https?://\\S+$"
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
           "lien": {
-            "type": "string"
+            "type": "string",
+            "pattern": "^https?://\\S+$"
           },
           "description": {
             "type": "string"
@@ -262,6 +280,7 @@
           "categorie",
           "nom",
           "score",
+          "source_repertoire_id",
           "lien",
           "description",
           "derniere_modification",

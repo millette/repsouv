@@ -6,6 +6,7 @@ import type { Tag } from "../enrichir.ts";
 import type { Categorie } from "../categories.ts";
 import type { Critere, CriteresConfirmes } from "../extract.ts";
 import type { Entree } from "../statistiques.ts";
+import type { Source } from "../sources.ts";
 
 export const META = { data_license: "CC-BY-SA-4.0", created_at: "2026-11-11T16:43:11-05:00", updated_at: "2026-11-12T10:00:00-05:00" };
 export const D0 = "2026-11-05T09:53:00-05:00";
@@ -20,6 +21,10 @@ export const CRITERES: Critere[] = [
   { id: "controle", icon: "🏢", titre: "Qui contrôle l'outil ?", description: "d" },
   { id: "dependance", icon: "🔗", titre: "De qui dépend-il pour fonctionner ?", description: "d" },
 ];
+export const SOURCES: Source[] = [
+  { id: "praxis", nom: "Praxis", url: "https://praxis.example/", extracteur: "praxis" },
+  { id: "facil", nom: "FACiL", url: "https://facil.example/", extracteur: "manuel", pdc: "https://facil.example/pdc/", donnees: "https://facil.example/donnees/", soumis_par: { nom: "Robin Millette", url: "https://robin.millette.info/", email: "robin@example.com" } },
+];
 export const TAGS: Tag[] = [
   { id: "chiffrement", description: "Chiffre les données." },
   { id: "auto-hebergeable", description: "Installable | chez soi." },
@@ -30,7 +35,7 @@ export const TAGS: Tag[] = [
 
 export const outil = (nom: string, extra: Partial<OutilClasse> = {}): OutilClasse => ({
   categorie: "cat1", nom, score: 2, lien: `https://${nom}.example/`, description: `Description de ${nom}.`,
-  derniere_modification: D0, changement: null, criteres: ["donnees", "dependance"], confiance: "moyenne", ...extra,
+  derniere_modification: D0, changement: null, source_repertoire_id: "praxis", criteres: ["donnees", "dependance"], confiance: "moyenne", ...extra,
 });
 export const enrichi = (nom: string, extra: Partial<OutilClasse> = {}) =>
   outil(nom, {

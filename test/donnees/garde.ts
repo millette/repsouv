@@ -4,7 +4,7 @@
 // s'arrêtent avec un message clair plutôt qu'une erreur de fichier introuvable.
 import { existsSync } from "node:fs";
 
-export const FICHIERS_DONNEES = ["outils.json", "categories.json", "criteres.json", "tags.json"] as const;
+export const FICHIERS_DONNEES = ["outils.json", "categories.json", "criteres.json", "tags.json", "sources.json"] as const;
 
 /** Lève une erreur explicite si un des fichiers manque. */
 export function exigerFichiers(fichiers: readonly string[]): void {

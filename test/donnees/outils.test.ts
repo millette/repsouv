@@ -12,6 +12,7 @@ import { classer, type OutilClasse } from "../../classify.ts";
 import { chargerTags } from "../../enrichir.ts";
 import type { Critere } from "../../extract.ts";
 import { lireFichier } from "../../fichiers.ts";
+import { problemesSource, type Source } from "../../sources.ts";
 import { ID_PAR_ICONE } from "../../ids.ts";
 import { exigerFichiers, FICHIERS_DONNEES } from "./garde.ts";
 
@@ -27,6 +28,14 @@ test("outils.json: 60 outils, chacun dans une catégorie de categories.json, et 
   for (const o of outils.donnees) assert.ok(ids.has(o.categorie), `${o.nom}: catégorie ${o.categorie} absente de categories.json`);
   const utilisees = new Set(outils.donnees.map((o) => o.categorie));
   for (const id of ids) assert.ok(utilisees.has(id), `catégorie ${id} sans outil`);
+});
+
+test("sources.json: sources valides, Praxis présente, et chaque outil renvoie à une source existante", () => {
+  const sources = lireFichier<Source>("sources.json", "sources").donnees;
+  for (const s of sources) assert.deepEqual(problemesSource(s), [], s.id);
+  assert.ok(sources.some((s) => s.id === "praxis"));
+  const ids = new Set(sources.map((s) => s.id));
+  for (const o of outils.donnees) assert.ok(ids.has(o.source_repertoire_id), `${o.nom}: source ${o.source_repertoire_id} absente de sources.json`);
 });
 
 test("criteres.json: trois critères dont l'id correspond à l'icône", () => {
@@ -53,7 +62,7 @@ test("tags.json: ids uniques, en kebab-case, avec description française non vid
 });
 
 test("les quatre fichiers portent la licence des données et des dates valides", () => {
-  for (const [f, cle] of [["outils.json", "outils"], ["categories.json", "categories"], ["criteres.json", "criteres"], ["tags.json", "tags"]] as const) {
+  for (const [f, cle] of [["outils.json", "outils"], ["categories.json", "categories"], ["criteres.json", "criteres"], ["tags.json", "tags"], ["sources.json", "sources"]] as const) {
     const lu = lireFichier(f, cle);
     assert.equal(lu.meta.data_license, "CC-BY-SA-4.0", f);
     assert.ok(Date.parse(lu.meta.created_at) <= Date.parse(lu.meta.updated_at), f);
@@ -62,7 +71,7 @@ test("les quatre fichiers portent la licence des données et des dates valides",
 
 test("les quatre fichiers sont valides selon leurs schémas JSON (Ajv)", () => {
   const lire = (chemin: string) => JSON.parse(readFileSync(chemin, "utf8"));
-  for (const nom of ["outils", "categories", "criteres", "tags"]) {
+  for (const nom of ["outils", "categories", "criteres", "tags", "sources"]) {
     const valider = formats.default(new Ajv2020({ strict: true, allErrors: true })).compile(lire(`schemas/${nom}.schema.json`));
     assert.equal(valider(lire(`${nom}.json`)), true, `${nom}.json: ${JSON.stringify(valider.errors)}`);
   }
