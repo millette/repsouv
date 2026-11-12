@@ -9,7 +9,6 @@ import { test } from "node:test";
 
 export const FICHIERS_MD = [
   "README.md", "implementation.md", "historique.md", "sommaire.md",
-  "spike-mion/RESULTATS.md",
 ] as const;
 
 /** Ancre GitHub d'un titre: minuscules, accents graves retirés, ponctuation retirée, espaces en tirets. */

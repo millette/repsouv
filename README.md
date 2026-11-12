@@ -213,4 +213,3 @@ jaq '.outils[] | select(.criteres_confirmes and (.criteres_confirmes.criteres | 
 | [implementation.md](implementation.md) | Le flux de travail, le contenu du dépôt, les schémas, chaque script et ses options, la classification et ses analyses, l'enrichissement, la génération du sommaire, les scripts npm, les tests, le dépannage et les conventions de documentation |
 | [historique.md](historique.md) | Les étapes du projet et les décisions prises, par date |
 | [sommaire.md](sommaire.md) | Le sommaire statistique généré (données, dates, catégories, statuts, licences, critères, forges, tags, fiabilité) |
-| [spike-mion/RESULTATS.md](spike-mion/RESULTATS.md) | L'expérience sur les schémas JSON de mion RunTypes (dossier isolé, hors du projet principal) |

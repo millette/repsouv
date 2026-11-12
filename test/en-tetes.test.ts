@@ -48,7 +48,7 @@ test("REUSE.toml déclare CC-BY-SA-4.0 pour les données et leurs dérivés, et 
     assert.ok(reuse.includes(`"${chemin}"`), `annoté: ${chemin}`);
   }
   assert.match(reuse, /SPDX-License-Identifier = "CC-BY-SA-4\.0"/);
-  for (const chemin of ["README.md", "implementation.md", "historique.md", "package.json", "tsconfig.json", "tsconfig.schemas.json", "nub.lock", ".gitignore", ".env.example", "spike-mion/**"]) {
+  for (const chemin of ["README.md", "implementation.md", "historique.md", "package.json", "tsconfig.json", "tsconfig.schemas.json", "nub.lock", ".gitignore", ".env.example"]) {
     assert.ok(reuse.includes(`"${chemin}"`), `annoté: ${chemin}`);
   }
 });
