@@ -1,0 +1,76 @@
+{
+  "$ref": "#/definitions/Message",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "Image": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "image",
+          "type": "string"
+        },
+        "largeur": {
+          "type": "number"
+        },
+        "url": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "url",
+        "largeur"
+      ],
+      "type": "object"
+    },
+    "Message": {
+      "additionalProperties": false,
+      "properties": {
+        "contenu": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Texte"
+            },
+            {
+              "$ref": "#/definitions/Image"
+            }
+          ]
+        },
+        "cree": {
+          "description": "Sur le fil JSON: chaîne ISO 8601. En mémoire: Date.",
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "cree",
+        "contenu"
+      ],
+      "type": "object"
+    },
+    "Texte": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "texte",
+          "type": "string"
+        },
+        "texte": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "texte"
+      ],
+      "type": "object"
+    }
+  }
+}
