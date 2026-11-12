@@ -75,3 +75,16 @@ Constats:
 - Pour un format de fichier strict et lisible par d'autres outils (`outils.json`), il faut éviter les types qui déclenchent l'encodage propre à RunTypes: unions avec `Date`, `Map`, `Set`, `bigint`. Avec des types JSON simples (objets, chaînes, nombres, tableaux, énumérations, unions d'objets discriminées), RunTypes et le générateur décrivent le même JSON, avec la réserve de `additionalProperties`.
 - Les données du dépôt n'utilisent que des types JSON simples (voir `extract.ts`: chaînes, nombres, booléens, tableaux, `null`, unions littérales). Elles évitent donc les cas problématiques.
 - Le générateur échoue silencieusement sur `Map` (schéma faux), tandis que RunTypes échoue de façon visible sur le JSON naturel. Aucun des deux ne remplace une revue des types exposés.
+
+## Essai avec tsdown (remplaçant d'esbuild)
+
+`tsdown.config.ts` (tsdown 0.23.7, rolldown 1.3.1) avec `@mionjs/devtools/runtypes/rolldown`; script `nub run construire:tsdown`, sortie dans `sortie-tsdown/` (ignoré par git). La construction esbuild (`nub run construire`) est conservée pour comparaison.
+
+Résultat: **fonctionne, avec une sortie équivalente.** Les trois scripts (`comparer.ts`, `cas-limites.ts`, `complement.ts`), exécutés une fois avec chaque bundle, produisent une sortie textuelle identique, octet pour octet. Le plugin voit donc bien les appels `createXxx<T>()` avant que rolldown retire les types.
+
+Écarts observés:
+
+- tsdown découpe en trois fichiers (`mion.mjs`, `mion2.mjs`, et un morceau partagé `createJsonSchemaFn-<hash>.mjs`), pour 43 ko au total, contre deux fichiers autonomes de 35 et 38 ko avec esbuild.
+- tsdown affiche un avertissement: `@mionjs/run-types` est embarqué dans le bundle parce qu'il est en `devDependencies`. Il suggère `deps.onlyBundle`; non appliqué ici.
+- Les scripts d'exécution importent `./mion.mjs`; avec tsdown, il faut copier le dossier de sortie (non fait dans le dépôt; le test a copié les fichiers temporairement puis rétabli la construction esbuild).
+- `dts: false`: le `mion.d.mts` écrit à la main reste utilisé.

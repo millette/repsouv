@@ -12,6 +12,7 @@
     "ajv-formats": "3.0.1",
     "esbuild": "0.28.2",
     "ts-json-schema-generator": "2.9.1-next.18",
+    "tsdown": "0.23.7",
     "typescript": "6.0.3"
   },
   "scripts": {
@@ -21,6 +22,7 @@
     "complement": "nub complement.ts",
     "typecheck": "../node_modules/.bin/tsrs -p .",
     "schema:tjs2": "ts-json-schema-generator --path types2.ts --type Noeud --tsconfig tsconfig.json -o schemas/tjs2-Noeud.schema.json && ts-json-schema-generator --path types2.ts --type UnionDate --tsconfig tsconfig.json -o schemas/tjs2-UnionDate.schema.json && ts-json-schema-generator --path types2.ts --type Compteurs --tsconfig tsconfig.json -o schemas/tjs2-Compteurs.schema.json && ts-json-schema-generator --path types2.ts --type Melange --tsconfig tsconfig.json -o schemas/tjs2-Melange.schema.json",
-    "cas-limites": "nub cas-limites.ts"
+    "cas-limites": "nub cas-limites.ts",
+    "construire:tsdown": "tsdown"
   }
 }
