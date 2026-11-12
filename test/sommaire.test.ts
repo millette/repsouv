@@ -6,7 +6,7 @@ import { existsSync, mkdtempSync, readdirSync, readFileSync, writeFileSync } fro
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
-import { CATEGORIES, CRITERES, D0, D1, entree, enrichi, META, outil, OUTILS, sansDate, TAGS } from "./donnees-fictives.ts";
+import { CATEGORIES, CRITERES, D0, D1, entree, enrichi, META, outil, OUTILS, sansDate, SOURCES, TAGS } from "./donnees-fictives.ts";
 import { ecrireFichier } from "../fichiers.ts";
 import {
   calculerStatistiques, chargeResume, familleLicence, forgeDe, genererSommaire, produireResume, rendreMarkdown, validerResume,
@@ -418,4 +418,28 @@ test("produireResume et genererSommaire: avec un repli, la seconde tentative pas
   const r = await genererSommaire({ source: join(d, "outils.json"), generer: async () => ({ paragraphes: [] }), genererRepli: async () => PARAS, modele: "gpt-test", modeleRepli: "gpt-repli", convertir: fauxConvertir([]) });
   assert.equal(r.resume, "oui");
   assert.match(readFileSync(join(d, "sommaire.md"), "utf8"), /modèle d'IA \(gpt-repli\)/);
+});
+
+test("statistiques: provenance par source (noms de sources.json), scores estimés, alternatives et Open Hub (complétés triés par contributeurs, restants, abandonnés, activité)", () => {
+  const oh = (nom: string, contributeurs: number, activite: string | null) => enrichi(nom, { openhub_id: nom.toLowerCase(), openhub: { organisation: null, activite, licences: ["MIT"], langage_principal: "Go", lignes_de_code: 10, contributeurs_total: 50, contributeurs_12_mois: contributeurs, commits_12_mois: 100, premier_mois: "2020-01-01", dernier_mois: "2026-11-01", consulte_le: "2026-11-13T10:00:00-05:00" } });
+  const outils = [...OUTILS, oh("H1", 5, "High"), oh("H2", 40, "High"), enrichi("Facil", { source_repertoire_id: "facil", score_estime: true, alternative_a: ["https://feedly.example/"] }), enrichi("Fin", { echecs_openhub: 3 })];
+  const s = calculerStatistiques(entree(outils, SOURCES));
+  assert.deepEqual(s.provenance, [{ id: "praxis", nom: "Praxis", outils: 9, enrichis: 8 }, { id: "facil", nom: "FACiL", outils: 1, enrichis: 1 }]);
+  assert.deepEqual(s.scoresEstimes, ["Facil"]);
+  assert.deepEqual(s.alternatives, [{ nom: "Facil", alternatives: ["https://feedly.example/"] }]);
+  assert.deepEqual(s.openhub.completes.map((o) => [o.nom, o.contributeurs12]), [["H2", 40], ["H1", 5]]);
+  assert.deepEqual(s.openhub.activite, [{ cle: "High", n: 2 }]);
+  assert.deepEqual(s.openhub.abandonnes, ["Fin"]);
+  assert.ok(s.openhub.restants.includes("A") && !s.openhub.restants.includes("C") && !s.openhub.restants.includes("Fin"), s.openhub.restants.join());
+  assert.equal(calculerStatistiques(entree()).provenance[0]!.nom, "praxis", "sans sources.json, l'identifiant sert de nom");
+});
+test("rendu: section Open Hub avec le tableau, les restants et les alternatives; chiffres clés avec la provenance et les scores estimés", () => {
+  const outils = [...OUTILS, enrichi("H", { openhub_id: "h", openhub: { organisation: "Org", activite: "High", licences: ["MIT"], langage_principal: null, lignes_de_code: null, contributeurs_total: null, contributeurs_12_mois: 7, commits_12_mois: null, premier_mois: null, dernier_mois: null, consulte_le: "d" } }), enrichi("Facil", { source_repertoire_id: "facil", score_estime: true, alternative_a: ["https://feedly.example/"] })];
+  const md = rendreMarkdown(calculerStatistiques(entree(outils, SOURCES)), { genereLe: GENERE_LE });
+  assert.match(md, /## Open Hub/);
+  assert.match(md, /\| H \| h \| High \| 7 \| \? \| MIT \|/);
+  assert.match(md, /Restent à chercher : A/);
+  assert.match(md, /Alternatives déclarées par la source\*\* : Facil \(https:\/\/feedly\.example\/\)/);
+  assert.match(md, /\*\*Provenance\*\* : Praxis \(7 outils\), FACiL \(1 outil\) ; 1 outil au score estimé/);
+  assert.match(rendreMarkdown(calculerStatistiques(entree()), { genereLe: GENERE_LE }), /Aucun outil n'a encore de données Open Hub/);
 });

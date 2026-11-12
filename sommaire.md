@@ -2,27 +2,28 @@
 
 *Documentation : [README](README.md) · [Implémentation](implementation.md) · [Historique](historique.md) · [Sommaire statistique](sommaire.md)*
 
-Généré le 2026-11-12T17:20:53-05:00 par `sommaire.ts` d'après `outils.json` (données sous licence CC-BY-SA-4.0, créées le 2026-11-12T12:35:52-05:00 et modifiées pour la dernière fois le 2026-11-12T17:20:36-05:00). Ne pas modifier ce fichier à la main : relancer `node sommaire.ts`.
+Généré le 2026-11-12T17:24:09-05:00 par `sommaire.ts` d'après `outils.json` (données sous licence CC-BY-SA-4.0, créées le 2026-11-12T12:35:52-05:00 et modifiées pour la dernière fois le 2026-11-12T17:20:36-05:00). Ne pas modifier ce fichier à la main : relancer `node sommaire.ts`.
 
 Sauf indication contraire, les pourcentages sont calculés sur les 60 outils du répertoire. Les statistiques sur le statut du code source, les licences, les forges et les tags ne portent que sur les 57 outils déjà enrichis.
 
 ## Résumé
 
-Ce répertoire rassemble 60 outils numériques pour aider les OSBL des arts et de la culture du Canada français à repérer des solutions favorisant la souveraineté numérique. Il couvre notamment la bureautique et la collaboration, la sécurité, le stockage, la gestion de projets, le financement, la billetterie et les collections culturelles. Chaque outil est évalué selon trois critères : où peuvent rester les données, qui contrôle l’outil et de qui il dépend pour fonctionner. Le score, sur une échelle de 0 à 3 étoiles, synthétise les critères satisfaits dans le répertoire : 52 outils obtiennent 2 étoiles et 8 en obtiennent 3. Le critère relatif aux données est indiqué comme satisfait pour 60 outils, celui du contrôle pour 29 et celui de la dépendance pour 39.
+Destiné aux OSBL des arts et de la culture du Canada français, ce répertoire rassemble 60 outils issus du répertoire de Praxis, La bande numérique. Il couvre notamment la bureautique et la collaboration, la sécurité, le stockage, la gestion de projets, le financement, la billetterie et les collections culturelles. Sa grille de souveraineté repose sur trois questions : où peuvent rester les données, qui contrôle l’outil et de qui il dépend pour fonctionner. Le score va de 0 à 3 étoiles. Dans le répertoire actuel, 52 outils obtiennent 2 étoiles et 8 obtiennent 3 étoiles, pour une moyenne de 2,13. Les critères relatifs aux données, au contrôle et à la dépendance y sont respectivement attribués à 60, 29 et 39 outils.
 
-L’enrichissement classe 24 outils comme libres, 6 comme partiellement libres, 1 comme ayant un code source disponible et 26 comme propriétaires, tandis que 3 restent non enrichis. Parmi les licences renseignées, le copyleft fort domine avec 16 occurrences, devant les licences permissives et le copyleft faible. Les dépôts de code recensés se trouvent surtout sur GitHub, mais aussi sur Framagit, git.jami.net et hg.mozilla.org. Une licence précise ou un dépôt n’est toutefois pas renseigné pour tous les outils concernés. Les étiquettes les plus fréquentes signalent l’auto-hébergement pour 25 outils, les API ou intégrations pour 22 et une offre gratuite pour 22. La bureautique et la collaboration constituent la catégorie la plus fournie avec 8 outils, suivie de la sécurité et de la gestion des accès avec 6, puis du stockage, de l’infonuagique et de la sauvegarde avec 5.
+L’enrichissement distingue 24 logiciels libres, 6 partiellement libres, 1 outil à code source disponible et 26 solutions propriétaires, tandis que 3 fiches ne sont pas encore enrichies. Parmi les licences renseignées, le copyleft fort, notamment GPL et AGPL, domine avec 16 occurrences, devant les licences permissives avec 5 et le copyleft faible avec 4. Certaines licences restent non renseignées. Les dépôts de code recensés se trouvent principalement sur GitHub, mais aussi sur Framagit, git.jami.net et hg.mozilla.org. Les étiquettes les plus fréquentes concernent l’auto-hébergement, avec 25 outils, les API ou intégrations et la gratuité, avec 22 outils chacune. La bureautique et la collaboration est la catégorie la plus fournie, avec 8 outils, suivie de la sécurité et de la gestion des accès avec 6, puis du stockage, de l’infonuagique et de la sauvegarde avec 5.
 
-Pour un organisme, les catégories et les étiquettes facilitent la constitution d’une sélection selon les besoins : collaborer sur des documents, gérer les membres et les dons, diffuser des événements ou publier des collections numériques. Le rapprochement des fonctions, du statut du code, des licences et des critères de souveraineté aide à comparer les solutions au-delà de leur seule origine géographique. Il permet notamment de distinguer un service hébergé, un logiciel auto-hébergeable ou un outil fonctionnant localement, puis de choisir selon le niveau de maîtrise des données recherché et les capacités techniques de l’équipe.
+Pour un organisme, le répertoire offre un point de départ pour repérer des solutions et les comparer selon les fonctions recherchées et le niveau de maîtrise des données souhaité. Il permet, par exemple, de rapprocher les besoins de gestion des membres, de diffusion d’infolettres ou de publication de collections des possibilités d’auto-hébergement, de chiffrement ou de fonctionnement hors ligne. La distinction entre logiciel libre, solution partiellement libre et service propriétaire aide à examiner des options différentes, sans confondre ouverture du code et souveraineté. Les descriptions et les étiquettes permettent aussi de repérer des versions gratuites, des intégrations ou des possibilités de conservation locale des données.
 
-Les étoiles restent des repères de souveraineté partielle, et non une garantie générale d’indépendance ou de protection des données. L’enrichissement porte sur 57 outils et repose notamment sur des évaluations automatiques, dont les résultats peuvent différer des critères initialement inscrits au répertoire. Ainsi, le critère relatif aux données est confirmé pour 45 outils enrichis, tandis qu’il demeure indéterminé pour 12. Avant toute adoption, il convient de vérifier les informations auprès des fournisseurs ou des projets : licence applicable à l’édition choisie, localisation effective des données, dépendances techniques, possibilités d’exportation, conditions tarifaires et disponibilité du français. Les fiches non enrichies et les renseignements manquants appellent une vigilance particulière.
+Ces indications décrivent une souveraineté souvent partielle et ne constituent pas une garantie d’indépendance complète. L’enrichissement porte sur 57 fiches, et les évaluations automatiques ne concordent pas toujours avec les critères attribués dans le répertoire : elles retiennent notamment le critère des données pour 47 outils, celui du contrôle pour 21 et celui de la dépendance pour 34. Des verdicts restent également indéterminés. Les scores doivent donc être lus avec les descriptions et les réserves associées, plutôt que comme une certification. Avant de choisir, il convient de vérifier les licences, les conditions d’hébergement, les dépendances techniques, les possibilités d’exportation, les fonctions comprises dans chaque édition et la disponibilité du français auprès des projets ou des fournisseurs.
 
-*Résumé rédigé par un modèle d'IA (gpt-6.1-sol) le 2026-11-12T17:20:49-05:00, à partir des statistiques ci-dessous et de la liste des outils. À relire avant de le diffuser.*
+*Résumé rédigé par un modèle d'IA (gpt-6.1-sol) le 2026-11-12T17:24:05-05:00, à partir des statistiques ci-dessous et de la liste des outils. À relire avant de le diffuser.*
 
 ## Chiffres clés
 
 - **60 outils** répartis en **20 catégories**.
 - **8 outils à 3 étoiles** et **52 à 2 étoiles** (moyenne : 2,13 étoiles).
 - **57 outils enrichis** sur 60 (95,0 %).
+- **Provenance** : Répertoire d'outils favorisant la souveraineté numérique (Praxis, La bande numérique) (60 outils).
 - **30 logiciels libres ou partiellement libres** parmi les outils enrichis (52,6 %).
 - **8 licences SPDX distinctes**, **4 forges de code** et **36 tags** utilisés sur 37 du vocabulaire.
 
@@ -202,6 +203,37 @@ Pour chaque outil enrichi, une IA a lu la page de l'outil et répondu, critère 
 
 - **Logiciels libres ou partiels sans dépôt connu** : La Digitale.
 - Autres outils enrichis sans dépôt (propriétaires ou inconnus) : 27.
+
+## Open Hub
+
+Données publiques d'[Open Hub](https://www.openhub.net/) sur les logiciels au code public (champ `openhub` de `outils.json`, voir `openhub.ts`) : activité, contributeurs et commits des douze derniers mois, licences déclarées sur Open Hub.
+
+| Outil | Projet Open Hub | Activité | Contributeurs (12 mois) | Commits (12 mois) | Licences Open Hub |
+|---|---|---|---|---|---|
+| Firefox | 9 | Very High | 1619 | 73478 | Mozilla Public License 2.0 |
+| Nextcloud | 727926 | Not Available | 634 | 85905 | GNU Affero General Public License v3.0 |
+| CiviCRM | 3256 | Very High | 376 | 10791 | GNU Affero General Public License v3.0 |
+| Collabora Online | 761437 | Very High | 327 | 18007 | aucune |
+| Penpot | 762685 | Very High | 232 | 5445 | Mozilla Public License 2.0 |
+| Bitwarden | 729478 | Very High | 168 | 3961 | aucune |
+| Euro-Office | 766962 | Very High | 162 | 6695 | aucune |
+| Discourse | 633846 | Very High | 136 | 7710 | GNU General Public License v2.0 or later |
+| Jitsi Meet | 714272 | Very High | 122 | 1056 | Apache License 2.0 |
+| Mattermost | 724252 | Very High | 120 | 2736 | aucune |
+| Matomo | 10720 | Not Available | 99 | 5467 | GNU General Public License v3.0 or later |
+| Thunderbird | 36 | Very High | 93 | 4269 | Mozilla Public License 2.0 |
+| OpenProject | 631944 | Very High | 89 | 19124 | GNU General Public License v3.0 only |
+| Mastodon | 730083 | Very High | 86 | 3159 | GNU Affero General Public License v3.0 or later |
+| Vaultwarden | 762092 | High | 58 | 230 | GNU Affero General Public License v3.0 or later |
+| Leantime | 757432 | High | 45 | 846 | GNU General Public License v2.0 or later |
+| Jami | 318963 | Not Available | 28 | 1884 | aucune |
+| CryptPad | 731278 | High | 24 | 1002 | aucune |
+| Taiga | 719594 | Moderate | 9 | 153 | GNU Affero General Public License v3.0 or later |
+| DocuSeal | 763084 | High | 3 | 1029 | GNU Affero General Public License v3.0 or later |
+| OnlyOffice | 486794 | Very Low | 1 | 1 | GNU Affero General Public License v3.0 |
+
+- **21 outils** avec des données Open Hub ; activité : Very High 12, High 4, Not Available 3, Moderate 1, Very Low 1.
+- Restent à chercher : La Digitale, Framapad, Omeka S, Vikunja, Mobilizon, 2FAS Auth, 2FAS Pass, Handy, Miniflux, Wallabag.
 
 ## Tags
 

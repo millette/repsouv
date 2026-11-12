@@ -77,4 +77,4 @@ export const OUTILS: OutilClasse[] = [
   sansDate(enrichi("G", { licence: "Apache-2.0 OR MIT", categorie: "cat2" })),
   outil("Retire", { removed: true, changement: "retrait", derniere_modification: D1 }),
 ];
-export const entree = (outils = OUTILS): Entree => ({ outils, categories: CATEGORIES, tags: TAGS, criteres: CRITERES, meta: META });
+export const entree = (outils = OUTILS, sources?: Source[]): Entree => ({ outils, categories: CATEGORIES, tags: TAGS, criteres: CRITERES, meta: META, ...(sources && { sources }) });

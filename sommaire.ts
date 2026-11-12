@@ -22,7 +22,8 @@ import { construireGraphiques, ecrireGraphiques, verifierVlConvert, type Convert
 import { chargerCategories } from "./categories.ts";
 import { chargerEnv } from "./env.ts";
 import { appelerOpenAI, chargerCriteres, chargerTags, MAX_ECHECS_PAR_DEFAUT, MODELE_PAR_DEFAUT, modelesDepuisEnv, nouvelEssai, obtenirValide, problemesMarkdown } from "./enrichir.ts";
-import { lireFichier } from "./fichiers.ts";
+import { lireFichier, lireSiExiste } from "./fichiers.ts";
+import type { Source } from "./sources.ts";
 import { createProgress, type Progress } from "./progress.ts";
 import {
   arrondi, calculerStatistiques, forgeDe, NOMS_SOURCES, NON_ENRICHI, type LigneCriteres, type Statistiques,
@@ -95,6 +96,7 @@ Sauf indication contraire, les pourcentages sont calculés sur les ${s.total} ou
 - **${pluriel(s.total, "outil")}** répartis en **${pluriel(s.categories.length, "catégorie")}**${s.retires.length ? `, et ${pluriel(s.retires.length, "outil retiré", "outils retirés")} du répertoire (${liste(s.retires)})` : ""}.
 - **${pluriel(s.scores.trois, "outil")} à 3 étoiles** et **${s.scores.deux} à 2 étoiles** (moyenne : ${decimal(s.scores.moyen)} étoiles).
 - **${pluriel(ens, "outil enrichi", "outils enrichis")}** sur ${s.total} (${pourcent(ens, s.total)}).
+- **Provenance** : ${s.provenance.map((p) => `${p.nom} (${pluriel(p.outils, "outil")})`).join(", ")}${s.scoresEstimes.length ? ` ; ${pluriel(s.scoresEstimes.length, "outil")} au score estimé faute d'étoiles dans la source (${liste(s.scoresEstimes, 6)})` : ""}.
 ${ens ? `- **${pluriel(libres, "logiciel libre ou partiellement libre", "logiciels libres ou partiellement libres")}** parmi les outils enrichis (${pourcent(libres, ens)}).
 - **${pluriel(s.licences.spdx.length, "licence SPDX distincte", "licences SPDX distinctes")}**, **${pluriel(s.forges.length, "forge de code", "forges de code")}** et **${pluriel(s.tags.utilisation.filter((t) => t.n).length, "tag")}** utilisés sur ${s.tags.utilisation.length} du vocabulaire.
 ` : ""}
@@ -206,6 +208,17 @@ ${s.forges.length ? `${image("forges")}${tableau(["Forge", "Outils", "Hôte(s)",
 
 ${s.sansDepot.libresOuPartiels.length ? `- **Logiciels libres ou partiels sans dépôt connu** : ${liste(s.sansDepot.libresOuPartiels, 10)}.\n` : ""}- Autres outils enrichis sans dépôt (propriétaires ou inconnus) : ${s.sansDepot.autres}.` : ens ? "*Aucun dépôt de code n'est connu pour les outils enrichis.*" : aucunEnrichi}
 `);
+
+  // Open Hub
+  const oh = s.openhub;
+  parts.push(`## Open Hub
+
+Données publiques d'[Open Hub](https://www.openhub.net/) sur les logiciels au code public (champ \`openhub\` de \`outils.json\`, voir \`openhub.ts\`) : activité, contributeurs et commits des douze derniers mois, licences déclarées sur Open Hub.
+
+${oh.completes.length ? `${tableau(["Outil", "Projet Open Hub", "Activité", "Contributeurs (12 mois)", "Commits (12 mois)", "Licences Open Hub"], oh.completes.map((o) => [o.nom, o.id, o.activite ?? "inconnue", o.contributeurs12 ?? "?", o.commits12 ?? "?", o.licences.join(", ") || "aucune"]))}
+
+- **${pluriel(oh.completes.length, "outil")}** avec des données Open Hub ; activité : ${oh.activite.map((a) => `${a.cle} ${a.n}`).join(", ")}.
+` : "*Aucun outil n'a encore de données Open Hub.*\n"}${oh.restants.length ? `- Restent à chercher : ${liste(oh.restants, 10)}.\n` : ""}${oh.abandonnes.length ? `- Sans concordance sûre après plusieurs essais (candidats dans le journal de \`update\`) : ${liste(oh.abandonnes, 10)}.\n` : ""}${s.alternatives.length ? `\n**Alternatives déclarées par la source** : ${s.alternatives.map((a) => `${a.nom} (${a.alternatives.join(", ")})`).join(" ; ")}.\n` : ""}`);
 
   // Tags
   const tg = s.tags;
@@ -369,8 +382,10 @@ export async function genererSommaire(o: OptionsSommaire): Promise<ResultatSomma
 
   const dossier = dirname(o.source);
   const lu = lireFichier<OutilClasse>(o.source, "outils");
+  const sourcesLues = lireSiExiste<Source>(join(dossier, "sources.json"), "sources");
   const statistiques = calculerStatistiques({
     outils: lu.donnees,
+    ...(sourcesLues && { sources: sourcesLues.donnees }),
     categories: chargerCategories(join(dossier, "categories.json")),
     tags: chargerTags(join(dossier, "tags.json")),
     criteres: chargerCriteres(join(dossier, "criteres.json")),

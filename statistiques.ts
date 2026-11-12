@@ -7,6 +7,8 @@ import { abandonne, type Tag } from "./enrichir.ts";
 import type { Categorie } from "./categories.ts";
 import type { Critere } from "./extract.ts";
 import type { Metadonnees } from "./fichiers.ts";
+import { abandonneOpenHub } from "./openhub.ts";
+import type { Source } from "./sources.ts";
 
 // ---------- vocabulaire ----------
 
@@ -48,6 +50,8 @@ export interface Entree {
   tags: Tag[];
   criteres: Critere[];
   meta: Metadonnees;
+  /** sources.json: pour nommer les sources des outils; une source inconnue est affichée par son identifiant. */
+  sources?: Source[];
 }
 
 export interface Compte {
@@ -114,6 +118,20 @@ export interface Statistiques {
   };
   forges: { forge: string; hotes: string[]; outils: string[] }[];
   sansDepot: { libresOuPartiels: string[]; autres: number };
+  /** Outils par source (source_repertoire_id), dans l'ordre décroissant. */
+  provenance: { id: string; nom: string; outils: number; enrichis: number }[];
+  /** Outils dont le score est estimé (source sans étoiles), par nom. */
+  scoresEstimes: string[];
+  /** Outils qui déclarent des alternatives (alternative_a). */
+  alternatives: { nom: string; alternatives: string[] }[];
+  /** Données Open Hub des outils libres enrichis. */
+  openhub: {
+    completes: { nom: string; id: string; activite: string | null; contributeurs12: number | null; commits12: number | null; licences: string[] }[];
+    /** Outils libres enrichis sans données Open Hub, pas encore abandonnés. */
+    restants: string[];
+    abandonnes: string[];
+    activite: Compte[];
+  };
 }
 
 const compter = (valeurs: Iterable<string>): Map<string, number> => {
@@ -190,7 +208,7 @@ function lignesVerdicts(outils: OutilClasse[], ids: string[], sourceDe: (o: Outi
     .concat(outils.length ? [ligne("Ensemble", outils)] : []);
 }
 
-export function calculerStatistiques({ outils: tous, categories: definitionsCategories, tags, criteres, meta }: Entree): Statistiques {
+export function calculerStatistiques({ outils: tous, categories: definitionsCategories, tags, criteres, meta, sources: definitionsSources = [] }: Entree): Statistiques {
   const categorieDe = (id: string): Categorie => definitionsCategories.find((c) => c.id === id) ?? { id, nom: id, icone: "" };
   const outils = tous.filter((o) => !o.removed);
   const enrichis = outils.filter((o) => o.description_longue);
@@ -334,6 +352,21 @@ export function calculerStatistiques({ outils: tous, categories: definitionsCate
     sansDepot: {
       libresOuPartiels: sansDepot.filter(libres).map((o) => o.nom),
       autres: sansDepot.filter((o) => !libres(o)).length,
+    },
+    provenance: [...compter(outils.map((o) => o.source_repertoire_id))].map(([id, n]) => ({
+      id,
+      nom: definitionsSources.find((s) => s.id === id)?.nom ?? id,
+      outils: n,
+      enrichis: outils.filter((o) => o.source_repertoire_id === id && o.description_longue).length,
+    })).sort((a, b) => b.outils - a.outils || a.id.localeCompare(b.id, "fr")),
+    scoresEstimes: outils.filter((o) => o.score_estime).map((o) => o.nom),
+    alternatives: outils.filter((o) => o.alternative_a?.length).map((o) => ({ nom: o.nom, alternatives: o.alternative_a! })),
+    openhub: {
+      completes: enrichis.filter((o) => o.openhub).map((o) => ({ nom: o.nom, id: o.openhub_id ?? "", activite: o.openhub!.activite, contributeurs12: o.openhub!.contributeurs_12_mois, commits12: o.openhub!.commits_12_mois, licences: o.openhub!.licences }))
+        .sort((a, b) => (b.contributeurs12 ?? -1) - (a.contributeurs12 ?? -1) || a.nom.localeCompare(b.nom, "fr")),
+      restants: enrichis.filter((o) => !o.openhub && o.source !== "proprietaire" && !abandonneOpenHub(o)).map((o) => o.nom),
+      abandonnes: enrichis.filter((o) => abandonneOpenHub(o)).map((o) => o.nom),
+      activite: trier(compter(enrichis.filter((o) => o.openhub).map((o) => o.openhub!.activite ?? "inconnue"))),
     },
   };
 }
