@@ -44,8 +44,8 @@
 import { dirname, join } from "node:path";
 import { couleursActives, creerCouleurs, type Couleurs } from "./couleurs.ts";
 import { classer, type OutilClasse } from "./classify.ts";
-import { estimerCoutEnrichissement, type Estimation, abandonne, MAX_ECHECS_PAR_DEFAUT,
-  aEnrichir, chargerCriteres, chargerTags, enrichirOutils, expliqueurOpenAI, generateurOpenAI, MODELE_PAR_DEFAUT, sauverTags,
+import { estimerCoutEnrichissement, type Estimation, abandonne, MAX_ECHECS_PAR_DEFAUT, modelesDepuisEnv,
+  aEnrichir, chargerCriteres, chargerTags, enrichirOutils, expliqueurOpenAI, generateurOpenAI, sauverTags,
   type NiveauJournal,
 } from "./enrichir.ts";
 import { lancer } from "./cli.ts";
@@ -60,7 +60,7 @@ import { createProgress, type Progress } from "./progress.ts";
 import { barreSommaire, genererSommaire } from "./sommaire.ts";
 import { abandonneConfirmation, aConfirmer, confirmateurOpenAI, confirmerOutils, estimerCoutConfirmation } from "./confirmer.ts";
 import { aDecrire, categoriesDepuis, decrireCategories, estimerCoutDescriptions, generateurDescriptionOpenAI, sauverCategories, type Categorie } from "./categories.ts";
-import { additionner, dollars, formaterCout, USAGE_VIDE, type Usage } from "./prix.ts";
+import { additionner, ajouterUsage, coutTotal, dollars, formaterCout, formaterCouts, soustraireUsages, type Usage, type UsagesParModele } from "./prix.ts";
 
 const CHAMPS_COMPARES = ["categorie", "score", "lien", "description"] as const;
 /** Les champs à reporter sur la version à jour d'un outil: l'enrichissement et le compteur d'échecs. */
@@ -197,7 +197,7 @@ export function texteConfirmation(nbOutils: number, coutEstime: string): string 
 }
 
 /** Les lignes d'estimation du coût pour `--dry-run` et la confirmation du premier import. */
-export function lignesEstimation(estimation: Estimation, verification: { outils: number; usage: Usage }, descriptions: { categories: number; usage: Usage }, modele: string, nbOutilsRepertoire: number, c: Couleurs): string[] {
+export function lignesEstimation(estimation: Estimation, verification: { outils: number; usage: Usage }, descriptions: { categories: number; usage: Usage }, modele: string, nbOutilsRepertoire: number, c: Couleurs, repli: string | null = null): string[] {
   const sommaire: Usage = { entree: 2000 + 120 * nbOutilsRepertoire, sortie: 1500, cache_lecture: 0, cache_ecriture: 0 };
   const lignes = [`${c.gras("Coût estimé")} (${estimation.hypotheses}):`];
   lignes.push(`  enrichissement de ${estimation.outils} outil(s): ${formaterCout(estimation.usage, modele)}`);
@@ -206,6 +206,8 @@ export function lignesEstimation(estimation: Estimation, verification: { outils:
   lignes.push(`  sommaire (un appel pour le résumé): ${formaterCout(sommaire, modele)}`);
   const total = additionner(additionner(additionner(estimation.usage, verification.usage), descriptions.usage), sommaire);
   lignes.push(`  total: ${c.jaune(formaterCout(total, modele))}`);
+  // Scénario extrême du repli: chaque appel rejeté par le principal est refait, aux mêmes jetons, par le repli.
+  if (repli) lignes.push(`  si chaque appel devait être repris par ${repli}: jusqu'à ${formaterCout(total, repli).replace(/^.*≈ /, "≈ ").replace(/ \(.*\)$/, "")} de plus`);
   return lignes;
 }
 
@@ -274,7 +276,7 @@ if (import.meta.main) {
     const suivi = creerCouleurs(couleursActives(process.stderr, process.env, sansCouleur));
 
     const { outils: page, categories: categoriesPage, criteres: criteresPage, modification } = await telechargerRepertoire(url);
-    const modele = process.env.OPENAI_MODEL || MODELE_PAR_DEFAUT;
+    const { principal: modele, repli } = modelesDepuisEnv();
     const fichierTags = join(dirname(fichier), "tags.json");
 
     // Aperçu sans rien écrire: ce que la synchronisation ferait, et ce qu'il resterait à enrichir.
@@ -294,6 +296,7 @@ if (import.meta.main) {
     const descriptions = estimerCoutDescriptions(apercu.categories, apercu.outils.filter((o) => !o.removed), modele);
 
     if (apercu.importInitial) console.log(sortie.attenue(`Import initial: ${fichier} n'existe pas, tous les outils de la page sont nouveaux`));
+    console.log(sortie.attenue(`Modèle OpenAI: ${modele}${repli ? `; repli: ${repli}` : "; sans repli"}`));
     for (const ligne of lignesResume(resume, modification, sortie)) console.log(ligne);
     console.log(`${sortie.gras("Enrichissement")}: ${prevus.length ? sortie.jaune(String(prevus.length)) : sortie.vert("0")} outil(s) à enrichir${tagsPresents ? "" : sortie.rouge(` (${fichierTags} absent: enrichissement impossible)`)}`);
     if (prevus.length) console.log(`  à enrichir (${prevus.length}): ${sortie.cyan(prevus.map((o) => o.nom).join(", "))}`);
@@ -301,7 +304,7 @@ if (import.meta.main) {
     console.log(`${sortie.gras("Vérification des critères")}: ${aVerifier.length ? sortie.jaune(String(aVerifier.length)) : sortie.vert("0")} outil(s) à vérifier${aVerifier.length ? ` (${sortie.cyan(aVerifier.map((o) => o.nom).join(", "))})` : ""}`);
     if (abandonnesVerif.length) console.log(`  ${sortie.jaune(`abandonnés après ${maxEchecs} échecs consécutifs`)} (${abandonnesVerif.length}): ${sortie.cyan(abandonnesVerif.map((o) => `${o.nom} (${o.echecs_confirmation})`).join(", "))}; relancer avec --max-echecs plus élevé pour les retenter`);
     console.log(`${sortie.gras("Descriptions de catégories")}: ${aDecrireListe.length ? sortie.jaune(String(aDecrireListe.length)) : sortie.vert("0")} catégorie(s) à décrire${aDecrireListe.length ? ` (${sortie.cyan(aDecrireListe.map((c) => c.nom).join(", "))})` : ""}`);
-    if (prevus.length || aVerifier.length || aDecrireListe.length || total) for (const ligne of lignesEstimation(estimation, verification, descriptions, modele, apercu.outils.filter((o) => !o.removed).length, sortie)) console.log(ligne);
+    if (prevus.length || aVerifier.length || aDecrireListe.length || total) for (const ligne of lignesEstimation(estimation, verification, descriptions, modele, apercu.outils.filter((o) => !o.removed).length, sortie, repli)) console.log(ligne);
     if (dryRun) {
       console.log(sortie.attenue("Simulation (--dry-run): rien n'est écrit"));
       return;
@@ -309,7 +312,11 @@ if (import.meta.main) {
 
     // Premier import: on demande avant de dépenser et d'écrire.
     if (apercu.importInitial && prevus.length && !accepterCouts) {
-      const cout = estimation.cout === null || verification.cout === null || descriptions.cout === null ? `inconnu pour ${modele}` : `≈ ${dollars(estimation.cout + verification.cout + descriptions.cout)}`;
+      const usageTotal = additionner(additionner(estimation.usage, verification.usage), descriptions.usage);
+      const coutRepli = repli ? coutTotal(new Map([[repli, usageTotal]])) : 0;
+      const cout = estimation.cout === null || verification.cout === null || descriptions.cout === null || coutRepli === null
+        ? `inconnu pour ${modele}`
+        : `≈ ${dollars(estimation.cout + verification.cout + descriptions.cout)}${repli ? `, jusqu'à ${dollars(coutRepli)} de plus si ${repli} doit reprendre chaque appel` : ""}`;
       if (!process.stdin.isTTY) {
         console.error(suivi.jaune(`Premier import hors terminal: ${prevus.length} outil(s) à enrichir (coût estimé ${cout}). Relancer avec --accepter-couts pour poursuivre, ou --dry-run pour l'estimation détaillée. Rien n'est écrit.`));
         process.exitCode = 1;
@@ -330,8 +337,8 @@ if (import.meta.main) {
     const { outils } = sync;
     let nbEnrichis = 0;
     let nbConfirmes = 0;
-    let usage: Usage = { ...USAGE_VIDE };
-    const compteur = (u: Usage) => { usage = additionner(usage, u); };
+    let usages: UsagesParModele = new Map();
+    const compteur = (u: Usage, m: string) => { usages = ajouterUsage(usages, m, u); };
     if (sync.ecrit) console.log(`${sortie.vert(fichier)} mis à jour`);
     if (sync.criteresEcrits) console.log(`${sortie.vert(join(dirname(fichier), "criteres.json"))} mis à jour`);
     if (sync.categoriesEcrites) console.log(`${sortie.vert(join(dirname(fichier), "categories.json"))} mis à jour`);
@@ -357,6 +364,7 @@ if (import.meta.main) {
           criteres,
           generer: generateurOpenAI(cle, modele, compteur),
           expliquer: expliqueurOpenAI(cle, modele, compteur),
+          ...(repli && { genererRepli: generateurOpenAI(cle, repli, compteur), expliquerRepli: expliqueurOpenAI(cle, repli, compteur) }),
           autoriserNouveauxTags: nouveauxTags,
           categories,
           maxEchecs,
@@ -374,7 +382,7 @@ if (import.meta.main) {
         nbEnrichis = resultat.enrichis.length;
         const enrichis = resultat.enrichis.length ? sortie.gras(sortie.vert(String(resultat.enrichis.length))) : "0";
         const echecs = resultat.erreurs.length ? sortie.gras(sortie.rouge(String(resultat.erreurs.length))) : sortie.vert("0");
-        console.log(`Enrichis: ${enrichis}; échecs: ${echecs}; ${formaterCout(usage, modele)}`);
+        console.log(`Enrichis: ${enrichis}; échecs: ${echecs}; ${formaterCouts(usages)}`);
         if (resultat.ecarts.length) console.log(`${sortie.jaune("Évaluation différente du répertoire")}: ${resultat.ecarts.join(", ")}`);
         if (tags.length > nbTags) console.log(`${sortie.cyan("Nouveaux tags")}: ${tags.slice(nbTags).map((t) => t.id).join(", ")}`);
         if (resultat.erreurs.length) process.exitCode = 1;
@@ -389,11 +397,12 @@ if (import.meta.main) {
         console.error(suivi.jaune(`Vérification des critères sautée: OPENAI_API_KEY absente; ${aConfirmerMaintenant.length} outil(s) restent à vérifier`));
       } else {
         const criteres = chargerCriteres(join(dirname(fichier), "criteres.json"));
-        const avant = usage;
+        const avant = usages;
         const progression = createProgress(aConfirmerMaintenant.length, { logWhenNotTTY: true, paint: { filled: suivi.vert, empty: suivi.attenue, label: suivi.cyan }, restant: formaterDuree });
         let traites = 0;
         const resultat = await confirmerOutils(outils, {
           confirmer: confirmateurOpenAI(cle, modele, compteur),
+          ...(repli && { confirmerRepli: confirmateurOpenAI(cle, repli, compteur), modeleRepli: repli }),
           criteres,
           modele,
           categories,
@@ -407,7 +416,7 @@ if (import.meta.main) {
         nbConfirmes = resultat.confirmes.length;
         const confirmes = nbConfirmes ? sortie.gras(sortie.vert(String(nbConfirmes))) : "0";
         const echecs = resultat.erreurs.length ? sortie.gras(sortie.rouge(String(resultat.erreurs.length))) : sortie.vert("0");
-        console.log(`Critères vérifiés: ${confirmes}; échecs: ${echecs}; ${formaterCout({ entree: usage.entree - avant.entree, sortie: usage.sortie - avant.sortie, cache_lecture: usage.cache_lecture - avant.cache_lecture, cache_ecriture: usage.cache_ecriture - avant.cache_ecriture }, modele)}`);
+        console.log(`Critères vérifiés: ${confirmes}; échecs: ${echecs}; ${formaterCouts(soustraireUsages(usages, avant))}`);
         if (resultat.erreurs.length) process.exitCode = 1;
       }
     }
@@ -419,12 +428,13 @@ if (import.meta.main) {
       if (!cle) {
         console.error(suivi.jaune(`Descriptions de catégories sautées: OPENAI_API_KEY absente; ${aDecrireMaintenant.length} catégorie(s) restent à décrire`));
       } else {
-        const avant = usage;
+        const avant = usages;
         const cheminCategories = join(dirname(fichier), "categories.json");
         const progression = createProgress(aDecrireMaintenant.length, { logWhenNotTTY: true, paint: { filled: suivi.vert, empty: suivi.attenue, label: suivi.cyan }, restant: formaterDuree });
         let traites = 0;
         const resultat = await decrireCategories(categories, outils.filter((o) => !o.removed), {
           generer: generateurDescriptionOpenAI(cle, modele, compteur),
+          ...(repli && { genererRepli: generateurDescriptionOpenAI(cle, repli, compteur) }),
           apresChaque: (cs) => { sauverCategories(cheminCategories, cs); },
           debut: (nom) => (process.stderr.isTTY ? progression.update(traites, nom) : progression.message(suivi.attenue(`Description de ${nom}...`))),
           progression: (n) => progression.update((traites = n)),
@@ -434,7 +444,7 @@ if (import.meta.main) {
         nbDecrites = resultat.decrites.length;
         const decrites = nbDecrites ? sortie.gras(sortie.vert(String(nbDecrites))) : "0";
         const echecs = resultat.erreurs.length ? sortie.gras(sortie.rouge(String(resultat.erreurs.length))) : sortie.vert("0");
-        console.log(`Catégories décrites: ${decrites}; échecs: ${echecs}; ${formaterCout({ entree: usage.entree - avant.entree, sortie: usage.sortie - avant.sortie, cache_lecture: usage.cache_lecture - avant.cache_lecture, cache_ecriture: usage.cache_ecriture - avant.cache_ecriture }, modele)}`);
+        console.log(`Catégories décrites: ${decrites}; échecs: ${echecs}; ${formaterCouts(soustraireUsages(usages, avant))}`);
         if (resultat.erreurs.length) process.exitCode = 1;
       }
     }
@@ -450,7 +460,8 @@ if (import.meta.main) {
           const r = await genererSommaire({
             source: fichier,
             cle: process.env.OPENAI_API_KEY,
-            modele: process.env.OPENAI_MODEL || undefined,
+            modele,
+            modeleRepli: repli,
             conserverSiEchec: true,
             progression: (total) => (barre = barreSommaire({ filled: suivi.vert, empty: suivi.attenue, label: suivi.cyan })(total)),
             journal: (message) => (barre ? barre.message(suivi.jaune(message)) : console.error(suivi.jaune(message))),

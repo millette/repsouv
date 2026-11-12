@@ -53,6 +53,55 @@ const espaces = (s: string) => s.replace(/[  ]/g, " ");
 const nombre = (n: number) => espaces(n.toLocaleString("fr-CA"));
 export const dollars = (n: number) => `${espaces(n.toLocaleString("fr-CA", { minimumFractionDigits: 2, maximumFractionDigits: 2 }))} $`;
 
+// ---------- jetons par modèle (le principal et son repli n'ont pas le même prix) ----------
+
+/** Jetons consommés par modèle au cours d'une exécution. */
+export type UsagesParModele = ReadonlyMap<string, Usage>;
+
+/** Un nouvel état avec les jetons ajoutés au modèle (l'ancien état reste intact, pour mesurer une phase par différence). */
+export function ajouterUsage(usages: UsagesParModele, modele: string, u: Usage): UsagesParModele {
+  return new Map(usages).set(modele, additionner(usages.get(modele) ?? USAGE_VIDE, u));
+}
+
+/** Ce qui s'est ajouté entre deux états, modèle par modèle (les modèles sans nouveauté sont omis). */
+export function soustraireUsages(apres: UsagesParModele, avant: UsagesParModele): UsagesParModele {
+  const diff = new Map<string, Usage>();
+  for (const [modele, u] of apres) {
+    const a = avant.get(modele) ?? USAGE_VIDE;
+    const d = { entree: u.entree - a.entree, sortie: u.sortie - a.sortie, cache_lecture: u.cache_lecture - a.cache_lecture, cache_ecriture: u.cache_ecriture - a.cache_ecriture };
+    if (d.entree || d.sortie || d.cache_lecture || d.cache_ecriture) diff.set(modele, d);
+  }
+  return diff;
+}
+
+/** Coût total, chaque modèle à son prix; null dès qu'un modèle a un prix inconnu. */
+export function coutTotal(usages: UsagesParModele): number | null {
+  let total = 0;
+  for (const [modele, u] of usages) {
+    const c = coutPour(u, modele);
+    if (c === null) return null;
+    total += c;
+  }
+  return total;
+}
+
+/** Comme formaterCout, mais pour plusieurs modèles: le total des jetons, le coût total et le coût par modèle. */
+export function formaterCouts(usages: UsagesParModele): string {
+  if (usages.size === 0) return "aucun appel";
+  if (usages.size === 1) {
+    const [modele, u] = [...usages][0]!;
+    return formaterCout(u, modele);
+  }
+  let total: Usage = { ...USAGE_VIDE };
+  for (const u of usages.values()) total = additionner(total, u);
+  const cache = total.cache_lecture ? ` (dont ${nombre(total.cache_lecture)} en cache)` : "";
+  const inconnus = [...usages.keys()].filter((m) => !PRIX[m]);
+  const detail = inconnus.length
+    ? `prix inconnu pour ${inconnus.join(", ")}`
+    : `≈ ${dollars(coutTotal(usages)!)} (${[...usages].map(([m, u]) => `${m} ${dollars(coutPour(u, m)!)}`).join("; ")})`;
+  return `${nombre(total.entree)} jetons en entrée${cache}, ${nombre(total.sortie)} en sortie, ${detail}`;
+}
+
 /** « 12 345 jetons en entrée (dont 1 000 en cache), 678 en sortie, ≈ 0,15 $ (modele) », ou le prix inconnu. */
 export function formaterCout(usage: Usage, modele: string): string {
   const cache = usage.cache_lecture ? ` (dont ${nombre(usage.cache_lecture)} en cache)` : "";

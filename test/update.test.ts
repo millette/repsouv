@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { classer, type OutilClasse } from "../classify.ts";
 import { creerCouleurs } from "../couleurs.ts";
-import { interpreterChoix, ligneJournal, lignesResume, mettreAJour, raisonDeSauterSommaire, sommaireNecessaire, texteConfirmation } from "../update.ts";
+import { interpreterChoix, ligneJournal, lignesEstimation, lignesResume, mettreAJour, raisonDeSauterSommaire, sommaireNecessaire, texteConfirmation } from "../update.ts";
 
 const base = (nom: string, extra: Partial<OutilClasse> = {}): OutilClasse => {
   const o = {
@@ -248,4 +248,16 @@ test("synchroniser: categories.json est écrit à côté de outils.json à parti
   assert.equal(t.categoriesEcrites, true, "l'icône a changé");
   const u = synchroniser(f, page, CRITERES, NOUVELLE, true, categories);
   assert.equal(u.categoriesEcrites, false, "simulation: rien n'est écrit");
+});
+
+test("lignesEstimation: une ligne par poste au prix du modèle, le total, et le scénario où le repli reprend chaque appel", () => {
+  const usage = { entree: 1000, sortie: 100, cache_lecture: 0, cache_ecriture: 0 };
+  const estimation = { outils: 2, usage, cout: 0.0015, hypotheses: "hypothèses" };
+  const lignes = lignesEstimation(estimation, { outils: 1, usage }, { categories: 1, usage }, "gpt-6.1-terra", 10, creerCouleurs(false), "gpt-6.1-sol");
+  assert.match(lignes[0]!, /^Coût estimé \(hypothèses\):/);
+  assert.match(lignes[1]!, /enrichissement de 2 outil\(s\): .*\(gpt-6.1-terra\)/);
+  assert.match(lignes[4]!, /sommaire \(un appel pour le résumé\)/);
+  assert.match(lignes[5]!, /^  total: .*≈ \d+,\d\d \$ \(gpt-6.1-terra\)$/);
+  assert.match(lignes[6]!, /^  si chaque appel devait être repris par gpt-6.1-sol: jusqu'à ≈ \d+,\d\d \$ de plus$/);
+  assert.equal(lignesEstimation(estimation, { outils: 1, usage }, { categories: 1, usage }, "gpt-6.1-terra", 10, creerCouleurs(false), null).length, 6);
 });

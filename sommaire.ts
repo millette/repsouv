@@ -21,7 +21,7 @@ import { formaterDuree } from "./duree.ts";
 import { construireGraphiques, ecrireGraphiques, verifierVlConvert, type Convertisseur, type GraphiqueEcrit } from "./graphiques.ts";
 import { chargerCategories } from "./categories.ts";
 import { chargerEnv } from "./env.ts";
-import { appelerOpenAI, chargerCriteres, chargerTags, MAX_ECHECS_PAR_DEFAUT, MODELE_PAR_DEFAUT, nouvelEssai, obtenirValide, problemesMarkdown } from "./enrichir.ts";
+import { appelerOpenAI, chargerCriteres, chargerTags, MAX_ECHECS_PAR_DEFAUT, MODELE_PAR_DEFAUT, modelesDepuisEnv, nouvelEssai, obtenirValide, problemesMarkdown } from "./enrichir.ts";
 import { lireFichier } from "./fichiers.ts";
 import { createProgress, type Progress } from "./progress.ts";
 import {
@@ -442,7 +442,8 @@ if (import.meta.main) {
       sansResume,
       sansGraphiques,
       cle: process.env.OPENAI_API_KEY,
-      modele: process.env.OPENAI_MODEL || undefined,
+      modele: modelesDepuisEnv().principal,
+      modeleRepli: modelesDepuisEnv().repli,
       progression: (total) => (barre = barreSommaire(paint)(total)),
       journal: (message) => (barre ? barre.message(message) : console.error(message)),
     });
