@@ -4,7 +4,7 @@
 
 ## En bref
 
-Ce dépôt est une extraction en JSON du [répertoire d'outils favorisant la souveraineté numérique](https://praxis.encommun.io/n/voRYZbuBYZKLejs8JyNkc5C4o7s/), une note publiée sur Praxis par La bande numérique (FCCF) pour les OSBL des arts et de la culture du Canada français. Le répertoire évalue 60 outils numériques, répartis en 20 catégories, selon trois critères (où restent les données, qui contrôle l'outil, de qui il dépend), et attribue à chacun 2 ou 3 étoiles. Le dépôt publie ces données sous une forme structurée et documentée (`outils.json`, `categories.json`, `criteres.json`, `tags.json`, avec leurs schémas JSON), les tient à jour depuis la page en ligne, et y ajoute ce que la page ne dit pas : à quel critère chaque étoile correspond (déduit des descriptions), et, pour 57 outils sur 60, un enrichissement par IA (description longue, tags, statut du code source, licence, dépôt de code, second avis sur la souveraineté) ainsi que les critères vérifiés d'après la page de l'outil, citation à l'appui.
+Ce dépôt est une extraction en JSON du [répertoire d'outils favorisant la souveraineté numérique](https://praxis.encommun.io/n/voRYZbuBYZKLejs8JyNkc5C4o7s/), une note publiée sur Praxis par La bande numérique (FCCF) pour les OSBL des arts et de la culture du Canada français. Le répertoire évalue 60 outils numériques, répartis en 20 catégories, selon trois critères (où restent les données, qui contrôle l'outil, de qui il dépend), et attribue à chacun 2 ou 3 étoiles. Le dépôt publie ces données sous une forme structurée et documentée (`outils.json`, `categories.json`, `criteres.json`, `tags.json`, avec leurs schémas JSON), les tient à jour depuis la page en ligne, et y ajoute ce que la page ne dit pas : à quel critère chaque étoile correspond (déduit des descriptions), et, pour 57 outils sur 60, un enrichissement par IA (description longue, tags, statut du code source, licence, dépôt de code, second avis sur la souveraineté) ainsi que les critères vérifiés d'après la page de l'outil, citation à l'appui. Il accueille aussi d'autres sources : les 22 [Services FACiLes](https://facil.services/) (logiciels libres hébergés au Québec par FACiL, avec le logiciel sous-jacent et les services qu'ils remplacent) et des outils ajoutés à la main, chacun rattaché à sa source (`sources.json`).
 
 Le [sommaire statistique](sommaire.md) qui en résulte distingue 24 logiciels libres, 6 partiellement libres, 1 à code source disponible et 26 propriétaires parmi les outils enrichis, avec les licences, les forges de code, les tags et les critères de souveraineté par statut du code source. Les données sont sous licence CC BY-SA 4.0 (comme la source, dont elles sont une adaptation), le code sous AGPL-3.0-or-later. Les champs produits par IA sont des résumés de pages tierces, à vérifier avant de s'y fier ; la démarche, ses limites et ses mesures sont documentées dans [implementation.md](implementation.md) et [historique.md](historique.md).
 
@@ -64,7 +64,7 @@ Les champs d'enrichissement résument des pages tierces (voir [D'où viennent le
 
 ### D'où viennent les champs
 
-- **De la source :** la catégorie (nom et icône), le nom, le score, le lien et la description de chaque outil, ainsi que les trois critères. La source de chaque outil est nommée par `source_repertoire_id` (voir [`sources.json`](#sourcesjson)) ; un outil ajouté à la main avec `node ajouter.ts` a une description rédigée par la personne qui l'ajoute et, sans étoiles, un score estimé (`score_estime`).
+- **De la source :** la catégorie (nom et icône), le nom, le score, le lien et la description de chaque outil, ainsi que les trois critères. La source de chaque outil est nommée par `source_repertoire_id` (voir [`sources.json`](#sourcesjson)) : Praxis, ou les Services FACiLes (nom, lien, description, logiciel sous-jacent et services remplacés, lus sur <https://facil.services/> ; catégorie attribuée par logiciel dans `extract-facil.ts`) ; un outil ajouté à la main avec `node ajouter.ts` a une description rédigée par la personne qui l'ajoute et, sans étoiles, un score estimé (`score_estime`).
 - **D'Open Hub** (données publiques, [openhub.net](https://www.openhub.net/)) : `openhub_id` et `openhub` des logiciels au code public (activité, contributeurs, commits, licences déclarées, langage, taille), relevés par `update` avec `OPENHUB_API_KEY`.
 - **Rédigé pour ce dépôt :** le vocabulaire de `tags.json` (identifiants et descriptions des 37 tags de départ).
 - **Calculé et généré par les scripts :** `sommaire.md` et `graphiques/` (statistiques calculées à partir des données, plus un résumé rédigé par un modèle d'IA).
@@ -84,6 +84,7 @@ node update.ts --dry-run         # montre ce que update ferait (changements, out
 node update.ts                   # synchronise les données avec la page, enrichit par IA les outils qui ne le sont pas encore, vérifie leurs critères, décrit les catégories (OPENAI_API_KEY), puis met le sommaire à jour si quelque chose a changé
 node update.ts --accepter-couts  # premier import hors terminal: accepte les coûts d'enrichissement sans la confirmation interactive
 node sommaire.ts                 # écrit sommaire.md et graphiques/ (--sans-resume, --sans-graphiques pour s'en passer, --sans-couleur)
+node extract-facil.ts [--fichier=page.html]   # synchronise les Services FACiLes (source facil) dans outils.json; node update.ts enrichit ensuite les nouveaux
 node ajouter.ts <lien> --nom=… --categorie=<id> --description=… --source=<id> [--score=N] [--alternative-a=url,…] [--source-nom=… --source-url=… --soumis-par-nom=…]
                                  # ajoute à la main un outil (et sa source dans sources.json); node update.ts l'enrichit ensuite
 ```
@@ -184,7 +185,7 @@ Le format est **strict** : un fichier de données qui n'a pas cette structure (s
 
 ### `outils.json`
 
-Fichier unifié : le tableau `outils` contient 60 outils (plus d'éventuels outils retirés). Chaque outil contient :
+Fichier unifié : le tableau `outils` contient 82 outils, 60 du répertoire Praxis et 22 des Services FACiLes (plus d'éventuels outils retirés). Chaque outil contient :
 
 | Champ | Description |
 |---|---|
@@ -193,7 +194,8 @@ Fichier unifié : le tableau `outils` contient 60 outils (plus d'éventuels outi
 | `source_repertoire_id` | Identifiant de la source de l'outil : `sources[].id` de [`sources.json`](#sourcesjson) (`praxis` pour le répertoire Praxis ; une autre valeur pour un outil ajouté à la main ou extrait d'une autre collection). `update` ne retire que les outils de la source qu'il synchronise |
 | `score` | Nombre d'étoiles ★ sur 3, donné par la source |
 | `score_estime` | Présent (`true`) quand la source ne donne pas d'étoiles (outil ajouté à la main sans `--score`) : `score`, `criteres` et `confiance` viennent de l'évaluation enrichie, ou, avant l'enrichissement, de la classification par seuil de la description |
-| `alternative_a` | Services, souvent propriétaires, auxquels l'outil se substitue (liste d'URL), quand la source le dit (collections comme FACiL, ou `--alternative-a` de `ajouter.ts`) ; absent sinon |
+| `alternative_a` | Services, souvent propriétaires, auxquels l'outil se substitue (liste d'URL), quand la source le dit (FACiL : « Remplace : … », converti en URL par `extract-facil.ts` ; ou `--alternative-a` de `ajouter.ts`) ; absent sinon |
+| `instance_de` | Logiciel libre dont l'outil est une instance hébergée : `{ nom, url }` (nom et lien vers le dépôt ou la version, tels que la source les donne ; FACiL : « Est une instance de : … ») ; absent sinon |
 | `lien` | Lien externe de l'outil |
 | `description` | Description fournie par la source |
 | `derniere_modification` | Dernière date de modification connue : ISO 8601 en heure de Toronto, avec le décalage (ex. `2026-11-05T09:53:00-05:00`) |
@@ -251,18 +253,18 @@ De nouveaux tags peuvent s'ajouter après cette première phase, avec `node upda
 
 ### `sources.json`
 
-Les sources des outils, dans le tableau `sources` : `{ id, nom, url, extracteur, pdc?, donnees?, soumis_par? }`. `id` est un slug référencé par `outils[].source_repertoire_id` ; `extracteur` dit qui sait lire la source : `praxis` (le répertoire, extrait par `extract.ts`), `facil` (à venir) ou `manuel` (outils saisis avec `node ajouter.ts`) ; `pdc` et `donnees` sont les pages de politique de confidentialité et de données de la collection, quand elle en publie ; `soumis_par` dit qui a soumis une collection ajoutée à la main (`nom` obligatoire, `url` et `email` facultatifs ; le courriel, s'il est donné, est publié avec les données). `update` crée le fichier avec la source `praxis` s'il manque ; `ajouter.ts` y ajoute les sources manuelles.
+Les sources des outils, dans le tableau `sources` : `{ id, nom, url, extracteur, pdc?, donnees?, soumis_par? }`. `id` est un slug référencé par `outils[].source_repertoire_id` ; `extracteur` dit qui sait lire la source : `praxis` (le répertoire, extrait par `extract.ts`), `facil` (les [Services FACiLes](https://facil.services/), extraits par `extract-facil.ts`) ou `manuel` (outils saisis avec `node ajouter.ts`) ; `pdc` et `donnees` sont les pages de politique de confidentialité et de données de la collection, quand elle en publie ; `soumis_par` dit qui a soumis une collection ajoutée à la main (`nom` obligatoire, `url` et `email` facultatifs ; le courriel, s'il est donné, est publié avec les données). `update` crée le fichier avec la source `praxis` s'il manque ; `ajouter.ts` y ajoute les sources manuelles.
 
 ## Sommaire statistique
 
 [`sommaire.md`](sommaire.md) est généré par `node sommaire.ts` à partir des données (voir [Génération du sommaire statistique](implementation.md#génération-du-sommaire-statistique)) ; sa première ligne donne la date de génération, et son résumé est rédigé par un modèle d'IA, à relire. Au 2026-11-12 :
 
-- **60 outils** répartis en **20 catégories** ; **8 outils à 3 étoiles** et **52 à 2 étoiles**.
-- **57 outils enrichis** sur 60, dont **30 logiciels libres ou partiellement libres** (52,6 %) : 24 libres, 6 partiellement libres, 1 à code source disponible, 26 propriétaires ; 3 outils ne sont pas encore enrichis.
+- **82 outils** répartis en **20 catégories** : 60 du répertoire Praxis (**8 à 3 étoiles** et **52 à 2 étoiles**) et 22 des Services FACiLes, au score estimé (0 par la classification par seuil de leurs courtes descriptions, en attendant leur enrichissement).
+- **57 outils enrichis** sur 82 (les 22 outils FACiL restent à enrichir), dont **30 logiciels libres ou partiellement libres** (52,6 %) : 24 libres, 6 partiellement libres, 1 à code source disponible, 26 propriétaires ; 3 outils ne sont pas encore enrichis.
 - **8 licences SPDX distinctes**, **4 forges de code** et **36 tags** utilisés sur 37.
-- Critères déduits des descriptions (`criteres`) : « données » pour les 60 outils, « contrôle » pour 29, « dépendance » pour 39. Critères **vérifiés** d'après la page de l'outil (`criteres_confirmes`, 57 outils) : « données » confirmé pour 45 et indéterminé pour 12 ; « contrôle » confirmé pour 26, infirmé pour 30, indéterminé pour 1 ; « dépendance » confirmé pour 25, infirmé pour 2, indéterminé pour 30.
+- Critères déduits des descriptions (`criteres`) : « données » pour 60 outils, « contrôle » pour 29, « dépendance » pour 39 (les 60 outils de Praxis ; les outils FACiL, sans étoiles, n'en ont pas encore). Critères **vérifiés** d'après la page de l'outil (`criteres_confirmes`, 57 outils) : « données » confirmé pour 45 et indéterminé pour 12 ; « contrôle » confirmé pour 26, infirmé pour 30, indéterminé pour 1 ; « dépendance » confirmé pour 25, infirmé pour 2, indéterminé pour 30.
 
-Le sommaire détaille chaque point par catégorie et par statut du code source, avec neuf graphiques possibles (huit dans l'état actuel), les licences, les forges, les tags et les écarts entre les critères déduits, l'évaluation enrichie et les critères vérifiés.
+Le sommaire détaille chaque point par catégorie et par statut du code source, avec neuf graphiques possibles (huit dans l'état actuel), les licences, les forges, les données Open Hub (21 logiciels libres), les tags et les écarts entre les critères déduits, l'évaluation enrichie et les critères vérifiés.
 
 ## Utiliser les données
 

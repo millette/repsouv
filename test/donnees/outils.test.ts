@@ -22,8 +22,9 @@ const outils = lireFichier<OutilClasse>("outils.json", "outils");
 const categories = lireFichier<Categorie>("categories.json", "categories");
 const criteres = lireFichier<Critere>("criteres.json", "criteres");
 
-test("outils.json: 60 outils, chacun dans une catégorie de categories.json, et chaque catégorie a au moins un outil", () => {
-  assert.equal(outils.donnees.length, 60);
+test("outils.json: 60 outils de Praxis (et d'autres sources), chacun dans une catégorie de categories.json, et chaque catégorie a au moins un outil", () => {
+  assert.equal(outils.donnees.filter((o) => o.source_repertoire_id === "praxis").length, 60);
+  assert.ok(outils.donnees.length >= 60);
   const ids = new Set(categories.donnees.map((c) => c.id));
   for (const o of outils.donnees) assert.ok(ids.has(o.categorie), `${o.nom}: catégorie ${o.categorie} absente de categories.json`);
   const utilisees = new Set(outils.donnees.map((o) => o.categorie));
@@ -43,10 +44,12 @@ test("criteres.json: trois critères dont l'id correspond à l'icône", () => {
   for (const c of criteres.donnees) assert.equal(ID_PAR_ICONE[c.icon], c.id);
 });
 
-test("outils.json: les critères sont ceux que classify.ts déduit de la description et du score, un par étoile", () => {
+test("outils.json: les critères sont ceux que classify.ts déduit de la description et du score, un par étoile (un score estimé non enrichi: classification par seuil)", () => {
   const ids = new Set(Object.values(ID_PAR_ICONE));
   for (const o of outils.donnees) {
-    assert.deepEqual(classer(o.description, o.score).criteres, o.criteres, o.nom);
+    if (o.score_estime) {
+      if (!o.evaluation_enrichie) assert.deepEqual(classer(o.description).criteres, o.criteres, o.nom);
+    } else assert.deepEqual(classer(o.description, o.score).criteres, o.criteres, o.nom);
     assert.equal(o.criteres.length, o.score, o.nom);
     for (const c of o.criteres) assert.ok(ids.has(c), `${o.nom}: ${c}`);
   }

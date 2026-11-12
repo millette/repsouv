@@ -272,11 +272,24 @@ test("mettreAJour: les outils d'une autre source sont conservés tels quels (jam
   const { outils, resume, migres } = mettreAJour([facil, ancien, sansSource], [page(ancien), page(sansSource)], NOUVELLE);
   assert.deepEqual(resume, { nouveau: [], modification: [], retrait: [], comeback: [] });
   assert.equal(migres, 1);
-  assert.deepEqual(outils.map((o) => [o.nom, o.source_repertoire_id]), [["A", "praxis"], ["B", "praxis"], ["Planète", "facil"]]);
-  assert.deepEqual(outils[2], facil);
+  assert.deepEqual(outils.map((o) => [o.nom, o.source_repertoire_id]), [["Planète", "facil"], ["A", "praxis"], ["B", "praxis"]], "les outils existants gardent leur place");
+  assert.deepEqual(outils[0], facil);
   const retrait = mettreAJour([facil, ancien], [], NOUVELLE);
   assert.deepEqual(retrait.resume.retrait, ["A"]);
   assert.equal(retrait.outils.find((o) => o.nom === "Planète")!.removed, undefined);
+});
+test("mettreAJour: un outil au score estimé garde la classification de sa page, puis celle de son évaluation enrichie une fois enrichi; son score ne compte pas comme modification", () => {
+  const page = { ...brut("P"), source_repertoire_id: "facil", score: 1, score_estime: true as const, criteres: ["donnees"] as OutilClasse["criteres"], confiance: "indéterminée" as const };
+  const premier = mettreAJour([], [page], NOUVELLE, "facil");
+  assert.deepEqual(premier.resume.nouveau, ["P"]);
+  assert.equal(premier.outils[0]!.confiance, "indéterminée");
+  const enrichi = { ...premier.outils[0]!, score: 3, criteres: ["donnees", "controle", "dependance"] as OutilClasse["criteres"], confiance: "élevée" as const, description_longue: "Longue.", evaluation_enrichie: { score: 3, criteres: ["donnees", "controle", "dependance"] as OutilClasse["criteres"], confiance: "élevée" as const } };
+  const second = mettreAJour([enrichi], [page], NOUVELLE, "facil");
+  assert.deepEqual(second.resume.modification, []);
+  const modifie = mettreAJour([enrichi], [{ ...page, description: "Autre description." }], NOUVELLE, "facil");
+  assert.deepEqual(modifie.resume.modification, ["P"]);
+  assert.equal(modifie.outils[0]!.score, 3);
+  assert.equal(modifie.outils[0]!.description_longue, "Longue.");
 });
 test("synchroniser: sources.json est créé à côté de outils.json avec la source Praxis, puis conservé tel quel", () => {
   const d = mkdtempSync(join(tmpdir(), "sync-"));

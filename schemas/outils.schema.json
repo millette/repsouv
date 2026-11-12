@@ -61,6 +61,23 @@
             "minItems": 1,
             "uniqueItems": true
           },
+          "instance_de": {
+            "type": "object",
+            "properties": {
+              "nom": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string",
+                "pattern": "^https?://\\S+$"
+              }
+            },
+            "required": [
+              "nom",
+              "url"
+            ],
+            "additionalProperties": false
+          },
           "lien": {
             "type": "string",
             "pattern": "^https?://\\S+$"

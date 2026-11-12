@@ -86,7 +86,7 @@ export interface Resume {
  */
 export function mettreAJour(
   existants: OutilClasse[],
-  page: Outil[],
+  page: (Outil & Partial<OutilClasse>)[],
   modification: string,
   sourceId: string = ID_PRAXIS,
 ): { outils: OutilClasse[]; resume: Resume; migres: number } {
@@ -98,45 +98,49 @@ export function mettreAJour(
     return { ...o, source_repertoire_id: ID_PRAXIS };
   });
   const siens = rattaches.filter((o) => o.source_repertoire_id === sourceId);
-  const autres = rattaches.filter((o) => o.source_repertoire_id !== sourceId);
   const parNom = new Map(siens.map((o) => [o.nom, o]));
-  const enLigne = new Set(page.map((o) => o.nom));
+  const parNomPage = new Map(page.map((o) => [o.nom, o]));
   const outils: OutilClasse[] = [];
 
-  const marquer = (o: Outil, changement: Changement, ancien?: OutilClasse): OutilClasse => {
+  const marquer = (o: Outil & Partial<OutilClasse>, changement: Changement, ancien?: OutilClasse): OutilClasse => {
     resume[changement].push(o.nom);
+    // Score estimé (source sans étoiles): la classification de l'extracteur reste, et, une fois l'outil enrichi, le score
+    // aligné sur l'évaluation enrichie survit à une modification de la page.
+    const estime = o.score_estime ? (ancien?.score_estime && ancien.evaluation_enrichie ? { score: ancien.score, criteres: ancien.criteres, confiance: ancien.confiance } : { criteres: o.criteres ?? [], confiance: o.confiance ?? "indéterminée" }) : classer(o.description, o.score);
     return {
       ...o,
       ...(ancien && enrichissementDe(ancien)),
       source_repertoire_id: sourceId,
       derniere_modification: modification,
       changement,
-      ...classer(o.description, o.score),
+      ...estime,
     };
   };
 
-  for (const p of page) {
-    const ancien = parNom.get(p.nom);
-    if (!ancien) {
-      outils.push(marquer(p, "nouveau"));
-    } else if (ancien.removed) {
-      outils.push(marquer(p, "comeback", ancien));
-    } else if (CHAMPS_COMPARES.some((c) => ancien[c] !== p[c])) {
-      outils.push(marquer(p, "modification", ancien));
-    } else {
-      outils.push(ancien);
-    }
-  }
-  for (const e of siens) {
-    if (enLigne.has(e.nom)) continue;
-    if (e.removed) {
+  // Les outils existants gardent leur place, toutes sources confondues; les nouveaux de la source vont à la fin, dans l'ordre de la page.
+  for (const e of rattaches) {
+    if (e.source_repertoire_id !== sourceId) {
       outils.push(e);
+      continue;
+    }
+    const p = parNomPage.get(e.nom);
+    if (!p) {
+      if (e.removed) {
+        outils.push(e);
+      } else {
+        outils.push({ ...e, derniere_modification: modification, changement: "retrait", removed: true });
+        resume.retrait.push(e.nom);
+      }
+    } else if (e.removed) {
+      outils.push(marquer(p, "comeback", e));
+    } else if (CHAMPS_COMPARES.some((c) => !(c === "score" && p.score_estime) && e[c] !== p[c])) {
+      outils.push(marquer(p, "modification", e));
     } else {
-      outils.push({ ...e, derniere_modification: modification, changement: "retrait", removed: true });
-      resume.retrait.push(e.nom);
+      outils.push(e);
     }
   }
-  return { outils: [...outils, ...autres], resume, migres };
+  for (const p of page) if (!parNom.has(p.nom)) outils.push(marquer(p, "nouveau"));
+  return { outils, resume, migres };
 }
 
 // ---------- synchronisation des fichiers ----------

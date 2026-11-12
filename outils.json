@@ -2,7 +2,7 @@
   "meta": {
     "data_license": "CC-BY-SA-4.0",
     "created_at": "2026-11-12T12:35:52-05:00",
-    "updated_at": "2026-11-12T17:20:36-05:00"
+    "updated_at": "2026-11-12T17:41:57-05:00"
   },
   "outils": [
     {
@@ -3239,6 +3239,473 @@
       },
       "source_repertoire_id": "praxis",
       "echecs_openhub": 2
+    },
+    {
+      "categorie": "gestion-d-evenements-et-billetterie",
+      "nom": "Agenda du libre du Québec",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://agendadulibre.qc.ca/",
+      "description": "Diffuser les événements de la communauté du libre.",
+      "derniere_modification": "2026-11-12T17:41:57-05:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "facil",
+      "instance_de": {
+        "nom": "agenda-libre-ruby",
+        "url": "https://framagit.org/agenda-libre/agenda-libre-ruby"
+      },
+      "alternative_a": [
+        "https://www.meetup.com/",
+        "https://www.eventbrite.ca/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "bureautique-et-collaboration",
+      "nom": "Bureautique FACiLe",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://bureautique.facil.services/",
+      "description": "Suite bureautique en ligne qui libère votre travail. (Pour les membres de FACiL.)",
+      "derniere_modification": "2026-11-12T17:41:57-05:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "facil",
+      "instance_de": {
+        "nom": "Collabora Online",
+        "url": "https://github.com/CollaboraOnline/online/commits/e724e42045"
+      },
+      "alternative_a": [
+        "https://docs.google.com/",
+        "https://www.microsoft.com/microsoft-365"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "creation-et-gestion-de-contenus-numeriques",
+      "nom": "Canal FACiLe",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://canal.facil.services/",
+      "description": "Une plateforme de diffusion de vidéos destinée principalement aux membres de FACiL.",
+      "derniere_modification": "2026-11-12T17:41:57-05:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "facil",
+      "instance_de": {
+        "nom": "PeerTube",
+        "url": "https://github.com/Chocobozzz/PeerTube/releases/tag/v8.2.4"
+      },
+      "alternative_a": [
+        "https://www.youtube.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "gestion-de-projets-et-des-taches",
+      "nom": "Code FACiLe",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://code.facil.services/",
+      "description": "Collaborer sur du code informatique.",
+      "derniere_modification": "2026-11-12T17:41:57-05:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "facil",
+      "instance_de": {
+        "nom": "GitLab",
+        "url": "https://gitlab.com/gitlab-org/gitlab-foss/-/tags/v18.11.11"
+      },
+      "alternative_a": [
+        "https://github.com/",
+        "https://bitbucket.org/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "communication-et-collaboration-d-equipe",
+      "nom": "Conférence FACiLe",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://conference.facil.services/",
+      "description": "Tenir des séances de visioconférence avec messagerie texte, édition collaborative et partage d'écran.",
+      "derniere_modification": "2026-11-12T17:41:57-05:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "facil",
+      "instance_de": {
+        "nom": "Jitsi Meet",
+        "url": "https://github.com/jitsi/docker-jitsi-meet/releases/tag/stable-10314"
+      },
+      "alternative_a": [
+        "https://www.skype.com/",
+        "https://www.whatsapp.com/",
+        "https://meet.google.com/",
+        "https://www.messenger.com/",
+        "https://apps.apple.com/app/facetime/id1110145091"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "messagerie-electronique",
+      "nom": "Courriel FACiLe",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://courriel.facil.services/",
+      "description": "Correspondre sur Internet, le pistage et la centralisation en moins. (Pour les membres de FACiL.)",
+      "derniere_modification": "2026-11-12T17:41:57-05:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "facil",
+      "instance_de": {
+        "nom": "SnappyMail",
+        "url": "https://apps.nextcloud.com/apps/snappymail/releases?platform=32#32"
+      },
+      "alternative_a": [
+        "https://mail.google.com/",
+        "https://outlook.live.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "gestion-de-projets-et-des-taches",
+      "nom": "Dates FACiLes",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://date.facil.services/",
+      "description": "Planifier des rendez-vous.",
+      "derniere_modification": "2026-11-12T17:41:57-05:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "facil",
+      "instance_de": {
+        "nom": "Framadate",
+        "url": "https://framagit.org/framasoft/framadate/framadate/tags/1.1.19"
+      },
+      "alternative_a": [
+        "https://doodle.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "bureautique-et-collaboration",
+      "nom": "Ébauche FACiLe",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://ebauche.facil.services/",
+      "description": "Suite bureautique pour le travail collaboratif chiffré de bout en bout.",
+      "derniere_modification": "2026-11-12T17:41:57-05:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "facil",
+      "instance_de": {
+        "nom": "Cryptpad",
+        "url": "https://github.com/cryptpad/cryptpad/releases/tag/2026.5.1"
+      },
+      "alternative_a": [
+        "https://docs.google.com/",
+        "https://www.microsoft.com/microsoft-365"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "communication-et-collaboration-d-equipe",
+      "nom": "Équipe FACiLe",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://equipe.facil.services/",
+      "description": "Communication en temps-réel pour le travail d'équipe",
+      "derniere_modification": "2026-11-12T17:41:57-05:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "facil",
+      "instance_de": {
+        "nom": "Mattermost",
+        "url": "https://github.com/mattermost/mattermost/releases/tag/v10.11.20"
+      },
+      "alternative_a": [
+        "https://slack.com/",
+        "https://www.microsoft.com/microsoft-teams",
+        "https://discord.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "gestion-d-evenements-et-billetterie",
+      "nom": "Événement FACiLe",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://evenement.facil.services/",
+      "description": "S'organiser et se mobiliser sans la surveillance des GAFAM.",
+      "derniere_modification": "2026-11-12T17:41:57-05:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "facil",
+      "instance_de": {
+        "nom": "Mobilizon",
+        "url": "https://framagit.org/framasoft/mobilizon/-/releases/5.2.3"
+      },
+      "alternative_a": [
+        "https://www.facebook.com/events/",
+        "https://www.meetup.com/",
+        "https://www.eventbrite.ca/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "securite-et-gestion-des-acces",
+      "nom": "Extrait FACiLe",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://extrait.facil.services/",
+      "description": "Chiffrer et partager des messages sur le web.",
+      "derniere_modification": "2026-11-12T17:41:57-05:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "facil",
+      "instance_de": {
+        "nom": "Privatebin",
+        "url": "https://github.com/PrivateBin/PrivateBin/releases/tag/2.0.6"
+      },
+      "alternative_a": [
+        "https://pastebin.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "gestion-de-la-relation-des-membres-et-crm",
+      "nom": "Formulaire FACiLe",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://formulaire.facil.services/",
+      "description": "Construire des formulaires pour des enquêtes et des sondages en ligne",
+      "derniere_modification": "2026-11-12T17:41:57-05:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "facil",
+      "instance_de": {
+        "nom": "Liberaforms",
+        "url": "https://codeberg.org/LiberaForms/server/releases/tag/v4.9.2"
+      },
+      "alternative_a": [
+        "https://forms.google.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "communautes-reseaux-et-partage-des-connaissances",
+      "nom": "Forums du libre du Québec",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://forumsdulibre.quebec/",
+      "description": "Discuter du libre de manière civilisée.",
+      "derniere_modification": "2026-11-12T17:41:57-05:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "facil",
+      "instance_de": {
+        "nom": "Discourse",
+        "url": "https://github.com/discourse/discourse/commits/d8fe4ceb99ecb2d1f6bff9af500b30eeaa1648e8"
+      },
+      "alternative_a": [
+        "https://www.facebook.com/groups/",
+        "https://groups.google.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "communautes-reseaux-et-partage-des-connaissances",
+      "nom": "Jasette FACiLe",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://jasette.facil.services/",
+      "description": "Échanger sur un réseau social dont vous n'êtes pas le produit.",
+      "derniere_modification": "2026-11-12T17:41:57-05:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "facil",
+      "instance_de": {
+        "nom": "Mastodon",
+        "url": "https://github.com/mastodon/mastodon/releases/tag/v4.7.1"
+      },
+      "alternative_a": [
+        "https://x.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "veille-et-gestion-de-l-information",
+      "nom": "Journal FACiLe",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://journal.facil.services/",
+      "description": "Rassembler tous vos fils d'actualité au même endroit.",
+      "derniere_modification": "2026-11-12T17:41:57-05:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "facil",
+      "instance_de": {
+        "nom": "Freshrss",
+        "url": "https://github.com/FreshRSS/FreshRSS/releases/tag/1.29.1"
+      },
+      "alternative_a": [
+        "https://www.facebook.com/",
+        "https://x.com/",
+        "https://news.google.com/",
+        "https://www.instagram.com/",
+        "https://www.reddit.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "navigation-web",
+      "nom": "Minifi.ca",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://minifi.ca/",
+      "description": "Raccourcir («minifier») des liens.",
+      "derniere_modification": "2026-11-12T17:41:57-05:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "facil",
+      "instance_de": {
+        "nom": "Lstu",
+        "url": "https://framagit.org/fiat-tux/hat-softwares/lstu/-/tags/0.28-0"
+      },
+      "alternative_a": [
+        "https://bitly.com/",
+        "https://goo.gl/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "stockage-infonuagique-et-sauvegarde",
+      "nom": "Nuage FACiLe",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://nuage.facil.services/",
+      "description": "Partager et synchroniser des fichiers, des contacts, des calendriers et bien plus. (Pour les membres de FACiL.)",
+      "derniere_modification": "2026-11-12T17:41:57-05:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "facil",
+      "instance_de": {
+        "nom": "NextCloud",
+        "url": "https://nextcloud.com/changelog/#latest32"
+      },
+      "alternative_a": [
+        "https://drive.google.com/",
+        "https://onedrive.live.com/",
+        "https://www.dropbox.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "communautes-reseaux-et-partage-des-connaissances",
+      "nom": "Parlote FACiLe",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://parlote.facil.services/",
+      "description": "Échanger sur une réseau social dont vous n'êtes pas le produit.",
+      "derniere_modification": "2026-11-12T17:41:57-05:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "facil",
+      "instance_de": {
+        "nom": "Diaspora",
+        "url": "https://github.com/diaspora/diaspora/releases/tag/v0.9.1.0"
+      },
+      "alternative_a": [
+        "https://www.facebook.com/",
+        "https://plus.google.com/",
+        "https://x.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "veille-et-gestion-de-l-information",
+      "nom": "Planète FACiLe",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://planete.facil.qc.ca/",
+      "description": "Agrégateur de blogues pour les membres de FACiL.",
+      "derniere_modification": "2026-11-12T17:41:57-05:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "facil",
+      "instance_de": {
+        "nom": "BilboPlanet",
+        "url": "https://github.com/theclimber/Bilboplanet"
+      },
+      "alternative_a": [
+        "https://feedly.com/",
+        "https://www.inoreader.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "navigation-web",
+      "nom": "Recherche FACiLe",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://recherche.facil.services/",
+      "description": "Rechercher sans se faire pister et profiler.",
+      "derniere_modification": "2026-11-12T17:41:57-05:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "facil",
+      "instance_de": {
+        "nom": "SearXNG",
+        "url": "https://github.com/searxng/searxng"
+      },
+      "alternative_a": [
+        "https://www.google.com/",
+        "https://www.bing.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "stockage-infonuagique-et-sauvegarde",
+      "nom": "Transfert FACiLe",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://transfert.facil.services/",
+      "description": "Transférer des fichiers trop gros pour être simplement joints à vos courriels.",
+      "derniere_modification": "2026-11-12T17:41:57-05:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "facil",
+      "instance_de": {
+        "nom": "Lufi",
+        "url": "https://framagit.org/fiat-tux/hat-softwares/lufi/-/releases/0.07.0"
+      },
+      "alternative_a": [
+        "https://wetransfer.com/",
+        "https://www.dropbox.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "communautes-reseaux-et-partage-des-connaissances",
+      "nom": "Wiki FACiLe",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://wiki.facil.qc.ca/",
+      "description": "Espace de travail collaboratif destiné principalement aux membres de FACiL.",
+      "derniere_modification": "2026-11-12T17:41:57-05:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "facil",
+      "instance_de": {
+        "nom": "MediaWiki",
+        "url": "https://www.mediawiki.org/wiki/MediaWiki_1.43"
+      },
+      "alternative_a": [
+        "https://www.microsoft.com/sharepoint",
+        "https://www.atlassian.com/software/confluence"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
     }
   ]
 }

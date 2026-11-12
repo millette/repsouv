@@ -30,6 +30,7 @@ Pour l'enrichissement et le résumé du sommaire, copier `.env.example` vers `.e
 
 ```
 Suivi courant    page en ligne ──▶ update.ts ──▶ outils.json + categories.json + criteres.json + sources.json   (nouveau, modification, retrait, comeback, pour les outils de la source Praxis; import initial si outils.json manque)
+Source FACiL     page des Services FACiLes ──▶ extract-facil.ts ──▶ outils.json + sources.json   (mêmes changements que Praxis, pour les outils de la source facil)
 Ajout manuel     ajouter.ts ──▶ outils.json (+ sources.json)   (outil d'une autre source, enrichi ensuite par update)
 Reconstruction   page en ligne ──▶ extract.ts --force ──▶ classify.ts ──▶ outils.json   (volontaire: remplace tout, enrichissement compris)
 Enrichissement   update.ts (toujours, pour les outils non enrichis) ──▶ API OpenAI ──▶ outils.json (+ tags.json si de nouveaux tags)
@@ -50,6 +51,7 @@ Schémas          schemas-types.ts ──▶ obuild + RunTypes ──▶ generer
 | `update.ts` | Le script du suivi : synchronise `outils.json`, `categories.json` et `criteres.json` avec la page en ligne (import initial compris), enrichit les outils qui ne le sont pas encore, vérifie leurs critères, décrit les catégories et met le sommaire à jour quand quelque chose a changé |
 | `extract.ts`, `classify.ts` | Les deux outils exceptionnels, sans script npm : reconstruction forcée depuis la page, et reclassement de tous les outils après un changement des règles |
 | `confirmer.ts` | Module de la vérification des critères (`criteres_confirmes`), appelé par `update.ts` après l'enrichissement |
+| `extract-facil.ts` | Extracteur et synchronisation de la source `facil` (Services FACiLes) : catégorie par logiciel et URL des services remplacés dans ses tables |
 | `ajouter.ts` | Ajout à la main d'un outil qui ne vient pas d'un répertoire extrait, avec sa source (`sources.json`) |
 | `sources.ts`, `openhub.ts` | Les sources des outils (validation, écriture de `sources.json`) et la lecture des données publiques d'Open Hub |
 | `sommaire.ts`, `sommaire.md`, `graphiques/` | Le script du sommaire statistique, le sommaire qu'il a généré et les graphiques (SVG) qu'il contient (mis à jour automatiquement par `nub run update` quand quelque chose a changé; sinon à regénérer avec `nub run sommaire`) |
@@ -78,7 +80,7 @@ Les schémas valent pour du JSON ordinaire : les types du dépôt (chaînes, nom
 
 ## Scripts
 
-Cinq scripts se lancent avec `node` (ou `nub`) : `update.ts` et `sommaire.ts` (usage courant), `ajouter.ts` (ajout manuel), `extract.ts` et `classify.ts` (opérations exceptionnelles); `generer-schemas.ts` est un cinquième programme, qui ne se lance que par `nub run schemas` (il doit d'abord être empaqueté, voir plus bas); les autres fichiers sont des modules, utilisés par les scripts et par les tests. Tout est en TypeScript. Les fonctions principales sont exportées pour être réutilisables; le code de ligne de commande ne s'exécute que lorsque le script est lancé directement.
+Six scripts se lancent avec `node` (ou `nub`) : `update.ts` et `sommaire.ts` (usage courant), `extract-facil.ts` (source FACiL) et `ajouter.ts` (ajout manuel), `extract.ts` et `classify.ts` (opérations exceptionnelles); `generer-schemas.ts` est un cinquième programme, qui ne se lance que par `nub run schemas` (il doit d'abord être empaqueté, voir plus bas); les autres fichiers sont des modules, utilisés par les scripts et par les tests. Tout est en TypeScript. Les fonctions principales sont exportées pour être réutilisables; le code de ligne de commande ne s'exécute que lorsque le script est lancé directement.
 
 ### `extract.ts`
 
@@ -210,6 +212,14 @@ Couleurs ANSI sans dépendance : `couleursActives(flux, env, sansCouleur)` déci
 ### `env.ts`
 
 `chargerEnv(chemin = ".env")` charge le fichier `.env` du dossier courant dans `process.env` (`process.loadEnvFile`), pour que `update.ts` et `sommaire.ts` trouvent `OPENAI_API_KEY` et `OPENAI_MODEL` lancés par `node` seul. Un fichier absent n'est pas une erreur ; toute autre erreur l'est. Une variable déjà présente dans l'environnement n'est jamais écrasée, donc nub, qui charge aussi `.env`, et `node` donnent le même résultat.
+
+### `extract-facil.ts`
+
+```sh
+node extract-facil.ts [--fichier=page.html] [--sans-couleur] [outils.json] [url]
+```
+
+Lit la page des [Services FACiLes](https://facil.services/) (téléchargée avec un en-tête de navigateur, que le site exige ; ou une copie locale par `--fichier`) : un bloc par service, avec le nom et le lien, une phrase de description, « Est une instance de : … » (`instance_de`, nom et lien vers le dépôt ou la version) et « Remplace : … » (`alternative_a`, convertis en URL par la table `ALTERNATIVES` ; un nom inconnu est signalé en avertissement et omis). La page n'a ni étoiles ni catégories : le score est estimé (`score_estime`, classification par seuil, puis alignement sur l'évaluation enrichie par `update`) et la catégorie vient de `CATEGORIE_PAR_LOGICIEL` (logiciel sous-jacent, en minuscules), à réviser à la main ; un logiciel inconnu arrête l'extraction en nommant les services concernés. La synchronisation est celle de `update` (`mettreAJour` pour la source `facil` : nouveau, modification, retrait, comeback, datés de la lecture, puisque la page n'affiche pas de date), sans toucher aux outils des autres sources ; `sources.json` reçoit la source `facil` (politique de confidentialité et page des données de FACiL). Les outils nouveaux sont enrichis par `node update.ts` comme les autres.
 
 ### `ajouter.ts`
 
@@ -421,6 +431,7 @@ Avec `node:test`, lancé par `nub --test` (le développement et les tests passen
 - `schemas.test.ts` : des données fictives complètes sont valides selon les schémas (avec Ajv, indépendant de RunTypes), et des variantes invalides sont refusées (clé inconnue, `score` hors de 0 à 3, `echecs_enrichissement` nul ou non entier, `source` ou `changement` inconnus, tags en trop ou en double, date non ISO, `meta` manquant).
 - `documentation.test.ts` : les trois fichiers Markdown rédigés (README, `implementation.md`, `historique.md`) existent, leurs liens relatifs et leurs ancres existent (ancres calculées comme GitHub, liens dans le code ignorés, liens vers le `sommaire.md` généré laissés à `test:data`), chacun commence par un titre et la ligne *Documentation*, sans tiret cadratin ni balise HTML (sauf l'image du README). Les outils communs (ancres, liens, conventions) sont dans `markdown.ts`.
 - `sources.test.ts` : source Praxis, validation des sources (slug, URL, extracteur, soumis_par et courriel), `sourcesAvec`, écriture et relecture de `sources.json`.
+- `extract-facil.test.ts` : extraction d'une page fictive (champs, instance_de, alternatives connues et inconnues, catégorie par logiciel, score estimé), erreurs (aucun service, logiciel sans catégorie, doublons), tables valides, synchronisation (nouveaux, inchangé, retrait, score aligné conservé), téléchargement avec en-tête de navigateur, CLI.
 - `ajouter.test.ts` : source demandée (connue, nouvelle, manquante), outil demandé (validation, score estimé ou donné, alternatives), écriture dans les fichiers, options de la ligne de commande, CLI.
 - `openhub.test.ts` : lecture du XML (collection, projet avec analyse, dépôts, erreur de statut), concordance directe et par les dépôts, champs écrits, outils à compléter, boucle avec un faux client (concordance, candidats journalisés, compteur et abandon, erreur réseau), client HTTP.
 - `en-tetes.test.ts` : chaque fichier `.ts` porte les en-têtes SPDX; la licence du code est la même dans `package.json`; les textes de licence sont présents, à la racine (`LICENSE*`) et dans `LICENSES/` (AGPL, CC BY-SA, MIT); chaque schéma JSON déclare la licence du code dans `$comment`; et `REUSE.toml` annote `schemas/**` et le reste des fichiers sans en-tête (AGPL-3.0-or-later), les données et leurs dérivés (CC-BY-SA-4.0) et le skill `.claude/**` (MIT). Ce test ne remplace pas `nub run licences`, qui contrôle tous les fichiers.
@@ -452,6 +463,8 @@ Avec `node:test`, lancé par `nub --test` (le développement et les tests passen
 | `Open Hub sauté: OPENHUB_API_KEY absente` | `update` a des logiciels libres à compléter mais pas de clé Open Hub dans `.env` (facultatif : voir `.env.example`) |
 | `<outil>: Open Hub: aucune concordance sûre …; candidats: …` | Aucun projet Open Hub ne correspond au lien ni au dépôt de l'outil ; les candidats listés permettent de vérifier à la main (le projet est peut-être absent d'Open Hub, ou nommé autrement). Après 3 échecs, l'outil n'est plus cherché (`--max-echecs=N` pour retenter) |
 | `Open Hub HTTP 401` ou `Open Hub: Invalid API key` | Clé Open Hub invalide ; `HTTP 429` : limite quotidienne atteinte, réessayer le lendemain |
+| `page FACiL: logiciel sans catégorie dans CATEGORIE_PAR_LOGICIEL …` | Un nouveau service FACiL repose sur un logiciel que l'extracteur ne connaît pas : ajouter le logiciel (en minuscules) et sa catégorie à la table de `extract-facil.ts` |
+| `Avertissement: <service>: service remplacé inconnu « … »` | `extract-facil.ts` ne connaît pas l'URL d'un service que la page dit remplacer : l'ajouter à `ALTERNATIVES` (l'outil est extrait sans cette alternative) |
 | `source « x » absente de sources.json: donner --source-nom et --source-url` | `ajouter.ts` : la source n'existe pas encore ; la créer avec ces options, ou choisir un identifiant existant |
 | `Option inconnue: …` | Option mal orthographiée. Les options valides sont décrites dans la section de chaque script |
 

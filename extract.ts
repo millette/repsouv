@@ -84,6 +84,8 @@ export interface Outil {
   source_repertoire_id: string;
   /** Services, souvent propriétaires, auxquels l'outil se substitue (URL), quand la source le dit (FACiL). */
   alternative_a?: string[];
+  /** Logiciel libre dont l'outil est une instance hébergée (nom et lien vers son dépôt ou sa version), quand la source le dit (FACiL). */
+  instance_de?: { nom: string; url: string };
   lien: string;
   description: string;
   /** Dernière date de modification connue: ISO 8601 en heure de Toronto, avec décalage (2026-11-05T09:53:00-05:00). */
