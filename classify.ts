@@ -21,7 +21,7 @@ export type Confiance = "élevée" | "moyenne" | "faible" | "indéterminée";
 export type Evidences = Record<Critere, number>;
 
 const ORDRE: readonly Critere[] = [DONNEES, CONTROLE, DEPENDANCE]; // départage des égalités
-const SEUIL = 2;
+export const SEUIL = 2;
 
 const HEBERGEMENT_CA = /(?:serveurs?|infrastructures?|instances?|hébergement)\s+(?:canadien|québécois)\w*/g;
 const NON_CANADIEN =
