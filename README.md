@@ -10,21 +10,23 @@ Le [sommaire statistique](sommaire.md) qui en résulte distingue 24 logiciels li
 
 <img src="graphiques/statut-code-source.svg" alt="Répartition des outils du répertoire par statut du code source : libre, partiellement libre, code source disponible, propriétaire, pas encore enrichi" width="720">
 
-*Statut du code source des outils du répertoire, d'après [`sommaire.md`](sommaire.md) (image produite par `nub run sommaire`).*
+*Statut du code source des outils du répertoire, d'après [`sommaire.md`](sommaire.md) (image produite par `node sommaire.ts`).*
 
 **Sommaire :** [Démarrage rapide](#démarrage-rapide) · [Source, crédits et licences](#source-crédits-et-licences) · [Autres commandes](#autres-commandes) · [Fichiers JSON](#fichiers-json) · [Sommaire statistique](#sommaire-statistique) · [Utiliser les données](#utiliser-les-données) · [Documentation](#documentation)
 
 ## Démarrage rapide
 
-Les mises à jour peuvent **coûter de l'argent** : l'enrichissement par IA et le résumé du sommaire passent par l'API OpenAI, facturée à l'usage. Le premier `nub run update` est le plus coûteux (il enrichit tous les outils du répertoire : environ 14 $ en borne haute, 1,50 $ constaté pour 57 outils) ; les suivants ne paient que les outils nouveaux et, s'il y a eu des changements, un résumé. `nub run update --dry-run` chiffre le travail et le coût estimés sans rien dépenser ni écrire, et le premier import demande une confirmation avant de dépenser.
+Les mises à jour peuvent **coûter de l'argent** : l'enrichissement par IA et le résumé du sommaire passent par l'API OpenAI, facturée à l'usage. Le premier `node update.ts` est le plus coûteux (il enrichit tous les outils du répertoire : environ 14 $ en borne haute, 1,50 $ constaté pour 57 outils) ; les suivants ne paient que les outils nouveaux et, s'il y a eu des changements, un résumé. `node update.ts --dry-run` chiffre le travail et le coût estimés sans rien dépenser ni écrire, et le premier import demande une confirmation avant de dépenser.
 
-1. **Installer [nub](https://nubjs.com/)** au besoin, l'exécuteur TypeScript et gestionnaire de paquets du projet : `curl -fsSL https://nubjs.com/install.sh | bash` (aussi par Homebrew, npm ou mise, voir le site).
-2. **Node.js 26** : rien à faire, nub lit `.node-version` (`26.13.1`) et télécharge cette version au besoin.
-3. **Cloner le dépôt** et s'y placer : `git clone <url du dépôt> && cd outils-souverainete-numerique`.
-4. **Configurer la clé OpenAI** : `cp .env.example .env`, puis mettre la clé dans `OPENAI_API_KEY=`. Avec un compte OpenAI, la clé se crée sur <https://platform.openai.com/api-keys> (« Create new secret key » ; elle commence par `sk-` et n'est affichée qu'une fois) et le crédit se vérifie sur <https://platform.openai.com/account/billing/overview>. Le fichier `.env` est ignoré par Git et la clé n'est transmise qu'à `api.openai.com`. Sans clé, `update` synchronise les données mais saute tout ce qui passe par l'API (enrichissement, vérification, descriptions, résumé).
-5. **Installer les dépendances** : `nub install`. Pour les graphiques du sommaire, installer aussi [vl-convert](https://github.com/vega/vl-convert) (`cargo install vl-convert` ou un binaire de ses versions, dans le `PATH`) ; sans lui, le sommaire est sauté par `update` et `nub run sommaire --sans-graphiques` reste possible.
-6. **Premier import** : `nub run update --dry-run` pour voir ce qui serait fait et le coût estimé, puis `nub run update`, qui crée `outils.json`, `categories.json` et `criteres.json` depuis la page en ligne, enrichit les outils par IA, vérifie leurs critères, citation à l'appui, décrit les catégories (après confirmation des coûts : 1 pour poursuivre, 2 pour arrêter), et génère `sommaire.md` et `graphiques/`. Le dépôt contenant déjà ces fichiers, cette étape ne s'applique qu'à partir d'un dossier vide ; sur un clone, `nub run update` se contente de mettre à jour.
-7. **Mises à jour** : `nub run update`, aussi souvent que voulu. Il compare la page en ligne aux données, enrichit et vérifie les outils nouveaux et régénère le sommaire et les graphiques seulement si quelque chose a changé ; une page inchangée ne coûte rien.
+**Utiliser** les scripts ne demande que Node.js ; **développer** (tests, types, schémas, licences) demande en plus [nub](https://nubjs.com/), voir [implementation.md](implementation.md).
+
+1. **Node.js 26** (`26.13.1` ou plus récent, voir `engines.node` dans `package.json`), avec npm : <https://nodejs.org/>. Les scripts sont en TypeScript, que Node exécute tel quel.
+2. **Cloner le dépôt** et s'y placer : `git clone <url du dépôt> && cd outils-souverainete-numerique`.
+3. **Configurer la clé OpenAI** : `cp .env.example .env`, puis mettre la clé dans `OPENAI_API_KEY=`. Avec un compte OpenAI, la clé se crée sur <https://platform.openai.com/api-keys> (« Create new secret key » ; elle commence par `sk-` et n'est affichée qu'une fois) et le crédit se vérifie sur <https://platform.openai.com/account/billing/overview>. Le fichier `.env` est ignoré par Git et la clé n'est transmise qu'à `api.openai.com`. Sans clé, `update` synchronise les données mais saute tout ce qui passe par l'API (enrichissement, vérification, descriptions, résumé).
+4. **Installer les dépendances** : `npm install`. Pour les graphiques du sommaire, installer aussi [vl-convert](https://github.com/vega/vl-convert) (`cargo install vl-convert` ou un binaire de ses versions, dans le `PATH`) ; sans lui, le sommaire est sauté par `update` et `node sommaire.ts --sans-graphiques` reste possible.
+5. **Premier import** : `node update.ts --dry-run` pour voir ce qui serait fait et le coût estimé, puis `node update.ts`, qui crée `outils.json`, `categories.json` et `criteres.json` depuis la page en ligne, enrichit les outils par IA, vérifie leurs critères, citation à l'appui, décrit les catégories (après confirmation des coûts : 1 pour poursuivre, 2 pour arrêter), et génère `sommaire.md` et `graphiques/`. Le dépôt contenant déjà ces fichiers, cette étape ne s'applique qu'à partir d'un dossier vide ; sur un clone, `node update.ts` se contente de mettre à jour.
+6. **Mises à jour** : `node update.ts`, aussi souvent que voulu. Il compare la page en ligne aux données, enrichit et vérifie les outils nouveaux et régénère le sommaire et les graphiques seulement si quelque chose a changé ; une page inchangée ne coûte rien.
+7. **Pour développer** : installer [nub](https://nubjs.com/) (`curl -fsSL https://nubjs.com/install.sh | bash` ; aussi par Homebrew, npm ou mise), qui télécharge le Node.js de `.node-version`, installe les dépendances d'après `nub.lock` (`nub install`) et lance les scripts de `package.json` (`nub run test`, `nub run typecheck`, `nub run schemas`, `nub run licences`). Les scripts `update` et `sommaire` s'exécutent indifféremment par `node` ou par `nub run`.
 
 ## Source, crédits et licences
 
@@ -71,17 +73,24 @@ Les champs d'enrichissement résument des pages tierces (voir [D'où viennent le
 
 ## Autres commandes
 
-Tout ce que le [démarrage rapide](#démarrage-rapide) ne couvre pas (flux de travail, scripts, options, dépannage) est dans [implementation.md](implementation.md). Les commandes `nub run` sont définies dans `package.json` :
+Tout ce que le [démarrage rapide](#démarrage-rapide) ne couvre pas (flux de travail, scripts, options, dépannage) est dans [implementation.md](implementation.md).
+
+Utilisation, avec Node.js seulement :
+
+```sh
+node update.ts --dry-run         # montre ce que update ferait (changements, outils à enrichir, jetons et coût estimés), sans rien écrire
+node update.ts                   # synchronise les données avec la page, enrichit par IA les outils qui ne le sont pas encore, vérifie leurs critères, décrit les catégories (OPENAI_API_KEY), puis met le sommaire à jour si quelque chose a changé
+node update.ts --accepter-couts  # premier import hors terminal: accepte les coûts d'enrichissement sans la confirmation interactive
+node sommaire.ts                 # écrit sommaire.md et graphiques/ (--sans-resume, --sans-graphiques pour s'en passer)
+```
+
+Développement, avec nub (commandes définies dans `package.json`) :
 
 ```sh
 nub run test                     # lance les tests (et vérifie que les schémas JSON sont à jour)
 nub run typecheck                # vérifie les types
 nub run schemas                  # régénère schemas/*.schema.json à partir des types
 nub run licences                 # vérifie la conformité REUSE des licences (uvx reuse lint; demande uv)
-nub run update --dry-run         # montre ce que update ferait (changements, outils à enrichir, jetons et coût estimés), sans rien écrire
-nub run update                   # synchronise les données avec la page, enrichit par IA les outils qui ne le sont pas encore, vérifie leurs critères, décrit les catégories (OPENAI_API_KEY), puis met le sommaire à jour si quelque chose a changé
-nub run update --accepter-couts  # premier import hors terminal: accepte les coûts d'enrichissement sans la confirmation interactive
-nub run sommaire                 # écrit sommaire.md et graphiques/ (--sans-resume, --sans-graphiques pour s'en passer)
 ```
 
 ## Fichiers JSON
@@ -165,11 +174,11 @@ Les `id` sont la forme courte utilisée dans les champs `criteres` de `outils.js
 
 Le vocabulaire restreint de tags : le tableau `tags` contient des `{ id, description }`, avec une description en français pour chaque tag (37 au départ). Chaque outil reçoit de 1 à 5 de ces tags, jamais plus.
 
-De nouveaux tags peuvent s'ajouter après cette première phase, avec `nub run update --nouveaux-tags`. Chaque tag ajouté doit être **justifié** : il porte alors en plus un champ `justification` (pourquoi aucun tag existant ne convient) et `propose_pour` (l'outil pour lequel il a été proposé). Un nouveau tag peut ne concerner qu'un seul outil.
+De nouveaux tags peuvent s'ajouter après cette première phase, avec `node update.ts --nouveaux-tags`. Chaque tag ajouté doit être **justifié** : il porte alors en plus un champ `justification` (pourquoi aucun tag existant ne convient) et `propose_pour` (l'outil pour lequel il a été proposé). Un nouveau tag peut ne concerner qu'un seul outil.
 
 ## Sommaire statistique
 
-[`sommaire.md`](sommaire.md) est généré par `nub run sommaire` à partir des données (voir [Génération du sommaire statistique](implementation.md#génération-du-sommaire-statistique)) ; sa première ligne donne la date de génération, et son résumé est rédigé par un modèle d'IA, à relire. Au 2026-11-12 :
+[`sommaire.md`](sommaire.md) est généré par `node sommaire.ts` à partir des données (voir [Génération du sommaire statistique](implementation.md#génération-du-sommaire-statistique)) ; sa première ligne donne la date de génération, et son résumé est rédigé par un modèle d'IA, à relire. Au 2026-11-12 :
 
 - **60 outils** répartis en **20 catégories** ; **8 outils à 3 étoiles** et **52 à 2 étoiles**.
 - **57 outils enrichis** sur 60, dont **30 logiciels libres ou partiellement libres** (52,6 %) : 24 libres, 6 partiellement libres, 1 à code source disponible, 26 propriétaires ; 3 outils ne sont pas encore enrichis.

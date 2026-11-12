@@ -8,7 +8,7 @@ Ce document décrit comment les données du [README](README.md) sont produites e
 
 ## Démarrage
 
-Prérequis : [nub](https://nubjs.com/), qui exécute le TypeScript directement, et un accès au réseau (`update` et l'enrichissement téléchargent des pages en ligne). Les commandes `nub run` sont définies dans `package.json`. Seul le sommaire (y compris sa mise à jour par `update`) a besoin d'un programme de plus, [vl-convert](https://github.com/vega/vl-convert) (voir [Sommaire statistique](#génération-du-sommaire-statistique)), pour ses graphiques. La génération des schémas JSON (`nub run schemas`) n'a pas besoin du réseau. Node.js 26 est épinglé dans `.node-version` : nub l'installe au besoin (RunTypes demande Node 24 ou plus). `nub run licences` demande [uv](https://docs.astral.sh/uv/). Pour l'installation pas à pas, voir le [démarrage rapide](README.md#démarrage-rapide) du README.
+Deux usages, deux prérequis. **Utiliser** les scripts (`node update.ts`, `node sommaire.ts`) ne demande que Node.js 26 (`engines.node` : `^26.13.1`), qui exécute le TypeScript tel quel, les dépendances installées par `npm install`, et un accès au réseau (`update` et l'enrichissement téléchargent des pages en ligne). **Développer** (tests, types, schémas, licences) demande [nub](https://nubjs.com/) : il télécharge le Node.js de `.node-version`, installe les dépendances d'après `nub.lock` (`nub install`) et lance les commandes `nub run` définies dans `package.json` ; sous nub, les scripts `update` et `sommaire`, qui appellent `node`, utilisent ce même Node.js. Seul le sommaire (y compris sa mise à jour par `update`) a besoin d'un programme de plus, [vl-convert](https://github.com/vega/vl-convert) (voir [Sommaire statistique](#génération-du-sommaire-statistique)), pour ses graphiques. La génération des schémas JSON (`nub run schemas`) n'a pas besoin du réseau. Node.js `26.13.1` est épinglé dans `.node-version` : nub l'installe au besoin (RunTypes demande Node 24 ou plus). `nub run licences` demande [uv](https://docs.astral.sh/uv/). Pour l'installation pas à pas, voir le [démarrage rapide](README.md#démarrage-rapide) du README.
 
 ```sh
 nub install                      # installe les dépendances
@@ -16,13 +16,13 @@ nub run test                     # lance les tests (et vérifie que les schémas
 nub run typecheck                # vérifie les types
 nub run schemas                  # régénère schemas/*.schema.json à partir des types
 nub run licences                 # vérifie la conformité REUSE des licences (uvx reuse lint; demande uv)
-nub run update --dry-run         # montre ce que update ferait (changements, outils à enrichir, jetons et coût estimés), sans rien écrire
+nub run update --dry-run         # (ou node update.ts --dry-run) montre ce que update ferait (changements, outils à enrichir, jetons et coût estimés), sans rien écrire
 nub run update                   # synchronise les données avec la page, enrichit par IA les outils qui ne le sont pas encore, vérifie leurs critères, décrit les catégories (OPENAI_API_KEY), puis met le sommaire à jour si quelque chose a changé
 nub run update --accepter-couts  # premier import hors terminal: accepte les coûts d'enrichissement sans la confirmation interactive
-nub run sommaire                 # écrit sommaire.md et graphiques/ (--sans-resume, --sans-graphiques pour s'en passer)
+nub run sommaire                 # (ou node sommaire.ts) écrit sommaire.md et graphiques/ (--sans-resume, --sans-graphiques pour s'en passer)
 ```
 
-Pour l'enrichissement et le résumé du sommaire, copier `.env.example` vers `.env` et y mettre la clé `OPENAI_API_KEY` (`.env` est ignoré par Git) ; `.env.example` dit où créer la clé sur le compte OpenAI (<https://platform.openai.com/api-keys>) et où vérifier le crédit. `OPENAI_MODEL` change le modèle (`gpt-6-astra` par défaut).
+Pour l'enrichissement et le résumé du sommaire, copier `.env.example` vers `.env` et y mettre la clé `OPENAI_API_KEY` (`.env` est ignoré par Git ; les scripts le lisent eux-mêmes dans le dossier courant, voir [`env.ts`](#envts)) ; `.env.example` dit où créer la clé sur le compte OpenAI (<https://platform.openai.com/api-keys>) et où vérifier le crédit. `OPENAI_MODEL` change le modèle (`gpt-6-astra` par défaut).
 
 ### Flux de travail
 
@@ -47,12 +47,12 @@ Schémas          schemas-types.ts ──▶ obuild + RunTypes ──▶ generer
 | `extract.ts`, `classify.ts` | Les deux outils exceptionnels, sans script npm : reconstruction forcée depuis la page, et reclassement de tous les outils après un changement des règles |
 | `confirmer.ts` | Module de la vérification des critères (`criteres_confirmes`), appelé par `update.ts` après l'enrichissement |
 | `sommaire.ts`, `sommaire.md`, `graphiques/` | Le script du sommaire statistique, le sommaire qu'il a généré et les graphiques (SVG) qu'il contient (mis à jour automatiquement par `nub run update` quand quelque chose a changé; sinon à regénérer avec `nub run sommaire`) |
-| `categories.ts`, `enrichir.ts`, `prix.ts`, `statistiques.ts`, `graphiques.ts`, `fichiers.ts`, `temps.ts`, `spdx.ts`, `progress.ts`, `couleurs.ts`, `ids.ts`, `cli.ts` | Modules utilisés par les scripts |
+| `categories.ts`, `enrichir.ts`, `prix.ts`, `statistiques.ts`, `graphiques.ts`, `fichiers.ts`, `temps.ts`, `spdx.ts`, `progress.ts`, `couleurs.ts`, `ids.ts`, `cli.ts`, `env.ts` | Modules utilisés par les scripts |
 | `schemas/`, `generer-schemas.ts`, `schemas-types.ts`, `affiner-schema.ts`, `build.config.ts`, `tsconfig.schemas.json` | Les schémas JSON des trois fichiers de données et ce qui les génère (voir [Schémas JSON](#schémas-json)) |
 | `test/` | Les tests |
-| `package.json`, `nub.lock`, `tsconfig.json` | Dépendances, scripts npm et configuration TypeScript |
+| `package.json`, `nub.lock`, `tsconfig.json` | Dépendances (`dependencies` pour l'exécution, `devDependencies` pour le développement, dont `vega` et `vega-lite` qui ne servent qu'aux types), scripts npm, `engines.node` et configuration TypeScript. `nub.lock` n'est lu que par nub ; `npm install` résout les versions d'après les plages de `package.json` |
 | `.env.example` | Modèle du fichier `.env` (la clé OpenAI, avec les instructions pour l'obtenir) |
-| `.node-version` | Version exacte de Node.js (`26.13.1`) que nub installe et utilise, répétée dans `engines.node` de `package.json` |
+| `.node-version` | Version exacte de Node.js (`26.13.1`) que nub installe et utilise ; `engines.node` de `package.json` en dérive (`^26.13.1`) pour qui exécute les scripts avec son propre Node.js |
 | `LICENSE` | Texte de la licence AGPL-3.0 du code |
 | `LICENSE-CC-BY-SA-4.0` | Texte de la licence CC BY-SA 4.0 des données (voir [Licences](README.md#licences)) |
 | `LICENSES/`, `REUSE.toml` | Les mêmes textes de licence, nommés par identifiant SPDX (`AGPL-3.0-or-later.txt`, `CC-BY-SA-4.0.txt`), et la déclaration de licence des fichiers sans en-tête, selon la spécification [REUSE](https://reuse.software/) (voir [Licences](README.md#licences)) |
@@ -194,6 +194,10 @@ Couleurs ANSI sans dépendance : `couleursActives(flux, env, sansCouleur)` déci
 ### `cli.ts`
 
 `lancer(principal)` exécute le corps d'un script en ligne de commande : toute erreur (option invalide, fichier manquant, réseau, erreur HTTP) s'affiche en un message clair (`Erreur: …`, en rouge dans un terminal), sans trace de pile, et donne le code de sortie 1. Utilisé par tous les scripts en ligne de commande.
+
+### `env.ts`
+
+`chargerEnv(chemin = ".env")` charge le fichier `.env` du dossier courant dans `process.env` (`process.loadEnvFile`), pour que `update.ts` et `sommaire.ts` trouvent `OPENAI_API_KEY` et `OPENAI_MODEL` lancés par `node` seul. Un fichier absent n'est pas une erreur ; toute autre erreur l'est. Une variable déjà présente dans l'environnement n'est jamais écrasée, donc nub, qui charge aussi `.env`, et `node` donnent le même résultat.
 
 ### `ids.ts`
 
@@ -346,17 +350,17 @@ Si le `score` ou les `criteres` d'un outil déjà enrichi changent, après un `c
 
 | Commande | Effet |
 |---|---|
-| `nub run update` | `nub update.ts` : synchronise `outils.json`, `categories.json` et `criteres.json` avec la page en ligne (import initial si `outils.json` manque), enrichit, vérifie et décrit ce qui ne l'est pas encore. Les options passent directement : `nub run update --dry-run` pour l'aperçu et l'estimation des coûts, `nub run update --accepter-couts` pour un premier import hors terminal |
-| `nub run sommaire` | `nub sommaire.ts` : écrit `sommaire.md` et `graphiques/` (`--sans-resume` évite l'appel à l'API, `--sans-graphiques` évite vl-convert) |
+| `nub run update` ou `node update.ts` | `node update.ts` : synchronise `outils.json`, `categories.json` et `criteres.json` avec la page en ligne (import initial si `outils.json` manque), enrichit, vérifie et décrit ce qui ne l'est pas encore. Les options passent directement : `nub run update --dry-run` pour l'aperçu et l'estimation des coûts, `nub run update --accepter-couts` pour un premier import hors terminal |
+| `nub run sommaire` ou `node sommaire.ts` | `node sommaire.ts` : écrit `sommaire.md` et `graphiques/` (`--sans-resume` évite l'appel à l'API, `--sans-graphiques` évite vl-convert) |
 | `nub run schemas` | `obuild && nub dist/generer-schemas.mjs` : régénère `schemas/*.schema.json` à partir des types (voir [Schémas JSON](#schémas-json)) |
 | `nub run schemas:verifier` | Comme `schemas`, mais sans rien écrire : échoue si les schémas commités sont périmés |
 | `nub run licences` | `uvx reuse lint` : vérifie que chaque fichier suivi déclare sa licence et son droit d'auteur ([REUSE](https://reuse.software/) 3.3). Demande [uv](https://docs.astral.sh/uv/) et un accès réseau la première fois ; non inclus dans `nub run test` |
-| `nub run test` | Lance les dix-huit fichiers de tests, puis `schemas:verifier` |
+| `nub run test` | Lance les vingt fichiers de tests, puis `schemas:verifier` |
 | `nub run typecheck` | `tsrs -p .` : vérifie les types avec [tsrs](https://www.npmjs.com/package/tsrs), un portage en Rust de `tsc` |
 
 ## Tests
 
-Dans `test/`, avec `node:test` lancé par `nub` :
+Dans `test/`, avec `node:test` lancé par `nub` (le développement et les tests passent par nub ; seuls `update.ts` et `sommaire.ts` sont prévus pour `node` seul) :
 
 - `categories.test.ts` : slug, liste des catégories depuis la page (ordre, doublons, descriptions conservées, identifiants en conflit), validation des descriptions, requête au modèle, boucle avec un faux modèle (nouvel essai, échec, sauvegarde) et estimation du coût.
 - `extract-categories.test.ts` : une catégorie par `h3` avec id, nom et icône, et les outils portent l'identifiant.
@@ -370,6 +374,8 @@ Dans `test/`, avec `node:test` lancé par `nub` :
 - `progress.test.ts` : barre en terminal et hors terminal, bornes, étiquette, `end()` idempotent, `message()`, peinture de la barre.
 - `couleurs.test.ts` : règles d'activation (terminal, `NO_COLOR`, `FORCE_COLOR`, `TERM=dumb`, `--sans-couleur`) et codes ANSI.
 - `temps.test.ts` : heure de Toronto (hiver, été, minuit, passage à l'heure d'été), décalage ajouté à une date locale.
+- `versions.test.ts` : `.node-version` est une version exacte, `engines.node` en est la plage `^`, et la documentation cite cette version.
+- `env.test.ts` : `.env` absent (sans erreur), présent (variables chargées), variable d'environnement existante conservée, autre erreur remontée avec le chemin.
 - `fichiers.test.ts` : structure et `meta` des fichiers de données (création, contenu inchangé ou modifié, licence rétablie, refus des formats invalides), et conformité des trois fichiers du dépôt.
 - `sommaire.test.ts` : statistiques (statuts, licences, familles, tags, critères par statut, critères vérifiés par verdict et par statut, forges, dates), rendu Markdown (sections, images insérées dans leur section, cas sans outil enrichi), validation du résumé et nouvelle tentative, `genererSommaire` (écriture, options, conservation du sommaire existant en cas d'échec), avec des données fictives (jamais `outils.json`, jamais le réseau).
 - `graphiques.test.ts` : spécifications Vega-Lite (données incluses, champs existants, pourcentages, verdicts des critères vérifiés, graphiques omis sans données), écriture et nettoyage des fichiers, message si vl-convert est absent, et conversion réelle en SVG autonome (ignorée si vl-convert n'est pas installé). Les données fictives des tests sont dans `donnees-fictives.ts`.
@@ -384,7 +390,7 @@ Dans `test/`, avec `node:test` lancé par `nub` :
 | `Refus d'écraser: …` | `extract.ts` a trouvé dans `outils.json` un enrichissement, un historique de changement, ou un format inattendu. Pour suivre la page sans rien perdre, utiliser `nub run update`; pour tout remplacer quand même, `nub extract.ts --force outils.json criteres.json` |
 | `… format invalide …` ou `« meta » invalide …` | Un fichier de données n'a pas la structure décrite dans [Fichiers JSON](README.md#fichiers-json). Le restaurer depuis Git (`git checkout outils.json`) ou, pour `outils.json`, le recréer avec `nub extract.ts --force outils.json criteres.json` puis `nub classify.ts outils.json` |
 | `Téléchargement impossible (url): …` | Réseau, délai de 30 secondes dépassé ou erreur HTTP en téléchargeant le répertoire. Rien n'a été écrit : réessayer |
-| `OPENAI_API_KEY absente` | Pour `nub run sommaire`, il y a un résumé à rédiger mais `.env` n'a pas la clé (`--sans-resume` l'évite). Pour `update`, c'est un avertissement : la synchronisation est écrite, l'enrichissement, la vérification des critères et les descriptions de catégories sont sautés, et il restera à les faire |
+| `OPENAI_API_KEY absente` | Pour `sommaire`, il y a un résumé à rédiger mais `.env` n'a pas la clé (`--sans-resume` l'évite), ou `.env` n'est pas dans le dossier courant (lancer les scripts depuis la racine du dépôt). Pour `update`, c'est un avertissement : la synchronisation est écrite, l'enrichissement, la vérification des critères et les descriptions de catégories sont sautés, et il restera à les faire |
 | `page inaccessible …` ou `page presque vide …`, `outil non enrichi` ou `critères non vérifiés` | La page de l'outil n'a pas pu être lue : l'outil n'est pas enrichi (ou vérifié) et sera retenté à la prochaine exécution. Après 3 échecs consécutifs, il est abandonné (`abandonnés après 3 échecs consécutifs`) : `--max-echecs=N` plus élevé pour le retenter. Voir [Pages inaccessibles](#pages-inaccessibles-ou-presque-vides) |
 | Des séquences comme `^[[32m` ou `[32m` apparaissent dans la sortie | Les couleurs sont forcées (`FORCE_COLOR`). Les désactiver avec `--sans-couleur` (ou retirer `FORCE_COLOR`) |
 | `Sommaire non mis à jour: …` | Après des changements ou un enrichissement, le sommaire n'a pas pu être mis à jour : clé ou vl-convert manquant (avertissement, rien n'est modifié) ou résumé impossible à rédiger (le sommaire existant est conservé, code de sortie 1). Régler le problème, puis lancer `nub run sommaire`  |
@@ -392,6 +398,7 @@ Dans `test/`, avec `node:test` lancé par `nub` :
 | `vl-convert vl2svg: …` | vl-convert a refusé une spécification de graphique : le message de vl-convert dit pourquoi. Vérifier sa version (`vl-convert --version`, 1.9 ou plus) |
 | `Schémas périmés ou absents: …` | `nub run schemas:verifier` (ou `nub run test`) a trouvé un schéma commité qui diffère de celui que les types produisent. Lancer `nub run schemas`, puis commiter `schemas/` |
 | `Premier import hors terminal: …` | `update` sans `outils.json` demande une confirmation des coûts, impossible hors terminal. Relancer avec `--accepter-couts` ou `--dry-run` |
+| `Fichier d'environnement illisible (.env): …` | `.env` existe mais n'a pas pu être lu (droits, ou un dossier de ce nom). Le corriger ou le retirer : sans `.env`, les scripts tournent sans clé |
 | `Option inconnue: …` | Option mal orthographiée. Les options valides sont décrites dans la section de chaque script |
 
 ## Documentation
