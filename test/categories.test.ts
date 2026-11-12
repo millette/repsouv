@@ -78,7 +78,7 @@ test("estimerCoutDescriptions: un appel par catégorie sans description, proport
   assert.equal(e.categories, 2);
   assert.ok(e.usage.entree > 0 && e.usage.sortie > 0 && e.cout! > 0);
   assert.equal(estimerCoutDescriptions(cats, outils, "inconnu").cout, null);
-  assert.deepEqual(estimerCoutDescriptions([cats[1]!], outils, "gpt-6-astra").usage, { entree: 0, sortie: 0, cache_lecture: 0, cache_ecriture: 0 });
+  assert.deepEqual(estimerCoutDescriptions([cats[1]!], outils, "gpt-6-astra").usage, { entree: 0, sortie: 0, cache_lecture: 0, cache_ecriture: 0, raisonnement: 0 });
 });
 
 test("decrireCategories: avec genererRepli, une réponse rejetée est reprise par le repli, et la catégorie est décrite", async () => {

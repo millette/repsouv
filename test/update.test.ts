@@ -251,7 +251,7 @@ test("synchroniser: categories.json est écrit à côté de outils.json à parti
 });
 
 test("lignesEstimation: une ligne par poste au prix du modèle, le total, et le scénario où le repli reprend chaque appel", () => {
-  const usage = { entree: 1000, sortie: 100, cache_lecture: 0, cache_ecriture: 0 };
+  const usage = { entree: 1000, sortie: 100, cache_lecture: 0, cache_ecriture: 0, raisonnement: 0 };
   const estimation = { outils: 2, usage, cout: 0.0015, hypotheses: "hypothèses" };
   const lignes = lignesEstimation(estimation, { outils: 1, usage }, { categories: 1, usage }, "gpt-6.1-terra", 10, creerCouleurs(false), "gpt-6.1-sol");
   assert.match(lignes[0]!, /^Coût estimé \(hypothèses\):/);

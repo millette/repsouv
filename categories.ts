@@ -136,7 +136,7 @@ export function estimerCoutDescriptions(categories: Categorie[], outils: { categ
   for (const c of categories.filter(aDecrire)) {
     n++;
     const fiche = requeteCategorie(c, outils.filter((o) => o.categorie === c.id)).messages[0]!;
-    usage = additionner(usage, { entree: consignes + Math.ceil(fiche.length / 3), sortie: 400, cache_lecture: 0, cache_ecriture: 0 });
+    usage = additionner(usage, { entree: consignes + Math.ceil(fiche.length / 3), sortie: 400, cache_lecture: 0, cache_ecriture: 0, raisonnement: 0 });
   }
   return { categories: n, usage, cout: coutPour(usage, modele) };
 }

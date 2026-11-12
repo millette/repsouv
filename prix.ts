@@ -4,27 +4,30 @@
 // Les prix viennent de la page de tarifs d'OpenAI consultée le 2026-11-12; ils servent aux estimations
 // de update.ts (--dry-run et premier import) et au coût rapporté par confirmer.ts. Un modèle absent de PRIX donne un coût inconnu.
 
-/** Jetons d'un appel; `entree` comprend les jetons en cache (lus ou écrits). */
+/** Jetons d'un appel; `entree` comprend les jetons en cache (lus ou écrits), `sortie` comprend ceux de raisonnement. */
 export interface Usage {
   entree: number;
   sortie: number;
   cache_lecture: number;
   cache_ecriture: number;
+  /** Part de `sortie` consacrée au raisonnement (facturée comme sortie; dépend de reasoning.effort). */
+  raisonnement: number;
 }
-export const USAGE_VIDE: Readonly<Usage> = { entree: 0, sortie: 0, cache_lecture: 0, cache_ecriture: 0 };
+export const USAGE_VIDE: Readonly<Usage> = { entree: 0, sortie: 0, cache_lecture: 0, cache_ecriture: 0, raisonnement: 0 };
 
 export const additionner = (a: Usage, b: Usage): Usage => ({
   entree: a.entree + b.entree,
   sortie: a.sortie + b.sortie,
   cache_lecture: a.cache_lecture + b.cache_lecture,
   cache_ecriture: a.cache_ecriture + b.cache_ecriture,
+  raisonnement: a.raisonnement + b.raisonnement,
 });
 
 /** Les jetons rapportés par l'API Responses d'OpenAI (`usage` du corps de la réponse); vide si absents. */
-export function usageDepuisOpenAI(corps: { usage?: { input_tokens?: number; output_tokens?: number; input_tokens_details?: { cached_tokens?: number } } }): Usage {
+export function usageDepuisOpenAI(corps: { usage?: { input_tokens?: number; output_tokens?: number; input_tokens_details?: { cached_tokens?: number }; output_tokens_details?: { reasoning_tokens?: number } } }): Usage {
   const u = corps.usage;
   if (!u) return { ...USAGE_VIDE };
-  return { entree: u.input_tokens ?? 0, sortie: u.output_tokens ?? 0, cache_lecture: u.input_tokens_details?.cached_tokens ?? 0, cache_ecriture: 0 };
+  return { entree: u.input_tokens ?? 0, sortie: u.output_tokens ?? 0, cache_lecture: u.input_tokens_details?.cached_tokens ?? 0, cache_ecriture: 0, raisonnement: u.output_tokens_details?.reasoning_tokens ?? 0 };
 }
 
 /** Prix en dollars par million de jetons. */
@@ -68,7 +71,7 @@ export function soustraireUsages(apres: UsagesParModele, avant: UsagesParModele)
   const diff = new Map<string, Usage>();
   for (const [modele, u] of apres) {
     const a = avant.get(modele) ?? USAGE_VIDE;
-    const d = { entree: u.entree - a.entree, sortie: u.sortie - a.sortie, cache_lecture: u.cache_lecture - a.cache_lecture, cache_ecriture: u.cache_ecriture - a.cache_ecriture };
+    const d = { entree: u.entree - a.entree, sortie: u.sortie - a.sortie, cache_lecture: u.cache_lecture - a.cache_lecture, cache_ecriture: u.cache_ecriture - a.cache_ecriture, raisonnement: u.raisonnement - a.raisonnement };
     if (d.entree || d.sortie || d.cache_lecture || d.cache_ecriture) diff.set(modele, d);
   }
   return diff;
@@ -95,16 +98,18 @@ export function formaterCouts(usages: UsagesParModele): string {
   let total: Usage = { ...USAGE_VIDE };
   for (const u of usages.values()) total = additionner(total, u);
   const cache = total.cache_lecture ? ` (dont ${nombre(total.cache_lecture)} en cache)` : "";
+  const raisonnement = total.raisonnement ? ` (dont ${nombre(total.raisonnement)} de raisonnement)` : "";
   const inconnus = [...usages.keys()].filter((m) => !PRIX[m]);
   const detail = inconnus.length
     ? `prix inconnu pour ${inconnus.join(", ")}`
     : `≈ ${dollars(coutTotal(usages)!)} (${[...usages].map(([m, u]) => `${m} ${dollars(coutPour(u, m)!)}`).join("; ")})`;
-  return `${nombre(total.entree)} jetons en entrée${cache}, ${nombre(total.sortie)} en sortie, ${detail}`;
+  return `${nombre(total.entree)} jetons en entrée${cache}, ${nombre(total.sortie)} en sortie${raisonnement}, ${detail}`;
 }
 
 /** « 12 345 jetons en entrée (dont 1 000 en cache), 678 en sortie, ≈ 0,15 $ (modele) », ou le prix inconnu. */
 export function formaterCout(usage: Usage, modele: string): string {
   const cache = usage.cache_lecture ? ` (dont ${nombre(usage.cache_lecture)} en cache)` : "";
+  const raisonnement = usage.raisonnement ? ` (dont ${nombre(usage.raisonnement)} de raisonnement)` : "";
   const cout = coutPour(usage, modele);
-  return `${nombre(usage.entree)} jetons en entrée${cache}, ${nombre(usage.sortie)} en sortie, ${cout === null ? `prix inconnu pour ${modele}` : `≈ ${dollars(cout)} (${modele})`}`;
+  return `${nombre(usage.entree)} jetons en entrée${cache}, ${nombre(usage.sortie)} en sortie${raisonnement}, ${cout === null ? `prix inconnu pour ${modele}` : `≈ ${dollars(cout)} (${modele})`}`;
 }

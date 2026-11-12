@@ -236,7 +236,7 @@ export function estimerCoutConfirmation(outils: Outil[], criteres: Critere[], mo
   let usage: Usage = { ...USAGE_VIDE };
   for (const outil of outils) {
     const fiche = requeteOutil(outil, { titre: outil.nom, meta_description: outil.description, extrait: extraitMax, liens_depot: [] }, criteres, undefined, categories).messages[0]!;
-    usage = additionner(usage, { entree: consignes + Math.ceil(fiche.length / 3), sortie: SORTIE_VERDICT, cache_lecture: 0, cache_ecriture: 0 });
+    usage = additionner(usage, { entree: consignes + Math.ceil(fiche.length / 3), sortie: SORTIE_VERDICT, cache_lecture: 0, cache_ecriture: 0, raisonnement: 0 });
   }
   return { outils: outils.length, usage, cout: coutPour(usage, modele) };
 }

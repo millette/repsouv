@@ -198,7 +198,7 @@ export function texteConfirmation(nbOutils: number, coutEstime: string): string 
 
 /** Les lignes d'estimation du coût pour `--dry-run` et la confirmation du premier import. */
 export function lignesEstimation(estimation: Estimation, verification: { outils: number; usage: Usage }, descriptions: { categories: number; usage: Usage }, modele: string, nbOutilsRepertoire: number, c: Couleurs, repli: string | null = null): string[] {
-  const sommaire: Usage = { entree: 2000 + 120 * nbOutilsRepertoire, sortie: 1500, cache_lecture: 0, cache_ecriture: 0 };
+  const sommaire: Usage = { entree: 2000 + 120 * nbOutilsRepertoire, sortie: 1500, cache_lecture: 0, cache_ecriture: 0, raisonnement: 0 };
   const lignes = [`${c.gras("Coût estimé")} (${estimation.hypotheses}):`];
   lignes.push(`  enrichissement de ${estimation.outils} outil(s): ${formaterCout(estimation.usage, modele)}`);
   lignes.push(`  vérification des critères de ${verification.outils} outil(s): ${formaterCout(verification.usage, modele)}`);

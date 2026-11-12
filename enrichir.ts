@@ -33,6 +33,11 @@ export function modelesDepuisEnv(env: Record<string, string | undefined> = proce
  * (HTTP 400, 401, 403, 404) ou refus du modèle. obtenirValide la laisse remonter aussitôt.
  */
 export class ErreurDefinitive extends Error {}
+
+/** Effort de raisonnement demandé à l'API (reasoning.effort) d'après OPENAI_REASONING_EFFORT; null: le défaut du modèle. */
+export function effortDepuisEnv(env: Record<string, string | undefined> = process.env): string | null {
+  return env.OPENAI_REASONING_EFFORT || null;
+}
 const IDS_CRITERES: readonly string[] = [DONNEES, CONTROLE, DEPENDANCE];
 const CONFIANCES: readonly ConfianceEvaluation[] = ["élevée", "moyenne", "faible"];
 
@@ -337,6 +342,7 @@ export async function appelerOpenAI(
   modele: string,
   requete: { nom: string; schema: unknown; instructions: string; messages: string[]; maxTokens: number },
   compteur?: Compteur,
+  options: { effort?: string | null } = { effort: effortDepuisEnv() },
 ): Promise<unknown> {
   const reponse = await fetch("https://api.openai.com/v1/responses", {
     method: "POST",
@@ -350,6 +356,7 @@ export async function appelerOpenAI(
       ],
       text: { format: { type: "json_schema", name: requete.nom, strict: true, schema: requete.schema } },
       max_output_tokens: requete.maxTokens,
+      ...(options.effort && { reasoning: { effort: options.effort } }),
     }),
   });
   const corps = (await reponse.json().catch(() => ({}))) as Record<string, any>;
@@ -621,8 +628,8 @@ export function estimerCoutEnrichissement(outils: Outil[], tags: Tag[], criteres
   for (const outil of outils) {
     const fiche = JSON.stringify(resumePage(outil, { titre: outil.nom, meta_description: outil.description, extrait: extraitMax, liens_depot: [] }, categories));
     const consignes = instructions(tags, criteres, false);
-    const appelFiche: Usage = { entree: estimerJetons(consignes) + estimerJetons(fiche), sortie: SORTIE_FICHE, cache_lecture: 0, cache_ecriture: 0 };
-    const appelEcart: Usage = { entree: estimerJetons(instructionsEcart(criteres)) + estimerJetons(fiche) + 200, sortie: SORTIE_ECART, cache_lecture: 0, cache_ecriture: 0 };
+    const appelFiche: Usage = { entree: estimerJetons(consignes) + estimerJetons(fiche), sortie: SORTIE_FICHE, cache_lecture: 0, cache_ecriture: 0, raisonnement: 0 };
+    const appelEcart: Usage = { entree: estimerJetons(instructionsEcart(criteres)) + estimerJetons(fiche) + 200, sortie: SORTIE_ECART, cache_lecture: 0, cache_ecriture: 0, raisonnement: 0 };
     usage = additionner(additionner(usage, appelFiche), appelEcart);
   }
   return {

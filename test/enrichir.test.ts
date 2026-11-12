@@ -8,7 +8,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import {
-  abandonne, aEnrichir, chargerTags, enrichirOutils, ErreurDefinitive, modelesDepuisEnv, MODELE_PAR_DEFAUT, MODELE_REPLI_PAR_DEFAUT, obtenirValide, extraireContenu, instructions, instructionsEcart, lireContenu, MAX_TAGS, MIN_EXTRAIT, obtenirPage, problemesMarkdown, sauverTags,
+  abandonne, aEnrichir, chargerTags, effortDepuisEnv, enrichirOutils, ErreurDefinitive, modelesDepuisEnv, MODELE_PAR_DEFAUT, MODELE_REPLI_PAR_DEFAUT, obtenirValide, extraireContenu, instructions, instructionsEcart, lireContenu, MAX_TAGS, MIN_EXTRAIT, obtenirPage, problemesMarkdown, sauverTags,
   schemaReponse, validerEcart, validerProposition, type Expliqueur, type Generateur, type Tag, appelerOpenAI, estimerCoutEnrichissement } from "../enrichir.ts";
 import type { Usage } from "../prix.ts";
 import type { Outil } from "../extract.ts";
@@ -531,7 +531,7 @@ test("estimerCoutEnrichissement: borne haute par outil, proportionnelle au nombr
   assert.equal(deux.usage.sortie, 2 * un.usage.sortie);
   assert.ok(un.cout! > 0 && Math.abs(deux.cout! - 2 * un.cout!) < 1e-9);
   assert.equal(estimerCoutEnrichissement([outil("a")], VOCAB, CRITERES, "modele-inconnu").cout, null);
-  assert.deepEqual(estimerCoutEnrichissement([], VOCAB, CRITERES, "gpt-6-astra").usage, { entree: 0, sortie: 0, cache_lecture: 0, cache_ecriture: 0 });
+  assert.deepEqual(estimerCoutEnrichissement([], VOCAB, CRITERES, "gpt-6-astra").usage, { entree: 0, sortie: 0, cache_lecture: 0, cache_ecriture: 0, raisonnement: 0 });
 });
 test("appelerOpenAI: le compteur reçoit les jetons de chaque appel, et le contenu est retourné", async () => {
   const vrai = globalThis.fetch;
@@ -541,7 +541,7 @@ test("appelerOpenAI: le compteur reçoit les jetons de chaque appel, et le conte
     const usages: Usage[] = [];
     const contenu = await appelerOpenAI("k", "m", { nom: "x", schema: {}, instructions: "i", messages: ["m"], maxTokens: 10 }, (u) => usages.push(u));
     assert.deepEqual(contenu, { a: 1 });
-    assert.deepEqual(usages, [{ entree: 100, sortie: 20, cache_lecture: 10, cache_ecriture: 0 }]);
+    assert.deepEqual(usages, [{ entree: 100, sortie: 20, cache_lecture: 10, cache_ecriture: 0, raisonnement: 0 }]);
   } finally {
     globalThis.fetch = vrai;
   }
@@ -609,7 +609,7 @@ test("appelerOpenAI: HTTP 400, 401, 403 et 404 et un refus du modèle sont des e
     const usages: [Usage, string][] = [];
     globalThis.fetch = reponse(429, { error: { message: "quota" }, usage: { input_tokens: 50, output_tokens: 0 } });
     await assert.rejects(appelerOpenAI("k", "m", requete, (u, modele) => usages.push([u, modele])), /HTTP 429/);
-    assert.deepEqual(usages, [[{ entree: 50, sortie: 0, cache_lecture: 0, cache_ecriture: 0 }, "m"]]);
+    assert.deepEqual(usages, [[{ entree: 50, sortie: 0, cache_lecture: 0, cache_ecriture: 0, raisonnement: 0 }, "m"]]);
   } finally {
     globalThis.fetch = vrai;
   }
@@ -646,4 +646,23 @@ test("enrichir: principal et repli rejetés, un seul échec compté; expliquerRe
   assert.deepEqual(s.enrichis, ["b"]);
   assert.equal(repli, 1);
   assert.equal(b[0]!.evaluation_enrichie!.ecart, "Le répertoire suppose les données au Canada.");
+});
+
+test("effort de raisonnement: OPENAI_REASONING_EFFORT est envoyé dans reasoning.effort; absent ou vide, rien n'est envoyé", async () => {
+  assert.equal(effortDepuisEnv({}), null);
+  assert.equal(effortDepuisEnv({ OPENAI_REASONING_EFFORT: "" }), null);
+  assert.equal(effortDepuisEnv({ OPENAI_REASONING_EFFORT: "low" }), "low");
+  const vrai = globalThis.fetch;
+  const corps = { status: "completed", usage: { input_tokens: 1, output_tokens: 1 }, output: [{ type: "message", content: [{ type: "output_text", text: "{}" }] }] };
+  const envois: string[] = [];
+  globalThis.fetch = (async (_url: unknown, init: { body: string }) => (envois.push(init.body), { ok: true, status: 200, json: async () => corps })) as unknown as typeof fetch;
+  try {
+    const requete = { nom: "x", schema: {}, instructions: "i", messages: ["m"], maxTokens: 10 };
+    await appelerOpenAI("k", "m", requete, undefined, { effort: "low" });
+    assert.deepEqual(JSON.parse(envois[0]!).reasoning, { effort: "low" });
+    await appelerOpenAI("k", "m", requete);
+    assert.equal("reasoning" in JSON.parse(envois[1]!), false);
+  } finally {
+    globalThis.fetch = vrai;
+  }
 });
