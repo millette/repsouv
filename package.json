@@ -1,5 +1,6 @@
 {
   "name": "outils-souverainete-numerique",
+  "version": "0.1.0",
   "private": true,
   "license": "AGPL-3.0-or-later",
   "author": {
@@ -24,6 +25,13 @@
     "spdx-license-ids": "^3.0.24",
     "vega": "^6.4.0",
     "vega-lite": "^6.5.0"
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "nub",
+      "version": "^0.10.0",
+      "onFail": "ignore"
+    }
   },
   "devDependencies": {
     "@mionjs/bin-compiler": "0.14.0",
