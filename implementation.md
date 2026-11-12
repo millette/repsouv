@@ -422,7 +422,7 @@ Si le `score` ou les `criteres` d'un outil déjà enrichi changent, après un `c
 | `nub run confirmer` | `nub confirmer.ts` : confirme les critères un par un avec une IA (`--fournisseur=openai` ou `--fournisseur=claude`, obligatoire), citation à l'appui. **Appelle une API payante** ; voir [`confirmer.ts`](#confirmerts) |
 | `nub run classify4` | `nub classify4.ts --confirmations=analyses/classification/confirmations-claude.json outils.json` : comme `classify`, mais retire les critères que l'enrichissement et les confirmations contredisent (pas adopté ; **modifie `outils.json` en place** et y laisse des outils avec moins de critères que d'étoiles, voir [Classification](#classification)) |
 | `nub run appliquer-confirmations` | `nub appliquer-confirmations.ts analyses/classification/confirmations-claude.json outils.json` : inscrit `criteres_confirmes` dans `outils.json` à partir des confirmations de Claude commitées |
-| `nub run test` | Lance les dix-sept fichiers de tests, puis `schemas:verifier` |
+| `nub run test` | Lance les dix-huit fichiers de tests, puis `schemas:verifier` |
 | `nub run typecheck` | `tsrs -p .` : vérifie les types avec [tsrs](https://www.npmjs.com/package/tsrs), un portage en Rust de `tsc` |
 
 ## Tests
@@ -445,6 +445,7 @@ Dans `test/`, avec `node:test` lancé par `nub` :
 - `sommaire.test.ts` : statistiques (statuts, licences, familles, tags, critères par statut, critères vérifiés par verdict et par statut, forges, dates), rendu Markdown (sections, images insérées dans leur section, cas sans outil enrichi), validation du résumé et nouvelle tentative, `genererSommaire` (écriture, options, conservation du sommaire existant en cas d'échec), avec des données fictives (jamais `outils.json`, jamais le réseau).
 - `graphiques.test.ts` : spécifications Vega-Lite (données incluses, champs existants, pourcentages, verdicts des critères vérifiés, graphiques omis sans données), écriture et nettoyage des fichiers, message si vl-convert est absent, et conversion réelle en SVG et PNG (ignorée si vl-convert n'est pas installé). Les données fictives des tests sont dans `donnees-fictives.ts`.
 - `schemas.test.ts` : les trois fichiers de données réels sont valides selon les schémas (avec Ajv, indépendant de RunTypes), et des variantes invalides sont refusées (clé inconnue, `score` hors de 0 à 3, `source` ou `changement` inconnus, tags en trop ou en double, date non ISO, `meta` manquant).
+- `documentation.test.ts` : les huit fichiers Markdown du dépôt (README, `implementation.md`, `historique.md`, `sommaire.md`, l'analyse et ses résultats, le spike) existent, leurs liens relatifs et leurs ancres existent (ancres calculées comme GitHub, liens dans le code ignorés), chacun commence par un titre et la ligne *Documentation*, sans tiret cadratin ni balise HTML (sauf l'image du README), et les fichiers générés disent par quel script et qu'ils ne se modifient pas à la main.
 - `en-tetes.test.ts` : chaque fichier `.ts` porte les en-têtes SPDX; la licence du code est la même dans `package.json`; les deux textes de licence sont présents, à la racine (`LICENSE*`) et dans `LICENSES/`; chaque schéma JSON déclare la licence du code dans `$comment`; et `REUSE.toml` annote `schemas/**` et le reste des fichiers sans en-tête (AGPL-3.0-or-later), ainsi que les données et leurs dérivés (CC-BY-SA-4.0). Ce test ne remplace pas `nub run licences`, qui contrôle tous les fichiers.
 
 ## Dépannage
@@ -474,4 +475,4 @@ Les fichiers Markdown du dépôt suivent les mêmes conventions :
 - la typographie française (espace avant « : », « ; », « ? » et « ! », guillemets « ») ; pas de tiret cadratin ; aucune balise HTML, sauf le `<img>` en tête du README, pour fixer la largeur de l'image ;
 - des tableaux avec une ligne d'en-tête, et les noms de fichiers, de champs et de commandes entre accents graves.
 
-Le test `en-tetes.test.ts` vérifie les en-têtes de licence ; les liens et les ancres sont vérifiés à la main avant chaque révision de la documentation (`nub run licences` couvre les licences des fichiers Markdown via `REUSE.toml`).
+Le test `documentation.test.ts` vérifie ces conventions (fichiers et ancres des liens, ligne *Documentation*, tirets, balises, mention des fichiers générés) ; `en-tetes.test.ts` vérifie les en-têtes de licence, et `nub run licences` couvre les licences des fichiers Markdown via `REUSE.toml`.
