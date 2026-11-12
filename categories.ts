@@ -91,6 +91,9 @@ export interface OptionsDescriptions {
   generer: GenerateurDescription;
   /** Appelé après chaque catégorie décrite, pour persister categories.json. */
   apresChaque?: (categories: Categorie[]) => void;
+  /** Appelé au début de chaque catégorie (son nom), puis après chaque tentative avec le nombre traité: pour une barre de progression. */
+  debut?: (nom: string) => void;
+  progression?: (traites: number) => void;
   journal?: (message: string, niveau?: "info" | "succes" | "avertissement" | "erreur") => void;
 }
 
@@ -98,8 +101,10 @@ export interface OptionsDescriptions {
 export async function decrireCategories(categories: Categorie[], outils: { categorie: string; nom: string; description: string }[], options: OptionsDescriptions): Promise<{ decrites: string[]; erreurs: { nom: string; message: string }[] }> {
   const journal = options.journal ?? (() => {});
   const resultat = { decrites: [] as string[], erreurs: [] as { nom: string; message: string }[] };
+  let traites = 0;
   for (const [i, categorie] of categories.entries()) {
     if (!aDecrire(categorie)) continue;
+    options.debut?.(categorie.nom);
     const siens = outils.filter((o) => o.categorie === categorie.id);
     try {
       const description = await obtenirValide(
@@ -115,6 +120,7 @@ export async function decrireCategories(categories: Categorie[], outils: { categ
       resultat.erreurs.push({ nom: categorie.nom, message: (e as Error).message });
       journal(`  ${categorie.nom}: ÉCHEC: ${(e as Error).message}`, "erreur");
     }
+    options.progression?.(++traites);
   }
   return resultat;
 }

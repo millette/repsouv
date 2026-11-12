@@ -110,3 +110,46 @@ test("couleurs: une étiquette trop longue est tronquée sur sa largeur visible,
   assert.ok(ligne.length <= 49, ligne);
   assert.match(ligne, /…$/);
 });
+
+// ---------- temps restant ----------
+
+const avecHorloge = (tty: boolean, columns = 80) => {
+  let t = 0;
+  const { stream, sortie } = faux(tty, columns);
+  const p = createProgress(4, { stream, intervalMs: 0, logWhenNotTTY: true, horloge: () => t, restant: (ms) => `${ms / 1000} s` });
+  return { p, sortie, avancer: (ms: number) => (t = ms) };
+};
+test("temps restant: estimé au rythme observé depuis le début, affiché après le pourcentage et avant l'étiquette; absent avant la première unité et à la fin", () => {
+  const { p, sortie, avancer } = avecHorloge(true);
+  p.update(0, "A");
+  assert.match(sortie.at(-1)!, /0% A\x1b\[K$/);
+  avancer(10_000);
+  p.update(1, "B");
+  assert.match(sortie.at(-1)!, /25% \(reste ≈ 30 s\) B\x1b\[K$/);
+  avancer(30_000);
+  p.update(3);
+  assert.match(sortie.at(-1)!, /75% \(reste ≈ 10 s\) B/);
+  avancer(40_000);
+  p.update(4);
+  assert.doesNotMatch(sortie.at(-1)!, /reste/);
+});
+test("temps restant: hors TTY, sur les lignes de pourcentage", () => {
+  const { p, sortie, avancer } = avecHorloge(false);
+  avancer(5_000);
+  p.update(1);
+  assert.equal(sortie.at(-1), "25% (reste ≈ 15 s)\n");
+  avancer(20_000);
+  p.update(4);
+  assert.equal(sortie.at(-1), "100%\n");
+});
+test("temps restant: sans l'option restant, rien n'est estimé; sur un écran trop étroit, il est omis avant l'étiquette", () => {
+  const { stream, sortie } = faux(true, 80);
+  createProgress(4, { stream, intervalMs: 0 }).update(1);
+  assert.doesNotMatch(sortie.at(-1)!, /reste/);
+  const etroit = faux(true, 42);
+  let t = 10_000;
+  createProgress(4, { stream: etroit.stream, intervalMs: 0, horloge: () => t, restant: (ms) => `${ms / 1000} s` }).update(1, "A");
+  const ligne = etroit.sortie.at(-1)!.replace(/^\r|\x1b\[K$/g, "");
+  assert.doesNotMatch(ligne, /reste/);
+  assert.ok(ligne.length <= 41, ligne);
+});

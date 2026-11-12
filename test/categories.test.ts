@@ -56,7 +56,9 @@ test("decrireCategories: décrit seulement les catégories sans description, en 
   const generer = async (r: { messages: string[] }) => { appels++; const id = /"id":"([a-z])"/.exec(r.messages[0]!)![1]!; return reponses[id]!.shift(); };
   const journal: string[] = [];
   let sauvegardes = 0;
-  const r = await decrireCategories(cats, outils, { generer, journal: (m) => journal.push(m), apresChaque: () => sauvegardes++ });
+  const debuts: string[] = [];
+  const progression: number[] = [];
+  const r = await decrireCategories(cats, outils, { generer, journal: (m) => journal.push(m), apresChaque: () => sauvegardes++, debut: (nom) => debuts.push(nom), progression: (n) => progression.push(n) });
   assert.deepEqual(r.decrites, ["a"]);
   assert.equal(cats[0]!.description, "Des outils qui font a, pour les organismes culturels.");
   assert.equal(cats[1]!.description, "Déjà.");
@@ -64,6 +66,8 @@ test("decrireCategories: décrit seulement les catégories sans description, en 
   assert.equal(r.erreurs[0]!.nom, "C");
   assert.equal(appels, 4);
   assert.equal(sauvegardes, 1);
+  assert.deepEqual(debuts, ["A", "C"]);
+  assert.deepEqual(progression, [1, 2]);
   assert.ok(journal.some((m) => /nouvel essai/.test(m)));
 });
 

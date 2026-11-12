@@ -49,7 +49,7 @@ Schémas          schemas-types.ts ──▶ obuild + RunTypes ──▶ generer
 | `extract.ts`, `classify.ts` | Les deux outils exceptionnels, sans script npm : reconstruction forcée depuis la page, et reclassement de tous les outils après un changement des règles |
 | `confirmer.ts` | Module de la vérification des critères (`criteres_confirmes`), appelé par `update.ts` après l'enrichissement |
 | `sommaire.ts`, `sommaire.md`, `graphiques/` | Le script du sommaire statistique, le sommaire qu'il a généré et les graphiques (SVG) qu'il contient (mis à jour automatiquement par `nub run update` quand quelque chose a changé; sinon à regénérer avec `nub run sommaire`) |
-| `categories.ts`, `enrichir.ts`, `prix.ts`, `statistiques.ts`, `graphiques.ts`, `fichiers.ts`, `temps.ts`, `spdx.ts`, `progress.ts`, `couleurs.ts`, `ids.ts`, `cli.ts`, `env.ts` | Modules utilisés par les scripts |
+| `categories.ts`, `enrichir.ts`, `prix.ts`, `statistiques.ts`, `graphiques.ts`, `fichiers.ts`, `temps.ts`, `spdx.ts`, `progress.ts`, `duree.ts`, `couleurs.ts`, `ids.ts`, `cli.ts`, `env.ts` | Modules utilisés par les scripts |
 | `schemas/`, `generer-schemas.ts`, `schemas-types.ts`, `affiner-schema.ts`, `build.config.ts`, `tsconfig.schemas.json` | Les schémas JSON des trois fichiers de données et ce qui les génère (voir [Schémas JSON](#schémas-json)) |
 | `test/`, `test/donnees/` | Les tests unitaires (fixtures et dossiers temporaires, sans données) et les tests des fichiers de données réels |
 | `package.json`, `nub.lock`, `tsconfig.json` | Dépendances (`dependencies` pour l'exécution, `devDependencies` pour le développement, dont `vega` et `vega-lite` qui ne servent qu'aux types), scripts npm, les deux environnements (`engines.node` pour l'exécution, `devEngines.runtime` et `devEngines.packageManager` pour le développement) et configuration TypeScript. `nub.lock` n'est lu que par nub ; `npm install` résout les versions d'après les plages de `package.json` |
@@ -187,7 +187,11 @@ Les dates et heures, toujours en heure de Toronto : `horodatage()` donne le mome
 
 ### `progress.ts`
 
-Barre de progression minimale sur une ligne, sans dépendance : `createProgress(total, options)` retourne `update(valeur, étiquette?)` (l'étiquette, par exemple l'outil en cours, s'affiche après le pourcentage), `message(texte)` (écrit une ligne au-dessus de la barre sans l'abîmer) et `end()`. Écrit sur stderr par défaut. L'option facultative `paint` colore les parties de la barre (rempli, vide, étiquette) sans changer sa largeur.
+Barre de progression minimale sur une ligne, sans dépendance : `createProgress(total, options)` retourne `update(valeur, étiquette?)` (l'étiquette, par exemple l'outil en cours, s'affiche après le pourcentage), `message(texte)` (écrit une ligne au-dessus de la barre sans l'abîmer) et `end()`. Écrit sur stderr par défaut. L'option facultative `paint` colore les parties de la barre (rempli, vide, étiquette) sans changer sa largeur. L'option `restant` (un formateur de durée, `formaterDuree` de `duree.ts`) ajoute après le pourcentage le temps restant estimé, « (reste ≈ 12 min) », au rythme moyen observé depuis le début de la barre : rien avant la première unité terminée ni à la fin, et omis si l'écran est trop étroit ; hors terminal, il figure sur les lignes de pourcentage. `update` l'affiche pour l'enrichissement, la vérification des critères et les descriptions de catégories.
+
+### `duree.ts`
+
+`formaterDuree(ms)` écrit une durée en français (« 45 s », « 13 min », « 1 h et 5 min », « 3 j et 1 h ») : arrondie à la seconde sous la minute, à la minute au-delà, jours de 24 heures, espaces ordinaires. `estimerRestant({ ecoule, traites, total })` extrapole le temps restant au rythme moyen (null tant que rien n'est terminé). Sans dépendance : `Temporal.Duration` (arrondi et équilibrage des unités) et `Intl.DurationFormat` (libellés de la locale `fr-CA`), natifs dans Node.js 26.
 
 ### `couleurs.ts`
 
@@ -377,7 +381,8 @@ Avec `node:test`, lancé par `nub --test` (le développement et les tests passen
 - `enrichir.test.ts` : date d'enrichissement, validation (tags, Markdown permis et interdit, licences SPDX et maison, évaluation), explication des écarts, extraction de la page, pages inaccessibles ou presque vides (avertissement, jamais enrichi), estimation des jetons et du coût, compteur de jetons des appels, enrichissement une seule fois, compteur d'échecs consécutifs et abandon après `maxEchecs`, reprise, avec de faux générateurs.
 - `prix.test.ts` : coût d'un appel au prix du modèle, addition des jetons, lecture des jetons d'une réponse OpenAI, formatage en français.
 - `spdx.test.ts` : licences SPDX valides et refusées.
-- `progress.test.ts` : barre en terminal et hors terminal, bornes, étiquette, `end()` idempotent, `message()`, peinture de la barre.
+- `progress.test.ts` : barre en terminal et hors terminal, bornes, étiquette, `end()` idempotent, `message()`, peinture de la barre, temps restant (rythme observé avec une horloge injectée, placement, absence avant la première unité et à la fin, écran étroit).
+- `duree.test.ts` : formats en français (secondes, minutes, heures, jours, zéro, espaces ordinaires, durées invalides) et estimation du temps restant.
 - `couleurs.test.ts` : règles d'activation (terminal, `NO_COLOR`, `FORCE_COLOR`, `TERM=dumb`, `--sans-couleur`) et codes ANSI.
 - `temps.test.ts` : heure de Toronto (hiver, été, minuit, passage à l'heure d'été), décalage ajouté à une date locale.
 - `versions.test.ts` : `.node-version` est une majeure seule, `engines.node` en est la plage (`>=N <N+1`), `devEngines.runtime` dit la même plage (Node, `onFail: warn`), et la documentation cite cette majeure.

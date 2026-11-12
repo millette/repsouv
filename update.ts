@@ -52,6 +52,7 @@ import { lancer } from "./cli.ts";
 import { existsSync } from "node:fs";
 import { createInterface } from "node:readline/promises";
 import { chargerEnv } from "./env.ts";
+import { formaterDuree } from "./duree.ts";
 import { ecrireFichier, lireFichier, lireSiExiste, type Lu } from "./fichiers.ts";
 import { CHAMPS_ENRICHIS, telechargerRepertoire, type Changement, type Critere, type Outil } from "./extract.ts";
 import { verifierVlConvert } from "./graphiques.ts";
@@ -348,6 +349,7 @@ if (import.meta.main) {
         const progression = createProgress(prevus.length, {
           logWhenNotTTY: true,
           paint: { filled: suivi.vert, empty: suivi.attenue, label: suivi.cyan },
+          restant: formaterDuree,
         });
         let traites = 0;
         const resultat = await enrichirOutils(outils, {
@@ -388,7 +390,7 @@ if (import.meta.main) {
       } else {
         const criteres = chargerCriteres(join(dirname(fichier), "criteres.json"));
         const avant = usage;
-        const progression = createProgress(aConfirmerMaintenant.length, { logWhenNotTTY: true, paint: { filled: suivi.vert, empty: suivi.attenue, label: suivi.cyan } });
+        const progression = createProgress(aConfirmerMaintenant.length, { logWhenNotTTY: true, paint: { filled: suivi.vert, empty: suivi.attenue, label: suivi.cyan }, restant: formaterDuree });
         let traites = 0;
         const resultat = await confirmerOutils(outils, {
           confirmer: confirmateurOpenAI(cle, modele, compteur),
@@ -419,11 +421,16 @@ if (import.meta.main) {
       } else {
         const avant = usage;
         const cheminCategories = join(dirname(fichier), "categories.json");
+        const progression = createProgress(aDecrireMaintenant.length, { logWhenNotTTY: true, paint: { filled: suivi.vert, empty: suivi.attenue, label: suivi.cyan }, restant: formaterDuree });
+        let traites = 0;
         const resultat = await decrireCategories(categories, outils.filter((o) => !o.removed), {
           generer: generateurDescriptionOpenAI(cle, modele, compteur),
           apresChaque: (cs) => { sauverCategories(cheminCategories, cs); },
-          journal: (message, niveau = "info") => console.error(ligneJournal(message, niveau, suivi)),
+          debut: (nom) => (process.stderr.isTTY ? progression.update(traites, nom) : progression.message(suivi.attenue(`Description de ${nom}...`))),
+          progression: (n) => progression.update((traites = n)),
+          journal: (message, niveau = "info") => progression.message(ligneJournal(message, niveau, suivi)),
         });
+        progression.end();
         nbDecrites = resultat.decrites.length;
         const decrites = nbDecrites ? sortie.gras(sortie.vert(String(nbDecrites))) : "0";
         const echecs = resultat.erreurs.length ? sortie.gras(sortie.rouge(String(resultat.erreurs.length))) : sortie.vert("0");

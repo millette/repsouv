@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
-// progress.ts — minimal single-line progress bar, no dependencies.
+// progress.ts — minimal single-line progress bar. Optional remaining-time estimate (see duree.ts).
+import { estimerRestant } from "./duree.ts";
 
 export interface ProgressOptions {
   /** Output stream. Defaults to stderr so stdout stays clean for data. */
@@ -11,6 +12,14 @@ export interface ProgressOptions {
   intervalMs?: number;
   /** Optional painters for the parts of the bar (ANSI colors); omit for a plain bar. */
   paint?: { filled?: (text: string) => string; empty?: (text: string) => string; label?: (text: string) => string };
+  /**
+   * Formats a duration in milliseconds (e.g. formaterDuree from duree.ts). When given, the remaining time,
+   * estimated from the average pace since creation, is shown after the percentage (« reste ≈ 12 min »),
+   * once at least one unit is done and until the end.
+   */
+  restant?: (ms: number) => string;
+  /** Clock in milliseconds, for the estimate (defaults to performance.now; injectable for tests). */
+  horloge?: () => number;
 }
 
 export interface Progress {
@@ -27,7 +36,8 @@ export interface Progress {
 }
 
 export function createProgress(total: number, options: ProgressOptions = {}): Progress {
-  const { stream = process.stderr, logWhenNotTTY = false, intervalMs = 100 } = options;
+  const { stream = process.stderr, logWhenNotTTY = false, intervalMs = 100, restant, horloge = () => performance.now() } = options;
+  const debut = horloge();
   const paint = { filled: (t: string) => t, empty: (t: string) => t, label: (t: string) => t, ...options.paint };
 
   if (!Number.isFinite(total) || total <= 0) {
@@ -45,6 +55,12 @@ export function createProgress(total: number, options: ProgressOptions = {}): Pr
 
   const ratio = (): number => current / total;
   const percent = (): number => Math.floor(ratio() * 100);
+  /** « (reste ≈ 12 min) », or empty when no formatter is given, before the first unit is done, or at the end. */
+  const texteRestant = (): string => {
+    if (!restant) return "";
+    const ms = estimerRestant({ ecoule: horloge() - debut, traites: current, total });
+    return ms === null ? "" : `(reste ≈ ${restant(ms)})`;
+  };
 
   function drawPlain(force: boolean): void {
     if (!logWhenNotTTY) return;
@@ -53,7 +69,8 @@ export function createProgress(total: number, options: ProgressOptions = {}): Pr
     if (bucket > lastBucket || (force && pct !== lastLoggedPct)) {
       lastBucket = bucket;
       lastLoggedPct = pct;
-      stream.write(`${pct}%\n`);
+      const reste = texteRestant();
+      stream.write(`${pct}%${reste ? ` ${reste}` : ""}\n`);
     }
   }
 
@@ -70,9 +87,14 @@ export function createProgress(total: number, options: ProgressOptions = {}): Pr
     const width = Math.max(0, Math.min(30, columns - 8));
     const filled = Math.floor(ratio() * width);
     // Lengths are computed on the plain text: the painters only add invisible escape codes.
-    const plain = width > 0 ? `[${"#".repeat(filled)}${"-".repeat(width - filled)}] ${pct}` : pct.slice(0, columns - 1);
+    let plain = width > 0 ? `[${"#".repeat(filled)}${"-".repeat(width - filled)}] ${pct}` : pct.slice(0, columns - 1);
     let line = width > 0 ? `[${paint.filled("#".repeat(filled))}${paint.empty("-".repeat(width - filled))}] ${pct}` : plain;
-    // Append the label if at least a few columns remain (one is kept spare to avoid wrapping).
+    // Append the remaining time, then the label, if enough columns remain (one is kept spare to avoid wrapping).
+    const reste = texteRestant();
+    if (reste && columns - 1 - plain.length - 1 >= reste.length) {
+      plain += ` ${reste}`;
+      line += ` ${reste}`;
+    }
     const room = columns - 1 - plain.length - 1;
     if (label && room >= 4) line += ` ${paint.label(label.length > room ? `${label.slice(0, room - 1)}…` : label)}`;
 
