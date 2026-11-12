@@ -1,12 +1,14 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
-// Les schémas JSON (schemas/*.schema.json, générés par `nub run schemas`) décrivent bien les fichiers de
-// données du dépôt, et refusent les variantes invalides. Validation avec Ajv, indépendant de RunTypes.
+// Les schémas JSON (schemas/*.schema.json, générés par `nub run schemas`) acceptent des données fictives complètes
+// et refusent les variantes invalides. Validation avec Ajv, indépendant de RunTypes. La validité des fichiers réels
+// du dépôt est vérifiée par test/donnees/outils.test.ts.
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import { Ajv2020 } from "ajv/dist/2020.js";
 import formats from "ajv-formats";
+import { CATEGORIES, CRITERES, enrichi, META, OUTILS, TAGS } from "./donnees-fictives.ts";
 
 const addFormats = formats.default;
 const lire = (chemin: string) => JSON.parse(readFileSync(chemin, "utf8"));
@@ -15,27 +17,30 @@ const compiler = (nom: string) => addFormats(new Ajv2020({ strict: true, allErro
 const outils = compiler("outils");
 const criteres = compiler("criteres");
 const tags = compiler("tags");
+const categories = compiler("categories");
 
-const donnees = { outils: lire("outils.json"), criteres: lire("criteres.json"), tags: lire("tags.json") };
 const copie = <T>(x: T): T => structuredClone(x);
-/** Un outil complet (enrichi) du fichier réel, comme base des variantes invalides. */
-const outilEnrichi = () => {
-  const o = donnees.outils.outils.find((x: { evaluation_enrichie?: unknown; tags?: string[] }) => x.evaluation_enrichie && (x.tags?.length ?? 0) > 0);
-  assert.ok(o, "au moins un outil enrichi dans outils.json");
-  return copie(o);
+/** Fichiers fictifs complets (« Maison » reçoit un tag: le schéma en exige de 1 à 5). */
+const donnees = {
+  outils: { meta: META, outils: OUTILS.map((o) => (o.tags?.length === 0 ? { ...o, tags: ["gratuit"] } : o)) },
+  criteres: { meta: META, criteres: CRITERES },
+  tags: { meta: META, tags: TAGS },
+  categories: { meta: META, categories: CATEGORIES },
 };
+/** Un outil complet (enrichi), comme base des variantes invalides. */
 const avec = (modifier: (o: Record<string, unknown>) => void) => {
   const f = copie(donnees.outils);
-  const o = outilEnrichi();
+  const o = enrichi("X") as unknown as Record<string, unknown>;
   modifier(o);
-  f.outils = [o];
+  f.outils = [o as never];
   return f;
 };
 
-test("les fichiers de données réels sont valides", () => {
+test("les données fictives complètes sont valides", () => {
   assert.equal(outils(donnees.outils), true, JSON.stringify(outils.errors));
   assert.equal(criteres(donnees.criteres), true, JSON.stringify(criteres.errors));
   assert.equal(tags(donnees.tags), true, JSON.stringify(tags.errors));
+  assert.equal(categories(donnees.categories), true, JSON.stringify(categories.errors));
 });
 
 test("un fichier sans « meta », ou sans le tableau attendu, est refusé", () => {
@@ -45,10 +50,10 @@ test("un fichier sans « meta », ou sans le tableau attendu, est refusé", () =
 });
 
 test("« meta » exige des dates ISO 8601 avec décalage et refuse les clés inconnues", () => {
-  const f = copie(donnees.outils);
+  const f = copie(donnees.outils) as { meta: Record<string, unknown> };
   f.meta.created_at = "2026-11-11 16:43:11";
   assert.equal(outils(f), false);
-  const g = copie(donnees.outils);
+  const g = copie(donnees.outils) as { meta: Record<string, unknown> };
   g.meta.extra = 1;
   assert.equal(outils(g), false);
 });
@@ -78,11 +83,11 @@ test("un outil: licence, dépôt et évaluation enrichie respectent leurs types"
 });
 
 test("critères et tags: champs obligatoires et clés inconnues", () => {
-  const c = copie(donnees.criteres);
-  delete c.criteres[0].titre;
+  const c = copie(donnees.criteres) as unknown as { criteres: Record<string, unknown>[] };
+  delete c.criteres[0]!.titre;
   assert.equal(criteres(c), false);
-  const t = copie(donnees.tags);
-  t.tags[0].extra = true;
+  const t = copie(donnees.tags) as unknown as { tags: Record<string, unknown>[] };
+  t.tags[0]!.extra = true;
   assert.equal(tags(t), false);
 });
 
@@ -94,30 +99,22 @@ test("un outil: echecs_enrichissement est un entier d'au moins 1", () => {
   assert.equal(outils(avec((o) => { o.echecs_confirmation = 0; })), false);
 });
 
-const categories = compiler("categories");
-const donneesCategories = lire("categories.json");
-
-test("categories.json est valide; un id qui n'est pas un slug, une clé inconnue ou un nom manquant sont refusés", () => {
-  assert.equal(categories(donneesCategories), true, JSON.stringify(categories.errors));
-  const c = copie(donneesCategories);
-  c.categories[0].id = "Analyse et mesure";
+test("catégories: un id qui n'est pas un slug, une clé inconnue ou un nom manquant sont refusés", () => {
+  const c = copie(donnees.categories) as unknown as { categories: Record<string, unknown>[] };
+  c.categories[0]!.id = "Analyse et mesure";
   assert.equal(categories(c), false);
-  const d = copie(donneesCategories);
-  d.categories[0].extra = 1;
+  const d = copie(donnees.categories) as unknown as { categories: Record<string, unknown>[] };
+  d.categories[0]!.extra = 1;
   assert.equal(categories(d), false);
-  const e = copie(donneesCategories);
-  delete e.categories[0].nom;
+  const e = copie(donnees.categories) as unknown as { categories: Record<string, unknown>[] };
+  delete e.categories[0]!.nom;
   assert.equal(categories(e), false);
 });
 
-test("relation entre les deux fichiers: outils[].categorie est un slug annoté comme renvoi à categories[].id, et chaque valeur existe dans categories.json", () => {
+test("relation entre les deux fichiers: outils[].categorie est un slug annoté comme renvoi à categories[].id", () => {
   const schema = lire("schemas/outils.schema.json");
   const champ = schema.properties.outils.items.properties.categorie;
   assert.match(champ.$comment, /categories\[\]\.id de categories\.json/);
   assert.equal(champ.pattern, lire("schemas/categories.schema.json").properties.categories.items.properties.id.pattern);
   assert.equal(outils(avec((o) => { o.categorie = "Analyse et mesure"; })), false);
-  const ids = new Set(donneesCategories.categories.map((c: { id: string }) => c.id));
-  for (const o of donnees.outils.outils) assert.ok(ids.has(o.categorie), `${o.nom}: catégorie ${o.categorie} absente de categories.json`);
-  const utilisees = new Set(donnees.outils.outils.map((o: { categorie: string }) => o.categorie));
-  for (const id of ids) assert.ok(utilisees.has(id), `catégorie ${id} sans outil`);
 });

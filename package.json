@@ -9,13 +9,15 @@
   },
   "type": "module",
   "scripts": {
-    "sommaire": "node sommaire.ts",
-    "schemas": "obuild && nub dist/generer-schemas.mjs",
-    "licences": "uvx reuse lint",
-    "schemas:verifier": "obuild && nub dist/generer-schemas.mjs --verifier",
     "update": "node update.ts",
-    "test": "nub test/classify.test.ts && nub test/categories.test.ts && nub test/extract-categories.test.ts && nub test/confirmer.test.ts && nub test/extract.test.ts && nub test/update.test.ts && nub test/enrichir.test.ts && nub test/progress.test.ts && nub test/spdx.test.ts && nub test/prix.test.ts && nub test/en-tetes.test.ts && nub test/documentation.test.ts && nub test/fichiers.test.ts && nub test/temps.test.ts && nub test/versions.test.ts && nub test/env.test.ts && nub test/sommaire.test.ts && nub test/couleurs.test.ts && nub test/graphiques.test.ts && nub test/schemas.test.ts && nub run schemas:verifier",
-    "typecheck": "tsrs -p ."
+    "sommaire": "node sommaire.ts",
+    "test": "nub run test:unit && nub run test:data && nub run schemas:verifier",
+    "test:unit": "nub --test \"test/*.test.ts\"",
+    "test:data": "nub --test \"test/donnees/*.test.ts\"",
+    "typecheck": "tsrs -p .",
+    "schemas": "obuild && nub dist/generer-schemas.mjs",
+    "schemas:verifier": "obuild && nub dist/generer-schemas.mjs --verifier",
+    "licences": "uvx reuse lint"
   },
   "dependencies": {
     "linkedom": "^0.18.15",

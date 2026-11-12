@@ -87,7 +87,8 @@ node sommaire.ts                 # écrit sommaire.md et graphiques/ (--sans-res
 Développement, avec nub (commandes définies dans `package.json`) :
 
 ```sh
-nub run test                     # lance les tests (et vérifie que les schémas JSON sont à jour)
+nub run test                     # lance les tests unitaires, puis ceux des données réelles, puis vérifie que les schémas JSON sont à jour
+nub run test:unit                # tests unitaires seulement (sans données: fonctionne avant le premier update)
 nub run typecheck                # vérifie les types
 nub run schemas                  # régénère schemas/*.schema.json à partir des types
 nub run licences                 # vérifie la conformité REUSE des licences (uvx reuse lint; demande uv)

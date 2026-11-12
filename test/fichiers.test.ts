@@ -90,11 +90,3 @@ test("lireSiExiste retourne null si le fichier est absent ou illisible, et la le
   ecrireFichier(f, "outils", [{ nom: "a" }], null, T0);
   assert.deepEqual(lireSiExiste(f, "outils")?.donnees, [{ nom: "a" }]);
 });
-
-test("les fichiers de données du dépôt portent la licence et des dates valides", () => {
-  for (const [f, cle] of [["outils.json", "outils"], ["categories.json", "categories"], ["criteres.json", "criteres"], ["tags.json", "tags"]] as const) {
-    const lu = lireFichier(f, cle);
-    assert.equal(lu.meta.data_license, "CC-BY-SA-4.0", f);
-    assert.ok(Date.parse(lu.meta.created_at) <= Date.parse(lu.meta.updated_at), f);
-  }
-});

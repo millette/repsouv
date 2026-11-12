@@ -8,17 +8,17 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import {
-  abandonne, aEnrichir, chargerCriteres, chargerTags, enrichirOutils, extraireContenu, instructions, instructionsEcart, lireContenu, MAX_TAGS, MIN_EXTRAIT, obtenirPage, problemesMarkdown, sauverTags,
+  abandonne, aEnrichir, chargerTags, enrichirOutils, extraireContenu, instructions, instructionsEcart, lireContenu, MAX_TAGS, MIN_EXTRAIT, obtenirPage, problemesMarkdown, sauverTags,
   schemaReponse, validerEcart, validerProposition, type Expliqueur, type Generateur, type Tag, appelerOpenAI, estimerCoutEnrichissement } from "../enrichir.ts";
 import type { Usage } from "../prix.ts";
 import type { Outil } from "../extract.ts";
+import { CRITERES } from "./donnees-fictives.ts";
 
 const VOCAB: Tag[] = [
   { id: "chiffrement", description: "Chiffre." },
   { id: "gratuit", description: "Gratuit." },
   { id: "automatisation", description: "Automatise." },
 ];
-const CRITERES = chargerCriteres("criteres.json");
 const evaluation = (extra: Record<string, unknown> = {}) => ({ score: 2, criteres: ["donnees", "dependance"], confiance: "moyenne", ...extra });
 const valide = (extra: Record<string, unknown> = {}) => ({
   description_longue: "Une description.", tags: ["gratuit"], source: "libre",
@@ -32,15 +32,6 @@ const outil = (nom: string, extra: Partial<Outil> = {}): Outil => ({
 const sansPage = async () => null;
 const pageOk = async () => ({ titre: "T", meta_description: "", extrait: "x".repeat(MIN_EXTRAIT), liens_depot: [] });
 const expliquerOk: Expliqueur = async () => ({ ecart: "Le répertoire ne précise pas l'hébergement." });
-
-test("tags.json: ids uniques, en kebab-case, avec description française non vide", () => {
-  const tags = chargerTags("tags.json");
-  assert.equal(new Set(tags.map((t) => t.id)).size, tags.length);
-  for (const t of tags) {
-    assert.match(t.id, /^[a-z0-9]+(-[a-z0-9]+)*$/);
-    assert.ok(t.description.trim().length > 0, t.id);
-  }
-});
 
 test("validation: une proposition correcte est acceptée", () => {
   assert.deepEqual(validerProposition(valide(), VOCAB, false).tags, ["gratuit"]);

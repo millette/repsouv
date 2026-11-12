@@ -12,7 +12,9 @@ Deux usages, deux prérequis. **Utiliser** les scripts (`node update.ts`, `node 
 
 ```sh
 nub install                      # installe les dépendances
-nub run test                     # lance les tests (et vérifie que les schémas JSON sont à jour)
+nub run test                     # lance les tests unitaires, puis ceux des données réelles, puis vérifie que les schémas JSON sont à jour
+nub run test:unit                # tests unitaires seulement: fonctionnent sans données, avant le premier update
+nub run test:data                # tests des fichiers de données réels (outils.json, categories.json, criteres.json, tags.json, sommaire.md)
 nub run typecheck                # vérifie les types
 nub run schemas                  # régénère schemas/*.schema.json à partir des types
 nub run licences                 # vérifie la conformité REUSE des licences (uvx reuse lint; demande uv)
@@ -49,7 +51,7 @@ Schémas          schemas-types.ts ──▶ obuild + RunTypes ──▶ generer
 | `sommaire.ts`, `sommaire.md`, `graphiques/` | Le script du sommaire statistique, le sommaire qu'il a généré et les graphiques (SVG) qu'il contient (mis à jour automatiquement par `nub run update` quand quelque chose a changé; sinon à regénérer avec `nub run sommaire`) |
 | `categories.ts`, `enrichir.ts`, `prix.ts`, `statistiques.ts`, `graphiques.ts`, `fichiers.ts`, `temps.ts`, `spdx.ts`, `progress.ts`, `couleurs.ts`, `ids.ts`, `cli.ts`, `env.ts` | Modules utilisés par les scripts |
 | `schemas/`, `generer-schemas.ts`, `schemas-types.ts`, `affiner-schema.ts`, `build.config.ts`, `tsconfig.schemas.json` | Les schémas JSON des trois fichiers de données et ce qui les génère (voir [Schémas JSON](#schémas-json)) |
-| `test/` | Les tests |
+| `test/`, `test/donnees/` | Les tests unitaires (fixtures et dossiers temporaires, sans données) et les tests des fichiers de données réels |
 | `package.json`, `nub.lock`, `tsconfig.json` | Dépendances (`dependencies` pour l'exécution, `devDependencies` pour le développement, dont `vega` et `vega-lite` qui ne servent qu'aux types), scripts npm, les deux environnements (`engines.node` pour l'exécution, `devEngines.runtime` et `devEngines.packageManager` pour le développement) et configuration TypeScript. `nub.lock` n'est lu que par nub ; `npm install` résout les versions d'après les plages de `package.json` |
 | `.env.example` | Modèle du fichier `.env` (la clé OpenAI, avec les instructions pour l'obtenir) |
 | `.node-version` | Majeure de Node.js (`26`) pour les gestionnaires de versions qui ne lisent pas `package.json` ; `devEngines.runtime` et `engines.node` disent la même chose (`>=26 <27`), et `versions.test.ts` tient les trois d'accord |
@@ -355,20 +357,24 @@ Si le `score` ou les `criteres` d'un outil déjà enrichi changent, après un `c
 | `nub run schemas` | `obuild && nub dist/generer-schemas.mjs` : régénère `schemas/*.schema.json` à partir des types (voir [Schémas JSON](#schémas-json)) |
 | `nub run schemas:verifier` | Comme `schemas`, mais sans rien écrire : échoue si les schémas commités sont périmés |
 | `nub run licences` | `uvx reuse lint` : vérifie que chaque fichier suivi déclare sa licence et son droit d'auteur ([REUSE](https://reuse.software/) 3.3). Demande [uv](https://docs.astral.sh/uv/) et un accès réseau la première fois ; non inclus dans `nub run test` |
-| `nub run test` | Lance les vingt fichiers de tests, puis `schemas:verifier` |
+| `nub run test` | `test:unit`, puis `test:data`, puis `schemas:verifier` |
+| `nub run test:unit` | `nub --test "test/*.test.ts"` : les tests unitaires, un processus par fichier en parallèle (runner de `node:test`), sans aucun fichier de données : ils passent avant le premier `nub run update` |
+| `nub run test:data` | `nub --test "test/donnees/*.test.ts"` : les tests qui lisent les vrais fichiers du dépôt ; sans eux, échec avec un message qui dit de lancer `nub run update` |
 | `nub run typecheck` | `tsrs -p .` : vérifie les types avec [tsrs](https://www.npmjs.com/package/tsrs), un portage en Rust de `tsc` |
 
 ## Tests
 
-Dans `test/`, avec `node:test` lancé par `nub` (le développement et les tests passent par nub ; seuls `update.ts` et `sommaire.ts` sont prévus pour `node` seul) :
+Avec `node:test`, lancé par `nub --test` (le développement et les tests passent par nub ; seuls `update.ts` et `sommaire.ts` sont prévus pour `node` seul). Le runner exécute un processus par fichier, en parallèle ; les fichiers sont donc indépendants (fixtures de `donnees-fictives.ts`, dossiers temporaires, serveur local sur un port libre), et dans un fichier les tests restent séquentiels. Deux groupes :
+
+**`test/*.test.ts`, unitaires** (`nub run test:unit`), sans aucun fichier de données ni réseau :
 
 - `categories.test.ts` : slug, liste des catégories depuis la page (ordre, doublons, descriptions conservées, identifiants en conflit), validation des descriptions, requête au modèle, boucle avec un faux modèle (nouvel essai, échec, sauvegarde) et estimation du coût.
 - `extract-categories.test.ts` : une catégorie par `h3` avec id, nom et icône, et les outils portent l'identifiant.
-- `classify.test.ts` : cas de classification connus, un nombre de critères égal au score pour les 60 outils, les options de la ligne de commande, le refus d'un fichier au mauvais format, et la couleur de « Erreur: ».
+- `classify.test.ts` : cas de classification connus (descriptions du répertoire figées dans le test), les options de la ligne de commande sur un fichier fictif, le refus d'un fichier au mauvais format, et la couleur de « Erreur: ».
 - `confirmer.test.ts` : validation des verdicts (statuts, citation obligatoire, exacte et d'au plus 300 caractères), forme de `criteres_confirmes`, règle A dans les consignes, requête sans score ni critères du répertoire, et la boucle avec un faux modèle (verdict inscrit en place et sauvegardé, outil déjà vérifié jamais refait, nouvel essai, échecs et compteur, page illisible, abandon, estimation du coût).
-- `extract.test.ts` : conversion de la date de la page en heure de Toronto, cohérence de `criteres.json` et `outils.json`, rejet d'une page sans date, téléchargement (sur un serveur local, sans réseau), erreurs de téléchargement, le garde-fou contre l'écrasement (avec et sans `--force`, y compris pour un fichier au mauvais format), et la preuve qu'aucun fichier HTML local n'est lu.
+- `extract.test.ts` : conversion de la date de la page en heure de Toronto, rejet d'une page sans date, téléchargement (sur un serveur local, sans réseau), erreurs de téléchargement, le garde-fou contre l'écrasement (avec et sans `--force`, y compris pour un fichier au mauvais format), et la preuve qu'aucun fichier HTML local n'est lu.
 - `update.test.ts` : nouveau, modification, retrait, comeback, `synchroniser` (import initial sans `outils.json`, simulation, fichier inchangé, écriture de `criteres.json` et de `categories.json` seulement quand ils changent, descriptions de catégories conservées, format invalide refusé), conservation des dates des outils inchangés et des champs d'enrichissement, la présentation colorée du résumé et du journal (même texte avec ou sans couleurs), les conditions de la mise à jour automatique du sommaire, la lecture de la réponse à la confirmation du premier import et son texte.
-- `enrichir.test.ts` : vocabulaire de `tags.json`, date d'enrichissement, validation (tags, Markdown permis et interdit, licences SPDX et maison, évaluation), explication des écarts, extraction de la page, pages inaccessibles ou presque vides (avertissement, jamais enrichi), estimation des jetons et du coût, compteur de jetons des appels, enrichissement une seule fois, compteur d'échecs consécutifs et abandon après `maxEchecs`, reprise, avec de faux générateurs.
+- `enrichir.test.ts` : date d'enrichissement, validation (tags, Markdown permis et interdit, licences SPDX et maison, évaluation), explication des écarts, extraction de la page, pages inaccessibles ou presque vides (avertissement, jamais enrichi), estimation des jetons et du coût, compteur de jetons des appels, enrichissement une seule fois, compteur d'échecs consécutifs et abandon après `maxEchecs`, reprise, avec de faux générateurs.
 - `prix.test.ts` : coût d'un appel au prix du modèle, addition des jetons, lecture des jetons d'une réponse OpenAI, formatage en français.
 - `spdx.test.ts` : licences SPDX valides et refusées.
 - `progress.test.ts` : barre en terminal et hors terminal, bornes, étiquette, `end()` idempotent, `message()`, peinture de la barre.
@@ -376,12 +382,17 @@ Dans `test/`, avec `node:test` lancé par `nub` (le développement et les tests 
 - `temps.test.ts` : heure de Toronto (hiver, été, minuit, passage à l'heure d'été), décalage ajouté à une date locale.
 - `versions.test.ts` : `.node-version` est une majeure seule, `engines.node` en est la plage (`>=N <N+1`), `devEngines.runtime` dit la même plage (Node, `onFail: warn`), et la documentation cite cette majeure.
 - `env.test.ts` : `.env` absent (sans erreur), présent (variables chargées), variable d'environnement existante conservée, autre erreur remontée avec le chemin.
-- `fichiers.test.ts` : structure et `meta` des fichiers de données (création, contenu inchangé ou modifié, licence rétablie, refus des formats invalides), et conformité des trois fichiers du dépôt.
+- `fichiers.test.ts` : structure et `meta` des fichiers de données (création, contenu inchangé ou modifié, licence rétablie, refus des formats invalides, tableau modifié en place entre deux écritures).
 - `sommaire.test.ts` : statistiques (statuts, licences, familles, tags, critères par statut, critères vérifiés par verdict et par statut, forges, dates), rendu Markdown (sections, images insérées dans leur section, cas sans outil enrichi), validation du résumé et nouvelle tentative, `genererSommaire` (écriture, options, conservation du sommaire existant en cas d'échec), avec des données fictives (jamais `outils.json`, jamais le réseau).
 - `graphiques.test.ts` : spécifications Vega-Lite (données incluses, champs existants, pourcentages, verdicts des critères vérifiés, graphiques omis sans données), écriture et nettoyage des fichiers, message si vl-convert est absent, et conversion réelle en SVG autonome (ignorée si vl-convert n'est pas installé). Les données fictives des tests sont dans `donnees-fictives.ts`.
-- `schemas.test.ts` : les quatre fichiers de données réels sont valides selon les schémas (avec Ajv, indépendant de RunTypes), et des variantes invalides sont refusées (clé inconnue, `score` hors de 0 à 3, `echecs_enrichissement` nul ou non entier, `source` ou `changement` inconnus, tags en trop ou en double, date non ISO, `meta` manquant).
-- `documentation.test.ts` : les quatre fichiers Markdown du dépôt (README, `implementation.md`, `historique.md`, `sommaire.md`) existent, leurs liens relatifs et leurs ancres existent (ancres calculées comme GitHub, liens dans le code ignorés), chacun commence par un titre et la ligne *Documentation*, sans tiret cadratin ni balise HTML (sauf l'image du README), et les fichiers générés disent par quel script et qu'ils ne se modifient pas à la main.
+- `schemas.test.ts` : des données fictives complètes sont valides selon les schémas (avec Ajv, indépendant de RunTypes), et des variantes invalides sont refusées (clé inconnue, `score` hors de 0 à 3, `echecs_enrichissement` nul ou non entier, `source` ou `changement` inconnus, tags en trop ou en double, date non ISO, `meta` manquant).
+- `documentation.test.ts` : les trois fichiers Markdown rédigés (README, `implementation.md`, `historique.md`) existent, leurs liens relatifs et leurs ancres existent (ancres calculées comme GitHub, liens dans le code ignorés, liens vers le `sommaire.md` généré laissés à `test:data`), chacun commence par un titre et la ligne *Documentation*, sans tiret cadratin ni balise HTML (sauf l'image du README). Les outils communs (ancres, liens, conventions) sont dans `markdown.ts`.
 - `en-tetes.test.ts` : chaque fichier `.ts` porte les en-têtes SPDX; la licence du code est la même dans `package.json`; les deux textes de licence sont présents, à la racine (`LICENSE*`) et dans `LICENSES/`; chaque schéma JSON déclare la licence du code dans `$comment`; et `REUSE.toml` annote `schemas/**` et le reste des fichiers sans en-tête (AGPL-3.0-or-later), ainsi que les données et leurs dérivés (CC-BY-SA-4.0). Ce test ne remplace pas `nub run licences`, qui contrôle tous les fichiers.
+
+**`test/donnees/*.test.ts`, données réelles** (`nub run test:data`), après un `nub run update` terminé ; chaque fichier commence par `exigerFichiers` (`garde.ts`), qui échoue avec un message clair si un fichier manque :
+
+- `donnees/outils.test.ts` : 60 outils, chacun dans une catégorie de `categories.json` et chaque catégorie utilisée ; `criteres.json` cohérent avec les icônes ; les critères de chaque outil sont ceux que `classify.ts` déduit, un par étoile ; vocabulaire de `tags.json` ; licence et dates des quatre fichiers ; validité des quatre fichiers selon les schémas JSON.
+- `donnees/documentation.test.ts` : `sommaire.md` existe, respecte les conventions et dit par quel script il est généré ; tous les liens des quatre fichiers Markdown, y compris vers `sommaire.md` et les images de `graphiques/`, sont valides.
 
 ## Dépannage
 
@@ -396,6 +407,7 @@ Dans `test/`, avec `node:test` lancé par `nub` (le développement et les tests 
 | `Sommaire non mis à jour: …` | Après des changements ou un enrichissement, le sommaire n'a pas pu être mis à jour : clé ou vl-convert manquant (avertissement, rien n'est modifié) ou résumé impossible à rédiger (le sommaire existant est conservé, code de sortie 1). Régler le problème, puis lancer `nub run sommaire`  |
 | `vl-convert est introuvable …` | Le sommaire a besoin de vl-convert pour ses graphiques. L'installer (voir [Graphiques](#graphiques)) ou utiliser `nub run sommaire --sans-graphiques` |
 | `vl-convert vl2svg: …` | vl-convert a refusé une spécification de graphique : le message de vl-convert dit pourquoi. Vérifier sa version (`vl-convert --version`, 1.9 ou plus) |
+| `Fichiers absents: … Lancer « nub run update » d'abord` | `nub run test:data` (ou `nub run test`) sans les fichiers de données ou le sommaire : lancer `nub run update`, ou se limiter à `nub run test:unit` |
 | `Schémas périmés ou absents: …` | `nub run schemas:verifier` (ou `nub run test`) a trouvé un schéma commité qui diffère de celui que les types produisent. Lancer `nub run schemas`, puis commiter `schemas/` |
 | `Premier import hors terminal: …` | `update` sans `outils.json` demande une confirmation des coûts, impossible hors terminal. Relancer avec `--accepter-couts` ou `--dry-run` |
 | `Fichier d'environnement illisible (.env): …` | `.env` existe mais n'a pas pu être lu (droits, ou un dossier de ce nom). Le corriger ou le retirer : sans `.env`, les scripts tournent sans clé |
