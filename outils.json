@@ -2,7 +2,7 @@
   "meta": {
     "data_license": "CC-BY-SA-4.0",
     "created_at": "2026-11-11T16:43:11-05:00",
-    "updated_at": "2026-11-11T17:43:31-05:00"
+    "updated_at": "2026-11-12T08:17:21-05:00"
   },
   "outils": [
     {
@@ -41,7 +41,23 @@
         "confiance": "élevée"
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "preuves": {
+          "donnees": "peut être auto-hébergé sur l’infrastructure de son choix",
+          "dependance": "Host Matomo on-premise or in the cloud with full ownership, no lock-in, and the flexibility to extend it your way."
+        },
+        "infirmes": {
+          "controle": "Il est d'origine internationale"
+        },
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Analyse et mesure",
@@ -78,7 +94,15 @@
         "ecart": "L’écart entre les deux scores porte sur la conservation des données au Canada : ce critère est attribué au répertoire par déduction, avec une confiance faible, mais n’est pas retenu par l’évaluation enrichie. L’extrait ne précise ni le lieu d’hébergement, ni la possibilité de choisir le Canada ou d’auto-héberger l’outil, ce qui ne permet pas de trancher. Les deux évaluations retiennent le contrôle canadien et ne retiennent pas l’indépendance technologique, sans que l’extrait confirme ces points : les intégrations à Google ou Microsoft ne prouvent pas à elles seules une dépendance indispensable. Une documentation sur les options de résidence des données, la propriété de l’entreprise et ses fournisseurs d’infrastructure permettrait de vérifier ces hypothèses."
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [],
+        "preuves": {},
+        "infirmes": {},
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Bureautique et collaboration",
@@ -118,7 +142,23 @@
         "ecart": "L’écart entre les trois étoiles du répertoire et les deux de l’évaluation enrichie porte uniquement sur le contrôle canadien : le qualificatif « outil canadien » a pu conduire à retenir ce critère, mais l’extrait ne précise ni la propriété ni le contrôle de l’organisation qui exploite cDox. Les deux évaluations retiennent l’hébergement au Canada et l’absence de dépendance étrangère importante, en s’appuyant notamment sur les serveurs indépendants à Montréal et les sauvegardes à Toronto. Les critères attribués au répertoire restent toutefois des hypothèses déduites automatiquement, même avec une confiance élevée : une confirmation de ses critères réels et des renseignements sur la propriété de cDox permettraient de trancher cet écart."
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "controle",
+          "dependance"
+        ],
+        "preuves": {
+          "donnees": "Vos documents ne quittent jamais le Canada.",
+          "controle": "Outil canadien de rédaction et de tableur collaboratifs permettant de créer, modifier et partager des documents à plusieurs.",
+          "dependance": "Tous les documents sont stockés et traités sur des serveurs bare metal indépendants à Montréal, Québec, sous les lois canadiennes, avec des sauvegardes chaque nuit à Toronto."
+        },
+        "infirmes": {},
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Bureautique et collaboration",
@@ -158,7 +198,21 @@
         "confiance": "moyenne"
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "controle"
+        ],
+        "preuves": {
+          "donnees": "Le logiciel s’installe localement sur votre ordinateur Windows ou Mac.",
+          "controle": "Outil québécois d’aide à la rédaction en français et en anglais combinant correcteur avancé, dictionnaires et guides linguistiques."
+        },
+        "infirmes": {},
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Bureautique et collaboration",
@@ -196,7 +250,19 @@
         "confiance": "élevée"
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees"
+        ],
+        "preuves": {
+          "donnees": "L'outil peut être auto-hébergé ou utilisé via une instance québécoise."
+        },
+        "infirmes": {},
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Bureautique et collaboration",
@@ -234,7 +300,23 @@
         "confiance": "élevée"
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "preuves": {
+          "donnees": "Besides, our solutions can be deployed on private servers.",
+          "dependance": "Cet outil, d'origine internationale, est libre et auto-hébergeable pour conserver la maîtrise de ses données."
+        },
+        "infirmes": {
+          "controle": "ONLYOFFICE is owned by Ascensio System SIA, a Latvian company which is a subsidiary of OnlyOffice Capital Group Pte. Ltd."
+        },
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Bureautique et collaboration",
@@ -271,7 +353,23 @@
         "confiance": "élevée"
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "preuves": {
+          "donnees": "Elle peut être auto-hébergée et intégrée à des plateformes comme Nextcloud pour faciliter le travail collaboratif.",
+          "dependance": "Integrate into your own infrastructure or access via one of our trusted hosting partners."
+        },
+        "infirmes": {
+          "controle": "Suite bureautique internationale libre"
+        },
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Bureautique et collaboration",
@@ -309,7 +407,23 @@
         "confiance": "moyenne"
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "preuves": {
+          "donnees": "Conçu en France mais auto-hébergeable au Canada.",
+          "dependance": "Ensemble d’outils numériques libres et gratuits pour créer, modifier et partager des contenus, collaborer et animer des ateliers ou des formations."
+        },
+        "infirmes": {
+          "controle": "Conçu en France mais auto-hébergeable au Canada."
+        },
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Bureautique et collaboration",
@@ -347,7 +461,23 @@
         "confiance": "moyenne"
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "preuves": {
+          "donnees": "elle peut être auto-hébergée sur l’infrastructure choisie par l’organisation",
+          "dependance": "Euro-Office is open source and developed in public by a community of individuals and organizations."
+        },
+        "infirmes": {
+          "controle": "Suite bureautique « open source » d'origine internationale"
+        },
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Bureautique et collaboration",
@@ -385,7 +515,23 @@
         "confiance": "élevée"
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "preuves": {
+          "donnees": "Bien que français, il s'agit d'un logiciel libre qui peut être installé sur un serveur canadien.",
+          "dependance": "Sa licence libre vous autorise à étudier son code, à y contribuer ainsi qu’à l’installer sur votre propre serveur."
+        },
+        "infirmes": {
+          "controle": "Framapad est proposé par une association française à but non lucratif : Framasoft"
+        },
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Communication et collaboration d’équipe",
@@ -425,7 +571,23 @@
         "confiance": "élevée"
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "controle",
+          "dependance"
+        ],
+        "preuves": {
+          "donnees": "Jami is completely peer-to-peer and doesn't require a server for relaying data between users.",
+          "controle": "Outil québécois de communication chiffrée",
+          "dependance": "Users who are on the same local network can communicate with Jami even if they are disconnected from the internet."
+        },
+        "infirmes": {},
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Communication et collaboration d’équipe",
@@ -463,7 +625,23 @@
         "confiance": "élevée"
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "preuves": {
+          "donnees": "peut cependant être auto-hébergé sur l’infrastructure de l’organisation, y compris dans un environnement privé ou totalement déconnecté",
+          "dependance": "Every capability runs entirely inside your perimeter, including in classified & air-gapped networks."
+        },
+        "infirmes": {
+          "controle": "Cet outil non canadien"
+        },
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Communication et collaboration d’équipe",
@@ -500,7 +678,21 @@
         "confiance": "élevée"
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "preuves": {
+          "donnees": "Cet outil international peut être utilisé gratuitement en ligne ou auto-hébergé sur l’infrastructure de son choix, sans compte utilisateur obligatoire.",
+          "dependance": "auto-hébergé sur l’infrastructure de son choix"
+        },
+        "infirmes": {},
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Communautés, réseaux et partage des connaissances",
@@ -551,7 +743,23 @@
         "confiance": "élevée"
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "preuves": {
+          "donnees": "Mastodon est un réseau social libre et décentralisé qui peut être hébergé au Canada, permettant ainsi de mieux maîtriser les données.",
+          "dependance": "Mastodon peut être déployé sur votre propre infrastructure, ce qui vous permet de suivre et d'être suivi depuis n'importe quel autre serveur Mastodon et de n'être contrôlé par personne d'autre que vous."
+        },
+        "infirmes": {
+          "controle": "Bien que d’origine allemande, Mastodon est un réseau social libre et décentralisé"
+        },
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Communautés, réseaux et partage des connaissances",
@@ -588,7 +796,23 @@
         "confiance": "élevée"
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "preuves": {
+          "donnees": "peut être auto-hébergé pour garder la maîtrise des échanges et des données des membres",
+          "dependance": "The entire Discourse codebase is freely available on GitHub. No black boxes, no vendor lock-in, no surprises."
+        },
+        "infirmes": {
+          "controle": "L'outil n'est pas canadien"
+        },
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Comptabilité et finances",
@@ -626,7 +850,19 @@
         "ecart": "L’écart porte sur le critère « donnees » : le répertoire est interprété comme accordant une étoile pour la conservation des données au Canada, contrairement à l’évaluation enrichie. L’extrait mentionne le chiffrement et les sauvegardes, mais ne précise ni leur localisation ni une option d’hébergement canadien ou d’auto-hébergement. Les deux évaluations retiennent le contrôle canadien et ne retiennent pas l’absence de dépendances étrangères, mais les critères attribués au répertoire restent des hypothèses déduites avec une confiance moyenne. Une confirmation du fournisseur sur les lieux d’hébergement et de sauvegarde, ainsi que sur les options offertes, permettrait de trancher l’écart."
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "controle"
+        ],
+        "preuves": {
+          "controle": "ce logiciel de comptabilité canadien, destiné aux petites organisations"
+        },
+        "infirmes": {},
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Financement, subventions et dons",
@@ -660,7 +896,19 @@
         "ecart": "L’écart entre les 2 étoiles du répertoire et les 0 de l’évaluation enrichie porte sur les critères « donnees » et « controle », attribués au répertoire par déduction avec une confiance moyenne, et non selon des critères publiés. La description présente Elodia comme québécoise, mais l’extrait ne confirme ni le contrôle canadien de l’entreprise ni la possibilité de conserver les données au Canada. Aucune évaluation ne retient le critère « dependance » : les fournisseurs d’IA et d’infrastructure ne sont pas précisés, ce qui ne prouve pas une dépendance étrangère. Pour trancher, il faudrait documenter la propriété de l’entreprise, les lieux d’hébergement et de traitement des données ainsi que les prestataires techniques, le score enrichi étant lui-même de faible confiance."
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "controle"
+        ],
+        "preuves": {
+          "controle": "Plateforme québécoise utilisant l’intelligence artificielle pour aider les artistes et organismes culturels à trouver des subventions"
+        },
+        "infirmes": {},
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Financement, subventions et dons",
@@ -697,7 +945,19 @@
         "ecart": "L’écart entre les deux étoiles du répertoire et l’étoile de l’évaluation enrichie porte sur le critère « donnees », retenu uniquement dans le répertoire selon une déduction automatique de confiance moyenne. La description présente Zeffy comme une plateforme québécoise, mais l’extrait ne précise pas où les données sont hébergées ni si leur conservation au Canada est possible. Les deux évaluations retiennent le contrôle canadien et ne retiennent pas l’absence de dépendances étrangères, sans que l’extrait suffise à confirmer ces conclusions. Une documentation sur les lieux d’hébergement et les options offertes permettrait de trancher l’écart, tandis que la structure de propriété et la liste des fournisseurs essentiels permettraient de vérifier les autres critères."
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "controle"
+        ],
+        "preuves": {
+          "controle": "Plateforme québécoise de collecte de fonds"
+        },
+        "infirmes": {},
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Financement, subventions et dons",
@@ -732,7 +992,19 @@
         "ecart": "L’écart entre les deux étoiles du répertoire et l’étoile de l’évaluation enrichie porte sur le critère des données, attribué au répertoire par déduction automatique avec une confiance moyenne, et non confirmé par ses auteur·trices. L’extrait présente CanaDon comme canadien, ce qui appuie le contrôle canadien retenu dans les deux évaluations, mais ne précise ni le lieu d’hébergement ni une possibilité de conserver les données au Canada. Aucune des deux évaluations ne retient l’absence de dépendance importante à des infrastructures étrangères, sans que l’extrait permette de vérifier ce point. Une documentation sur l’hébergement et les sous-traitants, ainsi que les critères réellement appliqués par le répertoire, permettraient de trancher cet écart."
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "controle"
+        ],
+        "preuves": {
+          "controle": "Plateforme canadienne de collecte de dons destinée aux organismes de bienfaisance enregistrés."
+        },
+        "infirmes": {},
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Création et gestion de contenus numériques",
@@ -770,7 +1042,21 @@
         "ecart": "L’écart entre les trois étoiles du répertoire et les deux de l’évaluation enrichie porte uniquement sur le critère « dependance », retenu dans le premier cas et non dans le second. La page affirme une propriété et une exploitation canadiennes ainsi que des serveurs au Canada, mais les offres Wix et la mention de Plesk soulèvent la question des dépendances technologiques étrangères sans établir leur importance pour chaque service. Les critères attribués au répertoire restent des hypothèses déduites automatiquement, même avec une confiance élevée : pour trancher, il faudrait connaître la justification des étoiles et vérifier quels services peuvent fonctionner sans ces fournisseurs étrangers."
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "controle"
+        ],
+        "preuves": {
+          "donnees": "Secure Canadian located servers",
+          "controle": "Canadian owned & operated for 25 years"
+        },
+        "infirmes": {},
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Création et gestion de contenus numériques",
@@ -808,7 +1094,21 @@
         "confiance": "élevée"
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees"
+        ],
+        "preuves": {
+          "donnees": "peut être auto-hébergée pour maîtriser le stockage et le partage des projets"
+        },
+        "infirmes": {
+          "controle": "Elle est non canadienne mais libre et peut être auto-hébergée"
+        },
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Gestion de collections et de contenus culturels",
@@ -844,7 +1144,21 @@
         "confiance": "moyenne"
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "controle"
+        ],
+        "preuves": {
+          "donnees": "Par défaut, La Bibli est hébergée à Toronto : vos données et celles de vos membres ne quittent pas le Canada, et ne sont revendues à personne.",
+          "controle": "La Bibli est développée au Nouveau-Brunswick par Aynils."
+        },
+        "infirmes": {},
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Gestion de collections et de contenus culturels",
@@ -881,7 +1195,21 @@
         "confiance": "moyenne"
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees"
+        ],
+        "preuves": {
+          "donnees": "avec auto-hébergement possible"
+        },
+        "infirmes": {
+          "controle": "Plateforme libre non canadienne"
+        },
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Gestion de projets et des tâches",
@@ -919,7 +1247,21 @@
         "confiance": "moyenne"
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees"
+        ],
+        "preuves": {
+          "donnees": "Non canadien, il propose une édition libre et auto-hébergeable."
+        },
+        "infirmes": {
+          "controle": "Non canadien, il propose une édition libre et auto-hébergeable."
+        },
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Gestion de projets et des tâches",
@@ -957,7 +1299,21 @@
         "confiance": "élevée"
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees"
+        ],
+        "preuves": {
+          "donnees": "OpenProject can be installed on-premises in your own organizations’s infrastructure, giving you complete control over your data and allowing you to manage it 100% yourself."
+        },
+        "infirmes": {
+          "controle": "Logiciel libre non canadien de gestion de projets"
+        },
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Gestion de projets et des tâches",
@@ -994,7 +1350,21 @@
         "confiance": "élevée"
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees"
+        ],
+        "preuves": {
+          "donnees": "Taiga on-premise hosting option is ideal for larger teams or multiple small teams that need to have all data on their own servers"
+        },
+        "infirmes": {
+          "controle": "Il n'est pas canadien mais peut être auto-hébergé."
+        },
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Gestion de projets et des tâches",
@@ -1030,7 +1400,23 @@
         "confiance": "élevée"
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "preuves": {
+          "donnees": "Run Vikunja on your own infrastructure. Your tasks, your projects, your rules.",
+          "dependance": "Vikunja is licensed under the AGPLv3 and completely free to self-host."
+        },
+        "infirmes": {
+          "controle": "Logiciel libre non canadien mais auto-hébergeable de gestion des tâches et projets"
+        },
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Gestion de la relation, des membres et CRM",
@@ -1066,7 +1452,19 @@
         "ecart": "L’écart entre les 2 étoiles du répertoire et les 0 étoile de l’évaluation enrichie porte sur les critères « donnees » et « controle », attribués au répertoire par déduction automatique avec une faible confiance. La description présente Member365 comme canadien, mais l’extrait ne précise ni les possibilités d’hébergement au Canada ni la propriété de l’entreprise, ce qui peut expliquer leur non-validation dans l’évaluation enrichie sans démontrer qu’ils ne sont pas satisfaits. Aucune évaluation ne retient le critère « dependance » : la connexion facultative à QuickBooks Online ne suffit toutefois pas à établir une dépendance importante à une infrastructure étrangère. Pour trancher, il faudrait vérifier les engagements d’hébergement, le contrôle effectif de l’entreprise et les fournisseurs indispensables au fonctionnement du service."
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "controle"
+        ],
+        "preuves": {
+          "controle": "Outil canadien de gestion des membres conçu pour les associations et OBNL."
+        },
+        "infirmes": {},
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Gestion de la relation, des membres et CRM",
@@ -1104,7 +1502,23 @@
         "confiance": "élevée"
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "preuves": {
+          "donnees": "Or download, install, and host CiviCRM on your own hosting infrastructure (experts only!).",
+          "dependance": "CiviCRM gives you total freedom in your choice of host. You're not tied to a particular data centre or country."
+        },
+        "infirmes": {
+          "controle": "Logiciel libre non canadien destiné aux associations et OBNL"
+        },
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Gestion d’événements et billetterie",
@@ -1138,7 +1552,19 @@
         "ecart": "L’écart entre les 2 étoiles du répertoire et les 0 étoile de l’évaluation enrichie porte sur la conservation des données au Canada et le contrôle canadien, deux critères attribués au répertoire par déduction automatique avec une confiance moyenne, et non publiés par ses auteur·trices. La description présente une solution québécoise, mais l’extrait de la page ne précise ni les lieux d’hébergement possibles ni la propriété de l’entreprise, ce qui peut expliquer leur non-validation dans l’évaluation enrichie, de confiance faible, sans démontrer qu’ils ne sont pas satisfaits. L’absence de dépendance importante à des infrastructures étrangères n’est retenue dans aucune des deux évaluations. Pour trancher, il faudrait obtenir des garanties sur la localisation des données, vérifier le contrôle effectif de l’entreprise et confirmer les critères réellement appliqués par le répertoire."
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "controle"
+        ],
+        "preuves": {
+          "controle": "Solution québécoise de billetterie et de gestion d’événements"
+        },
+        "infirmes": {},
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Gestion d’événements et billetterie",
@@ -1175,7 +1601,21 @@
         "confiance": "élevée"
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees"
+        ],
+        "preuves": {
+          "donnees": "Checkout the documentation to install your own instance or contact us for professional hosting services."
+        },
+        "infirmes": {
+          "controle": "Outil non canadien de gestion d’événements et de groupes"
+        },
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Gestion documentaire et signature électronique",
@@ -1212,7 +1652,21 @@
         "confiance": "moyenne"
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "controle"
+        ],
+        "preuves": {
+          "donnees": "100% données hébergées au Canada. Toujours.",
+          "controle": "Canadien. Depuis le tout premier jour."
+        },
+        "infirmes": {},
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Gestion documentaire et signature électronique",
@@ -1265,7 +1719,21 @@
         "confiance": "moyenne"
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees"
+        ],
+        "preuves": {
+          "donnees": "Non canadienne, elle propose une édition auto-hébergeable."
+        },
+        "infirmes": {
+          "controle": "Non canadienne, elle propose une édition auto-hébergeable."
+        },
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Marketing par courriel",
@@ -1304,7 +1772,21 @@
         "ecart": "L’écart entre les trois étoiles du répertoire et les deux de l’évaluation enrichie porte uniquement sur l’indépendance envers les fournisseurs ou infrastructures technologiques étrangers. Le titre de la page annonce des données au Canada et la présentation décrit Envoke comme canadien, mais ces indications ne démontrent pas l’absence de dépendances étrangères importantes. Les critères attribués au répertoire restent des hypothèses déduites automatiquement, même avec une confiance élevée, et l’extrait ne permet pas de trancher ce troisième critère. Une documentation sur les hébergeurs, les sous-traitants et les services indispensables au fonctionnement permettrait de vérifier cette indépendance."
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "controle"
+        ],
+        "preuves": {
+          "donnees": "Canadian Email Marketing Software with Data in Canada",
+          "controle": "Envoke is a Canadian email marketing and communications software."
+        },
+        "infirmes": {},
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Marketing par courriel",
@@ -1342,7 +1824,21 @@
         "ecart": "L’écart entre les deux évaluations porte sur le contrôle canadien, retenu dans les critères déduits du répertoire avec une confiance moyenne, mais pas dans l’évaluation enrichie. La présentation de Cyberimpact comme outil québécois ou plateforme canadienne ne suffit pas à établir qui contrôle l’entreprise : il faudrait vérifier son actionnariat et son éventuelle société mère. Les deux évaluations retiennent le critère des données, la page affirmant que les données de contacts sont hébergées exclusivement sur des serveurs canadiens. Aucune ne retient l’indépendance technologique, que l’extrait ne permet pas d’établir sans précisions sur les fournisseurs et infrastructures indispensables au fonctionnement."
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "controle"
+        ],
+        "preuves": {
+          "donnees": "Contact data hosted exclusively on Canadian servers",
+          "controle": "Outil québécois de marketing par courriel"
+        },
+        "infirmes": {},
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Marketing par courriel",
@@ -1380,7 +1876,19 @@
         "ecart": "L’écart entre les deux évaluations porte sur le critère « donnees » : le répertoire est interprété comme l’accordant, contrairement à l’évaluation enrichie, alors que toutes deux retiennent le contrôle canadien et n’accordent pas le critère d’indépendance technologique. Les critères attribués au répertoire sont toutefois des hypothèses déduites automatiquement avec une confiance moyenne, et la description de « solution québécoise » ne suffit pas à établir où les données sont hébergées. L’extrait fourni ne précise ni la possibilité de conserver les données au Canada, ni la propriété de l’entreprise, ni ses fournisseurs technologiques essentiels. Des engagements contractuels sur la localisation des données permettraient de trancher l’écart, tandis que des renseignements sur la propriété et les infrastructures permettraient de vérifier les deux critères communs."
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "controle"
+        ],
+        "preuves": {
+          "controle": "Solution québécoise de marketing relationnel"
+        },
+        "infirmes": {},
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Marketing par courriel",
@@ -1418,7 +1926,21 @@
         "confiance": "moyenne"
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "controle"
+        ],
+        "preuves": {
+          "donnees": "Your contact lists and campaign data are stored on Canadian servers, under Canadian and Québec privacy law.",
+          "controle": "Invest in a homegrown tech company that understands Canadian businesses."
+        },
+        "infirmes": {},
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Messagerie électronique",
@@ -1456,7 +1978,21 @@
         "confiance": "élevée"
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees"
+        ],
+        "preuves": {
+          "donnees": "les messages restent chez le fournisseur de courriel choisi et peuvent aussi être conservés localement sur l’appareil"
+        },
+        "infirmes": {
+          "controle": "Avec ce logiciel non canadien"
+        },
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Navigation Web",
@@ -1494,7 +2030,22 @@
         "confiance": "élevée"
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees"
+        ],
+        "preuves": {
+          "donnees": "Les données de navigation peuvent rester entièrement sur l’appareil."
+        },
+        "infirmes": {
+          "controle": "Navigateur Internet non canadien axé sur la protection de la vie privée",
+          "dependance": "Navigateur Internet non canadien axé sur la protection de la vie privée"
+        },
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Ressources humaines et gestion du temps",
@@ -1531,7 +2082,21 @@
         "confiance": "moyenne"
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "controle"
+        ],
+        "preuves": {
+          "donnees": "Les serveurs et la base de donnée de Feuille de temps sont situés au Canada et alimentés par de l'énergie verte.",
+          "controle": "Feuille de temps est développé par Aynils, une compagnie basée à Moncton"
+        },
+        "infirmes": {},
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Ressources humaines et gestion du temps",
@@ -1567,7 +2132,15 @@
         "ecart": "L’écart entre les 2 étoiles du répertoire et les 0 étoile de l’évaluation enrichie porte sur les critères « donnees » et « controle », attribués au répertoire par déduction automatique avec une confiance moyenne, et non selon des critères publiés. La conception au Québec et le ciblage des PME canadiennes ne prouvent ni que les données peuvent rester au Canada ni que l’entreprise est sous contrôle canadien, et l’extrait ne précise pas ces éléments. Le critère « dependance » n’est retenu dans aucune des deux évaluations, sans que cela démontre une dépendance étrangère importante. Pour trancher, il faudrait vérifier les engagements d’hébergement, la propriété actuelle de l’entreprise et ses fournisseurs technologiques essentiels, ainsi que les motifs des étoiles du répertoire."
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [],
+        "preuves": {},
+        "infirmes": {},
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Sécurité et gestion des accès",
@@ -1619,7 +2192,19 @@
         "confiance": "moyenne"
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:24-05:00"
+      "enrichi_le": "2026-11-11T17:29:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "controle"
+        ],
+        "preuves": {
+          "controle": "Gestionnaire canadien de mots de passe pour individus et équipes"
+        },
+        "infirmes": {},
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Sécurité et gestion des accès",
@@ -1657,7 +2242,21 @@
         "confiance": "élevée"
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:29:53-05:00"
+      "enrichi_le": "2026-11-11T17:29:53-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees"
+        ],
+        "preuves": {
+          "donnees": "Disponible dans le nuage ou en auto-hébergement sur l’infrastructure de son choix."
+        },
+        "infirmes": {
+          "controle": "Gestionnaire de mots de passe non canadien libre permettant de stocker, générer et partager mots de passe, clés d’accès et informations sensibles dans un coffre chiffré."
+        },
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Sécurité et gestion des accès",
@@ -1694,7 +2293,23 @@
         "confiance": "élevée"
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:30:16-05:00"
+      "enrichi_le": "2026-11-11T17:30:16-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "preuves": {
+          "donnees": "perfect for self-hosted deployment where running the official resource-heavy service might not be ideal.",
+          "dependance": "il permet de stocker et partager mots de passe et autres informations sensibles sur un serveur contrôlé par l’organisation."
+        },
+        "infirmes": {
+          "controle": "Non canadien, il permet de stocker et partager mots de passe et autres informations sensibles sur un serveur contrôlé par l’organisation."
+        },
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Sécurité et gestion des accès",
@@ -1732,7 +2347,23 @@
         "confiance": "moyenne"
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:30:40-05:00"
+      "enrichi_le": "2026-11-11T17:30:40-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "preuves": {
+          "donnees": "Data stored locally, not sent to third-party servers",
+          "dependance": "Fonctionne hors ligne, sans compte utilisateur, avec sauvegarde facultative chiffrée dans iCloud ou Google Drive."
+        },
+        "infirmes": {
+          "controle": "Application d’authentification à deux facteurs non canadienne"
+        },
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Sécurité et gestion des accès",
@@ -1770,7 +2401,23 @@
         "confiance": "élevée"
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:31:02-05:00"
+      "enrichi_le": "2026-11-11T17:31:02-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "preuves": {
+          "donnees": "You decide where to store your Items. You can store it in your own cloud or keep it as an encrypted file on an external drive.",
+          "dependance": "You store everything where you choose, and you don't need the Internet to access your Items."
+        },
+        "infirmes": {
+          "controle": "gestionnaire de mots de passe non canadien"
+        },
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Stockage, infonuagique et sauvegarde",
@@ -1809,7 +2456,21 @@
         "ecart": "L’écart entre les 3 étoiles du répertoire et les 2 étoiles de l’évaluation enrichie porte uniquement sur l’indépendance envers les fournisseurs et infrastructures étrangers. La page affirme un hébergement intégral au Canada et une propriété 100 % canadienne, ce qui appuie les deux critères communs, mais la mention d’un cloud souverain ne suffit pas à établir son indépendance technologique. L’utilisation de technologies NVIDIA pour l’offre d’intelligence artificielle soulève une question de dépendance sans démontrer qu’elle concerne l’ensemble de Cirrus. Les critères attribués au répertoire restant des hypothèses déduites, même avec une confiance élevée, il faudrait connaître sa grille réelle et les dépendances techniques indispensables aux services évalués pour trancher."
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:31:29-05:00"
+      "enrichi_le": "2026-11-11T17:31:29-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "controle"
+        ],
+        "preuves": {
+          "donnees": "Nous vous assurons que l’intégralité de vos données sera hébergée en sol canadien, garantissant ainsi que vos informations sensibles ne quitteront jamais le pays.",
+          "controle": "Fièrement une entreprise à propriété 100% canadienne"
+        },
+        "infirmes": {},
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Stockage, infonuagique et sauvegarde",
@@ -1848,7 +2509,23 @@
         "ecart": "L’écart entre les 3 étoiles du répertoire et les 2 étoiles de l’évaluation enrichie porte sur l’indépendance technologique : la page indique que TitanFile stocke les données dans des centres AWS et Azure, ce qui suggère une dépendance importante à des fournisseurs étrangers, même avec une résidence des données au Canada. Les deux évaluations retiennent les critères de données et de contrôle canadien, mais si la page annonce une résidence possible au Canada, l’extrait ne confirme pas le contrôle de l’entreprise. Les critères attribués au répertoire restent des hypothèses déduites automatiquement, malgré une confiance élevée ; pour trancher, il faudrait connaître la justification des étoiles et vérifier les garanties de résidence, la propriété de l’entreprise et la possibilité de fonctionner sans AWS ni Azure."
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:31:57-05:00"
+      "enrichi_le": "2026-11-11T17:31:57-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "controle"
+        ],
+        "preuves": {
+          "donnees": "Data residency in the US, Canada, or Europe",
+          "controle": "Outil canadien sécurisé de partage de fichiers et de communications"
+        },
+        "infirmes": {
+          "dependance": "When data is uploaded to TitanFile, it is encrypted and stored on ISO-certified AWS and Azure data centers."
+        },
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Stockage, infonuagique et sauvegarde",
@@ -1884,7 +2561,23 @@
         "ecart": "L’écart porte sur le contrôle canadien : le répertoire est interprété comme accordant ce critère, mais cette attribution reste une hypothèse déduite de la description, même avec une confiance élevée. L’évaluation enrichie ne retient que la conservation des données au Canada, explicitement annoncée pour les sauvegardes, car l’extrait ne précise pas qui détient ou contrôle Sylvéa. Les deux évaluations ne retiennent pas l’indépendance technologique, la sauvegarde de Google Workspace et Microsoft 365 ne supprimant pas la dépendance aux plateformes d’origine. Pour trancher, il faudrait vérifier la structure de propriété de Sylvéa et obtenir des auteur·trices du répertoire la justification des deux étoiles."
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:32:26-05:00"
+      "enrichi_le": "2026-11-11T17:32:26-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "controle"
+        ],
+        "preuves": {
+          "donnees": "Les données restent au Canada, sous loi canadienne.",
+          "controle": "Service canadien de sauvegarde automatisée des données de Google Workspace et Microsoft 365"
+        },
+        "infirmes": {
+          "dependance": "Il renforce la maîtrise des sauvegardes sans supprimer la dépendance aux plateformes d'origine."
+        },
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Stockage, infonuagique et sauvegarde",
@@ -1922,7 +2615,23 @@
         "confiance": "élevée"
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:32:46-05:00"
+      "enrichi_le": "2026-11-11T17:32:46-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "preuves": {
+          "donnees": "Peut être auto-hébergée sur l’infrastructure choisie.",
+          "dependance": "Enjoy constant improvements from a thriving and transparent, entirely open-source community development model, free of lockins or paywalls."
+        },
+        "infirmes": {
+          "controle": "Suite collaborative non canadienne"
+        },
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Stockage, infonuagique et sauvegarde",
@@ -1960,7 +2669,19 @@
         "confiance": "moyenne"
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:33:09-05:00"
+      "enrichi_le": "2026-11-11T17:33:09-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "controle"
+        ],
+        "preuves": {
+          "controle": "ce service canadien de stockage infonuagique"
+        },
+        "infirmes": {},
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Transcription et assistance aux réunions",
@@ -1998,7 +2719,21 @@
         "ecart": "L’écart porte sur le contrôle canadien : le répertoire affiche deux étoiles, associées par déduction aux critères données et contrôle, tandis que l’évaluation enrichie ne retient que les données. La description « outil québécois » suggère un ancrage local sans établir la propriété ni le contrôle de l’entreprise, alors que la page affirme explicitement que les données restent au Canada. Aucune des deux évaluations ne retient l’indépendance technologique, et l’extrait ne précise pas les fournisseurs d’IA ou d’hébergement, les intégrations étrangères ne suffisant pas à établir une dépendance importante. Pour trancher l’écart, il faudrait vérifier la structure de propriété de Manni et obtenir les critères effectivement appliqués par les auteur·trices du répertoire, puisque leur attribution reste hypothétique."
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:33:37-05:00"
+      "enrichi_le": "2026-11-11T17:33:37-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "controle"
+        ],
+        "preuves": {
+          "donnees": "Vos données restent au Canada. Conformité Loi 25 et PIPEDA.",
+          "controle": "Outil québécois de transcription de réunions par IA."
+        },
+        "infirmes": {},
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Transcription et assistance aux réunions",
@@ -2036,7 +2771,15 @@
         "ecart": "L’écart entre les deux évaluations porte sur le critère « donnees », attribué au répertoire par déduction avec une confiance moyenne, mais non retenu dans l’évaluation enrichie. L’extrait présente des garanties de sécurité, de conservation et de non-utilisation des données pour entraîner l’IA, sans préciser si un hébergement au Canada est possible. Les deux évaluations retiennent le contrôle canadien et ne retiennent pas l’indépendance technologique, mais la mention « conçu au Canada » ne suffit pas à établir le contrôle actuel de l’entreprise. Pour trancher l’écart, il faudrait une documentation contractuelle confirmant les lieux d’hébergement et les options de résidence des données, les critères réels des auteur·trices du répertoire restant inconnus."
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:34:05-05:00"
+      "enrichi_le": "2026-11-11T17:34:05-05:00",
+      "criteres_confirmes": {
+        "criteres": [],
+        "preuves": {},
+        "infirmes": {},
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Transcription et assistance aux réunions",
@@ -2074,7 +2817,23 @@
         "confiance": "élevée"
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:34:32-05:00"
+      "enrichi_le": "2026-11-11T17:34:32-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "preuves": {
+          "donnees": "La reconnaissance vocale s’effectue localement sur l’ordinateur, sans envoyer les enregistrements ou transcriptions dans le nuage.",
+          "dependance": "Your voice stays on your computer. Get transcriptions without sending audio to the cloud."
+        },
+        "infirmes": {
+          "controle": "Outil non canadien, gratuit et libre de dictée vocale"
+        },
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Veille et gestion de l’information",
@@ -2114,7 +2873,23 @@
         "confiance": "élevée"
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:35:34-05:00"
+      "enrichi_le": "2026-11-11T17:35:34-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "controle",
+          "dependance"
+        ],
+        "preuves": {
+          "donnees": "Les notes sont conservées sous forme de fichiers Markdown directement sur l’appareil.",
+          "controle": "Outil canadien de prise de notes et d’organisation des connaissances",
+          "dependance": "Obsidian stores notes privately on your device, so you can access them quickly, even offline."
+        },
+        "infirmes": {},
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Veille et gestion de l’information",
@@ -2151,7 +2926,23 @@
         "confiance": "moyenne"
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:35:54-05:00"
+      "enrichi_le": "2026-11-11T17:35:54-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "preuves": {
+          "donnees": "Disponible en auto-hébergement ou en service hébergé.",
+          "dependance": "Miniflux is compiled statically without external dependencies. Drop the binary on your server, and you're done."
+        },
+        "infirmes": {
+          "controle": "Lecteur de flux RSS non canadien, libre et minimaliste"
+        },
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     },
     {
       "categorie": "Veille et gestion de l’information",
@@ -2189,7 +2980,23 @@
         "confiance": "élevée"
       },
       "page_lue": true,
-      "enrichi_le": "2026-11-11T17:36:13-05:00"
+      "enrichi_le": "2026-11-11T17:36:13-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "preuves": {
+          "donnees": "Install wallabag on your own server and keep full control over updates, backups, data and access.",
+          "dependance": "Install wallabag on your own server and keep full control over updates, backups, data and access."
+        },
+        "infirmes": {
+          "controle": "Outil non canadien libre"
+        },
+        "modele": "claude-fable-5-2",
+        "regle": null,
+        "date": "2026-11-12T07:41:55-05:00"
+      }
     }
   ]
 }

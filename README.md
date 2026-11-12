@@ -56,6 +56,7 @@ Les champs d'enrichissement résument des pages tierces (voir [D'où viennent le
 - **Calculé et généré par les scripts :** `sommaire.md` et `graphiques/` (statistiques calculées à partir des données, plus un résumé rédigé par un modèle d'IA).
 - **Calculé par les scripts :** `meta` (licence et dates des fichiers), `derniere_modification`, `changement`, `removed` et `enrichi_le` (voir `update.ts`, `enrichir.ts` et `fichiers.ts`).
 - **Déduit par heuristique dans ce dépôt :** `criteres` et `confiance` (voir [Classification](#classification)).
+- **Vérifié par un modèle d'IA, citation à l'appui :** `criteres_confirmes` (voir [`confirmer.ts`](#confirmerts)). La citation permet de contrôler chaque verdict ; le verdict lui-même reste celui d'un modèle.
 - **Généré par un modèle d'IA :** les champs d'enrichissement (voir [Enrichissement](#enrichissement-par-ia)). Ils résument des pages tierces et sont à vérifier avant de s'y fier ou de les diffuser, surtout la licence et le dépôt.
 
 ## Démarrage
@@ -95,7 +96,7 @@ Schémas          schemas-types.ts ──▶ obuild + RunTypes ──▶ generer
 |---|---|
 | `outils.json`, `criteres.json`, `tags.json` | Les données (voir [Fichiers JSON](#fichiers-json)) |
 | `extract.ts`, `classify.ts`, `update.ts` | Les trois scripts du flux de travail |
-| `confirmer.ts`, `analyses/classification/` | Confirmation des critères par IA avec citation, et la trace de l'analyse de classification (essais, résultats chiffrés, sorties des deux fournisseurs) : voir [`analyses/classification/README.md`](analyses/classification/README.md) |
+| `confirmer.ts`, `appliquer-confirmations.ts`, `analyses/classification/` | Confirmation des critères par IA avec citation, son inscription dans `outils.json` (`criteres_confirmes`), et la trace de l'analyse de classification (essais, résultats chiffrés, sorties des deux fournisseurs) : voir [`analyses/classification/README.md`](analyses/classification/README.md) |
 | `classify4.ts` | Quatrième version : les critères de `classify.ts` moins ceux que l'enrichissement et les confirmations d'IA contredisent (47 outils sur 57 d'accord avec l'évaluation enrichie, contre 39). Pas utilisée par `build` ni `update` ; voir [Classification](#classification) |
 | `classify2.ts` | Deuxième version de `classify.ts` (mêmes critères, `confiance` recalibrée d'après l'évaluation enrichie). Pas encore utilisée par `build` ni par `update`; voir [Classification](#classification) |
 | `sommaire.ts`, `sommaire.md`, `graphiques/` | Le script du sommaire statistique, le sommaire qu'il a généré et les graphiques (SVG et PNG) qu'il contient (mis à jour automatiquement par `nub run enrichir`, ou par `nub run update --sommaire`, quand quelque chose a changé; sinon à regénérer avec `nub run sommaire`) |
@@ -167,6 +168,7 @@ Champs ajoutés par l'[enrichissement](#enrichissement-par-ia), absents tant que
 | `enrichi_le` | Date et heure de l'enrichissement de l'outil (ISO 8601, heure de Toronto). Les 41 outils enrichis avant l'ajout de ce champ portent la date de substitution `2026-11-11T17:29:24-05:00` (celle du premier enrichissement daté), qui n'est pas leur date exacte; la date des enrichissements suivants est exacte. Dans `outils.json`, 42 outils portent cette valeur : les 41 de substitution et le premier enrichissement daté |
 | `page_lue` | `true` si la page de l'outil a servi à l'enrichissement; `false` si l'outil a été enrichi sans page lisible (option `--sans-page`), à partir de sa seule description : résultat moins fiable, voir [Pages inaccessibles](#pages-inaccessibles-ou-presque-vides) |
 | `evaluation_enrichie` | Second avis du modèle sur la souveraineté de l'outil : `score` (nombre de critères satisfaits, de 0 à 3, égal à `criteres.length`), `criteres` (identifiants de `criteres.json`) et `confiance` (`"élevée"`, `"moyenne"` ou `"faible"`). S'y ajoute `ecart`, une explication en français de la différence, seulement quand cette évaluation diffère du `score` et des `criteres` du répertoire |
+| `criteres_confirmes` | Critères **vérifiés** par une IA d'après la page de l'outil, citation à l'appui (`confirmer.ts`, puis `appliquer-confirmations.ts`) : `criteres` (ceux qui sont confirmés, dans l'ordre de `criteres.json`), `preuves` (une citation copiée mot pour mot de la description ou de la page, pour chaque critère confirmé), `infirmes` (une citation pour chaque critère que la page contredit ; un critère absent des deux est indéterminé), `modele`, `regle` (règle de lecture ajoutée aux consignes, ou `null`) et `date` (heure de Toronto). Indépendant de `criteres`, qui reste lié aux étoiles : il peut en compter moins, jamais plus. Présent pour les 57 outils enrichis (modèle `claude-fable-5-2`), absent pour les autres |
 
 La page n'affiche qu'une seule date pour toute la note. `derniere_modification` est donc la date de la page au moment où l'outil a été ajouté ou a changé, et non la date exacte du changement de cet outil.
 
@@ -244,13 +246,21 @@ Part des critères de `classify.ts` (et de la confiance de `classify2.ts`) et en
 nub confirmer.ts --fournisseur=openai|claude [--modele=M] [--limite=N] [--budget=USD] [--sortie=F] [--regle=A] [--liste=noms.json] [--dry-run] [outils.json]
 ```
 
-Pour chaque outil enrichi, donne à une IA la page de l'outil et les trois critères (sans le score ni les critères du répertoire) et lui demande, critère par critère, « confirmé », « infirmé » ou « indéterminé », avec une **citation copiée mot pour mot** des textes fournis. Une citation introuvable rejette la réponse (redemandée une fois). C'est la piste 1 de l'[analyse de classification](analyses/classification/README.md) ; le résultat n'est pas écrit dans `outils.json` mais dans `analyses/classification/confirmations-<fournisseur>.json`.
+Pour chaque outil enrichi, donne à une IA la page de l'outil et les trois critères (sans le score ni les critères du répertoire) et lui demande, critère par critère, « confirmé », « infirmé » ou « indéterminé », avec une **citation copiée mot pour mot** des textes fournis. Une citation introuvable rejette la réponse (redemandée une fois). C'est la piste 1 de l'[analyse de classification](analyses/classification/README.md) ; le résultat est écrit dans `analyses/classification/confirmations-<fournisseur>.json`, puis inscrit dans `outils.json` (champ `criteres_confirmes`) par `appliquer-confirmations.ts`.
 
 - `openai` : API OpenAI (Responses), clé `OPENAI_API_KEY` ; modèle par défaut celui de l'enrichissement. `claude` : la commande `claude -p` (aucune clé `ANTHROPIC_API_KEY`, mais la session Claude Code ; isolée du projet, sans outil), modèle par défaut `claude-fable-5-2`.
 - **Coût :** les jetons et le coût en dollars de chaque appel sont inscrits dans la sortie (`totaux`). Pour OpenAI, le coût est calculé avec les prix de `PRIX` ; pour `claude`, c'est le coût au prix catalogue que rapporte la CLI. `--budget` (15 $ par défaut) arrête avant l'appel suivant quand le coût cumulé l'atteint.
 - **Reprise :** les outils déjà confirmés dans le fichier de sortie ne sont pas redemandés. `--liste=F` limite aux outils nommés dans `F` (tableau JSON de noms).
 - **Règles de lecture :** `--regle=A` ajoute aux consignes une précision pour le critère « contrôle » (la nationalité mentionnée suffit, sauf origine ou filiale étrangère), sans modifier `criteres.json`. Les règles sont dans `REGLES` ; leur effet est mesuré dans l'[analyse](analyses/classification/README.md).
 - **Confidentialité :** le nom, la catégorie, le lien, la description et l'extrait de la page (6 000 caractères au plus) de chaque outil sont envoyés au fournisseur choisi.
+
+### `appliquer-confirmations.ts`
+
+```sh
+nub appliquer-confirmations.ts <confirmations.json> <outils.json> [sortie.json]
+```
+
+Inscrit `criteres_confirmes` (voir [`outils.json`](#outilsjson)) dans chaque outil qui a un verdict dans le fichier de `confirmer.ts` ; les autres gardent leur champ tel quel. Fonction exportée `appliquerConfirmations`. `nub run appliquer-confirmations` applique les confirmations de Claude commitées. Le champ est protégé par `extract.ts` et conservé par `update.ts`, comme les autres champs d'enrichissement.
 
 ### `update.ts`
 
@@ -390,6 +400,8 @@ Ce qui s'améliore, c'est `confiance`. `classify.ts` la tire de l'écart entre l
 La capacité de la confiance à séparer les outils où l'IA est d'accord de ceux où elle ne l'est pas (AUC) passe de 0,756 à 0,811. **Cet écart n'est pas significatif** avec 57 outils (intervalle bootstrap à 95 % de la différence : environ de -0,08 à +0,19), et la règle a été choisie en regardant ces mêmes données : à confirmer quand d'autres outils seront enrichis. Limite : la description seule ne permet pas de prévoir quels critères « canadiens » l'IA ne confirmera pas (les descriptions des outils confirmés et non confirmés sont indiscernables), et l'IA n'est pas une vérité : c'est un deuxième avis.
 
 **`classify4.ts` : retirer plutôt que choisir.** Puisque le classement est bon et que l'écart tient au nombre de critères, `classify4.ts` retire ceux que les données contredisent (règles R1 et R2 ci-dessus). Sur une copie de `outils.json`, avec les confirmations de Claude : 47 outils sur 57 d'accord avec l'évaluation enrichie (82 %, Jaccard 0,874) contre 39 (68 %), 10 outils gagnés et 2 perdus (test des signes, p ≈ 0,04) ; 17 outils changent, par retrait seulement, et ont alors un critère de moins que d'étoiles. Sans confirmations (R1 seule) : 43. Les règles ont été choisies en regardant ces mêmes 57 outils, et `source` et `tags` viennent du même appel à l'IA que l'évaluation enrichie : c'est une cohérence, à reconfirmer sur d'autres outils. Le détail des 17 règles essayées est dans [`analyses/classification/README.md`](analyses/classification/README.md).
+
+**Décision.** Les étoiles et les critères vérifiés ne mesurent pas la même chose : les premières sont une donnée de la source, les seconds dépendent de ce que la page de l'outil dit. Aucune règle ne peut les faire coïncider sans sacrifier l'une des deux informations. `criteres` reste donc lié aux étoiles, et les critères vérifiés sont exposés à part, dans `criteres_confirmes`, avec la citation à l'appui (voir [`outils.json`](#outilsjson)). `classify2.ts` et `classify4.ts` restent disponibles comme variantes, non adoptées.
 
 ## Enrichissement par IA
 
@@ -541,7 +553,8 @@ Si le `score` ou les `criteres` d'un outil déjà enrichi changent, après un `c
 | `nub run licences` | `uvx reuse lint` : vérifie que chaque fichier suivi déclare sa licence et son droit d'auteur ([REUSE](https://reuse.software/) 3.3). Demande [uv](https://docs.astral.sh/uv/) et un accès réseau la première fois ; non inclus dans `nub run test` |
 | `nub run confirmer` | `nub confirmer.ts` : confirme les critères un par un avec une IA (`--fournisseur=openai` ou `--fournisseur=claude`, obligatoire), citation à l'appui. **Appelle une API payante** ; voir [`confirmer.ts`](#confirmerts) |
 | `nub run classify4` | `nub classify4.ts --confirmations=analyses/classification/confirmations-claude.json outils.json` : comme `classify`, mais retire les critères que l'enrichissement et les confirmations contredisent (pas adopté ; **modifie `outils.json` en place** et y laisse des outils avec moins de critères que d'étoiles, voir [Classification](#classification)) |
-| `nub run test` | Lance les seize fichiers de tests, puis `schemas:verifier` |
+| `nub run appliquer-confirmations` | `nub appliquer-confirmations.ts analyses/classification/confirmations-claude.json outils.json` : inscrit `criteres_confirmes` dans `outils.json` à partir des confirmations de Claude commitées |
+| `nub run test` | Lance les dix-sept fichiers de tests, puis `schemas:verifier` |
 | `nub run typecheck` | `tsrs -p .` : vérifie les types avec [tsrs](https://www.npmjs.com/package/tsrs), un portage en Rust de `tsc` |
 
 ## Tests
@@ -550,6 +563,7 @@ Dans `test/`, avec `node:test` lancé par `nub` :
 
 - `classify.test.ts` : cas de classification connus, un nombre de critères égal au score pour les 60 outils, les options de la ligne de commande, le refus d'un fichier au mauvais format, et la couleur de « Erreur: ».
 - `confirmer.test.ts` : validation des verdicts (statuts, citation obligatoire, exacte et d'au plus 300 caractères), accord entre ensembles, coût OpenAI, lecture de la sortie de `claude -p`, et la boucle avec de faux fournisseurs (nouvel essai, échec, page inaccessible, budget, limite, requête sans score ni critères du répertoire).
+- `appliquer-confirmations.test.ts` : forme de `criteres_confirmes` (critères, citations des confirmés et des infirmés, modèle, règle, date de Toronto), outils sans verdict laissés intacts, entrées non modifiées, champ compté parmi les champs d'enrichissement, la CLI sur une copie, et le fichier réel (le champ est présent pour chaque outil enrichi, chaque critère confirmé a sa citation, jamais plus de critères confirmés que d'étoiles).
 - `classify4.test.ts` : repli sur `classify.ts` sans enrichissement, règles R1 et R2 (cas gardés et retirés), sous-ensemble ordonné de `classify.ts` pour tous les outils, confiance de `classify2.ts`, accord de 47 contre 39 avec l'évaluation enrichie sur les confirmations commitées, lecture des confirmations, et la CLI sur une copie.
 - `classify2.test.ts` : mêmes critères que `classify.ts` pour tous les outils, les niveaux de `confiance` (élevée, moyenne, faible, indéterminée, trois étoiles), `confianceV2`, la comparaison avec l'évaluation enrichie (aucun faux négatif, AUC au moins égale à celle de `classify.ts`), et la CLI sur une copie de `outils.json`.
 - `extract.test.ts` : conversion de la date de la page en heure de Toronto, cohérence de `criteres.json` et `outils.json`, rejet d'une page sans date, téléchargement (sur un serveur local, sans réseau), erreurs de téléchargement, le garde-fou contre l'écrasement (avec et sans `--force`, y compris pour un fichier au mauvais format), et la preuve qu'aucun fichier HTML local n'est lu.
@@ -604,4 +618,7 @@ jaq '.outils[] | select(.enrichi_le != null and .enrichi_le >= "2026-11-12") | .
 
 # outils portant un tag
 jaq '.outils[] | select((.tags // []) | index("chiffrement")) | .nom' outils.json
+
+# critères vérifiés par IA, avec la citation, quand ils diffèrent des étoiles
+jaq '.outils[] | select(.criteres_confirmes and (.criteres_confirmes.criteres | length) < .score) | {nom, score, criteres, confirmes: .criteres_confirmes.criteres, preuves: .criteres_confirmes.preuves}' outils.json
 ```

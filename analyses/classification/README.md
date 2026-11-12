@@ -140,3 +140,7 @@ Réserves :
 - **Les règles ont été choisies en regardant ces 57 outils** (essai E en compte 17) ; l'amélioration est à reconfirmer sur d'autres outils. R1 et R2 ont toutefois une lecture simple : sans code ni installation chez soi, l'outil dépend de son fournisseur ; « fournisseur canadien » n'implique pas « hébergé au Canada » tant que la page ne le dit pas.
 - **Cohérence, pas vérité :** `source`, `tags` et `evaluation_enrichie` viennent du même appel à l'IA. Les confirmations de Claude sont indépendantes de cet appel, et R2 donne le même résultat avec OpenAI.
 - **`classify4.ts` rompt la convention « une étoile = un critère »** de `outils.json` : il n'est pas appliqué au fichier, et `build` et `update` utilisent toujours `classify.ts`. Les 10 outils qui restent en désaccord sont des fournisseurs canadiens propriétaires où l'évaluation enrichie ne confirme pas « contrôle » (ambiguïté connue, voir la règle A) ou ne confirme rien du tout.
+
+## Décision
+
+`criteres` reste lié aux étoiles (c'est ce que dit la source). Les critères vérifiés sont exposés dans un champ distinct de `outils.json`, `criteres_confirmes`, avec la citation à l'appui pour chaque critère confirmé ou infirmé, inscrit par `appliquer-confirmations.ts` à partir de `confirmations-claude.json` (modèle indépendant de celui de l'enrichissement ; sa lecture de « contrôle » coïncide avec la règle A). `classify2.ts` et `classify4.ts` restent des variantes non adoptées.

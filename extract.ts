@@ -28,6 +28,24 @@ export interface EvaluationEnrichie {
   ecart?: string;
 }
 
+/**
+ * Critères vérifiés par une IA à partir de la page de l'outil (confirmer.ts, puis appliquer-confirmations.ts), avec la
+ * citation à l'appui. Indépendant de `criteres`, qui reste lié aux étoiles de la source: il peut en compter moins.
+ */
+export interface CriteresConfirmes {
+  /** Critères confirmés, dans l'ordre de criteres.json. */
+  criteres: CritereId[];
+  /** Citation (copiée mot pour mot de la description ou de la page) pour chaque critère confirmé. */
+  preuves: Partial<Record<CritereId, string>>;
+  /** Citation pour chaque critère infirmé; un critère absent des deux est indéterminé (la page ne permet pas de conclure). */
+  infirmes: Partial<Record<CritereId, string>>;
+  modele: string;
+  /** Règle de lecture ajoutée aux consignes (voir REGLES dans confirmer.ts), ou null. */
+  regle: string | null;
+  /** Date de la confirmation (ISO 8601, heure de Toronto, avec décalage). */
+  date: string;
+}
+
 export type Changement = "nouveau" | "modification" | "retrait" | "comeback";
 
 export interface Outil {
@@ -67,6 +85,8 @@ export interface Outil {
   page_lue?: boolean;
   /** Date et heure de l'enrichissement de l'outil (ISO 8601, heure de Toronto, avec décalage). Absente pour les outils enrichis avant l'ajout de ce champ. */
   enrichi_le?: string;
+  /** Critères vérifiés par une IA, citation à l'appui (voir CriteresConfirmes); absent tant que confirmer.ts n'a pas été appliqué. */
+  criteres_confirmes?: CriteresConfirmes;
 }
 
 export interface Critere {
@@ -177,7 +197,7 @@ export function extraire(html: string): Repertoire {
 /** Les champs ajoutés par l'enrichissement (voir enrichir.ts). */
 export const CHAMPS_ENRICHIS = [
   "description_longue", "tags", "source", "licence", "custom_license", "custom_license_url", "repo", "evaluation_enrichie",
-  "page_lue", "enrichi_le",
+  "page_lue", "enrichi_le", "criteres_confirmes",
 ] as const;
 
 /**
