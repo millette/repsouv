@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Ces tests n'utilisent que des données fictives: ni outils.json, ni réseau, ni ligne de commande.
 import assert from "node:assert/strict";
-import { existsSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
@@ -236,24 +236,24 @@ test("statistiques: nombre d'outils par catégorie et par statut du code source"
   assert.deepEqual(categoriesSources.filter((r) => r.categorie === "cat2" && r.nom === "Cat2").map((r) => [r.source, r.n]).sort(), [["libre", 1], ["non enrichi", 1], ["proprietaire", 1]]);
 });
 
-const GRAPHIQUE = (id: string) => ({ id, titre: `Titre ${id}`, description: `Texte alternatif de ${id} [avec crochets].`, png: `graphiques/${id}.png`, svg: `graphiques/${id}.svg` });
-test("rendu: chaque image PNG est insérée dans la section du graphique, avec son texte alternatif", () => {
+const GRAPHIQUE = (id: string) => ({ id, titre: `Titre ${id}`, description: `Texte alternatif de ${id} [avec crochets].`, svg: `graphiques/${id}.svg` });
+test("rendu: chaque image SVG est insérée dans la section du graphique, avec son texte alternatif", () => {
   const ids = ["statut-code-source", "categories-statut", "criteres-repertoire-enrichie", "criteres-par-statut", "criteres-verdicts", "licences", "forges", "tags", "enrichissement-jours"];
   const md = rendreMarkdown(calculerStatistiques(entree()), { genereLe: GENERE_LE, graphiques: ids.map(GRAPHIQUE) });
   for (const id of ids) {
-    assert.ok(md.includes(`](graphiques/${id}.png)`), id);
+    assert.ok(md.includes(`](graphiques/${id}.svg)`), id);
     assert.ok(md.includes(`![Texte alternatif de ${id} avec crochets.]`), `${id}: texte alternatif sans crochets`);
   }
   const section = (titre: string) => md.slice(md.indexOf(`## ${titre}`), md.indexOf("\n## ", md.indexOf(`## ${titre}`) + 3));
-  assert.ok(section("Statut du code source").includes("statut-code-source.png"));
-  assert.ok(section("Catégories").includes("categories-statut.png"));
-  assert.ok(section("Licences").includes("licences.png"));
-  assert.ok(section("Forges de code").includes("forges.png"));
-  assert.ok(section("Tags").includes("tags.png"));
-  assert.ok(section("Critères de souveraineté").includes("criteres-repertoire-enrichie.png") && section("Critères de souveraineté").includes("criteres-par-statut.png"));
-  assert.ok(section("Critères de souveraineté").includes("criteres-verdicts.png"));
-  assert.ok(section("Dates").includes("enrichissement-jours.png"));
-  assert.doesNotMatch(md, /\.svg/); // seules les images PNG sont insérées
+  assert.ok(section("Statut du code source").includes("statut-code-source.svg"));
+  assert.ok(section("Catégories").includes("categories-statut.svg"));
+  assert.ok(section("Licences").includes("licences.svg"));
+  assert.ok(section("Forges de code").includes("forges.svg"));
+  assert.ok(section("Tags").includes("tags.svg"));
+  assert.ok(section("Critères de souveraineté").includes("criteres-repertoire-enrichie.svg") && section("Critères de souveraineté").includes("criteres-par-statut.svg"));
+  assert.ok(section("Critères de souveraineté").includes("criteres-verdicts.svg"));
+  assert.ok(section("Dates").includes("enrichissement-jours.svg"));
+  assert.doesNotMatch(md, /\.png/); // plus aucun PNG
 });
 test("rendu: les critères vérifiés ont leur sous-section, avec les trois verdicts par statut, le modèle et les outils sans verdict", () => {
   const md = rendreMarkdown(calculerStatistiques(entree()), { genereLe: GENERE_LE });
@@ -271,7 +271,7 @@ test("rendu: sans graphiques, aucune image; l'image précède son tableau", () =
   const sans = rendreMarkdown(calculerStatistiques(entree()), { genereLe: GENERE_LE });
   assert.doesNotMatch(sans, /!\[/);
   const avec = rendreMarkdown(calculerStatistiques(entree()), { genereLe: GENERE_LE, graphiques: [GRAPHIQUE("statut-code-source")] });
-  assert.ok(avec.indexOf("statut-code-source.png") < avec.indexOf("| Statut | Outils |"));
+  assert.ok(avec.indexOf("statut-code-source.svg") < avec.indexOf("| Statut | Outils |"));
   assert.doesNotMatch(avec, /undefined|NaN|\[object/);
 });
 
@@ -286,10 +286,9 @@ const dossierDeDonnees = () => {
   ecrireFichier(join(d, "categories.json"), "categories", CATEGORIES, null, "2026-11-11T16:00:00-05:00");
   return d;
 };
-const fauxConvertir = (appels: string[]) => (_spec: unknown, svg: string, png: string) => {
-  appels.push(png);
+const fauxConvertir = (appels: string[]) => (_spec: unknown, svg: string) => {
+  appels.push(svg);
   writeFileSync(svg, "<svg/>");
-  writeFileSync(png, "png");
 };
 
 test("genererSommaire: écrit sommaire.md avec le résumé et les images, et graphiques/ à côté", async () => {
@@ -303,9 +302,10 @@ test("genererSommaire: écrit sommaire.md avec le résumé et les images, et gra
   assert.match(md, /## Résumé/);
   assert.ok(md.includes(PARA));
   assert.match(md, /gpt-test/);
-  assert.match(md, /!\[.*\]\(graphiques\/statut-code-source\.png\)/);
+  assert.match(md, /!\[.*\]\(graphiques\/statut-code-source\.svg\)/);
   assert.equal(r.graphiques, converties.length);
-  assert.ok(existsSync(join(d, "graphiques", "statut-code-source.png")));
+  assert.ok(existsSync(join(d, "graphiques", "statut-code-source.svg")));
+  assert.equal(readdirSync(join(d, "graphiques")).some((f) => f.endsWith(".png")), false);
 });
 test("genererSommaire: sans résumé, le générateur n'est pas appelé; sans graphiques, le convertisseur non plus", async () => {
   const d = dossierDeDonnees();
@@ -358,5 +358,5 @@ test("genererSommaire: destination personnalisée, graphiques/ créé à côté"
   const sortie = join(d, "ailleurs.md");
   await genererSommaire({ source: join(d, "outils.json"), sortie, sansResume: true, convertir: fauxConvertir([]) });
   assert.ok(existsSync(sortie));
-  assert.ok(existsSync(join(d, "graphiques", "statut-code-source.png")));
+  assert.ok(existsSync(join(d, "graphiques", "statut-code-source.svg")));
 });

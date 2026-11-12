@@ -372,17 +372,19 @@ export function verifierVlConvert(commande: string = COMMANDE_VL_CONVERT): strin
   return r.stdout.trim();
 }
 
-/** Convertit une spécification Vega-Lite en SVG et en PNG (deux fois la résolution, pour rester net). */
-export type Convertisseur = (spec: TopLevelSpec, cheminSvg: string, cheminPng: string) => void;
+/**
+ * Convertit une spécification Vega-Lite en SVG. Le SVG est autonome (texte, formes, aucun script ni
+ * ressource externe), ce que GitHub et les autres forges affichent dans le Markdown; aucun PNG.
+ */
+export type Convertisseur = (spec: TopLevelSpec, cheminSvg: string) => void;
 
-export function convertirAvecVlConvert(spec: TopLevelSpec, cheminSvg: string, cheminPng: string, commande: string = COMMANDE_VL_CONVERT): void {
+export function convertirAvecVlConvert(spec: TopLevelSpec, cheminSvg: string, commande: string = COMMANDE_VL_CONVERT): void {
   const dossier = mkdtempSync(join(tmpdir(), "vl-"));
   try {
     const entree = join(dossier, "spec.vl.json");
     writeFileSync(entree, JSON.stringify(spec));
     const communs = ["--vl-version", VERSION_VEGA_LITE, "--format-locale", "fr-CA", "--time-format-locale", "fr-CA"];
     lancerVlConvert(commande, ["vl2svg", "-i", entree, "-o", cheminSvg, ...communs]);
-    lancerVlConvert(commande, ["vl2png", "-i", entree, "-o", cheminPng, "--scale", "2", ...communs]);
   } finally {
     rmSync(dossier, { recursive: true, force: true });
   }
@@ -392,26 +394,25 @@ export interface GraphiqueEcrit {
   id: string;
   titre: string;
   description: string;
-  /** Chemins relatifs au sommaire (ex. graphiques/statut-code-source.png). */
-  png: string;
+  /** Chemin relatif au sommaire (ex. graphiques/statut-code-source.svg). */
   svg: string;
 }
 
 /**
- * Écrit chaque graphique en SVG et en PNG dans `dossier`, et supprime les fichiers des graphiques
- * connus qui ne sont plus produits. Retourne les chemins relatifs au dossier parent.
+ * Écrit chaque graphique en SVG dans `dossier`, et supprime les fichiers des graphiques connus qui ne
+ * sont plus produits, ainsi que les PNG que les versions antérieures produisaient. Retourne les chemins
+ * relatifs au dossier parent.
  */
 export function ecrireGraphiques(graphiques: Graphique[], dossier: string, convertir: Convertisseur = convertirAvecVlConvert): GraphiqueEcrit[] {
   mkdirSync(dossier, { recursive: true });
   const produits = new Set(graphiques.map((g) => g.id));
   for (const id of IDS_GRAPHIQUES) {
-    if (produits.has(id)) continue;
     rmSync(join(dossier, `${id}.png`), { force: true });
-    rmSync(join(dossier, `${id}.svg`), { force: true });
+    if (!produits.has(id)) rmSync(join(dossier, `${id}.svg`), { force: true });
   }
   const nom = basename(dossier);
   return graphiques.map((g) => {
-    convertir(g.spec, join(dossier, `${g.id}.svg`), join(dossier, `${g.id}.png`));
-    return { id: g.id, titre: g.titre, description: g.description, png: `${nom}/${g.id}.png`, svg: `${nom}/${g.id}.svg` };
+    convertir(g.spec, join(dossier, `${g.id}.svg`));
+    return { id: g.id, titre: g.titre, description: g.description, svg: `${nom}/${g.id}.svg` };
   });
 }

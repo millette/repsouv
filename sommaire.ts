@@ -70,7 +70,7 @@ export function rendreMarkdown(s: Statistiques, { genereLe, resume, graphiques =
   /** L'image PNG du graphique `id`, suivie d'une ligne vide; rien si ce graphique n'existe pas. */
   const image = (id: string) => {
     const g = graphiques.find((x) => x.id === id);
-    return g ? `![${g.description.replace(/[\[\]]/g, "")}](${g.png})\n\n` : "";
+    return g ? `![${g.description.replace(/[\[\]]/g, "")}](${g.svg})\n\n` : "";
   };
 
   parts.push(`# Sommaire du répertoire d'outils favorisant la souveraineté numérique

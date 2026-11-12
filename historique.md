@@ -48,6 +48,7 @@ Les étapes du projet et les décisions prises, par date, d'après l'historique 
 - **`categories.json`** : les catégories deviennent un fichier de données (`id` en slug du nom, `nom`, `icone`, `description` rédigée par IA dans `update`), et `outils.json` ne garde que l'identifiant dans `categorie` (le champ `icone` disparaît). Les schémas annotent la relation et un test la vérifie.
 - **Documentation** scindée en trois fichiers : README (source, crédits, usage, données), `implementation.md` (scripts, classification, enrichissement, sommaire, tests, dépannage) et ce fichier.
 - **Expérience `spike-mion` retirée** du dépôt (ses conclusions sont consignées ci-dessus).
+- **Graphiques en SVG seulement** : les PNG (1,7 Mo pour 8 images, un second appel à vl-convert chacun) ne sont plus produits ; `sommaire.md` et le README insèrent les SVG, que GitHub affiche. `ecrireFichier` retourne une copie des données, pour que `updated_at` avance à chaque écriture d'un enrichissement (il restait figé après la première écriture d'une exécution).
 
 ## Décisions
 
@@ -68,4 +69,5 @@ Les étapes du projet et les décisions prises, par date, d'après l'historique 
 | Variantes de `classify.ts` essayées puis retirées (confiance recalibrée, retrait de critères) | Règles choisies en regardant les 57 outils enrichis ; l'une contredisait les étoiles, et `criteres_confirmes` répond au besoin |
 | Critères vérifiés par le modèle de l'enrichissement (OpenAI), automatiquement dans `update`, plutôt que par un second modèle à la main | Une seule clé et un seul modèle, coût estimable par `--dry-run`, champ complet sans intervention ; l'indépendance du second modèle avait servi à l'analyse (accord sur 49 outils sur 57), et la citation vérifiable reste le garde-fou |
 | Les catégories dans `categories.json`, référencées par identifiant | L'icône était répétée 60 fois pour 20 catégories, et un changement d'icône sur la page faisait bouger tous les outils de la catégorie ; la description de la catégorie a sa place dans ce fichier |
+| Graphiques en SVG, sans PNG | Les forges affichent les SVG autonomes dans le Markdown ; vectoriel net à toute taille, 8 fois moins lourd dans le dépôt, un appel vl-convert de moins par graphique. Seul l'export PDF par LaTeX y perd, personne ne le fait ici |
 | Règle A pour « contrôle » : la nationalité mentionnée suffit | Les descriptions ne disent jamais qui possède l'entreprise ; sans convention, les IA divergent sur 21 outils. L'accord obtenu est une convention, pas une vérification de la propriété |
