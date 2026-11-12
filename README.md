@@ -12,7 +12,7 @@ Le [sommaire statistique](sommaire.md) qui en résulte distingue 24 logiciels li
 
 *Statut du code source des outils du répertoire, d'après [`sommaire.md`](sommaire.md) (image produite par `node sommaire.ts`).*
 
-**Sommaire :** [Démarrage rapide](#démarrage-rapide) · [Source, crédits et licences](#source-crédits-et-licences) · [Autres commandes](#autres-commandes) · [Fichiers JSON](#fichiers-json) · [Sommaire statistique](#sommaire-statistique) · [Utiliser les données](#utiliser-les-données) · [Documentation](#documentation)
+**Sommaire :** [Démarrage rapide](#démarrage-rapide) · [Source, crédits et licences](#source-crédits-et-licences) · [Autres commandes](#autres-commandes) · [Outils à installer](#outils-à-installer) · [Fichiers JSON](#fichiers-json) · [Sommaire statistique](#sommaire-statistique) · [Utiliser les données](#utiliser-les-données) · [Documentation](#documentation)
 
 ## Démarrage rapide
 
@@ -23,7 +23,7 @@ Les mises à jour peuvent **coûter de l'argent** : l'enrichissement par IA et l
 1. **Node.js 26** (toute version 26.x, `engines.node` : `>=26 <27`), avec npm : <https://nodejs.org/>. Les scripts sont en TypeScript, que Node exécute tel quel.
 2. **Cloner le dépôt** et s'y placer : `git clone <url du dépôt> && cd outils-souverainete-numerique`.
 3. **Configurer la clé OpenAI** : `cp .env.example .env`, puis mettre la clé dans `OPENAI_API_KEY=`. Avec un compte OpenAI, la clé se crée sur <https://platform.openai.com/api-keys> (« Create new secret key » ; elle commence par `sk-` et n'est affichée qu'une fois) et le crédit se vérifie sur <https://platform.openai.com/account/billing/overview>. Le fichier `.env` est ignoré par Git et la clé n'est transmise qu'à `api.openai.com`. Sans clé, `update` synchronise les données mais saute tout ce qui passe par l'API (enrichissement, vérification, descriptions, résumé).
-4. **Installer les dépendances** : `npm install`. Pour les graphiques du sommaire, installer aussi [vl-convert](https://github.com/vega/vl-convert) (`cargo install vl-convert` ou un binaire de ses versions, dans le `PATH`) ; sans lui, le sommaire est sauté par `update` et `node sommaire.ts --sans-graphiques` reste possible.
+4. **Installer les dépendances** : `npm install`. Pour les graphiques du sommaire, installer aussi [vl-convert](https://github.com/vega/vl-convert) (binaire ou `cargo install`, voir [Outils à installer](#outils-à-installer)) ; sans lui, le sommaire est sauté par `update` et `node sommaire.ts --sans-graphiques` reste possible.
 5. **Premier import** : `node update.ts --dry-run` pour voir ce qui serait fait et le coût estimé, puis `node update.ts`, qui crée `outils.json`, `categories.json` et `criteres.json` depuis la page en ligne, enrichit les outils par IA, vérifie leurs critères, citation à l'appui, décrit les catégories (après confirmation des coûts : 1 pour poursuivre, 2 pour arrêter), et génère `sommaire.md` et `graphiques/`. Le dépôt contenant déjà ces fichiers, cette étape ne s'applique qu'à partir d'un dossier vide ; sur un clone, `node update.ts` se contente de mettre à jour.
 6. **Mises à jour** : `node update.ts`, aussi souvent que voulu. Il compare la page en ligne aux données, enrichit et vérifie les outils nouveaux et régénère le sommaire et les graphiques seulement si quelque chose a changé ; une page inchangée ne coûte rien.
 7. **Pour développer** : installer [nub](https://nubjs.com/) (`curl -fsSL https://nubjs.com/install.sh | bash` ; aussi par Homebrew, npm ou mise), qui télécharge le Node.js déclaré dans `devEngines.runtime` de `package.json` (la dernière 26.x), installe les dépendances d'après `nub.lock` (`nub install`) et lance les scripts de `package.json` (`nub run test`, `nub run typecheck`, `nub run schemas`, `nub run licences`). Les scripts `update` et `sommaire` s'exécutent indifféremment par `node` ou par `nub run`.
@@ -95,6 +95,63 @@ nub run typecheck                # vérifie les types
 nub run schemas                  # régénère schemas/*.schema.json à partir des types
 nub run licences                 # vérifie la conformité REUSE des licences (uvx reuse lint; demande uv)
 ```
+
+## Outils à installer
+
+Ce que chaque usage demande, et comment l'installer en ligne de commande sous Linux, macOS et WSL (Windows Subsystem for Linux : les commandes Linux s'y appliquent telles quelles, après `wsl --install` dans un terminal Windows). Les versions indiquées sont celles avec lesquelles le dépôt a été produit.
+
+| Outil | Rôle | Qui en a besoin | Version |
+|---|---|---|---|
+| [Node.js](https://nodejs.org/) | Exécute les scripts TypeScript tels quels ; `npm install` installe les dépendances | Utilisation et développement | 26.x (`engines.node` : `>=26 <27`) |
+| [vl-convert](https://github.com/vega/vl-convert) | Convertit les graphiques Vega-Lite du sommaire en SVG | Utilisation, pour `sommaire.md` (sinon `--sans-graphiques`) | 1.9 |
+| [nub](https://nubjs.com/) | Exécuteur TypeScript et gestionnaire de paquets du développement : Node.js de `devEngines.runtime`, `nub.lock`, `nub run …` | Développement | 0.10 |
+| [uv](https://docs.astral.sh/uv/) | `uvx reuse lint` (`nub run licences`) vérifie la conformité REUSE des licences | Développement | 0.13 |
+| [Git](https://git-scm.com/) | Cloner le dépôt et suivre l'historique des données | Les deux | 2.x |
+| [jaq](https://github.com/01mf02/jaq) | Facultatif : les exemples de requêtes de [Utiliser les données](#utiliser-les-données) (jq convient aussi) | Lecture des données | 3.x |
+| [Rust](https://rustup.rs/) (`cargo`) | Facultatif : compiler vl-convert ou jaq soi-même plutôt que télécharger un binaire | Rien d'obligatoire | stable |
+
+Une clé [OpenAI](https://platform.openai.com/api-keys) complète l'installation pour l'enrichissement et le résumé (voir le [démarrage rapide](#démarrage-rapide)) ; sans elle, tout fonctionne sauf ce qui passe par l'API.
+
+**Node.js 26.** Avec [fnm](https://github.com/Schniz/fnm), qui lit `.node-version` du dépôt (Linux, macOS, WSL) :
+
+```sh
+curl -fsSL https://fnm.vercel.app/install | bash   # puis rouvrir le terminal
+fnm install 26 && fnm use 26 && node --version
+```
+
+Autres voies : sur Debian ou Ubuntu (WSL compris), le dépôt [NodeSource](https://github.com/nodesource/distributions) (`curl -fsSL https://deb.nodesource.com/setup_26.x | sudo -E bash - && sudo apt-get install -y nodejs`) ; sur macOS, `brew install fnm` puis les mêmes commandes `fnm` (Homebrew n'offre pas la ligne 26 en formule figée) ; ou les installateurs de <https://nodejs.org/>. Si nub est installé, il télécharge lui-même la bonne version : rien d'autre à faire.
+
+**vl-convert 1.9.** Un binaire par plateforme sur la [page des versions](https://github.com/vega/vl-convert/releases) (archive `vl-convert_<plateforme>.zip`, le programme dans `bin/`) ; à placer dans un dossier du `PATH`, par exemple `~/.local/bin` :
+
+```sh
+# Linux x86_64 et WSL : vl-convert_linux-64 ; Linux arm64 : vl-convert_linux-aarch64
+# macOS Apple Silicon : vl-convert_osx-arm64 ; macOS Intel : vl-convert_osx-64
+curl -fsSL -o /tmp/vl-convert.zip https://github.com/vega/vl-convert/releases/latest/download/vl-convert_linux-64.zip
+unzip -o -j /tmp/vl-convert.zip bin/vl-convert -d ~/.local/bin && vl-convert --version
+```
+
+Ou, avec Rust installé, `cargo install vl-convert` (compilation de quelques minutes).
+
+**nub 0.10** (Linux, macOS, WSL ; aussi par Homebrew, npm ou mise, voir le site) :
+
+```sh
+curl -fsSL https://nubjs.com/install.sh | bash   # installe nub dans ~/.local/bin
+nub install && nub run test                     # dans le dépôt : dépendances d'après nub.lock, puis les tests
+```
+
+**uv** (Linux, macOS, WSL ; `brew install uv` sur macOS) :
+
+```sh
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+**Git** : `sudo apt-get install -y git` (Debian, Ubuntu, WSL), `xcode-select --install` ou `brew install git` (macOS).
+
+**jaq** (facultatif) : `brew install jaq` (macOS), `cargo install jaq`, ou un binaire de la [page des versions](https://github.com/01mf02/jaq/releases) (`jaq-x86_64-unknown-linux-gnu`, `jaq-aarch64-apple-darwin`, etc.) à copier dans `~/.local/bin` sous le nom `jaq`.
+
+**Rust** (facultatif) : `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh`, puis rouvrir le terminal.
+
+Sur Linux et WSL, vérifier que `~/.local/bin` est dans le `PATH` (`echo "$PATH"`) ; sinon ajouter `export PATH="$HOME/.local/bin:$PATH"` à `~/.bashrc` ou `~/.zshrc`.
 
 ## Fichiers JSON
 
@@ -221,7 +278,7 @@ jaq '.outils[] | select(.criteres_confirmes and (.criteres_confirmes.criteres | 
 
 | Fichier | Contenu |
 |---|---|
-| [README.md](README.md) | Ce fichier : le démarrage rapide, la source, les crédits et licences, les commandes, les fichiers de données et comment les utiliser |
+| [README.md](README.md) | Ce fichier : le démarrage rapide, la source, les crédits et licences, les commandes, les outils à installer, les fichiers de données et comment les utiliser |
 | [implementation.md](implementation.md) | Le flux de travail, le contenu du dépôt, les schémas, chaque script et ses options, la classification et ses analyses, l'enrichissement, la génération du sommaire, les scripts npm, les tests, le dépannage et les conventions de documentation |
 | [historique.md](historique.md) | Les étapes du projet et les décisions prises, par date |
 | [sommaire.md](sommaire.md) | Le sommaire statistique généré (données, dates, catégories, statuts, licences, critères, forges, tags, fiabilité) |
