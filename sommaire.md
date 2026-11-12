@@ -2,21 +2,21 @@
 
 *Documentation : [README](README.md) · [Implémentation](implementation.md) · [Historique](historique.md) · [Sommaire statistique](sommaire.md)*
 
-Généré le 2026-11-12T11:42:36-05:00 par `sommaire.ts` d'après `outils.json` (données sous licence CC-BY-SA-4.0, créées le 2026-11-11T16:43:11-05:00 et modifiées pour la dernière fois le 2026-11-12T11:40:38-05:00). Ne pas modifier ce fichier à la main : relancer `nub run sommaire`.
+Généré le 2026-11-12T13:03:10-05:00 par `sommaire.ts` d'après `outils.json` (données sous licence CC-BY-SA-4.0, créées le 2026-11-12T12:35:52-05:00 et modifiées pour la dernière fois le 2026-11-12T13:01:11-05:00). Ne pas modifier ce fichier à la main : relancer `nub run sommaire`.
 
 Sauf indication contraire, les pourcentages sont calculés sur les 60 outils du répertoire. Les statistiques sur le statut du code source, les licences, les forges et les tags ne portent que sur les 57 outils déjà enrichis.
 
 ## Résumé
 
-Ce répertoire rassemble 60 outils numériques pour aider les OSBL des arts et de la culture du Canada français à orienter leurs choix vers une meilleure souveraineté numérique. Il est organisé par catégories d’usage, notamment la bureautique et la collaboration, la sécurité, le stockage, le financement, la billetterie et la gestion de collections culturelles. La bureautique et la collaboration regroupent 8 outils, la sécurité et la gestion des accès, 6, et le stockage, l’infonuagique et la sauvegarde, 5. L’évaluation repose sur trois questions : où peuvent rester les données, qui contrôle l’outil et de qui dépend-il pour fonctionner? Le nombre de critères satisfaits détermine un score de 0 à 3 étoiles. Dans le classement du répertoire, 52 outils obtiennent 2 étoiles et 8 en obtiennent 3. Le critère relatif aux données est attribué à 60 outils, celui du contrôle à 29 et celui de la dépendance à 39.
+Ce répertoire rassemble 60 outils numériques pour aider les OSBL des arts et de la culture du Canada français à orienter leurs choix technologiques. Les fiches sont organisées par catégories de besoins et complétées, lorsqu’elles sont enrichies, par des renseignements sur le statut du code, les licences, les dépôts de code et les fonctionnalités. L’évaluation repose sur trois critères de souveraineté : où peuvent rester les données, qui contrôle l’outil et de qui il dépend pour fonctionner. Leur satisfaction se traduit par un score de 0 à 3 étoiles. Dans les évaluations du répertoire, 52 outils obtiennent deux étoiles et 8 en obtiennent trois. Le critère relatif aux données est indiqué comme satisfait pour 60 outils, celui du contrôle pour 29 et celui de la dépendance pour 39. Ces résultats décrivent des profils de souveraineté différents, plutôt qu’une garantie générale d’indépendance.
 
-La classification distingue 24 logiciels libres, 6 partiellement libres, 1 à code source disponible et 26 propriétaires, tandis que 3 outils ne sont pas encore enrichis. Parmi les licences renseignées, le copyleft fort, qui comprend GPL et AGPL, domine avec 14 occurrences, devant les licences permissives avec 5 et le copyleft faible avec 4. Certaines licences restent toutefois non renseignées, y compris pour des logiciels classés libres. GitHub est la forge de code la plus représentée dans les liens recensés; Framagit, git.jami.net, hg.mozilla.org et kolaente.dev figurent également au répertoire. Les étiquettes les plus fréquentes concernent l’auto-hébergement, associé à 25 outils, les API et intégrations à 24, la gratuité à 21 et la protection de la vie privée à 16. Ces caractéristiques permettent de distinguer l’ouverture du code, les fonctions offertes et les possibilités de maîtrise des données.
+La classification distingue 24 logiciels libres, 6 partiellement libres, 1 à code source disponible et 26 propriétaires, tandis que 3 outils ne sont pas encore enrichis. Parmi les licences renseignées, la famille du copyleft fort, GPL et AGPL, domine avec 16 occurrences, devant les licences permissives avec 5 et le copyleft faible avec 4. Certaines fiches classées libres ou partiellement libres ne précisent toutefois pas leur licence. GitHub est la forge la plus représentée dans les dépôts recensés, aux côtés de Framagit, de git.jami.net et de hg.mozilla.org. Le répertoire permet ainsi de distinguer l’ouverture du code des autres dimensions de souveraineté : un outil propriétaire peut satisfaire certains critères, tandis qu’un logiciel libre ne les satisfait pas nécessairement tous.
 
-Pour un organisme, le répertoire constitue un point de départ pour repérer des solutions et comparer celles qui répondent à un même besoin. Il permet, par exemple, d’examiner CiviCRM pour la gestion des membres et des donateurs, Omeka S pour la documentation et la diffusion de collections, ou Nextcloud pour le stockage et la collaboration. Les descriptions et les étiquettes aident à comparer l’auto-hébergement, le fonctionnement local, le chiffrement, les intégrations ou les offres gratuites. Un organisme peut ainsi orienter sa sélection selon ses activités, ses capacités techniques et le niveau de maîtrise des données recherché, plutôt que de s’appuyer uniquement sur le nombre d’étoiles.
+Les catégories couvrent les activités courantes comme les besoins culturels spécialisés : bureautique et collaboration, sécurité, stockage, gestion de projets, financement, billetterie ou gestion de collections. La bureautique et la collaboration regroupent 8 outils, la sécurité et la gestion des accès 6, et le stockage, l’infonuagique et la sauvegarde 5. Les étiquettes les plus fréquentes signalent l’auto-hébergement pour 25 outils, les API ou intégrations pour 22 et une offre gratuite pour 22. L’automatisation et la protection de la vie privée apparaissent chacune pour 14 outils. Ces repères permettent à un organisme de constituer une sélection, puis de comparer les fonctions et les modalités de maîtrise des données selon ses besoins et ses capacités techniques. Il peut notamment explorer Omeka S pour publier des collections numériques, CiviCRM pour gérer ses relations avec ses membres ou Nextcloud pour partager des fichiers sur une infrastructure choisie.
 
-Les scores doivent néanmoins être lus comme des repères et non comme une garantie de souveraineté complète. La Réserve illustre cette limite : conserver des sauvegardes au Canada ne supprime pas la dépendance aux plateformes d’origine. L’enrichissement porte sur 57 outils et reste incomplet pour les autres. Les évaluations enrichies retiennent le critère des données pour 47 outils, celui du contrôle pour 19 et celui de la dépendance pour 34, des résultats distincts du classement initial. Les déductions et verdicts automatiques comportent aussi des incertitudes et ne remplacent pas une vérification auprès des fournisseurs ou des projets. Avant de choisir, il convient donc de confirmer les licences, les conditions d’hébergement, les dépendances techniques, les possibilités d’exportation, les langues disponibles et les conditions tarifaires.
+L’enrichissement reste partiel : 57 fiches sont enrichies, mais celles d’En commun, de Paperless-ngx et du Bouclier canadien de CIRA ne le sont pas encore. Les déductions et verdicts automatiques doivent être distingués des évaluations initiales : les critères indiqués comme satisfaits après enrichissement concernent 47 outils pour les données, 21 pour le contrôle et 34 pour la dépendance. Des écarts et des verdicts indéterminés subsistent. La souveraineté peut aussi rester partielle, comme pour La Réserve, qui permet de conserver des sauvegardes au Canada sans supprimer la dépendance aux plateformes d’origine. Avant toute adoption, les licences, les conditions d’hébergement, les dépendances techniques, les possibilités d’exportation, les tarifs et la disponibilité en français sont donc à vérifier auprès des sources et des fournisseurs.
 
-*Résumé rédigé par un modèle d'IA (gpt-6-astra) le 2026-11-12T11:42:23-05:00, à partir des statistiques ci-dessous et de la liste des outils. À relire avant de le diffuser.*
+*Résumé rédigé par un modèle d'IA (gpt-6-astra) le 2026-11-12T13:02:59-05:00, à partir des statistiques ci-dessous et de la liste des outils. À relire avant de le diffuser.*
 
 ## Chiffres clés
 
@@ -24,7 +24,7 @@ Les scores doivent néanmoins être lus comme des repères et non comme une gara
 - **8 outils à 3 étoiles** et **52 à 2 étoiles** (moyenne : 2,13 étoiles).
 - **57 outils enrichis** sur 60 (95,0 %).
 - **30 logiciels libres ou partiellement libres** parmi les outils enrichis (52,6 %).
-- **8 licences SPDX distinctes**, **5 forges de code** et **37 tags** utilisés sur 37 du vocabulaire.
+- **8 licences SPDX distinctes**, **4 forges de code** et **36 tags** utilisés sur 37 du vocabulaire.
 
 ## Dates
 
@@ -41,18 +41,18 @@ La page du répertoire n'affiche qu'une date pour toute la note : la date d'un o
 
 | Changement détecté | Outils |
 |---|---|
-| Aucun depuis l'import | 60 |
+| nouveau | 60 |
 
 ### Enrichissement
 
 - 57 outils enrichis, dont 57 avec une date d'enrichissement enregistrée.
-- **Premier enrichissement** : 2026-11-11T17:29:24-05:00 (1Password, Antidote, Cakemail, CanaDon, cDox et 37 autre(s)).
-- **Dernier enrichissement** : 2026-11-11T17:36:13-05:00 (Wallabag).
-- Dernière écriture du fichier de données : 2026-11-12T11:40:38-05:00.
+- **Premier enrichissement** : 2026-11-12T12:36:14-05:00 (Matomo).
+- **Dernier enrichissement** : 2026-11-12T12:55:53-05:00 (Wallabag).
+- Dernière écriture du fichier de données : 2026-11-12T13:01:11-05:00.
 
 | Jour | Outils enrichis |
 |---|---|
-| 2026-11-11 | 57 |
+| 2026-11-12 | 57 |
 
 ## Catégories
 
@@ -99,8 +99,8 @@ La page du répertoire n'affiche qu'une date pour toute la note : la date d'un o
 
 | Licence (SPDX) | Outils | % des outils enrichis |
 |---|---|---|
-| AGPL-3.0-only | 5 | 8,8 % |
-| AGPL-3.0-or-later | 5 | 8,8 % |
+| AGPL-3.0-only | 8 | 14,0 % |
+| AGPL-3.0-or-later | 4 | 7,0 % |
 | MPL-2.0 | 4 | 7,0 % |
 | Apache-2.0 | 3 | 5,3 % |
 | GPL-3.0-or-later | 2 | 3,5 % |
@@ -112,7 +112,7 @@ La page du répertoire n'affiche qu'une date pour toute la note : la date d'un o
 
 | Famille | Outils |
 |---|---|
-| Copyleft fort (GPL, AGPL) | 14 |
+| Copyleft fort (GPL, AGPL) | 16 |
 | Permissive (MIT, Apache, BSD, ISC) | 5 |
 | Copyleft faible (LGPL, MPL, EPL, EUPL) | 4 |
 
@@ -121,9 +121,9 @@ La page du répertoire n'affiche qu'une date pour toute la note : la date d'un o
 | Statut | Outils |
 |---|---|
 | Propriétaire | 26 |
-| Libre | 5 |
-| Partiellement libre (open core) | 2 |
+| Libre | 4 |
 | Code source disponible | 1 |
+| Partiellement libre (open core) | 1 |
 
 ## Critères de souveraineté
 
@@ -157,7 +157,7 @@ Les critères du répertoire sont **déduits** des descriptions (voir le README)
 | Critère | Outils | % des évaluations |
 |---|---|---|
 | Où peuvent rester les données ? | 47 | 82,5 % |
-| Qui contrôle l’outil ? | 19 | 33,3 % |
+| Qui contrôle l’outil ? | 21 | 36,8 % |
 | De qui dépend-il pour fonctionner ? | 34 | 59,6 % |
 
 | Statut | Outils | Où peuvent rester les données ? | Qui contrôle l’outil ? | De qui dépend-il pour fonctionner ? | Critères au total | Moyenne par outil |
@@ -165,11 +165,11 @@ Les critères du répertoire sont **déduits** des descriptions (voir le README)
 | Libre | 24 | 24 | 1 | 24 | 49 | 2,04 |
 | Partiellement libre (open core) | 6 | 6 | 0 | 6 | 12 | 2 |
 | Code source disponible | 1 | 1 | 0 | 1 | 2 | 2 |
-| Propriétaire | 26 | 16 | 18 | 3 | 37 | 1,42 |
-| Ensemble | 57 | 47 | 19 | 34 | 100 | 1,75 |
+| Propriétaire | 26 | 16 | 20 | 3 | 39 | 1,5 |
+| Ensemble | 57 | 47 | 21 | 34 | 102 | 1,79 |
 
 - **39** évaluation(s) sur 57 concordent avec le répertoire (68,4 %) ; **18** s'en écartent (Klipfolio, cDox, Kashoo, Elodia, Zeffy, CanaDon, Webnames.ca, Member365, Le point de vente, Envoke et 8 autre(s)).
-- Confiance de l'évaluation enrichie : moyenne 28, élevée 27, faible 2.
+- Confiance de l'évaluation enrichie : moyenne 29, élevée 26, faible 2.
 
 ### Critères vérifiés d'après la page de l'outil (citation à l'appui)
 
@@ -179,74 +179,72 @@ Pour chaque outil enrichi, une IA a lu la page de l'outil et répondu, critère 
 
 | Statut | Outils | Où peuvent rester les données ? (confirmés / infirmés / indéterminés) | Qui contrôle l’outil ? (confirmés / infirmés / indéterminés) | De qui dépend-il pour fonctionner ? (confirmés / infirmés / indéterminés) |
 |---|---|---|---|---|
-| Libre | 24 | 24 / 0 / 0 | 1 / 23 / 0 | 18 / 0 / 6 |
+| Libre | 24 | 24 / 0 / 0 | 1 / 23 / 0 | 17 / 0 / 7 |
 | Partiellement libre (open core) | 6 | 6 / 0 / 0 | 0 / 6 / 0 | 4 / 0 / 2 |
 | Code source disponible | 1 | 1 / 0 / 0 | 0 / 1 / 0 | 1 / 0 / 0 |
 | Propriétaire | 26 | 14 / 0 / 12 | 25 / 0 / 1 | 3 / 2 / 21 |
-| Ensemble | 57 | 45 / 0 / 12 | 26 / 30 / 1 | 26 / 2 / 29 |
+| Ensemble | 57 | 45 / 0 / 12 | 26 / 30 / 1 | 25 / 2 / 30 |
 
 - **57** outil(s) vérifié(s) sur 57 enrichis, par gpt-6-astra (57).
-- **33** outil(s) sur 57 ont autant de critères confirmés que d'étoiles (57,9 %) ; pour les autres, la page n'établit pas tous les critères que les étoiles représentent.
-- **38** outil(s) sur 57 ont exactement les critères de l'évaluation enrichie (66,7 %).
+- **32** outil(s) sur 57 ont autant de critères confirmés que d'étoiles (56,1 %) ; pour les autres, la page n'établit pas tous les critères que les étoiles représentent.
+- **39** outil(s) sur 57 ont exactement les critères de l'évaluation enrichie (68,4 %).
 
 ## Forges de code
 
-![Diagramme à barres : nombre d'outils par forge de code (GitHub 25, Framagit 1, git.jami.net 1, hg.mozilla.org 1, kolaente.dev 1).](graphiques/forges.png)
+![Diagramme à barres : nombre d'outils par forge de code (GitHub 26, Framagit 1, git.jami.net 1, hg.mozilla.org 1).](graphiques/forges.png)
 
 | Forge | Outils | Hôte(s) | Outils concernés |
 |---|---|---|---|
-| GitHub | 25 | github.com | 2FAS Auth, Bitwarden, CiviCRM, Collabora Online, CryptPad, Discourse et 19 autre(s) |
+| GitHub | 26 | github.com | 2FAS Auth, Bitwarden, CiviCRM, Collabora Online, CryptPad, Discourse et 20 autre(s) |
 | Framagit | 1 | framagit.org | Mobilizon |
 | git.jami.net | 1 | git.jami.net | Jami |
 | hg.mozilla.org | 1 | hg.mozilla.org | Thunderbird |
-| kolaente.dev | 1 | kolaente.dev | Vikunja |
 
 - **Logiciels libres ou partiels sans dépôt connu** : La Digitale.
 - Autres outils enrichis sans dépôt (propriétaires ou inconnus) : 27.
 
 ## Tags
 
-- Moyenne de **4,42 tags par outil enrichi**.
-- 37 tags utilisés sur 37 du vocabulaire.
+- Moyenne de **4,39 tags par outil enrichi**.
+- 36 tags utilisés sur 37 du vocabulaire; **non utilisés** : gestion-documentaire.
 
-![Diagramme à barres : les 15 tags les plus fréquents (auto-hebergeable 25, api-integrations 24, gratuit 21, vie-privee 16, automatisation 13…).](graphiques/tags.png)
+![Diagramme à barres : les 15 tags les plus fréquents (auto-hebergeable 25, api-integrations 22, gratuit 22, automatisation 14, vie-privee 14…).](graphiques/tags.png)
 
 | Tag | Description | Outils | % des outils enrichis |
 |---|---|---|---|
 | auto-hebergeable | Peut être installé et exploité sur l'infrastructure de l'organisation plutôt que chez le fournisseur. | 25 | 43,9 % |
-| api-integrations | Offre une API ou des intégrations avec d'autres outils et services. | 24 | 42,1 % |
-| gratuit | Offre une version gratuite, entièrement ou pour les organismes admissibles. | 21 | 36,8 % |
-| vie-privee | Mise sur la protection de la vie privée : limitation du pistage, collecte minimale de données, fonctionnement sans compte. | 16 | 28,1 % |
-| automatisation | Automatise des tâches, des flux de travail ou des campagnes. | 13 | 22,8 % |
+| api-integrations | Offre une API ou des intégrations avec d'autres outils et services. | 22 | 38,6 % |
+| gratuit | Offre une version gratuite, entièrement ou pour les organismes admissibles. | 22 | 38,6 % |
+| automatisation | Automatise des tâches, des flux de travail ou des campagnes. | 14 | 24,6 % |
+| vie-privee | Mise sur la protection de la vie privée : limitation du pistage, collecte minimale de données, fonctionnement sans compte. | 14 | 24,6 % |
 | rapports-analytique | Produit des rapports, des tableaux de bord ou des indicateurs de suivi. | 13 | 22,8 % |
-| chiffrement | Chiffre les données ou les échanges, notamment de bout en bout. | 11 | 19,3 % |
+| application-mobile | Offre une application pour téléphone ou tablette. | 10 | 17,5 % |
+| redaction-documents | Rédaction, édition ou correction de textes, tableurs, présentations et autres documents. | 10 | 17,5 % |
+| securite-acces | Mots de passe, authentification à deux facteurs, protection contre l'hameçonnage et gestion des accès. | 10 | 17,5 % |
 | application-bureau | S'installe comme application sur l'ordinateur. | 9 | 15,8 % |
-| application-mobile | Offre une application pour téléphone ou tablette. | 9 | 15,8 % |
+| chiffrement | Chiffre les données ou les échanges, notamment de bout en bout. | 9 | 15,8 % |
 | collaboration-temps-reel | Permet de travailler à plusieurs en même temps sur un même contenu. | 9 | 15,8 % |
-| redaction-documents | Rédaction, édition ou correction de textes, tableurs, présentations et autres documents. | 9 | 15,8 % |
+| courriel-infolettres | Courriel, infolettres et marketing par courriel. | 8 | 14,0 % |
 | gestion-contacts-membres | Gestion de contacts, de membres, de donateurs et de la relation avec eux (CRM). | 8 | 14,0 % |
-| hors-ligne | Fonctionne sans connexion Internet ou garde les données localement sur l'appareil. | 8 | 14,0 % |
-| securite-acces | Mots de passe, authentification à deux facteurs, protection contre l'hameçonnage et gestion des accès. | 8 | 14,0 % |
-| courriel-infolettres | Courriel, infolettres et marketing par courriel. | 7 | 12,3 % |
+| hors-ligne | Fonctionne sans connexion Internet ou garde les données localement sur l'appareil. | 7 | 12,3 % |
 | messagerie-visioconference | Messagerie, appels audio et vidéo, visioconférence. | 6 | 10,5 % |
 | evenements-billetterie | Organisation d'événements, inscriptions et vente de billets. | 5 | 8,8 % |
-| stockage-partage-fichiers | Stockage, synchronisation et partage de fichiers. | 5 | 8,8 % |
-| dons-paiements | Collecte de dons, campagnes de financement et traitement de paiements. | 4 | 7,0 % |
+| communaute-reseau-social | Communautés en ligne, forums et réseaux sociaux. | 4 | 7,0 % |
 | gestion-projets-taches | Planification de projets, suivi de tâches et d'échéances, tableaux Kanban. | 4 | 7,0 % |
 | intelligence-artificielle | Utilise l'intelligence artificielle pour ses fonctions principales (génération, transcription, assistance). | 4 | 7,0 % |
 | notes-veille | Prise de notes, organisation des connaissances, flux RSS et lecture d'articles sauvegardés. | 4 | 7,0 % |
-| anglais-seulement | Interface ou soutien disponibles uniquement en anglais. | 3 | 5,3 % |
+| stockage-partage-fichiers | Stockage, synchronisation et partage de fichiers. | 4 | 7,0 % |
+| dons-paiements | Collecte de dons, campagnes de financement et traitement de paiements. | 3 | 5,3 % |
 | federe-decentralise | Repose sur des instances indépendantes qui communiquent entre elles ou sur une architecture pair-à-pair. | 3 | 5,3 % |
 | sauvegarde | Sauvegarde et récupération de données. | 3 | 5,3 % |
-| signature-electronique | Signature électronique de documents et suivi des signataires. | 3 | 5,3 % |
 | transcription-reunions | Transcription de la parole, dictée vocale et comptes rendus de réunions. | 3 | 5,3 % |
+| anglais-seulement | Interface ou soutien disponibles uniquement en anglais. | 2 | 3,5 % |
 | collections-patrimoine | Catalogage et publication de collections, de bibliothèques et de contenus culturels. | 2 | 3,5 % |
-| communaute-reseau-social | Communautés en ligne, forums et réseaux sociaux. | 2 | 3,5 % |
+| comptabilite-facturation | Comptabilité, facturation, suivi des dépenses et rapports financiers. | 2 | 3,5 % |
 | conception-design | Conception graphique, maquettes et prototypes. | 2 | 3,5 % |
 | domaines-hebergement-web | Noms de domaine, hébergement Web et services d'infrastructure en ligne. | 2 | 3,5 % |
 | ressources-humaines | Dossiers d'employés, vacances, absences et feuilles de temps. | 2 | 3,5 % |
-| comptabilite-facturation | Comptabilité, facturation, suivi des dépenses et rapports financiers. | 1 | 1,8 % |
-| gestion-documentaire | Classement, indexation, numérisation (OCR) et archivage de documents. | 1 | 1,8 % |
+| signature-electronique | Signature électronique de documents et suivi des signataires. | 2 | 3,5 % |
 | navigation-web | Navigation sur le Web. | 1 | 1,8 % |
 | subventions | Recherche de subventions et préparation de demandes de financement. | 1 | 1,8 % |
 | tarif-osbl | Prévoit un rabais ou une tarification particulière pour les OSBL et organismes de bienfaisance. | 1 | 1,8 % |
@@ -255,16 +253,16 @@ Pour chaque outil enrichi, une IA a lu la page de l'outil et répondu, critère 
 
 | Paire de tags | Outils |
 |---|---|
-| api-integrations + auto-hebergeable | 13 |
-| auto-hebergeable + gratuit | 13 |
-| api-integrations + automatisation | 9 |
+| auto-hebergeable + gratuit | 14 |
+| api-integrations + auto-hebergeable | 11 |
+| api-integrations + automatisation | 10 |
 | api-integrations + rapports-analytique | 9 |
 | auto-hebergeable + collaboration-temps-reel | 8 |
-| collaboration-temps-reel + redaction-documents | 7 |
-| gratuit + vie-privee | 7 |
+| collaboration-temps-reel + redaction-documents | 8 |
+| gratuit + vie-privee | 8 |
+| auto-hebergeable + redaction-documents | 7 |
 | api-integrations + gratuit | 6 |
-| auto-hebergeable + redaction-documents | 6 |
-| auto-hebergeable + vie-privee | 6 |
+| automatisation + rapports-analytique | 6 |
 
 ## Fiabilité et suivi
 
