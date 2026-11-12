@@ -232,3 +232,20 @@ test("synchroniser: fichier existant au mauvais format: refusé avec un message 
   assert.equal(statSync(f).size, 2);
 });
 
+
+test("synchroniser: categories.json est écrit à côté de outils.json à partir des catégories de la page, et les descriptions déjà connues sont conservées", () => {
+  const d = dossier();
+  const f = join(d, "outils.json");
+  const page = [{ ...brut("a"), categorie: "cat-a" }];
+  const categories = [{ id: "cat-a", nom: "Cat A", icone: "🧪" }];
+  const s = synchroniser(f, page, CRITERES, NOUVELLE, false, categories);
+  assert.deepEqual([s.categoriesEcrites, s.categories], [true, categories]);
+  const lu = lireFichier<{ id: string; description?: string }>(join(d, "categories.json"), "categories");
+  assert.deepEqual(lu.donnees, categories);
+  writeFileSync(join(d, "categories.json"), JSON.stringify({ meta: lu.meta, categories: [{ ...categories[0], description: "Décrite." }] }));
+  const t = synchroniser(f, page, CRITERES, NOUVELLE, false, [{ id: "cat-a", nom: "Cat A", icone: "🔬" }]);
+  assert.deepEqual(t.categories, [{ id: "cat-a", nom: "Cat A", icone: "🔬", description: "Décrite." }]);
+  assert.equal(t.categoriesEcrites, true, "l'icône a changé");
+  const u = synchroniser(f, page, CRITERES, NOUVELLE, true, categories);
+  assert.equal(u.categoriesEcrites, false, "simulation: rien n'est écrit");
+});

@@ -14,6 +14,7 @@ Les étapes du projet et les décisions prises, par date, d'après l'historique 
 | 2026-11-11 16:43 | Création des trois fichiers de données (`meta.created_at`), avec `meta` et les dates en heure de Toronto |
 | 2026-11-11 17:29 à 17:43 | Enrichissement par IA de 57 outils sur 60 ; les 3 autres (En commun, Paperless-ngx, CIRA Canadian Shield) ont une page inaccessible ou vide |
 | 2026-11-12 09:00 | Confirmation des critères par OpenAI et Claude sur les 57 outils enrichis, règle A, citation à l'appui (`confirmations/`, puis `criteres_confirmes`) |
+| 2026-11-12 11:39 | Création de `categories.json` (20 catégories, descriptions rédigées par IA à 11:42) |
 | 2026-11-12 11:42 | Dernière génération de `sommaire.md` |
 
 ## 2026-11-11
