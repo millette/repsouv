@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Précise un schéma JSON produit par RunTypes avec ce que les types TypeScript n'expriment pas:
 //   - les objets refusent les clés inconnues (additionalProperties: false), comme le fait fichiers.ts;
-//   - `score` est un entier de 0 à 3, `echecs_enrichissement` et `echecs_confirmation` des entiers d'au moins 1, `tags` compte de 1 à 5 identifiants distincts;
+//   - `score` est un entier de 0 à 3, `echecs_enrichissement`, `echecs_confirmation` et `echecs_openhub` des entiers d'au moins 1, `tags` compte de 1 à 5 identifiants distincts;
 //   - les dates sont des horodatages ISO 8601 avec décalage (même motif que fichiers.ts);
 //   - les URL (lien, url, pdc, donnees, alternative_a) sont en http(s), les courriels (soumis_par.email) ont la forme usuelle;
 //   - les identifiants (id, categorie et source_repertoire_id des outils) sont des slugs; outils[].categorie renvoie à categories[].id de categories.json
@@ -30,7 +30,7 @@ function regle(nom: string, schema: Noeud, freres: Set<string>): Noeud {
   if (nom === "source_repertoire_id" && schema.type === "string") return { pattern: SLUG, $comment: "identifiant d'une source: sources[].id de sources.json" };
   if ((CHAMPS_URL.has(nom) || (nom === "donnees" && freres.has("extracteur"))) && schema.type === "string") return { pattern: URL_HTTP };
   if (nom === "email" && schema.type === "string") return { pattern: COURRIEL };
-  if (nom === "echecs_enrichissement" || nom === "echecs_confirmation") return { type: "integer", minimum: 1 };
+  if (nom === "echecs_enrichissement" || nom === "echecs_confirmation" || nom === "echecs_openhub") return { type: "integer", minimum: 1 };
   if (CHAMPS_HORODATAGE.has(nom) && schema.type === "string") return { pattern: HORODATAGE };
   const elements = schema.items;
   if (schema.type === "array" && estObjet(elements) && elements.type === "string") {

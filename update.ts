@@ -55,6 +55,7 @@ import { chargerEnv } from "./env.ts";
 import { formaterDuree } from "./duree.ts";
 import { ecrireFichier, lireFichier, lireSiExiste, type Lu } from "./fichiers.ts";
 import { ID_PRAXIS, SOURCE_PRAXIS, sourcesAvec, type Source } from "./sources.ts";
+import { abandonneOpenHub, aCompleterOpenHub, clientOpenHub, completerOpenHub, requetesOpenHub } from "./openhub.ts";
 import { CHAMPS_ENRICHIS, telechargerRepertoire, type Changement, type Critere, type Outil } from "./extract.ts";
 import { verifierVlConvert } from "./graphiques.ts";
 import { createProgress, type Progress } from "./progress.ts";
@@ -65,7 +66,7 @@ import { additionner, ajouterUsage, coutTotal, dollars, formaterCout, formaterCo
 
 const CHAMPS_COMPARES = ["categorie", "score", "lien", "description"] as const;
 /** Les champs à reporter sur la version à jour d'un outil: l'enrichissement et le compteur d'échecs. */
-const CHAMPS_REPORTES = [...CHAMPS_ENRICHIS, "echecs_enrichissement", "echecs_confirmation"] as const;
+const CHAMPS_REPORTES = [...CHAMPS_ENRICHIS, "echecs_enrichissement", "echecs_confirmation", "openhub_id", "openhub", "echecs_openhub"] as const;
 
 /** Les champs d'enrichissement d'un outil existant, à reporter sur sa version à jour de la page. */
 const enrichissementDe = (o: OutilClasse): Partial<Outil> =>
@@ -318,6 +319,9 @@ if (import.meta.main) {
     const abandonnesVerif = apercu.outils.filter((o) => aConfirmer(o) && abandonneConfirmation(o, maxEchecs));
     const verification = estimerCoutConfirmation(aVerifier, criteresPage, modele, apercu.categories);
     const aDecrireListe = apercu.categories.filter(aDecrire);
+    // Open Hub: les outils libres déjà enrichis sans données (ceux enrichis maintenant le seront au passage suivant).
+    const aOpenHub = apercu.outils.filter((o) => aCompleterOpenHub(o, maxEchecs));
+    const abandonnesOpenHub = apercu.outils.filter((o) => abandonneOpenHub(o, maxEchecs));
     const descriptions = estimerCoutDescriptions(apercu.categories, apercu.outils.filter((o) => !o.removed), modele);
 
     if (apercu.importInitial) console.log(sortie.attenue(`Import initial: ${fichier} n'existe pas, tous les outils de la page sont nouveaux`));
@@ -329,6 +333,8 @@ if (import.meta.main) {
     console.log(`${sortie.gras("Vérification des critères")}: ${aVerifier.length ? sortie.jaune(String(aVerifier.length)) : sortie.vert("0")} outil(s) à vérifier${aVerifier.length ? ` (${sortie.cyan(aVerifier.map((o) => o.nom).join(", "))})` : ""}`);
     if (abandonnesVerif.length) console.log(`  ${sortie.jaune(`abandonnés après ${maxEchecs} échecs consécutifs`)} (${abandonnesVerif.length}): ${sortie.cyan(abandonnesVerif.map((o) => `${o.nom} (${o.echecs_confirmation})`).join(", "))}; relancer avec --max-echecs plus élevé pour les retenter`);
     console.log(`${sortie.gras("Descriptions de catégories")}: ${aDecrireListe.length ? sortie.jaune(String(aDecrireListe.length)) : sortie.vert("0")} catégorie(s) à décrire${aDecrireListe.length ? ` (${sortie.cyan(aDecrireListe.map((c) => c.nom).join(", "))})` : ""}`);
+    console.log(`${sortie.gras("Open Hub")}: ${aOpenHub.length ? sortie.jaune(String(aOpenHub.length)) : sortie.vert("0")} outil(s) libre(s) à chercher (${requetesOpenHub(apercu.outils, maxEchecs)} requête(s), gratuites, 1 000 par jour)${aOpenHub.length ? ` (${sortie.cyan(aOpenHub.map((o) => o.nom).join(", "))})` : ""}`);
+    if (abandonnesOpenHub.length) console.log(`  ${sortie.jaune(`abandonnés après ${maxEchecs} échecs consécutifs`)} (${abandonnesOpenHub.length}): ${sortie.cyan(abandonnesOpenHub.map((o) => `${o.nom} (${o.echecs_openhub})`).join(", "))}; relancer avec --max-echecs plus élevé pour les retenter`);
     if (prevus.length || aVerifier.length || aDecrireListe.length || total) for (const ligne of lignesEstimation(estimation, verification, descriptions, modele, apercu.outils.filter((o) => !o.removed).length, sortie, repli)) console.log(ligne);
     if (dryRun) {
       console.log(sortie.attenue("Simulation (--dry-run): rien n'est écrit"));
@@ -370,6 +376,7 @@ if (import.meta.main) {
     if (sync.sourcesEcrites) console.log(`${sortie.vert(join(dirname(fichier), "sources.json"))} mis à jour`);
     const categories = sync.categories;
     let nbDecrites = 0;
+    let nbOpenHub = 0;
 
     if (prevus.length) {
       const cle = process.env.OPENAI_API_KEY;
@@ -447,6 +454,31 @@ if (import.meta.main) {
       }
     }
 
+    // Open Hub: données publiques des projets libres enrichis qui n'en ont pas encore (openhub.ts).
+    const aOpenHubMaintenant = outils.filter((o) => aCompleterOpenHub(o, maxEchecs));
+    if (aOpenHubMaintenant.length) {
+      const cleOpenHub = process.env.OPENHUB_API_KEY;
+      if (!cleOpenHub) {
+        console.error(suivi.jaune(`Open Hub sauté: OPENHUB_API_KEY absente (voir .env.example); ${aOpenHubMaintenant.length} outil(s) libre(s) restent à chercher`));
+      } else {
+        const progression = createProgress(aOpenHubMaintenant.length, { logWhenNotTTY: true, paint: { filled: suivi.vert, empty: suivi.attenue, label: suivi.cyan }, restant: formaterDuree });
+        let traites = 0;
+        const resultat = await completerOpenHub(outils, {
+          client: clientOpenHub(cleOpenHub),
+          maxEchecs,
+          apresChaque: (os) => { courant = ecrireFichier(fichier, "outils", os, courant); },
+          debut: (nom) => (process.stderr.isTTY ? progression.update(traites, nom) : progression.message(suivi.attenue(`Open Hub: ${nom}...`))),
+          progression: (n) => progression.update((traites = n)),
+          journal: (message, niveau = "info") => progression.message(ligneJournal(message, niveau, suivi)),
+        });
+        progression.end();
+        nbOpenHub = resultat.completes.length;
+        const completes = nbOpenHub ? sortie.gras(sortie.vert(String(nbOpenHub))) : "0";
+        const echecs = resultat.erreurs.length ? sortie.gras(sortie.jaune(String(resultat.erreurs.length))) : sortie.vert("0");
+        console.log(`Open Hub: ${completes} outil(s) complété(s); sans concordance ou en erreur: ${echecs}${resultat.sansConcordance.length ? ` (candidats dans le journal ci-dessus)` : ""}`);
+      }
+    }
+
     // Descriptions des catégories qui n'en ont pas encore (categories.json), avec le même modèle.
     const aDecrireMaintenant = categories.filter(aDecrire);
     if (aDecrireMaintenant.length) {
@@ -475,7 +507,7 @@ if (import.meta.main) {
       }
     }
 
-    if (sommaireNecessaire({ dryRun, changements: total + nbDecrites, enrichis: nbEnrichis + nbConfirmes })) {
+    if (sommaireNecessaire({ dryRun, changements: total + nbDecrites, enrichis: nbEnrichis + nbConfirmes + nbOpenHub })) {
       const raison = raisonDeSauterSommaire(process.env.OPENAI_API_KEY, verifierVlConvert);
       if (raison) {
         console.error(suivi.jaune(`Sommaire non mis à jour: ${raison}. Le sommaire existant est conservé; relancer \`node sommaire.ts\` ensuite.`));

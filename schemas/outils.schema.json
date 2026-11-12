@@ -255,6 +255,131 @@
             ],
             "additionalProperties": false
           },
+          "openhub_id": {
+            "type": "string"
+          },
+          "openhub": {
+            "type": "object",
+            "properties": {
+              "organisation": {
+                "anyOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "string"
+                  }
+                ]
+              },
+              "activite": {
+                "anyOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "string"
+                  }
+                ]
+              },
+              "licences": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "langage_principal": {
+                "anyOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "string"
+                  }
+                ]
+              },
+              "lignes_de_code": {
+                "anyOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ]
+              },
+              "contributeurs_total": {
+                "anyOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ]
+              },
+              "contributeurs_12_mois": {
+                "anyOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ]
+              },
+              "commits_12_mois": {
+                "anyOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ]
+              },
+              "premier_mois": {
+                "anyOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "string"
+                  }
+                ]
+              },
+              "dernier_mois": {
+                "anyOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "string"
+                  }
+                ]
+              },
+              "consulte_le": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "organisation",
+              "activite",
+              "licences",
+              "langage_principal",
+              "lignes_de_code",
+              "contributeurs_total",
+              "contributeurs_12_mois",
+              "commits_12_mois",
+              "premier_mois",
+              "dernier_mois",
+              "consulte_le"
+            ],
+            "additionalProperties": false
+          },
+          "echecs_openhub": {
+            "type": "integer",
+            "minimum": 1
+          },
           "criteres": {
             "type": "array",
             "items": {

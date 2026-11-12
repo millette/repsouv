@@ -2,7 +2,7 @@
   "meta": {
     "data_license": "CC-BY-SA-4.0",
     "created_at": "2026-11-12T12:35:52-05:00",
-    "updated_at": "2026-11-12T17:11:36-05:00"
+    "updated_at": "2026-11-12T17:20:36-05:00"
   },
   "outils": [
     {
@@ -55,7 +55,23 @@
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:55:59-05:00"
       },
-      "source_repertoire_id": "praxis"
+      "source_repertoire_id": "praxis",
+      "openhub_id": "10720",
+      "openhub": {
+        "organisation": null,
+        "activite": "Not Available",
+        "licences": [
+          "GNU General Public License v3.0 or later"
+        ],
+        "langage_principal": "PHP",
+        "lignes_de_code": 3938168,
+        "contributeurs_total": 1079,
+        "contributeurs_12_mois": 99,
+        "commits_12_mois": 5467,
+        "premier_mois": "2007-07-01",
+        "dernier_mois": "2024-06-01",
+        "consulte_le": "2026-11-12T17:20:28-05:00"
+      }
     },
     {
       "categorie": "analyse-et-mesure",
@@ -256,7 +272,21 @@
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:56:28-05:00"
       },
-      "source_repertoire_id": "praxis"
+      "source_repertoire_id": "praxis",
+      "openhub_id": "731278",
+      "openhub": {
+        "organisation": null,
+        "activite": "High",
+        "licences": [],
+        "langage_principal": "JavaScript",
+        "lignes_de_code": 241863,
+        "contributeurs_total": 143,
+        "contributeurs_12_mois": 24,
+        "commits_12_mois": 1002,
+        "premier_mois": "2014-10-01",
+        "dernier_mois": "2026-11-01",
+        "consulte_le": "2026-11-12T17:20:28-05:00"
+      }
     },
     {
       "categorie": "bureautique-et-collaboration",
@@ -308,7 +338,23 @@
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:56:35-05:00"
       },
-      "source_repertoire_id": "praxis"
+      "source_repertoire_id": "praxis",
+      "openhub_id": "486794",
+      "openhub": {
+        "organisation": null,
+        "activite": "Very Low",
+        "licences": [
+          "GNU Affero General Public License v3.0"
+        ],
+        "langage_principal": "C#",
+        "lignes_de_code": 1874255,
+        "contributeurs_total": 15,
+        "contributeurs_12_mois": 1,
+        "commits_12_mois": 1,
+        "premier_mois": "2014-07-01",
+        "dernier_mois": "2026-05-01",
+        "consulte_le": "2026-11-12T17:20:29-05:00"
+      }
     },
     {
       "categorie": "bureautique-et-collaboration",
@@ -359,7 +405,21 @@
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:56:46-05:00"
       },
-      "source_repertoire_id": "praxis"
+      "source_repertoire_id": "praxis",
+      "openhub_id": "761437",
+      "openhub": {
+        "organisation": null,
+        "activite": "Very High",
+        "licences": [],
+        "langage_principal": "C++",
+        "lignes_de_code": 9045709,
+        "contributeurs_total": 2975,
+        "contributeurs_12_mois": 327,
+        "commits_12_mois": 18007,
+        "premier_mois": "2015-03-01",
+        "dernier_mois": "2026-11-01",
+        "consulte_le": "2026-11-12T17:17:21-05:00"
+      }
     },
     {
       "categorie": "bureautique-et-collaboration",
@@ -409,7 +469,8 @@
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:56:50-05:00"
       },
-      "source_repertoire_id": "praxis"
+      "source_repertoire_id": "praxis",
+      "echecs_openhub": 2
     },
     {
       "categorie": "bureautique-et-collaboration",
@@ -460,7 +521,21 @@
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:57:00-05:00"
       },
-      "source_repertoire_id": "praxis"
+      "source_repertoire_id": "praxis",
+      "openhub_id": "766962",
+      "openhub": {
+        "organisation": null,
+        "activite": "Very High",
+        "licences": [],
+        "langage_principal": "C++",
+        "lignes_de_code": 5991743,
+        "contributeurs_total": 425,
+        "contributeurs_12_mois": 162,
+        "commits_12_mois": 6695,
+        "premier_mois": "2013-06-01",
+        "dernier_mois": "2026-11-01",
+        "consulte_le": "2026-11-12T17:17:22-05:00"
+      }
     },
     {
       "categorie": "bureautique-et-collaboration",
@@ -512,7 +587,8 @@
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:57:07-05:00"
       },
-      "source_repertoire_id": "praxis"
+      "source_repertoire_id": "praxis",
+      "echecs_openhub": 2
     },
     {
       "categorie": "communication-et-collaboration-d-equipe",
@@ -566,7 +642,21 @@
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:57:14-05:00"
       },
-      "source_repertoire_id": "praxis"
+      "source_repertoire_id": "praxis",
+      "openhub_id": "318963",
+      "openhub": {
+        "organisation": "Savoir-faire Linux",
+        "activite": "Not Available",
+        "licences": [],
+        "langage_principal": "TypeScript",
+        "lignes_de_code": 1077570,
+        "contributeurs_total": 271,
+        "contributeurs_12_mois": 28,
+        "commits_12_mois": 1884,
+        "premier_mois": "2004-12-01",
+        "dernier_mois": "2026-07-01",
+        "consulte_le": "2026-11-12T17:17:23-05:00"
+      }
     },
     {
       "categorie": "communication-et-collaboration-d-equipe",
@@ -618,7 +708,21 @@
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:57:18-05:00"
       },
-      "source_repertoire_id": "praxis"
+      "source_repertoire_id": "praxis",
+      "openhub_id": "724252",
+      "openhub": {
+        "organisation": null,
+        "activite": "Very High",
+        "licences": [],
+        "langage_principal": "TypeScript",
+        "lignes_de_code": 2546648,
+        "contributeurs_total": 1682,
+        "contributeurs_12_mois": 120,
+        "commits_12_mois": 2736,
+        "premier_mois": "2015-06-01",
+        "dernier_mois": "2026-11-01",
+        "consulte_le": "2026-11-12T17:20:30-05:00"
+      }
     },
     {
       "categorie": "communication-et-collaboration-d-equipe",
@@ -669,7 +773,23 @@
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:57:25-05:00"
       },
-      "source_repertoire_id": "praxis"
+      "source_repertoire_id": "praxis",
+      "openhub_id": "714272",
+      "openhub": {
+        "organisation": "Atlassian",
+        "activite": "Very High",
+        "licences": [
+          "Apache License 2.0"
+        ],
+        "langage_principal": "TypeScript",
+        "lignes_de_code": 203781,
+        "contributeurs_total": 810,
+        "contributeurs_12_mois": 122,
+        "commits_12_mois": 1056,
+        "premier_mois": "2013-12-01",
+        "dernier_mois": "2026-11-01",
+        "consulte_le": "2026-11-12T17:20:31-05:00"
+      }
     },
     {
       "categorie": "communautes-reseaux-et-partage-des-connaissances",
@@ -735,7 +855,23 @@
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:57:30-05:00"
       },
-      "source_repertoire_id": "praxis"
+      "source_repertoire_id": "praxis",
+      "openhub_id": "730083",
+      "openhub": {
+        "organisation": null,
+        "activite": "Very High",
+        "licences": [
+          "GNU Affero General Public License v3.0 or later"
+        ],
+        "langage_principal": "Ruby",
+        "lignes_de_code": 236523,
+        "contributeurs_total": 1131,
+        "contributeurs_12_mois": 86,
+        "commits_12_mois": 3159,
+        "premier_mois": "2016-02-01",
+        "dernier_mois": "2026-11-01",
+        "consulte_le": "2026-11-12T17:17:26-05:00"
+      }
     },
     {
       "categorie": "communautes-reseaux-et-partage-des-connaissances",
@@ -786,7 +922,23 @@
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:57:41-05:00"
       },
-      "source_repertoire_id": "praxis"
+      "source_repertoire_id": "praxis",
+      "openhub_id": "633846",
+      "openhub": {
+        "organisation": null,
+        "activite": "Very High",
+        "licences": [
+          "GNU General Public License v2.0 or later"
+        ],
+        "langage_principal": "Ruby",
+        "lignes_de_code": 1718728,
+        "contributeurs_total": 1204,
+        "contributeurs_12_mois": 136,
+        "commits_12_mois": 7710,
+        "premier_mois": "2011-10-01",
+        "dernier_mois": "2026-11-01",
+        "consulte_le": "2026-11-12T17:17:26-05:00"
+      }
     },
     {
       "categorie": "comptabilite-et-finances",
@@ -1070,7 +1222,23 @@
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:58:05-05:00"
       },
-      "source_repertoire_id": "praxis"
+      "source_repertoire_id": "praxis",
+      "openhub_id": "762685",
+      "openhub": {
+        "organisation": null,
+        "activite": "Very High",
+        "licences": [
+          "Mozilla Public License 2.0"
+        ],
+        "langage_principal": "Clojure",
+        "lignes_de_code": 240884,
+        "contributeurs_total": 405,
+        "contributeurs_12_mois": 232,
+        "commits_12_mois": 5445,
+        "premier_mois": "2015-06-01",
+        "dernier_mois": "2026-11-01",
+        "consulte_le": "2026-11-12T17:17:27-05:00"
+      }
     },
     {
       "categorie": "gestion-de-collections-et-de-contenus-culturels",
@@ -1166,7 +1334,8 @@
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:58:12-05:00"
       },
-      "source_repertoire_id": "praxis"
+      "source_repertoire_id": "praxis",
+      "echecs_openhub": 2
     },
     {
       "categorie": "gestion-de-projets-et-des-taches",
@@ -1218,7 +1387,23 @@
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:58:18-05:00"
       },
-      "source_repertoire_id": "praxis"
+      "source_repertoire_id": "praxis",
+      "openhub_id": "757432",
+      "openhub": {
+        "organisation": null,
+        "activite": "High",
+        "licences": [
+          "GNU General Public License v2.0 or later"
+        ],
+        "langage_principal": "JavaScript",
+        "lignes_de_code": 271226,
+        "contributeurs_total": 212,
+        "contributeurs_12_mois": 45,
+        "commits_12_mois": 846,
+        "premier_mois": "2015-02-01",
+        "dernier_mois": "2026-11-01",
+        "consulte_le": "2026-11-12T17:17:27-05:00"
+      }
     },
     {
       "categorie": "gestion-de-projets-et-des-taches",
@@ -1270,7 +1455,23 @@
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:58:24-05:00"
       },
-      "source_repertoire_id": "praxis"
+      "source_repertoire_id": "praxis",
+      "openhub_id": "631944",
+      "openhub": {
+        "organisation": null,
+        "activite": "Very High",
+        "licences": [
+          "GNU General Public License v3.0 only"
+        ],
+        "langage_principal": "Ruby",
+        "lignes_de_code": 995059,
+        "contributeurs_total": 433,
+        "contributeurs_12_mois": 89,
+        "commits_12_mois": 19124,
+        "premier_mois": "2006-06-01",
+        "dernier_mois": "2026-10-01",
+        "consulte_le": "2026-11-12T17:17:28-05:00"
+      }
     },
     {
       "categorie": "gestion-de-projets-et-des-taches",
@@ -1322,7 +1523,23 @@
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:58:32-05:00"
       },
-      "source_repertoire_id": "praxis"
+      "source_repertoire_id": "praxis",
+      "openhub_id": "719594",
+      "openhub": {
+        "organisation": null,
+        "activite": "Moderate",
+        "licences": [
+          "GNU Affero General Public License v3.0 or later"
+        ],
+        "langage_principal": "Python",
+        "lignes_de_code": 132276,
+        "contributeurs_total": 217,
+        "contributeurs_12_mois": 9,
+        "commits_12_mois": 153,
+        "premier_mois": "2013-03-01",
+        "dernier_mois": "2026-11-01",
+        "consulte_le": "2026-11-12T17:17:29-05:00"
+      }
     },
     {
       "categorie": "gestion-de-projets-et-des-taches",
@@ -1372,7 +1589,8 @@
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:58:40-05:00"
       },
-      "source_repertoire_id": "praxis"
+      "source_repertoire_id": "praxis",
+      "echecs_openhub": 2
     },
     {
       "categorie": "gestion-de-la-relation-des-membres-et-crm",
@@ -1472,7 +1690,23 @@
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:58:49-05:00"
       },
-      "source_repertoire_id": "praxis"
+      "source_repertoire_id": "praxis",
+      "openhub_id": "3256",
+      "openhub": {
+        "organisation": null,
+        "activite": "Very High",
+        "licences": [
+          "GNU Affero General Public License v3.0"
+        ],
+        "langage_principal": "PHP",
+        "lignes_de_code": 1033572,
+        "contributeurs_total": 1794,
+        "contributeurs_12_mois": 376,
+        "commits_12_mois": 10791,
+        "premier_mois": "2010-04-01",
+        "dernier_mois": "2026-11-01",
+        "consulte_le": "2026-11-12T17:17:30-05:00"
+      }
     },
     {
       "categorie": "gestion-d-evenements-et-billetterie",
@@ -1568,7 +1802,8 @@
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:59:03-05:00"
       },
-      "source_repertoire_id": "praxis"
+      "source_repertoire_id": "praxis",
+      "echecs_openhub": 2
     },
     {
       "categorie": "gestion-documentaire-et-signature-electronique",
@@ -1683,7 +1918,23 @@
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:59:12-05:00"
       },
-      "source_repertoire_id": "praxis"
+      "source_repertoire_id": "praxis",
+      "openhub_id": "763084",
+      "openhub": {
+        "organisation": null,
+        "activite": "High",
+        "licences": [
+          "GNU Affero General Public License v3.0 or later"
+        ],
+        "langage_principal": "Ruby",
+        "lignes_de_code": 43453,
+        "contributeurs_total": 8,
+        "contributeurs_12_mois": 3,
+        "commits_12_mois": 1029,
+        "premier_mois": "2023-05-01",
+        "dernier_mois": "2026-11-01",
+        "consulte_le": "2026-11-12T17:20:32-05:00"
+      }
     },
     {
       "categorie": "marketing-par-courriel",
@@ -1932,7 +2183,23 @@
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:59:29-05:00"
       },
-      "source_repertoire_id": "praxis"
+      "source_repertoire_id": "praxis",
+      "openhub_id": "36",
+      "openhub": {
+        "organisation": "Mozilla Foundation",
+        "activite": "Very High",
+        "licences": [
+          "Mozilla Public License 2.0"
+        ],
+        "langage_principal": "Rust",
+        "lignes_de_code": 7020087,
+        "contributeurs_total": 1080,
+        "contributeurs_12_mois": 93,
+        "commits_12_mois": 4269,
+        "premier_mois": "2007-03-01",
+        "dernier_mois": "2026-11-01",
+        "consulte_le": "2026-11-12T17:17:31-05:00"
+      }
     },
     {
       "categorie": "navigation-web",
@@ -1982,7 +2249,23 @@
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:59:32-05:00"
       },
-      "source_repertoire_id": "praxis"
+      "source_repertoire_id": "praxis",
+      "openhub_id": "9",
+      "openhub": {
+        "organisation": "Mozilla Foundation",
+        "activite": "Very High",
+        "licences": [
+          "Mozilla Public License 2.0"
+        ],
+        "langage_principal": "JavaScript",
+        "lignes_de_code": 36469950,
+        "contributeurs_total": 11291,
+        "contributeurs_12_mois": 1619,
+        "commits_12_mois": 73478,
+        "premier_mois": "1998-03-01",
+        "dernier_mois": "2026-11-01",
+        "consulte_le": "2026-11-12T17:20:34-05:00"
+      }
     },
     {
       "categorie": "ressources-humaines-et-gestion-du-temps",
@@ -2190,7 +2473,21 @@
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:59:50-05:00"
       },
-      "source_repertoire_id": "praxis"
+      "source_repertoire_id": "praxis",
+      "openhub_id": "729478",
+      "openhub": {
+        "organisation": null,
+        "activite": "Very High",
+        "licences": [],
+        "langage_principal": "TypeScript",
+        "lignes_de_code": 560828,
+        "contributeurs_total": 554,
+        "contributeurs_12_mois": 168,
+        "commits_12_mois": 3961,
+        "premier_mois": "2016-03-01",
+        "dernier_mois": "2026-11-01",
+        "consulte_le": "2026-11-12T17:17:32-05:00"
+      }
     },
     {
       "categorie": "securite-et-gestion-des-acces",
@@ -2240,7 +2537,23 @@
         "modele": "gpt-6-astra",
         "date": "2026-11-12T12:59:59-05:00"
       },
-      "source_repertoire_id": "praxis"
+      "source_repertoire_id": "praxis",
+      "openhub_id": "762092",
+      "openhub": {
+        "organisation": null,
+        "activite": "High",
+        "licences": [
+          "GNU Affero General Public License v3.0 or later"
+        ],
+        "langage_principal": "Rust",
+        "lignes_de_code": 61072,
+        "contributeurs_total": 229,
+        "contributeurs_12_mois": 58,
+        "commits_12_mois": 230,
+        "premier_mois": "2018-02-01",
+        "dernier_mois": "2026-11-01",
+        "consulte_le": "2026-11-12T17:17:32-05:00"
+      }
     },
     {
       "categorie": "securite-et-gestion-des-acces",
@@ -2292,7 +2605,8 @@
         "modele": "gpt-6-astra",
         "date": "2026-11-12T13:00:04-05:00"
       },
-      "source_repertoire_id": "praxis"
+      "source_repertoire_id": "praxis",
+      "echecs_openhub": 2
     },
     {
       "categorie": "securite-et-gestion-des-acces",
@@ -2344,7 +2658,8 @@
         "modele": "gpt-6-astra",
         "date": "2026-11-12T13:00:09-05:00"
       },
-      "source_repertoire_id": "praxis"
+      "source_repertoire_id": "praxis",
+      "echecs_openhub": 2
     },
     {
       "categorie": "stockage-infonuagique-et-sauvegarde",
@@ -2549,7 +2864,23 @@
         "modele": "gpt-6-astra",
         "date": "2026-11-12T13:00:38-05:00"
       },
-      "source_repertoire_id": "praxis"
+      "source_repertoire_id": "praxis",
+      "openhub_id": "727926",
+      "openhub": {
+        "organisation": "Nextcloud",
+        "activite": "Not Available",
+        "licences": [
+          "GNU Affero General Public License v3.0"
+        ],
+        "langage_principal": "PHP",
+        "lignes_de_code": 18487145,
+        "contributeurs_total": 5084,
+        "contributeurs_12_mois": 634,
+        "commits_12_mois": 85905,
+        "premier_mois": "2010-03-01",
+        "dernier_mois": "2026-04-01",
+        "consulte_le": "2026-11-12T17:17:34-05:00"
+      }
     },
     {
       "categorie": "stockage-infonuagique-et-sauvegarde",
@@ -2747,7 +3078,8 @@
         "modele": "gpt-6-astra",
         "date": "2026-11-12T13:00:59-05:00"
       },
-      "source_repertoire_id": "praxis"
+      "source_repertoire_id": "praxis",
+      "echecs_openhub": 2
     },
     {
       "categorie": "veille-et-gestion-de-l-information",
@@ -2852,7 +3184,8 @@
         "modele": "gpt-6-astra",
         "date": "2026-11-12T13:01:06-05:00"
       },
-      "source_repertoire_id": "praxis"
+      "source_repertoire_id": "praxis",
+      "echecs_openhub": 2
     },
     {
       "categorie": "veille-et-gestion-de-l-information",
@@ -2904,7 +3237,8 @@
         "modele": "gpt-6-astra",
         "date": "2026-11-12T13:01:11-05:00"
       },
-      "source_repertoire_id": "praxis"
+      "source_repertoire_id": "praxis",
+      "echecs_openhub": 2
     }
   ]
 }

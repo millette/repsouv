@@ -48,6 +48,25 @@ export interface CriteresConfirmes {
   date: string;
 }
 
+/** Données publiques d'Open Hub (openhub.net) sur un projet libre, lues par openhub.ts; null quand Open Hub ne les donne pas. */
+export interface OpenHub {
+  organisation: string | null;
+  /** Indice d'activité d'Open Hub: « Inactive », « Very Low », « Low », « Moderate », « High », « Very High », « New » ou « NA ». */
+  activite: string | null;
+  /** Licences déclarées sur Open Hub (noms Open Hub, pas SPDX), pour contrôler `licence`. */
+  licences: string[];
+  langage_principal: string | null;
+  lignes_de_code: number | null;
+  contributeurs_total: number | null;
+  contributeurs_12_mois: number | null;
+  commits_12_mois: number | null;
+  /** Premier et dernier mois de l'analyse (AAAA-MM-JJ). */
+  premier_mois: string | null;
+  dernier_mois: string | null;
+  /** Date de la lecture (ISO 8601, heure de Toronto). */
+  consulte_le: string;
+}
+
 export type Changement = "nouveau" | "modification" | "retrait" | "comeback";
 
 export interface Outil {
@@ -101,6 +120,11 @@ export interface Outil {
   enrichi_le?: string;
   /** Critères vérifiés par une IA, citation à l'appui (voir CriteresConfirmes); absent tant que la vérification n'a pas réussi. */
   criteres_confirmes?: CriteresConfirmes;
+  /** Projet Open Hub concordant (vanity_name, voir openhub.ts) et ses données; seulement pour les logiciels au code public. */
+  openhub_id?: string;
+  openhub?: OpenHub;
+  /** Échecs consécutifs de la recherche Open Hub (aucune concordance sûre, erreur); même mécanique que echecs_enrichissement. */
+  echecs_openhub?: number;
 }
 
 export interface Critere {
