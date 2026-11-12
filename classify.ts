@@ -95,9 +95,7 @@ export function classer(description: string, score?: number): Classement {
 if (import.meta.main) {
   await lancer(async () => {
     const args = process.argv.slice(2);
-    // --force est accepté sans effet: `nub run build --force` transmet l'option à la dernière commande
-    // (celle-ci) et non à extract.ts; la reconstruction forcée passe par `nub run build:force`.
-    const inconnue = args.find((a) => a.startsWith("--") && a !== "--force");
+    const inconnue = args.find((a) => a.startsWith("--"));
     if (inconnue) throw new Error(`Option inconnue: ${inconnue}`);
     const [src, dst = src] = args.filter((a) => !a.startsWith("--"));
     if (!src || !dst) throw new Error("Usage: nub classify.ts <outils.json> [sortie.json]");

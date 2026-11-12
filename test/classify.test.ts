@@ -43,11 +43,11 @@ const copie = () => {
   copyFileSync("outils.json", f);
   return f;
 };
-test("CLI: --force est accepté sans effet (nub run build --force le transmet à classify)", () => {
+test("CLI: --force est refusée comme toute option inconnue (il n'y a plus de build qui la transmettrait)", () => {
   const f = copie();
   const r = spawnSync("nub", [classifyTs, f, "--force"], { encoding: "utf8" });
-  assert.equal(r.status, 0, r.stderr);
-  assert.equal(JSON.parse(readFileSync(f, "utf8")).outils.length, 60);
+  assert.notEqual(r.status, 0);
+  assert.match(r.stderr, /Option inconnue: --force/);
 });
 test("CLI: une autre option est refusée et le fichier reste intact", () => {
   const f = copie();

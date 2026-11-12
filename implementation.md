@@ -8,7 +8,7 @@ Ce document décrit comment les données du [README](README.md) sont produites e
 
 ## Démarrage
 
-Prérequis : [nub](https://nubjs.com/), qui exécute le TypeScript directement, et un accès au réseau (`extract`, `update` et l'enrichissement téléchargent des pages en ligne). Les commandes `nub run` sont définies dans `package.json`. Seul le sommaire (y compris sa mise à jour par `update`) a besoin d'un programme de plus, [vl-convert](https://github.com/vega/vl-convert) (voir [Sommaire statistique](#génération-du-sommaire-statistique)), pour ses graphiques. La génération des schémas JSON (`nub run schemas`) n'a pas besoin du réseau, mais RunTypes demande Node 24 ou plus, et `nub run licences` demande [uv](https://docs.astral.sh/uv/).
+Prérequis : [nub](https://nubjs.com/), qui exécute le TypeScript directement, et un accès au réseau (`update` et l'enrichissement téléchargent des pages en ligne). Les commandes `nub run` sont définies dans `package.json`. Seul le sommaire (y compris sa mise à jour par `update`) a besoin d'un programme de plus, [vl-convert](https://github.com/vega/vl-convert) (voir [Sommaire statistique](#génération-du-sommaire-statistique)), pour ses graphiques. La génération des schémas JSON (`nub run schemas`) n'a pas besoin du réseau, mais RunTypes demande Node 24 ou plus, et `nub run licences` demande [uv](https://docs.astral.sh/uv/).
 
 ```sh
 nub install                      # installe les dépendances
@@ -16,10 +16,10 @@ nub run test                     # lance les tests (et vérifie que les schémas
 nub run typecheck                # vérifie les types
 nub run schemas                  # régénère schemas/*.schema.json à partir des types
 nub run licences                 # vérifie la conformité REUSE des licences (uvx reuse lint; demande uv)
-nub run update --dry-run         # compare outils.json à la page en ligne, sans rien écrire
-nub run update                   # synchronise outils.json avec la page en ligne
+nub run update --dry-run         # compare outils.json à la page en ligne, sans rien écrire (import initial annoncé si le fichier manque)
+nub run update                   # synchronise outils.json et criteres.json avec la page en ligne; sans outils.json, c'est l'import initial
 nub run update --sommaire        # idem, puis met à jour le sommaire si la synchronisation a détecté des changements
-nub run enrichir --limite=5      # enrichit 5 outils par IA (nécessite OPENAI_API_KEY), puis met à jour le sommaire si quelque chose a changé
+nub run update --enrichir --limite=5   # enrichit 5 outils par IA (nécessite OPENAI_API_KEY), puis met à jour le sommaire si quelque chose a changé
 nub run sommaire                 # écrit sommaire.md et graphiques/ (--sans-resume, --sans-graphiques pour s'en passer)
 ```
 
@@ -28,23 +28,24 @@ Pour l'enrichissement, copier `.env.example` vers `.env` et y mettre la clé `OP
 ### Flux de travail
 
 ```
-Import initial   page en ligne ──▶ extract.ts ──▶ classify.ts ──▶ outils.json
-Suivi courant    page en ligne ──▶ update.ts ──▶ outils.json   (nouveau, modification, retrait, comeback)   [──▶ sommaire avec --sommaire]
+Suivi courant    page en ligne ──▶ update.ts ──▶ outils.json + criteres.json   (nouveau, modification, retrait, comeback; import initial si outils.json manque)   [──▶ sommaire avec --sommaire]
+Reconstruction   page en ligne ──▶ extract.ts --force ──▶ classify.ts ──▶ outils.json   (volontaire: remplace tout, enrichissement compris)
 Enrichissement   update.ts --enrichir ──▶ API OpenAI ──▶ outils.json (+ tags.json si de nouveaux tags) ──▶ sommaire (si quelque chose a changé)
 Sommaire         outils.json ──▶ sommaire.ts ──▶ sommaire.md + graphiques/   (vl-convert; résumé: API OpenAI)
 Schémas          schemas-types.ts ──▶ obuild + RunTypes ──▶ generer-schemas.ts ──▶ schemas/*.schema.json   (à relancer après un changement de type)
 ```
 
-`extract` et `update` téléchargent la page en ligne (le dépôt n'en contient aucune copie). Après l'import initial, `update` suffit pour suivre le répertoire. Voir [Importer ou réimporter depuis le web](#importer-ou-réimporter-depuis-le-web) avant de relancer `extract` ou `build`.
+`update` télécharge la page en ligne à chaque exécution (le dépôt n'en contient aucune copie) et suffit à tout, premier import compris. `extract.ts` et `classify.ts` ne servent qu'aux opérations exceptionnelles décrites dans [Importer ou réimporter depuis le web](#importer-ou-réimporter-depuis-le-web).
 
 ### Contenu du dépôt
 
 | Fichier | Rôle |
 |---|---|
 | `outils.json`, `criteres.json`, `tags.json` | Les données (voir [Fichiers JSON](README.md#fichiers-json)) |
-| `extract.ts`, `classify.ts`, `update.ts` | Les trois scripts du flux de travail |
+| `update.ts` | Le script du suivi : synchronise `outils.json` et `criteres.json` avec la page en ligne (import initial compris), enrichit avec `--enrichir`, met le sommaire à jour avec `--sommaire` |
+| `extract.ts`, `classify.ts` | Les deux outils exceptionnels, sans script npm : reconstruction forcée depuis la page, et reclassement de tous les outils après un changement des règles |
 | `confirmer.ts`, `appliquer-confirmations.ts`, `confirmations/` | Confirmation des critères par IA, citation à l'appui, son inscription dans `outils.json` (`criteres_confirmes`), et les verdicts des deux fournisseurs (`confirmations-openai.json`, `confirmations-claude.json`, avec jetons et coût par appel) |
-| `sommaire.ts`, `sommaire.md`, `graphiques/` | Le script du sommaire statistique, le sommaire qu'il a généré et les graphiques (SVG et PNG) qu'il contient (mis à jour automatiquement par `nub run enrichir`, ou par `nub run update --sommaire`, quand quelque chose a changé; sinon à regénérer avec `nub run sommaire`) |
+| `sommaire.ts`, `sommaire.md`, `graphiques/` | Le script du sommaire statistique, le sommaire qu'il a généré et les graphiques (SVG et PNG) qu'il contient (mis à jour automatiquement par `nub run update --enrichir`, ou par `nub run update --sommaire`, quand quelque chose a changé; sinon à regénérer avec `nub run sommaire`) |
 | `enrichir.ts`, `statistiques.ts`, `graphiques.ts`, `fichiers.ts`, `temps.ts`, `spdx.ts`, `progress.ts`, `couleurs.ts`, `ids.ts`, `cli.ts` | Modules utilisés par les scripts |
 | `schemas/`, `generer-schemas.ts`, `schemas-types.ts`, `affiner-schema.ts`, `build.config.ts`, `tsconfig.schemas.json` | Les schémas JSON des trois fichiers de données et ce qui les génère (voir [Schémas JSON](#schémas-json)) |
 | `test/` | Les tests |
@@ -87,7 +88,7 @@ Les outils sont écrits **sans** classification ni enrichissement, et le fichier
 nub classify.ts <outils.json> [sortie.json]
 ```
 
-Ajoute `criteres` et `confiance` à chaque outil (réécrit `outils.json` en place si aucune sortie n'est donnée), en gardant tous les autres champs. `meta.updated_at` ne change que si le contenu change. Voir [Classification](#classification). Une option inconnue est refusée; seule `--force` est tolérée, sans effet, pour que `nub run build --force` ne laisse pas un fichier à moitié construit.
+Ajoute `criteres` et `confiance` à chaque outil (réécrit `outils.json` en place si aucune sortie n'est donnée), en gardant tous les autres champs. `meta.updated_at` ne change que si le contenu change. Voir [Classification](#classification). Une option inconnue est refusée. Sans script npm : `nub classify.ts outils.json`, à lancer après un changement des règles de classification.
 
 ### `confirmer.ts`
 
@@ -118,7 +119,7 @@ Inscrit `criteres_confirmes` (voir [`outils.json`](README.md#outilsjson)) dans c
 nub update.ts [--dry-run] [--sans-couleur] [--sommaire] [--enrichir [--nouveaux-tags] [--sans-page] [--sans-sommaire] [--limite=N]] [outils.json] [url]
 ```
 
-Télécharge la page en ligne (`[url]`, par défaut celle du répertoire; le même téléchargement qu'`extract.ts`), la compare à `outils.json` (par défaut `./outils.json`, qui doit exister : pour un premier import, utiliser `nub run build`) et met le fichier à jour. `--dry-run` affiche les changements sans écrire (et le rappelle par une ligne « Simulation »). Pour chaque outil :
+Télécharge la page en ligne (`[url]`, par défaut celle du répertoire; le même téléchargement qu'`extract.ts`), la compare à `outils.json` (par défaut `./outils.json`) et met le fichier à jour. **Si `outils.json` n'existe pas, c'est l'import initial** : tous les outils de la page sont écrits avec `changement: "nouveau"` et la date de la page, et une ligne « Import initial » le dit. `criteres.json`, dans le même dossier, est écrit lui aussi, à chaque exécution, et une ligne le signale quand son contenu change (ou s'il est créé). Un `outils.json` au mauvais format est refusé, pas remplacé. `--dry-run` affiche les changements sans écrire (et le rappelle par une ligne « Simulation »). Pour chaque outil :
 
 - absent du fichier : `changement: "nouveau"`;
 - marqué `removed` et de retour sur la page : `"comeback"`, et `removed` disparaît;
@@ -287,7 +288,7 @@ La page de chaque outil est lue avant tout appel à l'API. Elle est jugée inuti
 - **par défaut**, l'outil n'est **pas enrichi** : aucun appel à l'API n'est fait, l'échec est consigné (code de sortie 1) et l'outil sera retenté à la prochaine exécution. Un résultat bâti sur la seule description serait moins fiable (licence et dépôt tirés de la mémoire du modèle, description générique), et comme un outil enrichi n'est jamais régénéré, il serait figé;
 - avec **`--sans-page`**, l'outil est enrichi quand même, à partir de la description seule. Le modèle est alors invité à la prudence (`null` pour la licence et le dépôt dans le doute, confiance faible). Le champ **`page_lue: false`** signale cet état, et le script liste ces outils à la fin de l'exécution.
 
-Les outils enrichis avec une page lisible portent `page_lue: true`. Pour refaire plus tard les outils enrichis sans page (une fois leur page redevenue accessible, ou après avoir changé de stratégie), supprimer leurs champs d'enrichissement, puis relancer `nub run enrichir` :
+Les outils enrichis avec une page lisible portent `page_lue: true`. Pour refaire plus tard les outils enrichis sans page (une fois leur page redevenue accessible, ou après avoir changé de stratégie), supprimer leurs champs d'enrichissement, puis relancer `nub run update --enrichir` :
 
 ```sh
 # à faire après un commit de outils.json (meta.updated_at sera mis à jour à la prochaine écriture par un script)
@@ -347,44 +348,27 @@ Configuration : `OPENAI_API_KEY` dans `.env` et, facultativement, `OPENAI_MODEL`
 
 ## Importer ou réimporter depuis le web
 
-`extract` et `build` servent à **construire `outils.json` depuis zéro** à partir de la page en ligne :
+`nub run update` est la seule porte d'entrée : il télécharge la page, compare, détecte les changements, conserve les dates des outils inchangés et ne touche jamais à l'enrichissement. Sans `outils.json`, il fait l'import initial (tous les outils « nouveau »). Deux opérations exceptionnelles restent possibles, sans script npm :
 
-- `nub run extract` télécharge la page et **réécrit `outils.json` en entier**, avec seulement les champs de la source. Il ne fusionne rien : le contenu est remplacé. Les seuls fichiers qu'il lit sont ses fichiers de **sortie** (`outils.json` et, s'il est donné, `criteres.json`), s'ils existent déjà : pour conserver leur `meta.created_at` et, pour `outils.json`, appliquer le garde-fou ci-dessous. Il ne lit ni n'écrit **jamais de fichier HTML** : la page est téléchargée en mémoire à chaque exécution.
-- `nub run build` enchaîne `extract` puis `classify` : le fichier produit est complet, avec `criteres` et `confiance`.
-
-C'est la voie de l'import initial. Ensuite, `update` fait la synchronisation courante : il télécharge la même page, mais compare, détecte les changements, conserve les dates des outils inchangés et ne touche jamais à l'enrichissement.
-
-Parce que `extract` remplace tout, un réimport détruit :
-
-- l'**enrichissement** (descriptions longues, tags, licences, évaluations), qui coûte des appels à l'API OpenAI;
-- l'**historique des changements** (`changement`, `removed`) et les dates de `update` : tous les outils reçoivent la date de modification actuelle de la page, avec `changement: null`. Le fichier garde en revanche son `meta.created_at`, et son `meta.updated_at` n'est modifié que si le contenu diffère.
-
-C'est pourquoi `extract` refuse d'écraser un `outils.json` qui contient ce genre de travail, ou qu'il ne peut pas lire. La classification n'est pas protégée : `classify` la recalcule toujours.
+- **Reconstruire depuis zéro** : `nub extract.ts --force outils.json criteres.json` puis `nub classify.ts outils.json`. `extract.ts` **réécrit `outils.json` en entier**, avec seulement les champs de la source : il ne fusionne rien. Sans `--force`, il refuse d'écraser un `outils.json` qui contient un enrichissement ou un historique de changement (`changement`, `removed`), ou qu'il ne peut pas lire. Il ne lit ni n'écrit jamais de fichier HTML : la page est téléchargée en mémoire. Un réimport détruit l'**enrichissement** (descriptions longues, tags, licences, évaluations, critères vérifiés), qui coûte des appels à l'API, et l'**historique des changements** : tous les outils reçoivent la date de modification actuelle de la page, avec `changement: null`. Le fichier garde son `meta.created_at`, et son `meta.updated_at` n'est modifié que si le contenu diffère.
+- **Reclasser tous les outils** après un changement des règles de `classify.ts`, sans rien perdre : `nub classify.ts outils.json`. `update` ne reclasse que les outils nouveaux ou modifiés.
 
 Comme la page est téléchargée à chaque exécution, un réimport n'est **pas reproductible** : il donne l'état du répertoire au moment où il est lancé. Pour retrouver un état précis, utiliser l'historique Git de `outils.json`.
 
 | Besoin | Commande |
 |---|---|
-| Suivre la page en ligne (usage courant) | `nub run update` |
-| Première construction (pas encore de `outils.json`) | `nub run build` |
-| `outils.json` invalide, vide ou corrompu | `nub run build:force` (le script refuse sinon, de peur d'écraser du travail) |
-| Appliquer de nouvelles règles de classification, sans rien perdre | `nub run classify` |
-| Tout remplacer volontairement depuis le web | `nub run build:force` (ou `nub run extract --force`) |
+| Suivre la page en ligne (usage courant) et premier import | `nub run update` |
+| `outils.json` invalide, vide ou corrompu | Le restaurer depuis Git, ou `nub extract.ts --force outils.json criteres.json` puis `nub classify.ts outils.json` (`update` et `extract` refusent sinon) |
+| Appliquer de nouvelles règles de classification, sans rien perdre | `nub classify.ts outils.json` |
+| Tout remplacer volontairement depuis le web | `nub extract.ts --force outils.json criteres.json` puis `nub classify.ts outils.json` |
 
-Les options de `nub run` sont transmises à la **dernière** commande du script. `nub run extract --force` agit donc bien sur `extract`, alors que `nub run build --force` transmettrait `--force` à `classify`, où il est ignoré : pour forcer une reconstruction, utiliser `build:force`.
-
-Si le `score` ou les `criteres` d'un outil déjà enrichi changent, après un `classify` ou parce que `update` détecte une modification, son `evaluation_enrichie` (et son `ecart`) peut devenir périmé : rien ne le recalcule, puisqu'un outil enrichi n'est jamais régénéré. Pour le refaire, supprimer ses champs d'enrichissement (même méthode que la recette de [Pages inaccessibles](#pages-inaccessibles-ou-presque-vides), en adaptant le filtre `select`), puis relancer `nub run enrichir`.
+Si le `score` ou les `criteres` d'un outil déjà enrichi changent, après un `classify` ou parce que `update` détecte une modification, son `evaluation_enrichie` (et son `ecart`) peut devenir périmé : rien ne le recalcule, puisqu'un outil enrichi n'est jamais régénéré. Pour le refaire, supprimer ses champs d'enrichissement (même méthode que la recette de [Pages inaccessibles](#pages-inaccessibles-ou-presque-vides), en adaptant le filtre `select`), puis relancer `nub run update --enrichir`.
 
 ## Scripts npm (`package.json`)
 
 | Commande | Effet |
 |---|---|
-| `nub run extract` | `nub extract.ts outils.json criteres.json` : importe depuis la page en ligne. Refuse d'écraser un travail existant sans `--force` |
-| `nub run classify` | `nub classify.ts outils.json` : classe les outils en place |
-| `nub run build` | `extract` puis `classify` : construit `outils.json` depuis la page en ligne. Refuse d'écraser un enrichissement ou un historique existant |
-| `nub run build:force` | Comme `build`, mais **remplace tout**, enrichissement et historique compris |
-| `nub run update` | `nub update.ts` : synchronise `outils.json` avec la page en ligne. Les options passent directement : `nub run update --dry-run`, ou `nub run update --sommaire` pour mettre aussi le sommaire à jour si des changements sont détectés |
-| `nub run enrichir` | `nub update.ts --enrichir` : synchronise, enrichit les outils sans description longue, puis met à jour le sommaire si quelque chose a changé. Par exemple : `nub run enrichir --limite=5` |
+| `nub run update` | `nub update.ts` : synchronise `outils.json` et `criteres.json` avec la page en ligne (import initial si `outils.json` manque). Les options passent directement : `nub run update --dry-run`, `nub run update --sommaire` pour mettre aussi le sommaire à jour si des changements sont détectés, ou `nub run update --enrichir --limite=5` pour enrichir |
 | `nub run sommaire` | `nub sommaire.ts` : écrit `sommaire.md` et `graphiques/` (`--sans-resume` évite l'appel à l'API, `--sans-graphiques` évite vl-convert) |
 | `nub run schemas` | `obuild && nub dist/generer-schemas.mjs` : régénère `schemas/*.schema.json` à partir des types (voir [Schémas JSON](#schémas-json)) |
 | `nub run schemas:verifier` | Comme `schemas`, mais sans rien écrire : échoue si les schémas commités sont périmés |
@@ -402,7 +386,7 @@ Dans `test/`, avec `node:test` lancé par `nub` :
 - `confirmer.test.ts` : validation des verdicts (statuts, citation obligatoire, exacte et d'au plus 300 caractères), accord entre ensembles, coût OpenAI, lecture de la sortie de `claude -p`, et la boucle avec de faux fournisseurs (nouvel essai, échec, page inaccessible, budget, limite, requête sans score ni critères du répertoire).
 - `appliquer-confirmations.test.ts` : forme de `criteres_confirmes` (critères, citations des confirmés et des infirmés, modèle, règle, date de Toronto), outils sans verdict laissés intacts, entrées non modifiées, champ compté parmi les champs d'enrichissement, la CLI sur une copie, et le fichier réel (le champ est présent pour chaque outil enrichi, chaque critère confirmé a sa citation, jamais plus de critères confirmés que d'étoiles).
 - `extract.test.ts` : conversion de la date de la page en heure de Toronto, cohérence de `criteres.json` et `outils.json`, rejet d'une page sans date, téléchargement (sur un serveur local, sans réseau), erreurs de téléchargement, le garde-fou contre l'écrasement (avec et sans `--force`, y compris pour un fichier au mauvais format), et la preuve qu'aucun fichier HTML local n'est lu.
-- `update.test.ts` : nouveau, modification, retrait, comeback, conservation des dates des outils inchangés et des champs d'enrichissement, la présentation colorée du résumé et du journal (même texte avec ou sans couleurs), et les conditions de la mise à jour automatique du sommaire (dont `--sommaire` et `--sans-sommaire`) et l'avertissement quand le sommaire n'est pas à jour.
+- `update.test.ts` : nouveau, modification, retrait, comeback, `synchroniser` (import initial sans `outils.json`, simulation, fichier inchangé, écriture de `criteres.json` seulement quand il change, format invalide refusé), conservation des dates des outils inchangés et des champs d'enrichissement, la présentation colorée du résumé et du journal (même texte avec ou sans couleurs), et les conditions de la mise à jour automatique du sommaire (dont `--sommaire` et `--sans-sommaire`) et l'avertissement quand le sommaire n'est pas à jour.
 - `enrichir.test.ts` : vocabulaire de `tags.json`, date d'enrichissement, validation (tags, Markdown permis et interdit, licences SPDX et maison, évaluation), explication des écarts, extraction de la page, pages inaccessibles ou presque vides (avertissement, refus par défaut, `--sans-page`), enrichissement une seule fois, limite, reprise et échecs, avec de faux générateurs.
 - `spdx.test.ts` : licences SPDX valides et refusées.
 - `progress.test.ts` : barre en terminal et hors terminal, bornes, étiquette, `end()` idempotent, `message()`, peinture de la barre.
@@ -419,8 +403,8 @@ Dans `test/`, avec `node:test` lancé par `nub` :
 
 | Message | Cause et remède |
 |---|---|
-| `Refus d'écraser: …` | `extract` (ou `build`) a trouvé dans `outils.json` un enrichissement, un historique de changement, ou un format inattendu. Pour suivre la page sans rien perdre, utiliser `nub run update`; pour tout remplacer quand même, `nub run build:force` |
-| `… format invalide …` ou `« meta » invalide …` | Un fichier de données n'a pas la structure décrite dans [Fichiers JSON](README.md#fichiers-json). Le restaurer depuis Git (`git checkout outils.json`) ou, pour `outils.json`, le recréer avec `nub run build:force` |
+| `Refus d'écraser: …` | `extract.ts` a trouvé dans `outils.json` un enrichissement, un historique de changement, ou un format inattendu. Pour suivre la page sans rien perdre, utiliser `nub run update`; pour tout remplacer quand même, `nub extract.ts --force outils.json criteres.json` |
+| `… format invalide …` ou `« meta » invalide …` | Un fichier de données n'a pas la structure décrite dans [Fichiers JSON](README.md#fichiers-json). Le restaurer depuis Git (`git checkout outils.json`) ou, pour `outils.json`, le recréer avec `nub extract.ts --force outils.json criteres.json` puis `nub classify.ts outils.json` |
 | `Téléchargement impossible (url): …` | Réseau, délai de 30 secondes dépassé ou erreur HTTP en téléchargeant le répertoire. Rien n'a été écrit : réessayer |
 | `OPENAI_API_KEY absente` | Il y a des outils à enrichir (ou un résumé à rédiger pour `nub run sommaire`), mais `.env` n'a pas la clé. La synchronisation, elle, a déjà été écrite. Pour le sommaire, `--sans-resume` évite la clé |
 | `page inaccessible …` ou `page presque vide …`, `outil non enrichi` | La page de l'outil n'a pas pu être lue : réessayer plus tard, ou enrichir à partir de la description seule avec `--sans-page`. Voir [Pages inaccessibles](#pages-inaccessibles-ou-presque-vides) |

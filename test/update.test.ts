@@ -194,3 +194,64 @@ test("un avertissement et une mise à jour du sommaire s'excluent toujours", () 
     assert.equal(avertissementSommaireNonMisAJour(o) !== null && sommaireNecessaire(o), false, JSON.stringify(o));
   }
 });
+
+// ---------- synchroniser: import initial, écriture de outils.json et de criteres.json ----------
+
+import { existsSync, mkdtempSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { synchroniser } from "../update.ts";
+import type { Critere, Outil } from "../extract.ts";
+import { lireFichier } from "../fichiers.ts";
+
+const CRITERES: Critere[] = [
+  { id: "donnees", icon: "📍", titre: "Où peuvent rester les données ?", description: "Au Canada ?" },
+  { id: "controle", icon: "🏢", titre: "Qui contrôle l'outil ?", description: "Canadien ?" },
+  { id: "dependance", icon: "🔗", titre: "De qui dépend-il ?", description: "Étranger ?" },
+];
+const brut = (nom: string): Outil => ({ categorie: "c", icone: "i", nom, score: 2, lien: `https://${nom}`, description: "Outil libre et auto-hébergé", derniere_modification: "", changement: null });
+const dossier = () => mkdtempSync(join(tmpdir(), "sync-"));
+
+test("synchroniser: sans outils.json, import initial: tous les outils sont « nouveau », classés, et criteres.json est créé", () => {
+  const d = dossier();
+  const f = join(d, "outils.json");
+  const s = synchroniser(f, [brut("a"), brut("b")], CRITERES, NOUVELLE, false);
+  assert.equal(s.importInitial, true);
+  assert.deepEqual(s.resume.nouveau, ["a", "b"]);
+  assert.equal(s.ecrit, true);
+  assert.equal(s.criteresEcrits, true);
+  const lu = lireFichier<OutilClasse>(f, "outils");
+  assert.deepEqual(lu.donnees.map((o) => [o.nom, o.changement, o.derniere_modification, o.criteres]), [["a", "nouveau", NOUVELLE, ["donnees", "dependance"]], ["b", "nouveau", NOUVELLE, ["donnees", "dependance"]]]);
+  assert.equal(lu.meta.data_license, "CC-BY-SA-4.0");
+  assert.deepEqual(lireFichier<Critere>(join(d, "criteres.json"), "criteres").donnees, CRITERES);
+});
+
+test("synchroniser: import initial en simulation: rien n'est écrit", () => {
+  const d = dossier();
+  const s = synchroniser(join(d, "outils.json"), [brut("a")], CRITERES, NOUVELLE, true);
+  assert.equal(s.importInitial, true);
+  assert.deepEqual([s.ecrit, s.criteresEcrits], [false, false]);
+  assert.deepEqual([existsSync(join(d, "outils.json")), existsSync(join(d, "criteres.json"))], [false, false]);
+});
+
+test("synchroniser: fichier existant et page inchangée: outils.json n'est pas réécrit; criteres.json seulement si les critères changent", () => {
+  const d = dossier();
+  const f = join(d, "outils.json");
+  synchroniser(f, [brut("a")], CRITERES, NOUVELLE, false);
+  const avant = readFileSync(f, "utf8");
+  const s = synchroniser(f, [brut("a")], CRITERES, "2027-01-01T00:00:00-05:00", false);
+  assert.deepEqual([s.importInitial, s.ecrit, s.criteresEcrits], [false, false, false]);
+  assert.equal(readFileSync(f, "utf8"), avant);
+  const autres = CRITERES.map((c) => ({ ...c, description: `${c.description} (revu)` }));
+  const t = synchroniser(f, [brut("a")], autres, "2027-01-01T00:00:00-05:00", false);
+  assert.deepEqual([t.ecrit, t.criteresEcrits], [false, true]);
+  assert.equal(lireFichier<Critere>(join(d, "criteres.json"), "criteres").donnees[0]!.description, "Au Canada ? (revu)");
+});
+
+test("synchroniser: fichier existant au mauvais format: refusé avec un message clair, sans import initial", () => {
+  const d = dossier();
+  const f = join(d, "outils.json");
+  writeFileSync(f, "[]");
+  assert.throws(() => synchroniser(f, [brut("a")], CRITERES, NOUVELLE, false), /format invalide/);
+  assert.equal(statSync(f).size, 2);
+});

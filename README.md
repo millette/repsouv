@@ -59,7 +59,7 @@ Les champs d'enrichissement résument des pages tierces (voir [D'où viennent le
 
 ## Usage en bref
 
-Prérequis : [nub](https://nubjs.com/), qui exécute le TypeScript directement, et un accès au réseau (`extract`, `update` et l'enrichissement téléchargent des pages en ligne). Le sommaire a besoin de [vl-convert](https://github.com/vega/vl-convert) pour ses graphiques, l'enrichissement et le résumé du sommaire d'une clé `OPENAI_API_KEY` dans `.env` (copier `.env.example`). Tout le reste, dont le flux de travail, les scripts, leurs options et le dépannage, est dans [implementation.md](implementation.md).
+Prérequis : [nub](https://nubjs.com/), qui exécute le TypeScript directement, et un accès au réseau (`update` et l'enrichissement téléchargent des pages en ligne). Le sommaire a besoin de [vl-convert](https://github.com/vega/vl-convert) pour ses graphiques, l'enrichissement et le résumé du sommaire d'une clé `OPENAI_API_KEY` dans `.env` (copier `.env.example`). Tout le reste, dont le flux de travail, les scripts, leurs options et le dépannage, est dans [implementation.md](implementation.md).
 
 ```sh
 nub install                      # installe les dépendances
@@ -67,10 +67,10 @@ nub run test                     # lance les tests (et vérifie que les schémas
 nub run typecheck                # vérifie les types
 nub run schemas                  # régénère schemas/*.schema.json à partir des types
 nub run licences                 # vérifie la conformité REUSE des licences (uvx reuse lint; demande uv)
-nub run update --dry-run         # compare outils.json à la page en ligne, sans rien écrire
-nub run update                   # synchronise outils.json avec la page en ligne
+nub run update --dry-run         # compare outils.json à la page en ligne, sans rien écrire (import initial annoncé si le fichier manque)
+nub run update                   # synchronise outils.json et criteres.json avec la page en ligne; sans outils.json, c'est l'import initial
 nub run update --sommaire        # idem, puis met à jour le sommaire si la synchronisation a détecté des changements
-nub run enrichir --limite=5      # enrichit 5 outils par IA (nécessite OPENAI_API_KEY), puis met à jour le sommaire si quelque chose a changé
+nub run update --enrichir --limite=5   # enrichit 5 outils par IA (nécessite OPENAI_API_KEY), puis met à jour le sommaire si quelque chose a changé
 nub run sommaire                 # écrit sommaire.md et graphiques/ (--sans-resume, --sans-graphiques pour s'en passer)
 ```
 

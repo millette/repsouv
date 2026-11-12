@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
-// Met à jour outils.json depuis le répertoire en ligne.
+// Met à jour outils.json (et criteres.json, dans le même dossier) depuis le répertoire en ligne. C'est la seule
+// porte d'entrée pour suivre le répertoire: si outils.json n'existe pas, c'est l'import initial, et tous les outils
+// sont écrits avec changement "nouveau" (voir synchroniser). Reconstruction forcée: extract.ts --force; reclassement
+// de tous les outils après un changement des règles: classify.ts.
 // Usage: nub update.ts [--dry-run] [--sans-couleur] [--sommaire] [--enrichir [--nouveaux-tags] [--sans-page] [--sans-sommaire] [--limite=N]] [outils.json] [url]
 //
 // Pour chaque outil, selon la comparaison avec la page en ligne:
@@ -45,8 +48,9 @@ import {
   type NiveauJournal,
 } from "./enrichir.ts";
 import { lancer } from "./cli.ts";
-import { ecrireFichier, lireFichier, type Lu } from "./fichiers.ts";
-import { CHAMPS_ENRICHIS, telechargerRepertoire, type Changement, type Outil } from "./extract.ts";
+import { existsSync } from "node:fs";
+import { ecrireFichier, lireFichier, lireSiExiste, type Lu } from "./fichiers.ts";
+import { CHAMPS_ENRICHIS, telechargerRepertoire, type Changement, type Critere, type Outil } from "./extract.ts";
 import { verifierVlConvert } from "./graphiques.ts";
 import { createProgress } from "./progress.ts";
 import { genererSommaire } from "./sommaire.ts";
@@ -107,6 +111,43 @@ export function mettreAJour(
     }
   }
   return { outils, resume };
+}
+
+// ---------- synchronisation des fichiers ----------
+
+export interface Synchronisation {
+  outils: OutilClasse[];
+  resume: Resume;
+  /** true si outils.json n'existait pas: tous les outils de la page sont « nouveau ». */
+  importInitial: boolean;
+  /** true si outils.json a été écrit (au moins un changement, ou import initial; jamais en simulation). */
+  ecrit: boolean;
+  /** true si criteres.json a été créé ou si son contenu a changé (jamais en simulation). */
+  criteresEcrits: boolean;
+  /** Dernier état écrit de outils.json (null en simulation d'un import initial), à passer aux écritures suivantes. */
+  courant: Lu<OutilClasse> | null;
+}
+
+/**
+ * Compare la page téléchargée à `fichier` (outils.json) et écrit outils.json et criteres.json (même dossier).
+ * Un outils.json absent est un import initial; un outils.json au mauvais format est refusé (lireFichier).
+ * En simulation (`dryRun`), rien n'est écrit.
+ */
+export function synchroniser(fichier: string, page: Outil[], criteres: Critere[], modification: string, dryRun: boolean): Synchronisation {
+  const importInitial = !existsSync(fichier);
+  let courant: Lu<OutilClasse> | null = importInitial ? null : lireFichier<OutilClasse>(fichier, "outils");
+  const { outils, resume } = mettreAJour(courant?.donnees ?? [], page, modification);
+  const total = Object.values(resume).reduce((n, noms) => n + noms.length, 0);
+  const ecrit = !dryRun && (total > 0 || importInitial);
+  if (ecrit) courant = ecrireFichier(fichier, "outils", outils, courant);
+  let criteresEcrits = false;
+  if (!dryRun) {
+    const chemin = join(dirname(fichier), "criteres.json");
+    const avant = lireSiExiste<Critere>(chemin, "criteres");
+    const apres = ecrireFichier(chemin, "criteres", criteres, avant);
+    criteresEcrits = avant === null || JSON.stringify(avant.donnees) !== JSON.stringify(apres.donnees);
+  }
+  return { outils, resume, importInitial, ecrit, criteresEcrits, courant };
 }
 
 // ---------- sommaire automatique ----------
@@ -201,20 +242,19 @@ if (import.meta.main) {
     const sortie = creerCouleurs(couleursActives(process.stdout, process.env, sansCouleur));
     const suivi = creerCouleurs(couleursActives(process.stderr, process.env, sansCouleur));
 
-    const { outils: page, modification } = await telechargerRepertoire(url);
-    // Fichier de départ, puis dernier état écrit: les métadonnées (updated_at) sont maintenues par ecrireFichier.
-    let courant: Lu<OutilClasse> = lireFichier<OutilClasse>(fichier, "outils");
-    const existants = courant.donnees;
+    const { outils: page, criteres: criteresPage, modification } = await telechargerRepertoire(url);
+    // Dernier état écrit de outils.json: les métadonnées (updated_at) sont maintenues par ecrireFichier.
+    const sync = synchroniser(fichier, page, criteresPage, modification, dryRun);
+    let courant = sync.courant;
+    const { outils, resume } = sync;
 
     let nbEnrichis = 0;
-    const { outils, resume } = mettreAJour(existants, page, modification);
     const total = Object.values(resume).reduce((n, noms) => n + noms.length, 0);
+    if (sync.importInitial) console.log(sortie.attenue(`Import initial: ${fichier} n'existe pas, tous les outils de la page sont nouveaux`));
     for (const ligne of lignesResume(resume, modification, sortie)) console.log(ligne);
     if (dryRun) console.log(sortie.attenue("Simulation (--dry-run): rien n'est écrit"));
-    if (total && !dryRun) {
-      courant = ecrireFichier(fichier, "outils", outils, courant);
-      console.log(`${sortie.vert(fichier)} mis à jour`);
-    }
+    if (sync.ecrit) console.log(`${sortie.vert(fichier)} mis à jour`);
+    if (sync.criteresEcrits) console.log(`${sortie.vert(join(dirname(fichier), "criteres.json"))} mis à jour`);
 
     if (enrichir) {
       const fichierTags = join(dirname(fichier), "tags.json");
