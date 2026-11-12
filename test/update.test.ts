@@ -142,23 +142,23 @@ test("sommaireNecessaire: hors simulation, dès que quelque chose a changé ou a
   assert.equal(sommaireNecessaire({ dryRun: false, changements: 0, enrichis: 0 }), false);
   assert.equal(sommaireNecessaire({ dryRun: true, changements: 2, enrichis: 3 }), false);
 });
-test("interpreterChoix: 1 ou oui accepte les coûts, 2 passe en simulation, 3, vide ou autre chose arrête", () => {
+test("interpreterChoix: 1 ou oui accepte les coûts; 2, vide ou autre chose arrête (l'estimation est déjà affichée)", () => {
   assert.equal(interpreterChoix("1"), "accepter");
   assert.equal(interpreterChoix(" Oui "), "accepter");
-  assert.equal(interpreterChoix("2"), "simulation");
+  assert.equal(interpreterChoix("2"), "arreter");
   assert.equal(interpreterChoix("3"), "arreter");
   assert.equal(interpreterChoix(""), "arreter");
   assert.equal(interpreterChoix("peut-être"), "arreter");
 });
-test("texteConfirmation: le premier import annonce le nombre d'outils, le coût estimé et les trois choix", () => {
+test("texteConfirmation: le premier import annonce le nombre d'outils, le coût estimé et les deux choix", () => {
   const texte = texteConfirmation(60, "≈ 12,34 $");
   assert.match(texte, /Premier import/);
   assert.match(texte, /60 outil\(s\)/);
   assert.match(texte, /≈ 12,34 \$/);
   assert.match(texte, /1\. [^\n]*coûts/i);
-  assert.match(texte, /2\. [^\n]*simulation/i);
-  assert.match(texte, /3\. [^\n]*arrêter/i);
-  assert.match(texte, /\[1\/2\/3\]/);
+  assert.match(texte, /2\. [^\n]*arrêter/i);
+  assert.doesNotMatch(texte, /simulation|3\./);
+  assert.match(texte, /\[1\/2\]/);
 });
 test("raisonDeSauterSommaire: clé API absente, vl-convert introuvable, ou rien à signaler", () => {
   const present = () => "vl-convert 1.9.0";

@@ -28,8 +28,8 @@
 //   Si la page de l'outil est inaccessible ou presque vide, un avertissement est affiché et l'outil n'est PAS
 //   enrichi (échec consigné, retenté jusqu'à --max-echecs) pour ne pas figer un résultat peu fiable.
 //   Sans clé, l'enrichissement est sauté avec un avertissement.
-//   Premier import (outils.json absent): l'estimation du coût est affichée et une confirmation est demandée (1. poursuivre
-//   en acceptant les coûts, 2. simulation, 3. arrêter); hors terminal, --accepter-couts tient lieu de réponse 1.
+//   Premier import (outils.json absent): l'aperçu et l'estimation du coût sont affichés, puis une confirmation est demandée
+//   (1. poursuivre en acceptant les coûts, 2. arrêter); hors terminal, --accepter-couts tient lieu de réponse 1.
 //   --nouveaux-tags : le modèle peut proposer de nouveaux tags (justification obligatoire, ajoutés à tags.json).
 //   --max-echecs=N  : un outil qui a échoué N fois de suite (echecs_enrichissement) n'est plus tenté; 3 par défaut.
 //
@@ -178,22 +178,19 @@ export function sommaireNecessaire(o: { dryRun: boolean; changements: number; en
   return !o.dryRun && (o.changements > 0 || o.enrichis > 0);
 }
 
-/** Réponse à la confirmation du premier import: 1 ou oui accepte les coûts, 2 passe en simulation, tout le reste arrête. */
-export function interpreterChoix(reponse: string): "accepter" | "simulation" | "arreter" {
+/** Réponse à la confirmation du premier import: 1 ou oui accepte les coûts, tout le reste arrête (l'aperçu et l'estimation sont déjà affichés). */
+export function interpreterChoix(reponse: string): "accepter" | "arreter" {
   const r = reponse.trim().toLowerCase();
-  if (r === "1" || r === "oui" || r === "o") return "accepter";
-  if (r === "2") return "simulation";
-  return "arreter";
+  return r === "1" || r === "oui" || r === "o" ? "accepter" : "arreter";
 }
 
 /** Le texte de la confirmation demandée au premier import, avant toute écriture. */
 export function texteConfirmation(nbOutils: number, coutEstime: string): string {
   return [
     `Premier import: ${nbOutils} outil(s) seront enrichis par l'API OpenAI (coût estimé ${coutEstime}, borne haute).`,
-    "  1. poursuivre en acceptant les coûts OpenAI (import, enrichissement et sommaire);",
-    "  2. poursuivre en simulation (--dry-run): estimation détaillée, rien n'est dépensé ni écrit;",
-    "  3. arrêter.",
-    "Votre choix [1/2/3] (3 par défaut): ",
+    "  1. poursuivre en acceptant les coûts OpenAI (import, enrichissement, vérification, descriptions et sommaire);",
+    "  2. arrêter: rien n'est dépensé ni écrit (l'aperçu et l'estimation sont ci-dessus).",
+    "Votre choix [1/2] (2 par défaut): ",
   ].join("\n");
 }
 
@@ -318,10 +315,6 @@ if (import.meta.main) {
       const rl = createInterface({ input: process.stdin, output: process.stderr });
       const choix = interpreterChoix(await rl.question(texteConfirmation(prevus.length, cout)));
       rl.close();
-      if (choix === "simulation") {
-        console.log(sortie.attenue("Simulation: rien n'est écrit (l'estimation est ci-dessus)"));
-        return;
-      }
       if (choix === "arreter") {
         console.log(sortie.attenue("Arrêt: rien n'est écrit"));
         return;
