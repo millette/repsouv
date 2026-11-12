@@ -255,3 +255,13 @@ test("synchroniser: fichier existant au mauvais format: refusé avec un message 
   assert.throws(() => synchroniser(f, [brut("a")], CRITERES, NOUVELLE, false), /format invalide/);
   assert.equal(statSync(f).size, 2);
 });
+
+test("avertissement à l'import initial: il n'y a pas encore de sommaire, le message le dit, sans changer les conditions", () => {
+  const base = { enrichir: false, dryRun: false, changements: 60, enrichis: 0, importInitial: true };
+  const a = avertissementSommaireNonMisAJour(base)!;
+  assert.equal(a, "Aucun sommaire n'a encore été généré: lancer `nub run sommaire`, ou ajouter --sommaire à update.");
+  assert.equal(avertissementSommaireNonMisAJour({ ...base, enrichir: true, sansSommaire: true }), "Aucun sommaire n'a encore été généré (--sans-sommaire): lancer `nub run sommaire`.");
+  assert.equal(avertissementSommaireNonMisAJour({ ...base, dryRun: true }), null);
+  assert.equal(avertissementSommaireNonMisAJour({ ...base, sommaire: true }), null);
+  assert.equal(avertissementSommaireNonMisAJour({ ...base, importInitial: false }), "Le sommaire n'est plus à jour (des changements ont été détectés): lancer `nub run sommaire`, ou ajouter --sommaire à update.");
+});

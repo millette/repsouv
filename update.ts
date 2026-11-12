@@ -162,12 +162,19 @@ export function sommaireNecessaire(o: { enrichir: boolean; dryRun: boolean; chan
 
 /**
  * L'avertissement quand le sommaire n'est PAS mis à jour parce qu'on ne l'a pas demandé (update seul) ou qu'on l'a
- * refusé (--sans-sommaire), alors que des changements ont eu lieu. Null s'il n'y a rien à signaler. Les autres cas
+ * refusé (--sans-sommaire), alors que des changements ont eu lieu; à l'import initial, le message dit qu'aucun sommaire
+ * n'existe encore. Null s'il n'y a rien à signaler. Les autres cas
  * (clé ou vl-convert manquant, résumé impossible) ont leur propre message.
  */
-export function avertissementSommaireNonMisAJour(o: { enrichir: boolean; dryRun: boolean; changements: number; enrichis: number; sansSommaire?: boolean; sommaire?: boolean }): string | null {
+export function avertissementSommaireNonMisAJour(o: { enrichir: boolean; dryRun: boolean; changements: number; enrichis: number; sansSommaire?: boolean; sommaire?: boolean; importInitial?: boolean }): string | null {
   const change = !o.dryRun && (o.changements > 0 || o.enrichis > 0);
   if (!change || sommaireNecessaire(o)) return null;
+  // À l'import initial, il n'y a pas de sommaire antérieur: rien n'est périmé, il reste à le générer.
+  if (o.importInitial) {
+    return o.sansSommaire
+      ? "Aucun sommaire n'a encore été généré (--sans-sommaire): lancer `nub run sommaire`."
+      : "Aucun sommaire n'a encore été généré: lancer `nub run sommaire`, ou ajouter --sommaire à update.";
+  }
   const quoi = o.enrichis > 0 ? "des outils ont été enrichis" : "des changements ont été détectés";
   return o.sansSommaire
     ? `Le sommaire n'est plus à jour (${quoi}, --sans-sommaire): lancer \`nub run sommaire\`.`
@@ -305,7 +312,7 @@ if (import.meta.main) {
       }
     }
 
-    const nonMisAJour = avertissementSommaireNonMisAJour({ enrichir, dryRun, changements: total, enrichis: nbEnrichis, sansSommaire, sommaire });
+    const nonMisAJour = avertissementSommaireNonMisAJour({ enrichir, dryRun, changements: total, enrichis: nbEnrichis, sansSommaire, sommaire, importInitial: sync.importInitial });
     if (nonMisAJour) console.error(suivi.jaune(nonMisAJour));
     if (sommaireNecessaire({ enrichir, dryRun, changements: total, enrichis: nbEnrichis, sansSommaire, sommaire })) {
       const raison = raisonDeSauterSommaire(process.env.OPENAI_API_KEY, verifierVlConvert);
