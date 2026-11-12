@@ -71,6 +71,10 @@
             "type": "integer",
             "minimum": 1
           },
+          "echecs_confirmation": {
+            "type": "integer",
+            "minimum": 1
+          },
           "description_longue": {
             "type": "string"
           },
@@ -221,16 +225,6 @@
               "modele": {
                 "type": "string"
               },
-              "regle": {
-                "anyOf": [
-                  {
-                    "type": "null"
-                  },
-                  {
-                    "type": "string"
-                  }
-                ]
-              },
               "date": {
                 "type": "string"
               }
@@ -240,7 +234,6 @@
               "preuves",
               "infirmes",
               "modele",
-              "regle",
               "date"
             ],
             "additionalProperties": false

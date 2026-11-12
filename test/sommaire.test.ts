@@ -79,7 +79,7 @@ test("statistiques: critères vérifiés (criteres_confirmes): confirmés, infir
   const { confirmes } = calculerStatistiques(entree()).criteres;
   assert.equal(confirmes.outils, 4);
   assert.deepEqual(confirmes.sansVerdict, ["G"]);
-  assert.deepEqual(cles(confirmes.modeles), { "claude-fable-5-2": 4 });
+  assert.deepEqual(cles(confirmes.modeles), { "gpt-6-astra": 4 });
   assert.deepEqual(confirmes.parSource.map((l) => l.source), ["libre", "partiel", "source-disponible", "proprietaire", "Ensemble"]);
   const ensemble = confirmes.parSource.at(-1)!;
   assert.equal(ensemble.outils, 4);
@@ -259,7 +259,7 @@ test("rendu: les critères vérifiés ont leur sous-section, avec les trois verd
   assert.match(section, /citation/);
   assert.match(section, /\| Libre \| 1 \| 1 \/ 0 \/ 0 \| 0 \/ 1 \/ 0 \| 1 \/ 0 \/ 0 \|/);
   assert.match(section, /\| Ensemble \| 4 \| 2 \/ 1 \/ 1 \| 2 \/ 1 \/ 1 \| 2 \/ 0 \/ 2 \|/);
-  assert.match(section, /claude-fable-5-2/);
+  assert.match(section, /gpt-6-astra/);
   assert.match(section, /sans verdict[^\n]*G/);
   assert.match(section, /\*\*2\*\* outil\(s\) sur 4 ont autant de critères confirmés que d'étoiles/);
   const sans = rendreMarkdown(calculerStatistiques(entree(OUTILS.map((o) => { const { criteres_confirmes: _c, ...reste } = o; return reste as typeof o; }))), { genereLe: GENERE_LE });

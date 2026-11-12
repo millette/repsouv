@@ -48,7 +48,7 @@ export const confirmes = (donnees: "c" | "x" | "?", controle: "c" | "x" | "?", d
     criteres: ids.filter((id) => v[id] === "c"),
     preuves: Object.fromEntries(ids.filter((id) => v[id] === "c").map((id) => [id, `preuve ${id}`])),
     infirmes: Object.fromEntries(ids.filter((id) => v[id] === "x").map((id) => [id, `contre ${id}`])),
-    modele: "claude-fable-5-2", regle: null, date: "2026-11-12T07:41:55-05:00",
+    modele: "gpt-6-astra", date: "2026-11-12T07:41:55-05:00",
   };
 };
 

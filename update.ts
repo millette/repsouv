@@ -6,6 +6,9 @@
 // de tous les outils après un changement des règles: classify.ts.
 // Usage: nub update.ts [--dry-run] [--sans-couleur] [--nouveaux-tags] [--max-echecs=N] [--accepter-couts] [outils.json] [url]
 //
+// Après l'enrichissement, les critères des outils enrichis sans verdict sont vérifiés (criteres_confirmes, voir confirmer.ts)
+// avec le même modèle et la règle A; mêmes règles que l'enrichissement (une fois par outil, échecs comptés, clé absente: sauté).
+//
 // Pour chaque outil, selon la comparaison avec la page en ligne:
 //   - absent du fichier → changement "nouveau"
 //   - précédemment retiré (removed: true) et de retour → "comeback" (le champ removed disparaît)
@@ -53,11 +56,12 @@ import { CHAMPS_ENRICHIS, telechargerRepertoire, type Changement, type Critere, 
 import { verifierVlConvert } from "./graphiques.ts";
 import { createProgress } from "./progress.ts";
 import { genererSommaire } from "./sommaire.ts";
+import { abandonneConfirmation, aConfirmer, confirmateurOpenAI, confirmerOutils, estimerCoutConfirmation } from "./confirmer.ts";
 import { additionner, dollars, formaterCout, USAGE_VIDE, type Usage } from "./prix.ts";
 
 const CHAMPS_COMPARES = ["categorie", "icone", "score", "lien", "description"] as const;
 /** Les champs à reporter sur la version à jour d'un outil: l'enrichissement et le compteur d'échecs. */
-const CHAMPS_REPORTES = [...CHAMPS_ENRICHIS, "echecs_enrichissement"] as const;
+const CHAMPS_REPORTES = [...CHAMPS_ENRICHIS, "echecs_enrichissement", "echecs_confirmation"] as const;
 
 /** Les champs d'enrichissement d'un outil existant, à reporter sur sa version à jour de la page. */
 const enrichissementDe = (o: OutilClasse): Partial<Outil> =>
@@ -181,12 +185,13 @@ export function texteConfirmation(nbOutils: number, coutEstime: string): string 
 }
 
 /** Les lignes d'estimation du coût pour `--dry-run` et la confirmation du premier import. */
-export function lignesEstimation(estimation: Estimation, modele: string, nbOutilsRepertoire: number, c: Couleurs): string[] {
+export function lignesEstimation(estimation: Estimation, verification: { outils: number; usage: Usage }, modele: string, nbOutilsRepertoire: number, c: Couleurs): string[] {
   const sommaire: Usage = { entree: 2000 + 120 * nbOutilsRepertoire, sortie: 1500, cache_lecture: 0, cache_ecriture: 0 };
   const lignes = [`${c.gras("Coût estimé")} (${estimation.hypotheses}):`];
   lignes.push(`  enrichissement de ${estimation.outils} outil(s): ${formaterCout(estimation.usage, modele)}`);
+  lignes.push(`  vérification des critères de ${verification.outils} outil(s): ${formaterCout(verification.usage, modele)}`);
   lignes.push(`  sommaire (un appel pour le résumé): ${formaterCout(sommaire, modele)}`);
-  const total = additionner(estimation.usage, sommaire);
+  const total = additionner(additionner(estimation.usage, verification.usage), sommaire);
   lignes.push(`  total: ${c.jaune(formaterCout(total, modele))}`);
   return lignes;
 }
@@ -267,13 +272,19 @@ if (import.meta.main) {
     const tagsPresents = existsSync(fichierTags);
     const prevus = tagsPresents ? aFaire.filter((o) => !abandonne(o, maxEchecs)) : [];
     const estimation = estimerCoutEnrichissement(prevus, tagsPresents ? chargerTags(fichierTags) : [], criteresPage, modele);
+    // À vérifier: les outils déjà enrichis sans verdict (hors abandonnés), plus ceux qui seront enrichis maintenant.
+    const aVerifier = [...apercu.outils.filter((o) => aConfirmer(o) && !abandonneConfirmation(o, maxEchecs)), ...prevus];
+    const abandonnesVerif = apercu.outils.filter((o) => aConfirmer(o) && abandonneConfirmation(o, maxEchecs));
+    const verification = estimerCoutConfirmation(aVerifier, criteresPage, modele);
 
     if (apercu.importInitial) console.log(sortie.attenue(`Import initial: ${fichier} n'existe pas, tous les outils de la page sont nouveaux`));
     for (const ligne of lignesResume(resume, modification, sortie)) console.log(ligne);
     console.log(`${sortie.gras("Enrichissement")}: ${prevus.length ? sortie.jaune(String(prevus.length)) : sortie.vert("0")} outil(s) à enrichir${tagsPresents ? "" : sortie.rouge(` (${fichierTags} absent: enrichissement impossible)`)}`);
     if (prevus.length) console.log(`  à enrichir (${prevus.length}): ${sortie.cyan(prevus.map((o) => o.nom).join(", "))}`);
     if (abandonnes.length) console.log(`  ${sortie.jaune(`abandonnés après ${maxEchecs} échecs consécutifs`)} (${abandonnes.length}): ${sortie.cyan(abandonnes.map((o) => `${o.nom} (${o.echecs_enrichissement})`).join(", "))}; relancer avec --max-echecs plus élevé pour les retenter`);
-    if (prevus.length || total) for (const ligne of lignesEstimation(estimation, modele, apercu.outils.filter((o) => !o.removed).length, sortie)) console.log(ligne);
+    console.log(`${sortie.gras("Vérification des critères")}: ${aVerifier.length ? sortie.jaune(String(aVerifier.length)) : sortie.vert("0")} outil(s) à vérifier${aVerifier.length ? ` (${sortie.cyan(aVerifier.map((o) => o.nom).join(", "))})` : ""}`);
+    if (abandonnesVerif.length) console.log(`  ${sortie.jaune(`abandonnés après ${maxEchecs} échecs consécutifs`)} (${abandonnesVerif.length}): ${sortie.cyan(abandonnesVerif.map((o) => `${o.nom} (${o.echecs_confirmation})`).join(", "))}; relancer avec --max-echecs plus élevé pour les retenter`);
+    if (prevus.length || aVerifier.length || total) for (const ligne of lignesEstimation(estimation, verification, modele, apercu.outils.filter((o) => !o.removed).length, sortie)) console.log(ligne);
     if (dryRun) {
       console.log(sortie.attenue("Simulation (--dry-run): rien n'est écrit"));
       return;
@@ -281,7 +292,7 @@ if (import.meta.main) {
 
     // Premier import: on demande avant de dépenser et d'écrire.
     if (apercu.importInitial && prevus.length && !accepterCouts) {
-      const cout = estimation.cout === null ? `inconnu pour ${modele}` : `≈ ${dollars(estimation.cout)}`;
+      const cout = estimation.cout === null || verification.cout === null ? `inconnu pour ${modele}` : `≈ ${dollars(estimation.cout + verification.cout)}`;
       if (!process.stdin.isTTY) {
         console.error(suivi.jaune(`Premier import hors terminal: ${prevus.length} outil(s) à enrichir (coût estimé ${cout}). Relancer avec --accepter-couts pour poursuivre, ou --dry-run pour l'estimation détaillée. Rien n'est écrit.`));
         process.exitCode = 1;
@@ -305,6 +316,9 @@ if (import.meta.main) {
     let courant = sync.courant;
     const { outils } = sync;
     let nbEnrichis = 0;
+    let nbConfirmes = 0;
+    let usage: Usage = { ...USAGE_VIDE };
+    const compteur = (u: Usage) => { usage = additionner(usage, u); };
     if (sync.ecrit) console.log(`${sortie.vert(fichier)} mis à jour`);
     if (sync.criteresEcrits) console.log(`${sortie.vert(join(dirname(fichier), "criteres.json"))} mis à jour`);
 
@@ -316,8 +330,6 @@ if (import.meta.main) {
         const tags = chargerTags(fichierTags);
         const criteres = chargerCriteres(join(dirname(fichier), "criteres.json"));
         const nbTags = tags.length;
-        let usage: Usage = { ...USAGE_VIDE };
-        const compteur = (u: Usage) => { usage = additionner(usage, u); };
         const progression = createProgress(prevus.length, {
           logWhenNotTTY: true,
           paint: { filled: suivi.vert, empty: suivi.attenue, label: suivi.cyan },
@@ -351,7 +363,37 @@ if (import.meta.main) {
       }
     }
 
-    if (sommaireNecessaire({ dryRun, changements: total, enrichis: nbEnrichis })) {
+    // Vérification des critères (criteres_confirmes) des outils enrichis sans verdict, avec le même modèle et la règle A.
+    const aConfirmerMaintenant = outils.filter((o) => aConfirmer(o) && !abandonneConfirmation(o, maxEchecs));
+    if (aConfirmerMaintenant.length) {
+      const cle = process.env.OPENAI_API_KEY;
+      if (!cle) {
+        console.error(suivi.jaune(`Vérification des critères sautée: OPENAI_API_KEY absente; ${aConfirmerMaintenant.length} outil(s) restent à vérifier`));
+      } else {
+        const criteres = chargerCriteres(join(dirname(fichier), "criteres.json"));
+        const avant = usage;
+        const progression = createProgress(aConfirmerMaintenant.length, { logWhenNotTTY: true, paint: { filled: suivi.vert, empty: suivi.attenue, label: suivi.cyan } });
+        let traites = 0;
+        const resultat = await confirmerOutils(outils, {
+          confirmer: confirmateurOpenAI(cle, modele, compteur),
+          criteres,
+          modele,
+          maxEchecs,
+          apresChaque: (os) => { courant = ecrireFichier(fichier, "outils", os, courant); },
+          debut: (nom) => (process.stderr.isTTY ? progression.update(traites, nom) : progression.message(suivi.attenue(`Vérification de ${nom}...`))),
+          progression: (n) => progression.update((traites = n)),
+          journal: (message, niveau = "info") => progression.message(ligneJournal(message, niveau, suivi)),
+        });
+        progression.end();
+        nbConfirmes = resultat.confirmes.length;
+        const confirmes = nbConfirmes ? sortie.gras(sortie.vert(String(nbConfirmes))) : "0";
+        const echecs = resultat.erreurs.length ? sortie.gras(sortie.rouge(String(resultat.erreurs.length))) : sortie.vert("0");
+        console.log(`Critères vérifiés: ${confirmes}; échecs: ${echecs}; ${formaterCout({ entree: usage.entree - avant.entree, sortie: usage.sortie - avant.sortie, cache_lecture: usage.cache_lecture - avant.cache_lecture, cache_ecriture: usage.cache_ecriture - avant.cache_ecriture }, modele)}`);
+        if (resultat.erreurs.length) process.exitCode = 1;
+      }
+    }
+
+    if (sommaireNecessaire({ dryRun, changements: total, enrichis: nbEnrichis + nbConfirmes })) {
       const raison = raisonDeSauterSommaire(process.env.OPENAI_API_KEY, verifierVlConvert);
       if (raison) {
         console.error(suivi.jaune(`Sommaire non mis à jour: ${raison}. Le sommaire existant est conservé; relancer \`nub run sommaire\` ensuite.`));

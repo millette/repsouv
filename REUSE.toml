@@ -11,7 +11,7 @@ SPDX-License-Identifier = "AGPL-3.0-or-later"
 
 # Données, adaptées du répertoire d'origine (Praxis), et ce qui en est dérivé: sommaire et graphiques.
 [[annotations]]
-path = ["outils.json", "criteres.json", "tags.json", "sommaire.md", "graphiques/**", "confirmations/*.json"]
+path = ["outils.json", "criteres.json", "tags.json", "sommaire.md", "graphiques/**"]
 SPDX-FileCopyrightText = [
   "2026 Sven Buridans, François Delnooz, Marie-Renee Duguay (Praxis), Répertoire d'outils favorisant la souveraineté numérique",
   "2026 Robin Millette <https://robin.millette.info/>",

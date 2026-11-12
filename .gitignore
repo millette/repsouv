@@ -1,10 +1,7 @@
 node_modules/
 .env
-pre-enrichir-outils.json
 .claude
-orig-sommaire.md
 .agents
 skills-lock.json
 dist/
 .mion/
-confirmations/.cache/

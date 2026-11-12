@@ -29,8 +29,8 @@ export interface EvaluationEnrichie {
 }
 
 /**
- * Critères vérifiés par une IA à partir de la page de l'outil (confirmer.ts, puis appliquer-confirmations.ts), avec la
- * citation à l'appui. Indépendant de `criteres`, qui reste lié aux étoiles de la source: il peut en compter moins.
+ * Critères vérifiés par une IA à partir de la page de l'outil (confirmer.ts, appelé par update.ts après l'enrichissement,
+ * règle A pour « controle »), avec la citation à l'appui. Indépendant de `criteres`, qui reste lié aux étoiles de la source: il peut en compter moins.
  */
 export interface CriteresConfirmes {
   /** Critères confirmés, dans l'ordre de criteres.json. */
@@ -40,8 +40,6 @@ export interface CriteresConfirmes {
   /** Citation pour chaque critère infirmé; un critère absent des deux est indéterminé (la page ne permet pas de conclure). */
   infirmes: Partial<Record<CritereId, string>>;
   modele: string;
-  /** Règle de lecture ajoutée aux consignes (voir REGLES dans confirmer.ts), ou null. */
-  regle: string | null;
   /** Date de la confirmation (ISO 8601, heure de Toronto, avec décalage). */
   date: string;
 }
@@ -66,6 +64,8 @@ export interface Outil {
    * retiré dès que l'enrichissement réussit. À MAX_ECHECS_PAR_DEFAUT (enrichir.ts), l'outil n'est plus tenté sans --max-echecs.
    */
   echecs_enrichissement?: number;
+  /** Nombre d'échecs consécutifs de la vérification des critères (confirmer.ts); même mécanique que echecs_enrichissement. */
+  echecs_confirmation?: number;
   // Champs ajoutés par `update.ts --enrichir` (voir enrichir.ts); absents tant que l'outil n'est pas enrichi.
   /** Description longue en français (Markdown, sans image ni HTML), générée une seule fois. */
   description_longue?: string;
@@ -85,7 +85,7 @@ export interface Outil {
   evaluation_enrichie?: EvaluationEnrichie;
   /** Date et heure de l'enrichissement de l'outil (ISO 8601, heure de Toronto, avec décalage). Absente pour les outils enrichis avant l'ajout de ce champ. */
   enrichi_le?: string;
-  /** Critères vérifiés par une IA, citation à l'appui (voir CriteresConfirmes); absent tant que confirmer.ts n'a pas été appliqué. */
+  /** Critères vérifiés par une IA, citation à l'appui (voir CriteresConfirmes); absent tant que la vérification n'a pas réussi. */
   criteres_confirmes?: CriteresConfirmes;
 }
 

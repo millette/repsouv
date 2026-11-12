@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Précise un schéma JSON produit par RunTypes avec ce que les types TypeScript n'expriment pas:
 //   - les objets refusent les clés inconnues (additionalProperties: false), comme le fait fichiers.ts;
-//   - `score` est un entier de 0 à 3, `echecs_enrichissement` un entier d'au moins 1, `tags` compte de 1 à 5 identifiants distincts;
+//   - `score` est un entier de 0 à 3, `echecs_enrichissement` et `echecs_confirmation` des entiers d'au moins 1, `tags` compte de 1 à 5 identifiants distincts;
 //   - les dates sont des horodatages ISO 8601 avec décalage (même motif que fichiers.ts).
 // Les règles s'appliquent par nom de propriété. Les règles de croisement (licence SPDX, tags présents dans
 // tags.json, score égal au nombre de critères) restent dans les validateurs et les tests.
@@ -15,7 +15,7 @@ const estObjet = (x: unknown): x is Noeud => typeof x === "object" && x !== null
 /** Règle propre à une propriété, selon son nom et la forme de son schéma; retourne ce qu'il faut ajouter. */
 function regle(nom: string, schema: Noeud): Noeud {
   if (nom === "score") return { type: "integer", minimum: 0, maximum: 3 };
-  if (nom === "echecs_enrichissement") return { type: "integer", minimum: 1 };
+  if (nom === "echecs_enrichissement" || nom === "echecs_confirmation") return { type: "integer", minimum: 1 };
   if (CHAMPS_HORODATAGE.has(nom) && schema.type === "string") return { pattern: HORODATAGE };
   const elements = schema.items;
   if (schema.type === "array" && estObjet(elements) && elements.type === "string") {
