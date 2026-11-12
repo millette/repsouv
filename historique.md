@@ -11,11 +11,12 @@ Les étapes du projet et les décisions prises, par date, d'après l'historique 
 | Date | Repère |
 |---|---|
 | 2026-11-05 09:53 | Date de modification affichée par la page du répertoire au moment de l'import initial : tous les outils portent cette `derniere_modification` |
-| 2026-11-11 16:43 | Création des trois fichiers de données (`meta.created_at`), avec `meta` et les dates en heure de Toronto |
+| 2026-11-11 16:43 | Création des trois fichiers de données d'alors (`outils.json`, `criteres.json`, `tags.json`), avec `meta` et les dates en heure de Toronto ; `tags.json` porte toujours ce `meta.created_at` |
 | 2026-11-11 17:29 à 17:43 | Enrichissement par IA de 57 outils sur 60 ; les 3 autres (En commun, Paperless-ngx, CIRA Canadian Shield) ont une page inaccessible ou vide |
 | 2026-11-12 09:00 | Confirmation des critères par OpenAI et Claude sur les 57 outils enrichis, règle A, citation à l'appui (`confirmations/`, puis `criteres_confirmes`) |
 | 2026-11-12 11:39 | Création de `categories.json` (20 catégories, descriptions rédigées par IA à 11:42) |
-| 2026-11-12 11:42 | Dernière génération de `sommaire.md` |
+| 2026-11-12 12:35 à 13:03 | Réimport complet dans un dossier vide (`update`, import initial) : `outils.json`, `categories.json` et `criteres.json` sont recréés (`meta.created_at` 12:35), 57 outils enrichis (12:36 à 12:55) puis vérifiés (jusqu'à 13:01), 20 catégories décrites (13:02) |
+| 2026-11-12 13:34 | Dernière génération de `sommaire.md` |
 
 ## 2026-11-11
 
@@ -25,7 +26,7 @@ Les étapes du projet et les décisions prises, par date, d'après l'historique 
 - **Protection de `outils.json`** : `extract` refuse d'écraser un enrichissement ou un historique sans `--force` ; la copie HTML locale disparaît, la page est toujours téléchargée.
 - **Pages inaccessibles ou presque vides** : avertissement, refus par défaut, option `--sans-page` et marque `page_lue`.
 - **Licences et métadonnées** : AGPL-3.0 pour le code, CC BY-SA 4.0 pour les données ; en-têtes SPDX dans chaque fichier ; champ `meta` (`data_license`, `created_at`, `updated_at`) et dates en heure de Toronto ; format strict des fichiers de données.
-- **Sommaire statistique** (`sommaire.ts`) avec résumé rédigé par IA, puis date d'enrichissement par outil (`enrichi_le`). Les 41 outils enrichis avant ce champ reçoivent la date de substitution `2026-11-11T17:29:24-05:00`, celle du premier enrichissement daté ; 42 outils portent donc cette valeur.
+- **Sommaire statistique** (`sommaire.ts`) avec résumé rédigé par IA, puis date d'enrichissement par outil (`enrichi_le`). Les 41 outils enrichis avant ce champ reçoivent alors la date de substitution `2026-11-11T17:29:24-05:00`, celle du premier enrichissement daté (le réimport du 12 novembre a depuis donné à chaque outil sa date exacte).
 - **Couleurs** dans `update.ts` et pour le mot « Erreur: » de tous les scripts.
 - **Enrichissement terminé** : 57 outils sur 60.
 - **Graphiques Vega-Lite** dans le sommaire, convertis par vl-convert en SVG et PNG ; le graphique du statut du code source est affiché en tête du README.
@@ -48,6 +49,7 @@ Les étapes du projet et les décisions prises, par date, d'après l'historique 
 - **`categories.json`** : les catégories deviennent un fichier de données (`id` en slug du nom, `nom`, `icone`, `description` rédigée par IA dans `update`), et `outils.json` ne garde que l'identifiant dans `categorie` (le champ `icone` disparaît). Les schémas annotent la relation et un test la vérifie.
 - **Documentation** scindée en trois fichiers : README (source, crédits, usage, données), `implementation.md` (scripts, classification, enrichissement, sommaire, tests, dépannage) et ce fichier.
 - **Expérience `spike-mion` retirée** du dépôt (ses conclusions sont consignées ci-dessus).
+- **Réimport complet** (12:35 à 13:03) dans un dossier vide, pour éprouver `update` de bout en bout : 60 outils, 57 enrichis et vérifiés en 27 minutes (les mêmes 3 abandonnés après 3 échecs), 20 catégories décrites. Comparé à l'import précédent : source et classification identiques, verdicts identiques sur « données » et « contrôle » et sur 54 outils sur 57 pour « dépendance », tags et licences légèrement différents (texte généré). Les fichiers de données et `enrichi_le` datent désormais de ce réimport. Au passage, correction de `meta.updated_at`, qui restait figé pendant l'enrichissement (`ecrireFichier` retourne une copie des données).
 - **Skill `charting-vega-lite` versionné** (`.claude/skills/`, MIT, oaustegard/claude-skills) avec son texte de licence dans `LICENSES/MIT.txt` et son annotation REUSE ; `.gitignore` n'ignore plus `.claude`.
 - **Temps restant** sur les barres de progression de `update` (enrichissement, vérification, descriptions de catégories, qui reçoit sa barre) : estimé au rythme moyen observé, formaté en français par `duree.ts` avec `Temporal.Duration` et `Intl.DurationFormat`, natifs dans Node.js 26.
 - **Tests en deux groupes** : `test:unit` (`test/*.test.ts`, fixtures et dossiers temporaires, passe sans données) et `test:data` (`test/donnees/`, les vrais fichiers, échec explicite s'ils manquent) ; lancés par le runner de `node:test` via `nub --test`, un processus par fichier en parallèle (265 tests en 4,5 s au lieu de 9 s). `nub run test` enchaîne les deux puis `schemas:verifier`.

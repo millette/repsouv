@@ -90,6 +90,7 @@ Développement, avec nub (commandes définies dans `package.json`) :
 ```sh
 nub run test                     # lance les tests unitaires, puis ceux des données réelles, puis vérifie que les schémas JSON sont à jour
 nub run test:unit                # tests unitaires seulement (sans données: fonctionne avant le premier update)
+nub run test:data                # tests des fichiers de données réels (outils.json, categories.json, criteres.json, tags.json, sommaire.md)
 nub run typecheck                # vérifie les types
 nub run schemas                  # régénère schemas/*.schema.json à partir des types
 nub run licences                 # vérifie la conformité REUSE des licences (uvx reuse lint; demande uv)
@@ -103,8 +104,8 @@ Les quatre fichiers de données sont validés par des [schémas JSON](implementa
 {
   "meta": {
     "data_license": "CC-BY-SA-4.0",
-    "created_at": "2026-11-11T16:43:11-05:00",
-    "updated_at": "2026-11-11T16:48:12-05:00"
+    "created_at": "2026-11-12T12:35:52-05:00",
+    "updated_at": "2026-11-12T13:01:11-05:00"
   },
   "outils": [ ... ]
 }
@@ -150,7 +151,7 @@ Champs ajoutés par l'[enrichissement](implementation.md#enrichissement-par-ia),
 | `custom_license` | Nom ou identifiant d'une licence absente de la liste SPDX (licence maison ou propre à l'éditeur), tel que l'éditeur l'écrit. Exclusif avec `licence`; `null` si la licence est SPDX, si le logiciel est propriétaire ou si elle est inconnue |
 | `custom_license_url` | URL du texte de la licence maison, quand elle est disponible; `null` sinon. Exige `custom_license` |
 | `repo` | URL du dépôt de code source, sur n'importe quelle forge (GitHub, GitLab, Codeberg, Framagit…); `null` si aucun ou inconnu |
-| `enrichi_le` | Date et heure de l'enrichissement de l'outil (ISO 8601, heure de Toronto). Les 41 outils enrichis avant l'ajout de ce champ portent la date de substitution `2026-11-11T17:29:24-05:00` (celle du premier enrichissement daté), qui n'est pas leur date exacte; la date des enrichissements suivants est exacte. Dans `outils.json`, 42 outils portent cette valeur : les 41 de substitution et le premier enrichissement daté |
+| `enrichi_le` | Date et heure de l'enrichissement de l'outil (ISO 8601, heure de Toronto), exacte pour chaque outil : les 57 enrichissements de `outils.json` datent du réimport du 2026-11-12 (de 12:36 à 12:55) |
 | `evaluation_enrichie` | Second avis du modèle sur la souveraineté de l'outil : `score` (nombre de critères satisfaits, de 0 à 3, égal à `criteres.length`), `criteres` (identifiants de `criteres.json`) et `confiance` (`"élevée"`, `"moyenne"` ou `"faible"`). S'y ajoute `ecart`, une explication en français de la différence, seulement quand cette évaluation diffère du `score` et des `criteres` du répertoire |
 | `criteres_confirmes` | Critères **vérifiés** par une IA d'après la page de l'outil, citation à l'appui (`confirmer.ts`, appelé par `update`) : `criteres` (ceux qui sont confirmés, dans l'ordre de `criteres.json`), `preuves` (une citation copiée mot pour mot de la description ou de la page, pour chaque critère confirmé), `infirmes` (une citation pour chaque critère que la page contredit ; un critère absent des deux est indéterminé), `modele` et `date` (heure de Toronto). Indépendant de `criteres`, qui reste lié aux étoiles : il peut en compter moins, jamais plus. Rempli par `update` pour tout outil enrichi qui ne l'a pas encore (modèle `gpt-6-astra`, le même que l'enrichissement, avec la règle de lecture « la nationalité mentionnée suffit » pour « contrôle ») ; présent pour les 57 outils enrichis |
 
@@ -184,8 +185,8 @@ De nouveaux tags peuvent s'ajouter après cette première phase, avec `node upda
 
 - **60 outils** répartis en **20 catégories** ; **8 outils à 3 étoiles** et **52 à 2 étoiles**.
 - **57 outils enrichis** sur 60, dont **30 logiciels libres ou partiellement libres** (52,6 %) : 24 libres, 6 partiellement libres, 1 à code source disponible, 26 propriétaires ; 3 outils ne sont pas encore enrichis.
-- **8 licences SPDX distinctes**, **5 forges de code** et **37 tags** utilisés sur 37.
-- Critères déduits des descriptions (`criteres`) : « données » pour les 60 outils, « contrôle » pour 29, « dépendance » pour 39. Critères **vérifiés** d'après la page de l'outil (`criteres_confirmes`, 57 outils) : « données » confirmé pour 45 et indéterminé pour 12 ; « contrôle » confirmé pour 26, infirmé pour 30, indéterminé pour 1 ; « dépendance » confirmé pour 26, infirmé pour 2, indéterminé pour 29.
+- **8 licences SPDX distinctes**, **4 forges de code** et **36 tags** utilisés sur 37.
+- Critères déduits des descriptions (`criteres`) : « données » pour les 60 outils, « contrôle » pour 29, « dépendance » pour 39. Critères **vérifiés** d'après la page de l'outil (`criteres_confirmes`, 57 outils) : « données » confirmé pour 45 et indéterminé pour 12 ; « contrôle » confirmé pour 26, infirmé pour 30, indéterminé pour 1 ; « dépendance » confirmé pour 25, infirmé pour 2, indéterminé pour 30.
 
 Le sommaire détaille chaque point par catégorie et par statut du code source, avec neuf graphiques possibles (huit dans l'état actuel), les licences, les forges, les tags et les écarts entre les critères déduits, l'évaluation enrichie et les critères vérifiés.
 
