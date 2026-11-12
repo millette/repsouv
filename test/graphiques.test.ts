@@ -194,3 +194,13 @@ test("vl-convert réel: une spécification invalide est une erreur avec le messa
   const dossier = mkdtempSync(join(tmpdir(), "graph-"));
   assert.throws(() => convertirAvecVlConvert({ mark: "inexistant" } as never, join(dossier, "a.svg")), /vl-convert vl2svg/);
 });
+
+test("ecrireGraphiques: le suivi est prévenu avant chaque graphique (titre) et après (nombre écrit)", () => {
+  const dossier = join(mkdtempSync(join(tmpdir(), "graph-")), "graphiques");
+  const gs = construireGraphiques(stats());
+  const debuts: string[] = [];
+  const faits: number[] = [];
+  ecrireGraphiques(gs, dossier, faux([]), { debut: (g) => debuts.push(g.titre), fin: (n) => faits.push(n) });
+  assert.deepEqual(debuts, gs.map((g) => g.titre));
+  assert.deepEqual(faits, gs.map((_, i) => i + 1));
+});

@@ -403,7 +403,13 @@ export interface GraphiqueEcrit {
  * sont plus produits, ainsi que les PNG que les versions antérieures produisaient. Retourne les chemins
  * relatifs au dossier parent.
  */
-export function ecrireGraphiques(graphiques: Graphique[], dossier: string, convertir: Convertisseur = convertirAvecVlConvert): GraphiqueEcrit[] {
+/** Suivi de l'écriture, pour une barre de progression: avant chaque graphique, puis après, avec le nombre écrit. */
+export interface SuiviGraphiques {
+  debut?: (graphique: Graphique) => void;
+  fin?: (ecrits: number) => void;
+}
+
+export function ecrireGraphiques(graphiques: Graphique[], dossier: string, convertir: Convertisseur = convertirAvecVlConvert, suivi: SuiviGraphiques = {}): GraphiqueEcrit[] {
   mkdirSync(dossier, { recursive: true });
   const produits = new Set(graphiques.map((g) => g.id));
   for (const id of IDS_GRAPHIQUES) {
@@ -411,8 +417,10 @@ export function ecrireGraphiques(graphiques: Graphique[], dossier: string, conve
     if (!produits.has(id)) rmSync(join(dossier, `${id}.svg`), { force: true });
   }
   const nom = basename(dossier);
-  return graphiques.map((g) => {
+  return graphiques.map((g, i) => {
+    suivi.debut?.(g);
     convertir(g.spec, join(dossier, `${g.id}.svg`));
+    suivi.fin?.(i + 1);
     return { id: g.id, titre: g.titre, description: g.description, svg: `${nom}/${g.id}.svg` };
   });
 }

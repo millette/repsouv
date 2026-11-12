@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Sommaire statistique du répertoire, écrit dans sommaire.md.
-// Usage: nub sommaire.ts [--sans-resume] [--sans-graphiques] [outils.json] [sommaire.md]
+// Usage: nub sommaire.ts [--sans-resume] [--sans-graphiques] [--sans-couleur] [outils.json] [sommaire.md]
 //
 // Lit outils.json (et tags.json et criteres.json, dans le même dossier) et écrit un sommaire en
 // Markdown: chiffres clés, dates, catégories, statut du code source, licences, critères de
@@ -13,14 +13,17 @@
 // graphiques/ à côté du sommaire, et leurs images PNG y sont insérées. --sans-graphiques les omet.
 // Le calcul des statistiques et le rendu sont des fonctions pures; seul le résumé utilise le réseau.
 import { writeFileSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { basename, dirname, join } from "node:path";
 import type { OutilClasse } from "./classify.ts";
 import { lancer } from "./cli.ts";
+import { couleursActives, creerCouleurs } from "./couleurs.ts";
+import { formaterDuree } from "./duree.ts";
 import { construireGraphiques, ecrireGraphiques, verifierVlConvert, type Convertisseur, type GraphiqueEcrit } from "./graphiques.ts";
 import { chargerCategories } from "./categories.ts";
 import { chargerEnv } from "./env.ts";
 import { appelerOpenAI, chargerCriteres, chargerTags, MAX_ECHECS_PAR_DEFAUT, MODELE_PAR_DEFAUT, obtenirValide, problemesMarkdown } from "./enrichir.ts";
 import { lireFichier } from "./fichiers.ts";
+import { createProgress, type Progress } from "./progress.ts";
 import {
   arrondi, calculerStatistiques, forgeDe, NOMS_SOURCES, NON_ENRICHI, type LigneCriteres, type Statistiques,
 } from "./statistiques.ts";
@@ -326,7 +329,16 @@ export interface OptionsSommaire {
   convertir?: Convertisseur;
   /** Messages de suivi (une réponse de l'IA rejetée, par exemple). */
   journal?: (message: string) => void;
+  /**
+   * Fabrique d'une barre de progression, appelée avec le nombre d'étapes (le résumé, chaque graphique, l'écriture
+   * du sommaire); la barre reçoit `update(n, étiquette)` à chaque étape puis `end()`, même en cas d'échec.
+   */
+  progression?: (total: number) => Pick<Progress, "update" | "end">;
 }
+
+/** La barre de progression des scripts, sur stderr, avec le temps restant estimé. */
+export const barreSommaire = (paint?: { filled?: (t: string) => string; empty?: (t: string) => string; label?: (t: string) => string }) => (total: number) =>
+  createProgress(total, { logWhenNotTTY: true, restant: formaterDuree, ...(paint && { paint }) });
 
 export interface ResultatSommaire {
   ecrit: boolean;
@@ -359,21 +371,36 @@ export async function genererSommaire(o: OptionsSommaire): Promise<ResultatSomma
     meta: lu.meta,
   });
   const destination = o.sortie ?? join(dossier, "sommaire.md");
+  const specs = o.sansGraphiques ? [] : construireGraphiques(statistiques);
+  // Étapes de la barre: le résumé, chaque graphique, l'écriture du sommaire.
+  const barre = o.progression?.((o.sansResume ? 0 : 1) + specs.length + 1);
+  let etape = 0;
 
   let resume: ResumeIA = null;
   if (!o.sansResume) {
     const modele = o.modele ?? MODELE_PAR_DEFAUT;
     const generer = o.generer ?? generateurResumeOpenAI(o.cle!, modele);
+    barre?.update(etape, `résumé (${modele})`);
     try {
       resume = { paragraphes: await produireResume(chargeResume(statistiques, lu.donnees), generer, (r) => journal(`Résumé rejeté (${r}), nouvel essai`)), modele, date: horodatage() };
     } catch (e) {
       resume = { erreur: (e as Error).message };
-      if (o.conserverSiEchec) return { ecrit: false, destination, graphiques: 0, resume: "echec", erreur: resume.erreur, statistiques };
+      if (o.conserverSiEchec) {
+        barre?.end();
+        return { ecrit: false, destination, graphiques: 0, resume: "echec", erreur: resume.erreur, statistiques };
+      }
     }
+    etape++;
   }
 
-  const graphiques = o.sansGraphiques ? [] : ecrireGraphiques(construireGraphiques(statistiques), join(dirname(destination), "graphiques"), o.convertir);
+  const graphiques = o.sansGraphiques ? [] : ecrireGraphiques(specs, join(dirname(destination), "graphiques"), o.convertir, {
+    debut: (g) => barre?.update(etape, g.titre),
+    fin: (n) => { etape = (o.sansResume ? 0 : 1) + n; },
+  });
+  barre?.update(etape, basename(destination));
   writeFileSync(destination, rendreMarkdown(statistiques, { genereLe: horodatage(), resume, graphiques }));
+  barre?.update(etape + 1);
+  barre?.end();
   const erreur = resume && "erreur" in resume ? resume.erreur : undefined;
   return {
     ecrit: true,
@@ -393,9 +420,12 @@ if (import.meta.main) {
     const args = process.argv.slice(2);
     const sansResume = args.includes("--sans-resume");
     const sansGraphiques = args.includes("--sans-graphiques");
-    const inconnue = args.find((a) => a.startsWith("--") && a !== "--sans-resume" && a !== "--sans-graphiques");
+    const inconnue = args.find((a) => a.startsWith("--") && a !== "--sans-resume" && a !== "--sans-graphiques" && a !== "--sans-couleur");
     if (inconnue) throw new Error(`Option inconnue: ${inconnue}`);
     const [source = "outils.json", sortie] = args.filter((a) => !a.startsWith("--"));
+    const suivi = creerCouleurs(couleursActives(process.stderr, process.env, args.includes("--sans-couleur")));
+    const paint = { filled: suivi.vert, empty: suivi.attenue, label: suivi.cyan };
+    let barre: Progress | undefined;
     const r = await genererSommaire({
       source,
       ...(sortie !== undefined && { sortie }),
@@ -403,7 +433,8 @@ if (import.meta.main) {
       sansGraphiques,
       cle: process.env.OPENAI_API_KEY,
       modele: process.env.OPENAI_MODEL || undefined,
-      journal: (message) => console.error(message),
+      progression: (total) => (barre = barreSommaire(paint)(total)),
+      journal: (message) => (barre ? barre.message(message) : console.error(message)),
     });
     if (r.resume === "echec") process.exitCode = 1;
     const { statistiques: s } = r;

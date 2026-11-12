@@ -360,3 +360,49 @@ test("genererSommaire: destination personnalisée, graphiques/ créé à côté"
   assert.ok(existsSync(sortie));
   assert.ok(existsSync(join(d, "graphiques", "statut-code-source.svg")));
 });
+
+// ---------- barre de progression (fabrique injectée) ----------
+
+const fausseBarre = () => {
+  const journal: { total?: number; etapes: [number, string | undefined][]; messages: string[]; fin: number } = { etapes: [], messages: [], fin: 0 };
+  const progression = (total: number) => {
+    journal.total = total;
+    return {
+      update: (n: number, etiquette?: string) => { journal.etapes.push([n, etiquette]); },
+      message: (m: string) => { journal.messages.push(m); },
+      end: () => { journal.fin++; },
+    };
+  };
+  return { journal, progression };
+};
+test("genererSommaire: la barre compte le résumé, chaque graphique et l'écriture du sommaire, avec leurs étiquettes, puis se termine", async () => {
+  const d = dossierDeDonnees();
+  const { journal, progression } = fausseBarre();
+  const r = await genererSommaire({ source: join(d, "outils.json"), generer: async () => PARAS, convertir: fauxConvertir([]), modele: "gpt-test", progression });
+  assert.equal(journal.total, 1 + r.graphiques + 1);
+  assert.deepEqual(journal.etapes[0], [0, "résumé (gpt-test)"]);
+  assert.equal(journal.etapes[1]![0], 1);
+  assert.match(journal.etapes[1]![1]!, /./);
+  assert.deepEqual(journal.etapes.at(-2), [1 + r.graphiques, "sommaire.md"]);
+  assert.deepEqual(journal.etapes.at(-1), [journal.total, undefined]);
+  assert.equal(journal.fin, 1);
+});
+test("genererSommaire: sans résumé ni graphiques, la barre ne compte que l'écriture; les messages de suivi passent par elle; un échec conservé la termine aussi", async () => {
+  const d = dossierDeDonnees();
+  const sans = fausseBarre();
+  await genererSommaire({ source: join(d, "outils.json"), sansResume: true, sansGraphiques: true, progression: sans.progression });
+  assert.equal(sans.journal.total, 1);
+  assert.equal(sans.journal.fin, 1);
+
+  const reponses = [{ paragraphes: [PARA] }, PARAS];
+  const avec = fausseBarre();
+  const journal: string[] = [];
+  await genererSommaire({ source: join(d, "outils.json"), sansGraphiques: true, generer: async () => reponses.shift(), progression: avec.progression, journal: (m) => journal.push(m) });
+  assert.equal(journal.length, 1); // le message est transmis au journal du demandeur, qui l'affiche via la barre s'il le veut
+  assert.equal(avec.journal.fin, 1);
+
+  const echec = fausseBarre();
+  const r = await genererSommaire({ source: join(d, "outils.json"), conserverSiEchec: true, generer: async () => { throw new Error("HTTP 500"); }, convertir: fauxConvertir([]), progression: echec.progression });
+  assert.equal(r.ecrit, false);
+  assert.equal(echec.journal.fin, 1);
+});

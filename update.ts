@@ -56,8 +56,8 @@ import { formaterDuree } from "./duree.ts";
 import { ecrireFichier, lireFichier, lireSiExiste, type Lu } from "./fichiers.ts";
 import { CHAMPS_ENRICHIS, telechargerRepertoire, type Changement, type Critere, type Outil } from "./extract.ts";
 import { verifierVlConvert } from "./graphiques.ts";
-import { createProgress } from "./progress.ts";
-import { genererSommaire } from "./sommaire.ts";
+import { createProgress, type Progress } from "./progress.ts";
+import { barreSommaire, genererSommaire } from "./sommaire.ts";
 import { abandonneConfirmation, aConfirmer, confirmateurOpenAI, confirmerOutils, estimerCoutConfirmation } from "./confirmer.ts";
 import { aDecrire, categoriesDepuis, decrireCategories, estimerCoutDescriptions, generateurDescriptionOpenAI, sauverCategories, type Categorie } from "./categories.ts";
 import { additionner, dollars, formaterCout, USAGE_VIDE, type Usage } from "./prix.ts";
@@ -446,12 +446,14 @@ if (import.meta.main) {
       } else {
         console.error(suivi.attenue("Mise à jour du sommaire..."));
         try {
+          let barre: Progress | undefined;
           const r = await genererSommaire({
             source: fichier,
             cle: process.env.OPENAI_API_KEY,
             modele: process.env.OPENAI_MODEL || undefined,
             conserverSiEchec: true,
-            journal: (message) => console.error(suivi.jaune(message)),
+            progression: (total) => (barre = barreSommaire({ filled: suivi.vert, empty: suivi.attenue, label: suivi.cyan })(total)),
+            journal: (message) => (barre ? barre.message(suivi.jaune(message)) : console.error(suivi.jaune(message))),
           });
           if (r.ecrit) console.log(`${sortie.vert(r.destination)} mis à jour (${r.graphiques} graphique(s))`);
           else {
