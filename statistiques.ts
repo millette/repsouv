@@ -84,7 +84,7 @@ export interface Statistiques {
   /** Nombre d'outils par catégorie et par statut du code source (pour les graphiques). */
   categoriesSources: { categorie: string; source: string; n: number }[];
   scores: { deux: number; trois: number; moyen: number };
-  enrichissement: { enrichis: number; sansPage: string[]; avecEcart: string[]; sansDate: number; /** Outils non enrichis abandonnés après des échecs consécutifs (voir enrichir.ts). */ abandonnes: string[] };
+  enrichissement: { enrichis: number; avecEcart: string[]; sansDate: number; /** Outils non enrichis abandonnés après des échecs consécutifs (voir enrichir.ts). */ abandonnes: string[] };
   changements: Compte[];
   confianceClassification: Compte[];
   dates: { premieres: DateExtreme | null; dernieres: DateExtreme | null; parDate: Compte[] };
@@ -267,7 +267,6 @@ export function calculerStatistiques({ outils: tous, tags, criteres, meta }: Ent
     },
     enrichissement: {
       enrichis: enrichis.length,
-      sansPage: enrichis.filter((o) => o.page_lue === false).map((o) => o.nom),
       avecEcart: enrichis.filter((o) => o.evaluation_enrichie?.ecart).map((o) => o.nom),
       sansDate: enrichis.length - enrichiLe.length,
       abandonnes: outils.filter((o) => !o.description_longue && abandonne(o)).map((o) => o.nom),

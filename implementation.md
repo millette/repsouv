@@ -272,11 +272,11 @@ La page de chaque outil est lue avant tout appel à l'API. Elle est jugée inuti
 - un **avertissement** est affiché dans le journal, avec la raison;
 - **par défaut**, l'outil n'est **pas enrichi** : aucun appel à l'API n'est fait, l'échec est consigné (code de sortie 1, `echecs_enrichissement` incrémenté) et l'outil sera retenté à la prochaine exécution, jusqu'à 3 échecs consécutifs. Un résultat bâti sur la seule description serait moins fiable (licence et dépôt tirés de la mémoire du modèle, description générique), et comme un outil enrichi n'est jamais régénéré, il serait figé;
 
-Les outils enrichis portent `page_lue: true` ; `page_lue: false` est une valeur historique (ancienne option `--sans-page`, retirée : un outil dont la page est illisible n'est jamais enrichi, pour ne pas figer un résumé tiré de la mémoire du modèle). Pour refaire plus tard des outils enrichis sans page, supprimer leurs champs d'enrichissement, puis relancer `nub run update` :
+Un outil dont la page est illisible n'est donc jamais enrichi, pour ne pas figer un résumé tiré de la mémoire du modèle. Pour refaire plus tard l'enrichissement d'un outil (page corrigée, changement de stratégie), supprimer ses champs d'enrichissement, puis relancer `nub run update` :
 
 ```sh
 # à faire après un commit de outils.json (meta.updated_at sera mis à jour à la prochaine écriture par un script)
-jaq '.outils |= map(if .page_lue == false then del(.description_longue, .tags, .source, .licence, .custom_license, .custom_license_url, .repo, .evaluation_enrichie, .page_lue, .enrichi_le) else . end)' outils.json > /tmp/outils.json && mv /tmp/outils.json outils.json
+jaq '.outils |= map(if .nom == "Nom de l'\''outil" then del(.description_longue, .tags, .source, .licence, .custom_license, .custom_license_url, .repo, .evaluation_enrichie, .enrichi_le, .criteres_confirmes) else . end)' outils.json > /tmp/outils.json && mv /tmp/outils.json outils.json
 ```
 
 ## Génération du sommaire statistique
@@ -292,7 +292,7 @@ Le sommaire est mis à jour **automatiquement** par `update.ts` quand quelque ch
 - les **critères de souveraineté** : nombre d'outils par critère, et critères satisfaits par statut du code source, d'abord pour le répertoire (déduits) puis pour l'évaluation enrichie, avec les écarts entre les deux, et enfin les **critères vérifiés** d'après la page de l'outil (`criteres_confirmes`) : part des critères confirmés, infirmés et indéterminés par statut du code source, modèle, outils sans verdict, outils ayant autant de critères confirmés que d'étoiles;
 - les **forges de code** : nombre d'outils par forge (GitHub, GitLab, Codeberg…) et logiciels libres sans dépôt connu;
 - les **tags** : utilisation de chacun, tags inutilisés, moyenne par outil, paires les plus fréquentes, tags ajoutés;
-- la **fiabilité** : confiance de la classification, outils enrichis sans page lisible, outils restant à enrichir;
+- la **fiabilité** : confiance de la classification, outils restant à enrichir et outils abandonnés après des échecs répétés;
 - des **graphiques**, insérés dans la section qu'ils illustrent (voir plus bas).
 
 Tant que tous les outils ont la même date (aucune modification détectée depuis l'import), les lignes « outils les plus anciens » et « outils les plus récents » sont identiques. Les outils enrichis avant l'ajout de `enrichi_le` ont tous la même date de substitution : ils apparaissent donc ensemble comme « premier enrichissement » (voir le champ `enrichi_le`).

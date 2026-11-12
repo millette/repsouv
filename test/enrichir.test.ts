@@ -414,12 +414,11 @@ const unOutilAvecGenerateur = () => {
   return { generer, appels: () => appels };
 };
 
-test("page: une page normale donne page_lue: true, sans avertissement", async () => {
+test("page: une page normale: enrichi, sans avertissement", async () => {
   const g = unOutilAvecGenerateur();
   const journal: string[] = [];
   const outils = [outil("a")];
   const r = await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer: g.generer, lire: pageOk, journal: (m) => journal.push(m) });
-  assert.equal(outils[0]!.page_lue, true);
   assert.deepEqual(r.enrichis, ["a"]);
   assert.equal(journal.some((m) => m.includes("AVERTISSEMENT")), false);
 });
@@ -439,7 +438,6 @@ for (const [cas, lire, raison] of [
     assert.doesNotMatch(r.erreurs[0]!.message, /--sans-page/);
     assert.ok(journal.some((m) => m.includes("AVERTISSEMENT") && raison.test(m)));
     assert.equal(outils[0]!.description_longue, undefined);
-    assert.equal(outils[0]!.page_lue, undefined);
     assert.equal(aEnrichir(outils[0]!), true);
   });
 }
@@ -449,9 +447,6 @@ test("page: un outil dont la page est inaccessible n'empÃªche pas les autres d'Ã
   const r = await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer: async () => valide(), lire });
   assert.deepEqual(r.enrichis, ["b"]);
   assert.equal(r.erreurs[0]!.nom, "a");
-});
-test("page: les instructions demandent la prudence sans page lisible", () => {
-  assert.match(instructions(VOCAB, CRITERES, false), /inaccessible/);
 });
 test("obtenirPage: distingue page normale, vide, absente et en erreur", async () => {
   assert.equal((await obtenirPage("u", pageOk)).probleme, undefined);

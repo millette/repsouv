@@ -304,7 +304,6 @@ Tu reçois en JSON le nom d'un outil, sa description actuelle et un extrait de s
 - licence: UNIQUEMENT une expression de licence SPDX valide, avec les identifiants exacts de la liste SPDX et leur casse (ex. AGPL-3.0-or-later, MIT, Apache-2.0, « MIT OR Apache-2.0 »). Écris -only ou -or-later (jamais GPL-3.0 ni GPL-2.0+). Jamais le nom en toutes lettres ni un LicenseRef. null si le logiciel est propriétaire, si tu n'es pas certain, ou si aucun identifiant SPDX ne convient.
 - custom_license et custom_license_url: pour une licence réelle qui n'a PAS d'identifiant SPDX (licence maison ou propre à l'éditeur, par exemple pour un logiciel à code source disponible), « licence » reste null et « custom_license » donne le nom ou l'identifiant de cette licence tel que l'éditeur l'écrit; « custom_license_url » donne l'URL de son texte, seulement si tu la connais ou la trouves dans le contenu fourni (sinon null). Si « licence » est une expression SPDX, ou si le logiciel est propriétaire, les deux sont null.
 - repo: URL du dépôt de code source principal, sur n'importe quelle forge (GitHub, GitLab, Codeberg, Framagit, etc.). Privilégie un lien de « liens_depot ». null si propriétaire ou inconnu.
-Si « page » vaut « inaccessible » ou est presque vide, tu n'as que la description actuelle: reste prudent, réponds null pour la licence, le repo et les licences maison à moins d'en être certain, et indique une confiance faible dans l'évaluation.
 En cas de doute sur la source, la licence ou le repo, réponds null plutôt que de deviner. Un logiciel propriétaire a licence, custom_license et repo à null.
 - evaluation_enrichie: ton évaluation INDÉPENDANTE de la souveraineté numérique de l'outil, pour une organisation canadienne, d'après le contenu fourni et ce qui est solidement établi. « criteres » liste les critères satisfaits parmi les suivants; « score » est leur nombre (0 à 3); « confiance » (élevée, moyenne ou faible) dit à quel point l'information disponible est claire. Un critère n'est satisfait que si l'information est claire; sinon ne le compte pas.
 ${listeCriteres}
@@ -546,7 +545,7 @@ export async function enrichirOutils(outils: OutilARevoir[], options: OptionsEnr
 
       for (const n of nouveaux_tags) tags.push({ ...n, propose_pour: outil.nom });
       const { echecs_enrichissement: _echecs, ...sansCompteur } = outil;
-      outils[i] = { ...sansCompteur, ...champs, page_lue: true, enrichi_le: horloge() };
+      outils[i] = { ...sansCompteur, ...champs, enrichi_le: horloge() };
       resultat.enrichis.push(outil.nom);
       journal(`  ${outil.nom}: ${champs.tags.join(", ")} (${champs.source})`, "succes");
       if (different) {

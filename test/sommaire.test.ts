@@ -123,7 +123,6 @@ test("statistiques: dates du répertoire (plus anciennes et plus récentes) et d
   assert.deepEqual(e.derniere!.outils, ["C"]);
   assert.deepEqual(e.parJour, [{ cle: "2026-11-12", n: 3 }, { cle: "2026-11-13", n: 1 }]);
   assert.equal(s.enrichissement.sansDate, 1);
-  assert.deepEqual(s.enrichissement.sansPage, ["G"]);
   assert.deepEqual(s.enrichissement.avecEcart, ["B"]);
 });
 test("statistiques: aucun outil enrichi (début de l'enrichissement), sans erreur", () => {

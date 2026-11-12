@@ -41,6 +41,7 @@ Les étapes du projet et les décisions prises, par date, d'après l'historique 
 - **`update` porte d'entrée unique** : sans `outils.json`, il fait l'import initial (tous les outils « nouveau ») et il écrit aussi `criteres.json` ; les scripts npm `build`, `build:force`, `extract`, `classify` et l'alias `enrichir` sont retirés. `extract.ts --force` (reconstruction) et `classify.ts` (reclassement) restent des commandes explicites, sans script npm.
 - **Options de `update` réduites** : `--sommaire`, `--sans-sommaire` et `--limite` retirés ; le sommaire se met à jour avec `--enrichir` seulement, et `update` seul avertit. Nouveau champ `echecs_enrichissement` : après 3 échecs consécutifs (`--max-echecs=N`), un outil n'est plus tenté.
 - **`update` enrichit toujours** : `--enrichir` et `--sans-page` retirés ; un outil dont la page est illisible n'est jamais enrichi. `--dry-run` affiche l'aperçu et une estimation des jetons et du coût (`prix.ts`, borne haute). Au premier import, confirmation dans le terminal (1. accepter les coûts, 2. simulation, 3. arrêter), ou `--accepter-couts` hors terminal. Les jetons réels de chaque enrichissement sont comptés et affichés.
+- **Champ `page_lue` retiré** des données, du code, des schémas et des docs : plus rien ne pouvait produire `false`, et `true` était devenu implicite (un outil enrichi a toujours eu sa page lue).
 - **Documentation** scindée en trois fichiers : README (source, crédits, usage, données), `implementation.md` (scripts, classification, enrichissement, sommaire, tests, dépannage) et ce fichier.
 
 ## Décisions

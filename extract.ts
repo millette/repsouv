@@ -83,11 +83,6 @@ export interface Outil {
   repo?: string | null;
   /** Second avis sur score et critères, à comparer à `score` et `criteres` du répertoire. */
   evaluation_enrichie?: EvaluationEnrichie;
-  /**
-   * true si la page de l'outil a servi à l'enrichissement; false si l'outil a été enrichi sans
-   * page lisible (ancienne option --sans-page, retirée: valeur historique), à partir de sa seule description: résultat moins fiable.
-   */
-  page_lue?: boolean;
   /** Date et heure de l'enrichissement de l'outil (ISO 8601, heure de Toronto, avec décalage). Absente pour les outils enrichis avant l'ajout de ce champ. */
   enrichi_le?: string;
   /** Critères vérifiés par une IA, citation à l'appui (voir CriteresConfirmes); absent tant que confirmer.ts n'a pas été appliqué. */
@@ -202,7 +197,7 @@ export function extraire(html: string): Repertoire {
 /** Les champs ajoutés par l'enrichissement (voir enrichir.ts). */
 export const CHAMPS_ENRICHIS = [
   "description_longue", "tags", "source", "licence", "custom_license", "custom_license_url", "repo", "evaluation_enrichie",
-  "page_lue", "enrichi_le", "criteres_confirmes",
+  "enrichi_le", "criteres_confirmes",
 ] as const;
 
 /**

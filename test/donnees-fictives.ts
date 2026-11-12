@@ -30,7 +30,7 @@ export const outil = (nom: string, extra: Partial<OutilClasse> = {}): OutilClass
 export const enrichi = (nom: string, extra: Partial<OutilClasse> = {}) =>
   outil(nom, {
     description_longue: "Longue.", tags: ["chiffrement"], source: "libre", licence: "AGPL-3.0-only", custom_license: null, custom_license_url: null,
-    repo: `https://github.com/org/${nom}`, page_lue: true, enrichi_le: "2026-11-12T09:00:00-05:00",
+    repo: `https://github.com/org/${nom}`, enrichi_le: "2026-11-12T09:00:00-05:00",
     evaluation_enrichie: { score: 2, criteres: ["donnees", "dependance"], confiance: "élevée" }, ...extra,
   });
 
@@ -64,7 +64,7 @@ export const OUTILS: OutilClasse[] = [
     evaluation_enrichie: { score: 3, criteres: ["donnees", "controle", "dependance"], confiance: "élevée" }, criteres_confirmes: confirmes("c", "c", "c") }),
   outil("D", { categorie: "Cat2", changement: "nouveau", derniere_modification: D1 }),
   enrichi("Maison", { source: "source-disponible", criteres_confirmes: confirmes("?", "?", "?"), licence: null, custom_license: "Licence maison", custom_license_url: "https://maison.example/licence", repo: "https://git.exemple.org/x/Maison", tags: [] }),
-  sansDate(enrichi("G", { licence: "Apache-2.0 OR MIT", page_lue: false, categorie: "Cat2" })),
+  sansDate(enrichi("G", { licence: "Apache-2.0 OR MIT", categorie: "Cat2" })),
   outil("Retire", { removed: true, changement: "retrait", derniere_modification: D1 }),
 ];
 export const entree = (outils = OUTILS): Entree => ({ outils, tags: TAGS, criteres: CRITERES, meta: META });

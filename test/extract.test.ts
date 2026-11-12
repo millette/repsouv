@@ -41,7 +41,7 @@ test("travailAPerdre: l'enrichissement et l'historique sont signalés", () => {
   const perte = travailAPerdre([
     { nom: "a", description_longue: "Longue." },
     { nom: "b", licence: null },
-    { nom: "e", page_lue: true },
+    { nom: "e", enrichi_le: "2026-11-12T09:00:00-05:00" },
     { nom: "c", changement: "modification" },
     { nom: "d", removed: true },
   ]);

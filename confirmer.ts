@@ -388,7 +388,7 @@ if (import.meta.main) {
 
     const deja: Resultat[] = existsSync(sortie) ? (JSON.parse(readFileSync(sortie, "utf8")).resultats as Resultat[]).filter((r) => r.confirmation) : [];
     const faits = new Set(deja.map((r) => r.nom));
-    let candidats = lireFichier<OutilClasse>(fichierOutils, "outils").donnees.filter((o) => o.evaluation_enrichie && !o.removed && o.page_lue !== false);
+    let candidats = lireFichier<OutilClasse>(fichierOutils, "outils").donnees.filter((o) => o.evaluation_enrichie && !o.removed);
     if (fichierListe) candidats = selectionnerOutils(candidats, JSON.parse(readFileSync(fichierListe, "utf8")) as string[]);
     const outils = candidats.filter((o) => !faits.has(o.nom));
     console.error(`${nomFournisseur} ${modele}: ${outils.length} outil(s) à confirmer (${deja.length} déjà faits), budget ${budgetUsd} $`);

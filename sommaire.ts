@@ -220,8 +220,7 @@ ${tg.ajoutes.length ? `\n**Tags ajoutés après le vocabulaire initial** :\n\n${
   parts.push(`## Fiabilité et suivi
 
 - Confiance de la déduction des critères : ${s.confianceClassification.map((x) => `${x.cle} ${x.n}`).join(", ")}.
-${ens ? `- Outils enrichis **sans page lisible** (résultat moins fiable) : ${s.enrichissement.sansPage.length ? `${s.enrichissement.sansPage.length} (${liste(s.enrichissement.sansPage, 10)})` : "aucun"}.
-- Outils restant à enrichir : ${s.total - ens}${abandonnesTexte}.` : `- Outils restant à enrichir : ${s.total}${abandonnesTexte}.`}
+- Outils restant à enrichir : ${s.total - ens}${abandonnesTexte}.
 `);
 
   return parts.join("\n").replace(/\n{3,}/g, "\n\n").trimEnd() + "\n";
