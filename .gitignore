@@ -7,3 +7,4 @@ orig-sommaire.md
 skills-lock.json
 dist/
 .mion/
+analyses/classification/.cache/

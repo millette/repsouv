@@ -1,0 +1,1506 @@
+{
+  "meta": {
+    "fournisseur": "openai",
+    "modele": "gpt-6-astra",
+    "prix": {
+      "entree": 10,
+      "cache_lecture": 1,
+      "sortie": 50
+    },
+    "date": "2026-11-12T12:41:57.094Z",
+    "arret": null
+  },
+  "totaux": {
+    "appels": 57,
+    "entree": 98688,
+    "sortie": 9977,
+    "cache_lecture": 5749,
+    "cache_ecriture": 0,
+    "cout_usd": 1.433989,
+    "echecs": 0
+  },
+  "resultats": [
+    {
+      "nom": "Matomo",
+      "lien": "https://matomo.org/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "peut être auto-hébergé sur l’infrastructure de son choix."
+        },
+        "controle": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "dependance": {
+          "statut": "confirme",
+          "preuve": "Host Matomo on-premise or in the cloud with full ownership, no lock-in, and the flexibility to extend it your way."
+        }
+      },
+      "usage": {
+        "entree": 2042,
+        "sortie": 229,
+        "cache_lecture": 2039,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.013519
+    },
+    {
+      "nom": "Klipfolio",
+      "lien": "https://www.klipfolio.com/v4",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "controle": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 1586,
+        "sortie": 56,
+        "cache_lecture": 1583,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.004413
+    },
+    {
+      "nom": "cDox",
+      "lien": "https://cdox.studio/?lang=fr-CA",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Tous les documents sont stockés et traités sur des serveurs bare metal indépendants à Montréal, Québec, sous les lois canadiennes, avec des sauvegardes chaque nuit à Toronto. Vos documents ne quittent jamais le Canada."
+        },
+        "controle": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "dependance": {
+          "statut": "confirme",
+          "preuve": "Tous les documents sont stockés et traités sur des serveurs bare metal indépendants à Montréal, Québec, sous les lois canadiennes, avec des sauvegardes chaque nuit à Toronto."
+        }
+      },
+      "usage": {
+        "entree": 2130,
+        "sortie": 234,
+        "cache_lecture": 2127,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.013857
+    },
+    {
+      "nom": "Antidote",
+      "lien": "https://www.antidote.info/fr/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Le logiciel s’installe localement sur votre ordinateur Windows ou Mac."
+        },
+        "controle": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "dependance": {
+          "statut": "confirme",
+          "preuve": "Antidote Mobile Il vous suit partout et n’a pas besoin de connexion Internet pour fonctionner."
+        }
+      },
+      "usage": {
+        "entree": 2097,
+        "sortie": 198,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.03087
+    },
+    {
+      "nom": "CryptPad",
+      "lien": "https://cryptpad.org/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "L'outil peut être auto-hébergé ou utilisé via une instance québécoise."
+        },
+        "controle": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 1946,
+        "sortie": 140,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02646
+    },
+    {
+      "nom": "OnlyOffice",
+      "lien": "https://www.onlyoffice.com/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Cet outil, d'origine internationale, est libre et auto-hébergeable pour conserver la maîtrise de ses données."
+        },
+        "controle": {
+          "statut": "infirme",
+          "preuve": "ONLYOFFICE is owned by Ascensio System SIA, a Latvian company which is a subsidiary of OnlyOffice Capital Group Pte. Ltd."
+        },
+        "dependance": {
+          "statut": "confirme",
+          "preuve": "Can I use ONLYOFFICE offline?Yes, you can. To do so, download the free ONLYOFFICE Desktop Editors which is available for Windows, Linux, and macOS."
+        }
+      },
+      "usage": {
+        "entree": 1997,
+        "sortie": 215,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.03072
+    },
+    {
+      "nom": "Collabora Online",
+      "lien": "https://www.collaboraonline.com/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Elle peut être auto-hébergée et intégrée à des plateformes comme Nextcloud pour faciliter le travail collaboratif."
+        },
+        "controle": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "dependance": {
+          "statut": "confirme",
+          "preuve": "Teams can work together on documents within the internal platform—secure, auditable, and self-hosted."
+        }
+      },
+      "usage": {
+        "entree": 1855,
+        "sortie": 227,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.0299
+    },
+    {
+      "nom": "La Digitale",
+      "lien": "https://ladigitale.dev/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Conçu en France mais auto-hébergeable au Canada."
+        },
+        "controle": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 2281,
+        "sortie": 136,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02961
+    },
+    {
+      "nom": "Euro-Office",
+      "lien": "https://github.com/Euro-Office",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Conçue pour être intégrée à des solutions comme Nextcloud, elle peut être auto-hébergée sur l’infrastructure choisie par l’organisation."
+        },
+        "controle": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 1866,
+        "sortie": 162,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02676
+    },
+    {
+      "nom": "Framapad",
+      "lien": "https://framapad.org/abc/fr/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Bien que français, il s'agit d'un logiciel libre qui peut être installé sur un serveur canadien."
+        },
+        "controle": {
+          "statut": "infirme",
+          "preuve": "Framapad est proposé par une association française à but non lucratif : Framasoft"
+        },
+        "dependance": {
+          "statut": "confirme",
+          "preuve": "Framapad est une installation du logiciel libre Etherpad sur les serveurs de Framasoft. Sa licence libre vous autorise à étudier son code, à y contribuer ainsi qu’à l’installer sur votre propre serveur."
+        }
+      },
+      "usage": {
+        "entree": 2229,
+        "sortie": 262,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.03539
+    },
+    {
+      "nom": "Jami",
+      "lien": "https://jami.net/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Users who are on the same local network can communicate with Jami even if they are disconnected from the internet."
+        },
+        "controle": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "dependance": {
+          "statut": "confirme",
+          "preuve": "Users who are on the same local network can communicate with Jami even if they are disconnected from the internet."
+        }
+      },
+      "usage": {
+        "entree": 1426,
+        "sortie": 278,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02816
+    },
+    {
+      "nom": "Mattermost",
+      "lien": "https://mattermost.com/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Cet outil non canadien peut cependant être auto-hébergé sur l’infrastructure de l’organisation, y compris dans un environnement privé ou totalement déconnecté."
+        },
+        "controle": {
+          "statut": "infirme",
+          "preuve": "Cet outil non canadien"
+        },
+        "dependance": {
+          "statut": "confirme",
+          "preuve": "Every capability runs entirely inside your perimeter, including in classified & air-gapped networks."
+        }
+      },
+      "usage": {
+        "entree": 1763,
+        "sortie": 142,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02473
+    },
+    {
+      "nom": "Jitsi Meet",
+      "lien": "https://jitsi.org/jitsi-meet/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Cet outil international peut être utilisé gratuitement en ligne ou auto-hébergé sur l’infrastructure de son choix, sans compte utilisateur obligatoire."
+        },
+        "controle": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 1016,
+        "sortie": 224,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02136
+    },
+    {
+      "nom": "Mastodon",
+      "lien": "https://joinmastodon.org/fr",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Mastodon est un réseau social libre et décentralisé qui peut être hébergé au Canada, permettant ainsi de mieux maîtriser les données."
+        },
+        "controle": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "dependance": {
+          "statut": "confirme",
+          "preuve": "Chaque serveur Mastodon est totalement indépendant, mais capable d'interagir avec les autres pour former un réseau social mondial."
+        }
+      },
+      "usage": {
+        "entree": 1981,
+        "sortie": 321,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.03586
+    },
+    {
+      "nom": "Discourse",
+      "lien": "https://www.discourse.org/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "L'outil n'est pas canadien mais peut être auto-hébergé pour garder la maîtrise des échanges et des données des membres."
+        },
+        "controle": {
+          "statut": "infirme",
+          "preuve": "L'outil n'est pas canadien mais peut être auto-hébergé pour garder la maîtrise des échanges et des données des membres."
+        },
+        "dependance": {
+          "statut": "confirme",
+          "preuve": "No black boxes, no vendor lock-in, no surprises. Audit it, fork it, extend it. View on GitHub -> Star Your data, your control Export everything, anytime. Self-host or use our managed hosting. Switch whenever you want."
+        }
+      },
+      "usage": {
+        "entree": 1808,
+        "sortie": 405,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.03833
+    },
+    {
+      "nom": "Kashoo",
+      "lien": "https://kashoo.com/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "controle": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 1684,
+        "sortie": 121,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02289
+    },
+    {
+      "nom": "Elodia",
+      "lien": "https://www.elodia.app/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "controle": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 1664,
+        "sortie": 101,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02169
+    },
+    {
+      "nom": "Zeffy",
+      "lien": "https://www.zeffy.com/fr-ca",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "controle": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 2149,
+        "sortie": 167,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02984
+    },
+    {
+      "nom": "CanaDon",
+      "lien": "https://www.canadahelps.org/fr/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "controle": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 1406,
+        "sortie": 141,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02111
+    },
+    {
+      "nom": "Webnames.ca",
+      "lien": "https://www.webnames.ca/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Servers in Canada for privacy & compliance"
+        },
+        "controle": {
+          "statut": "confirme",
+          "preuve": "Canadian owned & operated for 25 years"
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 1934,
+        "sortie": 69,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02279
+    },
+    {
+      "nom": "Penpot",
+      "lien": "https://penpot.app/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Elle est non canadienne mais libre et peut être auto-hébergée pour maîtriser le stockage et le partage des projets."
+        },
+        "controle": {
+          "statut": "infirme",
+          "preuve": "Elle est non canadienne"
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 930,
+        "sortie": 170,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.0178
+    },
+    {
+      "nom": "La Bibli",
+      "lien": "https://labibli.com/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Par défaut, La Bibli est hébergée à Toronto : vos données et celles de vos membres ne quittent pas le Canada, et ne sont revendues à personne."
+        },
+        "controle": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 2132,
+        "sortie": 150,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02882
+    },
+    {
+      "nom": "Omeka S",
+      "lien": "https://omeka.org/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "avec auto-hébergement possible."
+        },
+        "controle": {
+          "statut": "infirme",
+          "preuve": "Plateforme libre non canadienne"
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 891,
+        "sortie": 128,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.01531
+    },
+    {
+      "nom": "Leantime",
+      "lien": "https://leantime.io/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Non canadien, il propose une édition libre et auto-hébergeable."
+        },
+        "controle": {
+          "statut": "infirme",
+          "preuve": "Non canadien, il propose une édition libre et auto-hébergeable."
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 1937,
+        "sortie": 210,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02987
+    },
+    {
+      "nom": "OpenProject",
+      "lien": "https://www.openproject.org/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Sa version communautaire auto-hébergeable permet de conserver les données sur une infrastructure choisie."
+        },
+        "controle": {
+          "statut": "infirme",
+          "preuve": "Logiciel libre non canadien de gestion de projets"
+        },
+        "dependance": {
+          "statut": "confirme",
+          "preuve": "OpenProject can be installed on-premises in your own organizations’s infrastructure, giving you complete control over your data and allowing you to manage it 100% yourself."
+        }
+      },
+      "usage": {
+        "entree": 1814,
+        "sortie": 189,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02759
+    },
+    {
+      "nom": "Taiga",
+      "lien": "https://taiga.io/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Il n'est pas canadien mais peut être auto-hébergé."
+        },
+        "controle": {
+          "statut": "infirme",
+          "preuve": "Il n'est pas canadien mais peut être auto-hébergé."
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 1557,
+        "sortie": 236,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02737
+    },
+    {
+      "nom": "Vikunja",
+      "lien": "https://vikunja.io/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Your data, your server Run Vikunja on your own infrastructure."
+        },
+        "controle": {
+          "statut": "infirme",
+          "preuve": "Logiciel libre non canadien mais auto-hébergeable de gestion des tâches et projets offrant des listes, tableaux Kanban, échéances et vues chronologiques."
+        },
+        "dependance": {
+          "statut": "confirme",
+          "preuve": "You can install Vikunja using Docker, native binaries for your platform, or sign up for Vikunja Cloud."
+        }
+      },
+      "usage": {
+        "entree": 1338,
+        "sortie": 223,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02453
+    },
+    {
+      "nom": "Member365",
+      "lien": "https://member365.com/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "controle": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 1755,
+        "sortie": 96,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02235
+    },
+    {
+      "nom": "CiviCRM",
+      "lien": "https://civicrm.org/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Or download, install, and host CiviCRM on your own hosting infrastructure (experts only!)."
+        },
+        "controle": {
+          "statut": "infirme",
+          "preuve": "Logiciel libre non canadien destiné aux associations et OBNL pour gérer leurs membres, donateurs, contacts, événements et communications."
+        },
+        "dependance": {
+          "statut": "confirme",
+          "preuve": "CiviCRM gives you total freedom in your choice of host. You're not tied to a particular data centre or country."
+        }
+      },
+      "usage": {
+        "entree": 1591,
+        "sortie": 241,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02796
+    },
+    {
+      "nom": "Le point de vente",
+      "lien": "http://www.lepointdevente.com/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "controle": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 2323,
+        "sortie": 76,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02703
+    },
+    {
+      "nom": "Mobilizon",
+      "lien": "https://mobilizon.org/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Checkout the documentation to install your own instance or contact us for professional hosting services."
+        },
+        "controle": {
+          "statut": "infirme",
+          "preuve": "Outil non canadien de gestion d’événements et de groupes permettant de publier des activités, créer des pages communautaires et mobiliser des participants."
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 1312,
+        "sortie": 205,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02337
+    },
+    {
+      "nom": "eZsign",
+      "lien": "https://www.ezsign.com/fr/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "100% données hébergées au Canada. Toujours."
+        },
+        "controle": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 2124,
+        "sortie": 229,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.03269
+    },
+    {
+      "nom": "DocuSeal",
+      "lien": "https://www.docuseal.com/fr",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Non canadienne, elle propose une édition auto-hébergeable."
+        },
+        "controle": {
+          "statut": "infirme",
+          "preuve": "Non canadienne, elle propose une édition auto-hébergeable."
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 2078,
+        "sortie": 147,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02813
+    },
+    {
+      "nom": "Envoke",
+      "lien": "https://envoke.com/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Canadian Email Marketing Software with Data in Canada"
+        },
+        "controle": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 1280,
+        "sortie": 63,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.01595
+    },
+    {
+      "nom": "Cyberimpact",
+      "lien": "http://www.cyberimpact.com/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Contact data hosted exclusively on Canadian servers"
+        },
+        "controle": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 1867,
+        "sortie": 62,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02177
+    },
+    {
+      "nom": "Dialogue Insight",
+      "lien": "https://www.dialoginsight.com/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "controle": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 1741,
+        "sortie": 78,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02131
+    },
+    {
+      "nom": "Cakemail",
+      "lien": "https://www.cakemail.ca/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Your contact lists and campaign data are stored on Canadian servers, under Canadian and Québec privacy law."
+        },
+        "controle": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 1421,
+        "sortie": 172,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02281
+    },
+    {
+      "nom": "Thunderbird",
+      "lien": "https://www.thunderbird.net/fr",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "les messages restent chez le fournisseur de courriel choisi et peuvent aussi être conservés localement sur l’appareil."
+        },
+        "controle": {
+          "statut": "infirme",
+          "preuve": "Avec ce logiciel non canadien"
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 1502,
+        "sortie": 198,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02492
+    },
+    {
+      "nom": "Firefox",
+      "lien": "https://www.firefox.com/fr",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Les données de navigation peuvent rester entièrement sur l’appareil."
+        },
+        "controle": {
+          "statut": "infirme",
+          "preuve": "Navigateur Internet non canadien"
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 1938,
+        "sortie": 129,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02583
+    },
+    {
+      "nom": "Feuille de temps",
+      "lien": "https://feuilledetemps.ca/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Les serveurs et la base de donnée de Feuille de temps sont situés au Canada et alimentés par de l'énergie verte."
+        },
+        "controle": {
+          "statut": "confirme",
+          "preuve": "Fait au Nouveau-Brunswick par une compagnie canadienne"
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 2048,
+        "sortie": 158,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02838
+    },
+    {
+      "nom": "Folks HR",
+      "lien": "https://folksrh.com/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "controle": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 2002,
+        "sortie": 56,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02282
+    },
+    {
+      "nom": "1Password",
+      "lien": "https://1password.com/fr/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "controle": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 1173,
+        "sortie": 231,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02328
+    },
+    {
+      "nom": "Bitwarden",
+      "lien": "https://bitwarden.com/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Disponible dans le nuage ou en auto-hébergement sur l’infrastructure de son choix."
+        },
+        "controle": {
+          "statut": "infirme",
+          "preuve": "Gestionnaire de mots de passe non canadien libre"
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 1937,
+        "sortie": 173,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02802
+    },
+    {
+      "nom": "Vaultwarden",
+      "lien": "https://github.com/dani-garcia/vaultwarden",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Non canadien, il permet de stocker et partager mots de passe et autres informations sensibles sur un serveur contrôlé par l’organisation."
+        },
+        "controle": {
+          "statut": "infirme",
+          "preuve": "Non canadien"
+        },
+        "dependance": {
+          "statut": "confirme",
+          "preuve": "An alternative server implementation of the Bitwarden Client API, written in Rust and compatible with official Bitwarden clients [disclaimer], perfect for self-hosted deployment where running the official resource-heavy service might not be ideal."
+        }
+      },
+      "usage": {
+        "entree": 1985,
+        "sortie": 299,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.0348
+    },
+    {
+      "nom": "2FAS Auth",
+      "lien": "https://2fas.com/auth/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Local-first:Data stored locally, not sent to third-party servers"
+        },
+        "controle": {
+          "statut": "infirme",
+          "preuve": "Application d’authentification à deux facteurs non canadienne qui génère localement des codes temporaires pour sécuriser les connexions aux comptes en ligne."
+        },
+        "dependance": {
+          "statut": "confirme",
+          "preuve": "Fonctionne hors ligne, sans compte utilisateur, avec sauvegarde facultative chiffrée dans iCloud ou Google Drive."
+        }
+      },
+      "usage": {
+        "entree": 1676,
+        "sortie": 201,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02681
+    },
+    {
+      "nom": "2FAS Pass",
+      "lien": "https://2fas.com/pass/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "La synchronisation est facultative et peut passer par une infrastructure auto-hébergée, sans compte utilisateur obligatoire."
+        },
+        "controle": {
+          "statut": "infirme",
+          "preuve": "Disponible uniquement en anglais, ce gestionnaire de mots de passe non canadien « local-first » stocke le coffre chiffré sur l’appareil."
+        },
+        "dependance": {
+          "statut": "confirme",
+          "preuve": "You store everything where you choose, and you don't need the Internet to access your Items."
+        }
+      },
+      "usage": {
+        "entree": 1680,
+        "sortie": 250,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.0293
+    },
+    {
+      "nom": "Micrologic",
+      "lien": "http://www.micrologic.ca/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Nous vous assurons que l’intégralité de vos données sera hébergée en sol canadien, garantissant ainsi que vos informations sensibles ne quitteront jamais le pays."
+        },
+        "controle": {
+          "statut": "confirme",
+          "preuve": "Fièrement une entreprise à propriété 100% canadienne"
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 2003,
+        "sortie": 160,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02803
+    },
+    {
+      "nom": "TitanFile",
+      "lien": "https://www.titanfile.com/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Data residency in the US, Canada, or Europe"
+        },
+        "controle": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "dependance": {
+          "statut": "infirme",
+          "preuve": "When data is uploaded to TitanFile, it is encrypted and stored on ISO-certified AWS and Azure data centers."
+        }
+      },
+      "usage": {
+        "entree": 1940,
+        "sortie": 160,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.0274
+    },
+    {
+      "nom": "La Réserve",
+      "lien": "https://sylvea.ca/solutions-resilientes/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Vos données sauvegardées chaque nuit, sur des serveurs au Canada, mutualisés entre OSBL."
+        },
+        "controle": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "dependance": {
+          "statut": "infirme",
+          "preuve": "Il renforce la maîtrise des sauvegardes sans supprimer la dépendance aux plateformes d'origine."
+        }
+      },
+      "usage": {
+        "entree": 1580,
+        "sortie": 92,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.0204
+    },
+    {
+      "nom": "Nextcloud",
+      "lien": "https://nextcloud.com/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Peut être auto-hébergée sur l’infrastructure choisie."
+        },
+        "controle": {
+          "statut": "infirme",
+          "preuve": "Suite collaborative non canadienne"
+        },
+        "dependance": {
+          "statut": "confirme",
+          "preuve": "Governments are moving away from foreign cloud providers amid rising concerns about digital sovereignty and are opting for secure self hosted cloud file storage platforms."
+        }
+      },
+      "usage": {
+        "entree": 1774,
+        "sortie": 250,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.03024
+    },
+    {
+      "nom": "Sync.com",
+      "lien": "https://www.sync.com/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "controle": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 1367,
+        "sortie": 117,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.01952
+    },
+    {
+      "nom": "Manni",
+      "lien": "https://www.manni.app/fr/home",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Vos données restent au Canada."
+        },
+        "controle": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 2056,
+        "sortie": 136,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02736
+    },
+    {
+      "nom": "Fellow",
+      "lien": "https://fellow.ai/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "controle": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "dependance": {
+          "statut": "indetermine",
+          "preuve": null
+        }
+      },
+      "usage": {
+        "entree": 1845,
+        "sortie": 81,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.0225
+    },
+    {
+      "nom": "Handy",
+      "lien": "https://handy.computer/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "La reconnaissance vocale s’effectue localement sur l’ordinateur, sans envoyer les enregistrements ou transcriptions dans le nuage."
+        },
+        "controle": {
+          "statut": "infirme",
+          "preuve": "Outil non canadien, gratuit et libre de dictée vocale qui transcrit la parole directement dans n’importe quel champ de texte."
+        },
+        "dependance": {
+          "statut": "confirme",
+          "preuve": "La reconnaissance vocale s’effectue localement sur l’ordinateur, sans envoyer les enregistrements ou transcriptions dans le nuage."
+        }
+      },
+      "usage": {
+        "entree": 1121,
+        "sortie": 236,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02301
+    },
+    {
+      "nom": "Obsidian",
+      "lien": "https://obsidian.md/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Les notes sont conservées sous forme de fichiers Markdown directement sur l’appareil."
+        },
+        "controle": {
+          "statut": "indetermine",
+          "preuve": null
+        },
+        "dependance": {
+          "statut": "confirme",
+          "preuve": "Obsidian stores notes privately on your device, so you can access them quickly, even offline."
+        }
+      },
+      "usage": {
+        "entree": 1916,
+        "sortie": 183,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02831
+    },
+    {
+      "nom": "Miniflux",
+      "lien": "https://miniflux.app/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Disponible en auto-hébergement ou en service hébergé."
+        },
+        "controle": {
+          "statut": "infirme",
+          "preuve": "Lecteur de flux RSS non canadien, libre et minimaliste"
+        },
+        "dependance": {
+          "statut": "confirme",
+          "preuve": "Miniflux is compiled statically without external dependencies. Drop the binary on your server, and you're done."
+        }
+      },
+      "usage": {
+        "entree": 990,
+        "sortie": 170,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.0184
+    },
+    {
+      "nom": "Wallabag",
+      "lien": "https://wallabag.org/",
+      "tentatives": 1,
+      "confirmation": {
+        "donnees": {
+          "statut": "confirme",
+          "preuve": "Il peut être auto-hébergé pour conserver la maîtrise de ses archives."
+        },
+        "controle": {
+          "statut": "infirme",
+          "preuve": "Outil non canadien libre permettant de sauvegarder des articles et des pages Web pour les lire plus tard, sans publicité ni distractions."
+        },
+        "dependance": {
+          "statut": "confirme",
+          "preuve": "Install wallabag on your own server and keep full control over updates, backups, data and access."
+        }
+      },
+      "usage": {
+        "entree": 1204,
+        "sortie": 194,
+        "cache_lecture": 0,
+        "cache_ecriture": 0
+      },
+      "cout_usd": 0.02174
+    }
+  ]
+}

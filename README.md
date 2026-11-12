@@ -95,6 +95,7 @@ Schémas          schemas-types.ts ──▶ obuild + RunTypes ──▶ generer
 |---|---|
 | `outils.json`, `criteres.json`, `tags.json` | Les données (voir [Fichiers JSON](#fichiers-json)) |
 | `extract.ts`, `classify.ts`, `update.ts` | Les trois scripts du flux de travail |
+| `confirmer.ts`, `analyses/classification/` | Confirmation des critères par IA avec citation, et la trace de l'analyse de classification (essais, résultats chiffrés, sorties des deux fournisseurs) : voir [`analyses/classification/README.md`](analyses/classification/README.md) |
 | `classify2.ts` | Deuxième version de `classify.ts` (mêmes critères, `confiance` recalibrée d'après l'évaluation enrichie). Pas encore utilisée par `build` ni par `update`; voir [Classification](#classification) |
 | `sommaire.ts`, `sommaire.md`, `graphiques/` | Le script du sommaire statistique, le sommaire qu'il a généré et les graphiques (SVG et PNG) qu'il contient (mis à jour automatiquement par `nub run enrichir`, ou par `nub run update --sommaire`, quand quelque chose a changé; sinon à regénérer avec `nub run sommaire`) |
 | `enrichir.ts`, `statistiques.ts`, `graphiques.ts`, `fichiers.ts`, `temps.ts`, `spdx.ts`, `progress.ts`, `couleurs.ts`, `ids.ts`, `cli.ts` | Modules utilisés par les scripts |
@@ -105,7 +106,7 @@ Schémas          schemas-types.ts ──▶ obuild + RunTypes ──▶ generer
 | `LICENSE` | Texte de la licence AGPL-3.0 du code |
 | `LICENSE-CC-BY-SA-4.0` | Texte de la licence CC BY-SA 4.0 des données (voir [Licences](#licences)) |
 | `LICENSES/`, `REUSE.toml` | Les mêmes textes de licence, nommés par identifiant SPDX (`AGPL-3.0-or-later.txt`, `CC-BY-SA-4.0.txt`), et la déclaration de licence des fichiers sans en-tête, selon la spécification [REUSE](https://reuse.software/) (voir [Licences](#licences)) |
-| `.gitignore` | Ignore `.env`, `node_modules/`, `dist/` et `.mion/` (sorties de la génération des schémas), les dossiers locaux `.claude` et `.agents` (et `skills-lock.json`), et des copies de sauvegarde (`pre-enrichir-outils.json`, voir [Enrichissement par IA](#enrichissement-par-ia), et `orig-sommaire.md`) |
+| `.gitignore` | Ignore `.env`, `node_modules/`, `dist/` et `.mion/` (sorties de la génération des schémas), `analyses/classification/.cache/` (pages téléchargées par `confirmer.ts`), les dossiers locaux `.claude` et `.agents` (et `skills-lock.json`), et des copies de sauvegarde (`pre-enrichir-outils.json`, voir [Enrichissement par IA](#enrichissement-par-ia), et `orig-sommaire.md`) |
 
 ## Fichiers JSON
 
@@ -227,6 +228,19 @@ nub classify2.ts <outils.json> [sortie.json]
 ```
 
 Variante de `classify.ts` : mêmes options, mêmes `criteres` (le test vérifie qu'ils sont identiques pour tous les outils), mais `confiance` recalibrée (fonctions exportées `classer2` et `confianceV2`). Elle n'est appelée ni par `build` ni par `update`, et n'a pas été appliquée à `outils.json` : pour l'essayer sans risque, `nub classify2.ts outils.json /tmp/outils-v2.json`. Les raisons et les mesures sont dans [Classification](#classification).
+
+### `confirmer.ts`
+
+```sh
+nub confirmer.ts --fournisseur=openai|claude [--modele=M] [--limite=N] [--budget=USD] [--sortie=F] [--dry-run] [outils.json]
+```
+
+Pour chaque outil enrichi, donne à une IA la page de l'outil et les trois critères (sans le score ni les critères du répertoire) et lui demande, critère par critère, « confirmé », « infirmé » ou « indéterminé », avec une **citation copiée mot pour mot** des textes fournis. Une citation introuvable rejette la réponse (redemandée une fois). C'est la piste 1 de l'[analyse de classification](analyses/classification/README.md) ; le résultat n'est pas écrit dans `outils.json` mais dans `analyses/classification/confirmations-<fournisseur>.json`.
+
+- `openai` : API OpenAI (Responses), clé `OPENAI_API_KEY` ; modèle par défaut celui de l'enrichissement. `claude` : la commande `claude -p` (aucune clé `ANTHROPIC_API_KEY`, mais la session Claude Code ; isolée du projet, sans outil), modèle par défaut `claude-fable-5-2`.
+- **Coût :** les jetons et le coût en dollars de chaque appel sont inscrits dans la sortie (`totaux`). Pour OpenAI, le coût est calculé avec les prix de `PRIX` ; pour `claude`, c'est le coût au prix catalogue que rapporte la CLI. `--budget` (15 $ par défaut) arrête avant l'appel suivant quand le coût cumulé l'atteint.
+- **Reprise :** les outils déjà confirmés dans le fichier de sortie ne sont pas redemandés.
+- **Confidentialité :** le nom, la catégorie, le lien, la description et l'extrait de la page (6 000 caractères au plus) de chaque outil sont envoyés au fournisseur choisi.
 
 ### `update.ts`
 
@@ -513,7 +527,8 @@ Si le `score` ou les `criteres` d'un outil déjà enrichi changent, après un `c
 | `nub run schemas` | `obuild && nub dist/generer-schemas.mjs` : régénère `schemas/*.schema.json` à partir des types (voir [Schémas JSON](#schémas-json)) |
 | `nub run schemas:verifier` | Comme `schemas`, mais sans rien écrire : échoue si les schémas commités sont périmés |
 | `nub run licences` | `uvx reuse lint` : vérifie que chaque fichier suivi déclare sa licence et son droit d'auteur ([REUSE](https://reuse.software/) 3.3). Demande [uv](https://docs.astral.sh/uv/) et un accès réseau la première fois ; non inclus dans `nub run test` |
-| `nub run test` | Lance les quatorze fichiers de tests, puis `schemas:verifier` |
+| `nub run confirmer` | `nub confirmer.ts` : confirme les critères un par un avec une IA (`--fournisseur=openai` ou `--fournisseur=claude`, obligatoire), citation à l'appui. **Appelle une API payante** ; voir [`confirmer.ts`](#confirmerts) |
+| `nub run test` | Lance les quinze fichiers de tests, puis `schemas:verifier` |
 | `nub run typecheck` | `tsrs -p .` : vérifie les types avec [tsrs](https://www.npmjs.com/package/tsrs), un portage en Rust de `tsc` |
 
 ## Tests
@@ -521,6 +536,7 @@ Si le `score` ou les `criteres` d'un outil déjà enrichi changent, après un `c
 Dans `test/`, avec `node:test` lancé par `nub` :
 
 - `classify.test.ts` : cas de classification connus, un nombre de critères égal au score pour les 60 outils, les options de la ligne de commande, le refus d'un fichier au mauvais format, et la couleur de « Erreur: ».
+- `confirmer.test.ts` : validation des verdicts (statuts, citation obligatoire, exacte et d'au plus 300 caractères), accord entre ensembles, coût OpenAI, lecture de la sortie de `claude -p`, et la boucle avec de faux fournisseurs (nouvel essai, échec, page inaccessible, budget, limite, requête sans score ni critères du répertoire).
 - `classify2.test.ts` : mêmes critères que `classify.ts` pour tous les outils, les niveaux de `confiance` (élevée, moyenne, faible, indéterminée, trois étoiles), `confianceV2`, la comparaison avec l'évaluation enrichie (aucun faux négatif, AUC au moins égale à celle de `classify.ts`), et la CLI sur une copie de `outils.json`.
 - `extract.test.ts` : conversion de la date de la page en heure de Toronto, cohérence de `criteres.json` et `outils.json`, rejet d'une page sans date, téléchargement (sur un serveur local, sans réseau), erreurs de téléchargement, le garde-fou contre l'écrasement (avec et sans `--force`, y compris pour un fichier au mauvais format), et la preuve qu'aucun fichier HTML local n'est lu.
 - `update.test.ts` : nouveau, modification, retrait, comeback, conservation des dates des outils inchangés et des champs d'enrichissement, la présentation colorée du résumé et du journal (même texte avec ou sans couleurs), et les conditions de la mise à jour automatique du sommaire (dont `--sommaire` et `--sans-sommaire`) et l'avertissement quand le sommaire n'est pas à jour.

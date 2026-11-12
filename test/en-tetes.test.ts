@@ -44,11 +44,11 @@ test("LICENSES/ contient le texte de chaque licence utilisée, nommé par identi
 });
 test("REUSE.toml déclare CC-BY-SA-4.0 pour les données et leurs dérivés, et la licence du code pour le reste", () => {
   const reuse = readFileSync("REUSE.toml", "utf8");
-  for (const chemin of ["outils.json", "criteres.json", "tags.json", "sommaire.md", "graphiques/**"]) {
+  for (const chemin of ["outils.json", "criteres.json", "tags.json", "sommaire.md", "graphiques/**", "analyses/**/*.json"]) {
     assert.ok(reuse.includes(`"${chemin}"`), `annoté: ${chemin}`);
   }
   assert.match(reuse, /SPDX-License-Identifier = "CC-BY-SA-4\.0"/);
-  for (const chemin of ["README.md", "package.json", "tsconfig.json", "tsconfig.schemas.json", "nub.lock", ".gitignore", ".env.example", "spike-mion/**"]) {
+  for (const chemin of ["README.md", "package.json", "tsconfig.json", "tsconfig.schemas.json", "nub.lock", ".gitignore", ".env.example", "spike-mion/**", "analyses/**/*.md"]) {
     assert.ok(reuse.includes(`"${chemin}"`), `annoté: ${chemin}`);
   }
 });
