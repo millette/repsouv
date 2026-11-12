@@ -14,7 +14,7 @@
     "licences": "uvx reuse lint",
     "schemas:verifier": "obuild && nub dist/generer-schemas.mjs --verifier",
     "update": "nub update.ts",
-    "test": "nub test/classify.test.ts && nub test/categories.test.ts && nub test/extract-categories.test.ts && nub test/confirmer.test.ts && nub test/extract.test.ts && nub test/update.test.ts && nub test/enrichir.test.ts && nub test/progress.test.ts && nub test/spdx.test.ts && nub test/prix.test.ts && nub test/en-tetes.test.ts && nub test/documentation.test.ts && nub test/fichiers.test.ts && nub test/temps.test.ts && nub test/sommaire.test.ts && nub test/couleurs.test.ts && nub test/graphiques.test.ts && nub test/schemas.test.ts && nub run schemas:verifier",
+    "test": "nub test/classify.test.ts && nub test/categories.test.ts && nub test/extract-categories.test.ts && nub test/confirmer.test.ts && nub test/extract.test.ts && nub test/update.test.ts && nub test/enrichir.test.ts && nub test/progress.test.ts && nub test/spdx.test.ts && nub test/prix.test.ts && nub test/en-tetes.test.ts && nub test/documentation.test.ts && nub test/fichiers.test.ts && nub test/temps.test.ts && nub test/versions.test.ts && nub test/sommaire.test.ts && nub test/couleurs.test.ts && nub test/graphiques.test.ts && nub test/schemas.test.ts && nub run schemas:verifier",
     "typecheck": "tsrs -p ."
   },
   "dependencies": {
@@ -23,6 +23,9 @@
     "spdx-license-ids": "^3.0.24",
     "vega": "^6.4.0",
     "vega-lite": "^6.5.0"
+  },
+  "engines": {
+    "node": "26.13.1"
   },
   "devEngines": {
     "packageManager": {

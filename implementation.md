@@ -52,7 +52,7 @@ Schémas          schemas-types.ts ──▶ obuild + RunTypes ──▶ generer
 | `test/` | Les tests |
 | `package.json`, `nub.lock`, `tsconfig.json` | Dépendances, scripts npm et configuration TypeScript |
 | `.env.example` | Modèle du fichier `.env` (la clé OpenAI, avec les instructions pour l'obtenir) |
-| `.node-version` | Version de Node.js (`26`) que nub installe et utilise |
+| `.node-version` | Version exacte de Node.js (`26.13.1`) que nub installe et utilise, répétée dans `engines.node` de `package.json` |
 | `LICENSE` | Texte de la licence AGPL-3.0 du code |
 | `LICENSE-CC-BY-SA-4.0` | Texte de la licence CC BY-SA 4.0 des données (voir [Licences](README.md#licences)) |
 | `LICENSES/`, `REUSE.toml` | Les mêmes textes de licence, nommés par identifiant SPDX (`AGPL-3.0-or-later.txt`, `CC-BY-SA-4.0.txt`), et la déclaration de licence des fichiers sans en-tête, selon la spécification [REUSE](https://reuse.software/) (voir [Licences](README.md#licences)) |
