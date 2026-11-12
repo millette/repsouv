@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Jetons et prix des appels aux modèles d'IA: compte des jetons d'un appel, prix par million de jetons, coût en dollars.
-// Les prix viennent des pages de tarifs d'OpenAI et d'Anthropic consultées le 2026-11-12; ils servent aux estimations
+// Les prix viennent de la page de tarifs d'OpenAI consultée le 2026-11-12; ils servent aux estimations
 // de update.ts (--dry-run et premier import) et au coût rapporté par confirmer.ts. Un modèle absent de PRIX donne un coût inconnu.
 
 /** Jetons d'un appel; `entree` comprend les jetons en cache (lus ou écrits). */
@@ -38,10 +38,6 @@ export const PRIX: Readonly<Record<string, Prix>> = {
   "gpt-6.1-sol": { entree: 2, cache_lecture: 0.1, sortie: 10 },
   "gpt-6.1-terra": { entree: 1, cache_lecture: 0.05, sortie: 5 },
   "gpt-6-luna": { entree: 0.1, cache_lecture: 0.01, sortie: 0.5 },
-  "claude-fable-5-2": { entree: 8, cache_lecture: 0.2, sortie: 40 },
-  "claude-opus-5-5": { entree: 4, cache_lecture: 0.2, sortie: 20 },
-  "claude-sonnet-5-5": { entree: 2, cache_lecture: 0.1, sortie: 10 },
-  "claude-haiku-5-5": { entree: 0.1, cache_lecture: 0.01, sortie: 0.5 },
 };
 
 /** Coût d'un appel OpenAI: entrées hors cache, entrées en cache et sorties (les jetons de raisonnement sont facturés comme sorties). */
