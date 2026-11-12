@@ -26,6 +26,11 @@
     "node": ">=26 <27"
   },
   "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": ">=26 <27",
+      "onFail": "warn"
+    },
     "packageManager": {
       "name": "nub",
       "version": "^0.10.0",
