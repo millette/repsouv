@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
+// REUSE-IgnoreStart (ce fichier cite des étiquettes SPDX dans ses chaînes de test)
 import assert from "node:assert/strict";
 import { readdirSync, readFileSync } from "node:fs";
 import { test } from "node:test";
@@ -33,7 +34,22 @@ test("chaque schéma JSON déclare la licence du code dans $comment, et REUSE.to
   }
   const reuse = readFileSync("REUSE.toml", "utf8");
   assert.match(reuse, /^version = 1$/m);
-  assert.match(reuse, /path = "schemas\/\*\*"/);
+  assert.ok(reuse.includes('"schemas/**"'), "schemas/** annoté");
   assert.match(reuse, new RegExp(`SPDX-License-Identifier = "${LICENCE_CODE}"`));
   assert.match(reuse, /SPDX-FileCopyrightText = "\d{4} Robin Millette </);
 });
+test("LICENSES/ contient le texte de chaque licence utilisée, nommé par identifiant SPDX (convention REUSE)", () => {
+  assert.match(readFileSync("LICENSES/AGPL-3.0-or-later.txt", "utf8"), /GNU AFFERO GENERAL PUBLIC LICENSE\s+Version 3, 19 November 2007/);
+  assert.match(readFileSync("LICENSES/CC-BY-SA-4.0.txt", "utf8"), /Attribution-ShareAlike 4\.0 International/);
+});
+test("REUSE.toml déclare CC-BY-SA-4.0 pour les données et leurs dérivés, et la licence du code pour le reste", () => {
+  const reuse = readFileSync("REUSE.toml", "utf8");
+  for (const chemin of ["outils.json", "criteres.json", "tags.json", "sommaire.md", "graphiques/**"]) {
+    assert.ok(reuse.includes(`"${chemin}"`), `annoté: ${chemin}`);
+  }
+  assert.match(reuse, /SPDX-License-Identifier = "CC-BY-SA-4\.0"/);
+  for (const chemin of ["README.md", "package.json", "tsconfig.json", "tsconfig.schemas.json", "nub.lock", ".gitignore", ".env.example", "spike-mion/**"]) {
+    assert.ok(reuse.includes(`"${chemin}"`), `annoté: ${chemin}`);
+  }
+});
+// REUSE-IgnoreEnd

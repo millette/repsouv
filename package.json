@@ -18,7 +18,8 @@
     "enrichir": "nub update.ts --enrichir",
     "sommaire": "nub sommaire.ts",
     "schemas": "obuild && nub dist/generer-schemas.mjs",
-    "schemas:verifier": "obuild && nub dist/generer-schemas.mjs --verifier"
+    "schemas:verifier": "obuild && nub dist/generer-schemas.mjs --verifier",
+    "licences": "uvx reuse lint"
   },
   "dependencies": {
     "linkedom": "^0.18.15",

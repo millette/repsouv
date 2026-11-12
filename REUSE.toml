@@ -1,8 +1,19 @@
 # Licences des fichiers qui ne peuvent pas porter d'en-tête SPDX (spécification REUSE, https://reuse.software/).
 # Les fichiers .ts portent leurs propres en-têtes; chaque schéma déclare aussi sa licence dans « $comment ».
+# Vérification: `nub run licences` (uvx reuse lint). Textes des licences: LICENSES/.
 version = 1
 
+# Code, schémas JSON, configuration et documentation du dépôt.
 [[annotations]]
-path = "schemas/**"
+path = ["schemas/**", "README.md", "package.json", "nub.lock", "tsconfig.json", "tsconfig.schemas.json", ".gitignore", ".env.example", "spike-mion/**"]
 SPDX-FileCopyrightText = "2026 Robin Millette <https://robin.millette.info/>"
 SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+# Données, adaptées du répertoire d'origine (Praxis), et ce qui en est dérivé: sommaire et graphiques.
+[[annotations]]
+path = ["outils.json", "criteres.json", "tags.json", "sommaire.md", "graphiques/**"]
+SPDX-FileCopyrightText = [
+  "2026 Sven Buridans, François Delnooz, Marie-Renee Duguay (Praxis), Répertoire d'outils favorisant la souveraineté numérique",
+  "2026 Robin Millette <https://robin.millette.info/>",
+]
+SPDX-License-Identifier = "CC-BY-SA-4.0"
