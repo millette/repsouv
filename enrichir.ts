@@ -17,7 +17,22 @@ import { horodatage } from "./temps.ts";
 export const MAX_TAGS = 5;
 export const SOURCES = ["libre", "partiel", "source-disponible", "proprietaire"] as const;
 export type Source = (typeof SOURCES)[number];
-export const MODELE_PAR_DEFAUT = "gpt-6-astra";
+export const MODELE_PAR_DEFAUT = "gpt-6.1-terra";
+/** Modèle de repli: reprend un appel que le modèle principal a raté (réponse rejetée, erreur passagère de l'API). */
+export const MODELE_REPLI_PAR_DEFAUT = "gpt-6.1-sol";
+
+/** Modèles d'après OPENAI_MODEL et OPENAI_MODEL_FALLBACK; un repli vide, ou identique au principal, désactive le repli. */
+export function modelesDepuisEnv(env: Record<string, string | undefined> = process.env): { principal: string; repli: string | null } {
+  const principal = env.OPENAI_MODEL || MODELE_PAR_DEFAUT;
+  const repli = env.OPENAI_MODEL_FALLBACK === undefined ? MODELE_REPLI_PAR_DEFAUT : env.OPENAI_MODEL_FALLBACK;
+  return { principal, repli: repli && repli !== principal ? repli : null };
+}
+
+/**
+ * Erreur qu'une nouvelle tentative ne corrigera pas, ni avec un autre modèle: requête ou clé refusée par l'API
+ * (HTTP 400, 401, 403, 404) ou refus du modèle. obtenirValide la laisse remonter aussitôt.
+ */
+export class ErreurDefinitive extends Error {}
 const IDS_CRITERES: readonly string[] = [DONNEES, CONTROLE, DEPENDANCE];
 const CONFIANCES: readonly ConfianceEvaluation[] = ["élevée", "moyenne", "faible"];
 
@@ -314,8 +329,8 @@ ${liste}`;
 }
 
 /** Appelle l'API Responses d'OpenAI avec une sortie JSON structurée et retourne l'objet JSON parsé. */
-/** Reçoit les jetons de chaque appel à l'API (pour le coût). */
-export type Compteur = (usage: Usage) => void;
+/** Reçoit les jetons de chaque appel à l'API, avec le modèle appelé (pour le coût, au prix de chaque modèle). */
+export type Compteur = (usage: Usage, modele: string) => void;
 
 export async function appelerOpenAI(
   cle: string,
@@ -338,12 +353,15 @@ export async function appelerOpenAI(
     }),
   });
   const corps = (await reponse.json().catch(() => ({}))) as Record<string, any>;
-  if (!reponse.ok) throw new Error(`OpenAI HTTP ${reponse.status}: ${corps.error?.message ?? "erreur inconnue"}`);
-  compteur?.(usageDepuisOpenAI(corps)); // les jetons sont facturés même si la réponse est inutilisable
+  if (corps.usage) compteur?.(usageDepuisOpenAI(corps), modele); // les jetons sont facturés même si la réponse est en erreur ou inutilisable
+  if (!reponse.ok) {
+    const message = `OpenAI HTTP ${reponse.status}: ${corps.error?.message ?? "erreur inconnue"}`;
+    throw [400, 401, 403, 404].includes(reponse.status) ? new ErreurDefinitive(message) : new Error(message);
+  }
   if (corps.status === "incomplete") throw new Error(`réponse incomplète (${corps.incomplete_details?.reason})`);
   const contenuMessage = (corps.output ?? []).filter((o: any) => o.type === "message").flatMap((o: any) => o.content ?? []);
   const refus = contenuMessage.find((c: any) => c.type === "refusal");
-  if (refus) throw new Error(`refus du modèle: ${refus.refusal}`);
+  if (refus) throw new ErreurDefinitive(`refus du modèle: ${refus.refusal}`);
   const texte = contenuMessage.find((c: any) => c.type === "output_text")?.text;
   if (typeof texte !== "string") throw new Error("réponse sans texte");
   return JSON.parse(texte);
@@ -481,26 +499,24 @@ export interface ResultatEnrichissement {
   abandonnes: string[];
 }
 
-const TENTATIVES = 2;
-
 /**
- * Demande une réponse au modèle jusqu'à TENTATIVES fois; à chaque rejet, la raison est
- * transmise à la tentative suivante. Lève la dernière erreur si aucune réponse n'est valide.
+ * Demande une réponse au modèle, au plus deux fois: si la première est rejetée (validation, erreur passagère de
+ * l'API), la raison est transmise à la seconde tentative, faite par `repli` (le modèle de repli) s'il est donné,
+ * sinon par `produire` encore. Une ErreurDefinitive remonte aussitôt. Lève la dernière erreur si rien n'est valide.
  */
 export async function obtenirValide<T>(
   produire: (rappel?: string) => Promise<unknown>,
   valider: (brut: unknown) => T,
   rejet: (raison: string) => void,
+  repli?: (rappel: string) => Promise<unknown>,
 ): Promise<T> {
-  let rappel: string | undefined;
-  for (let essai = 1; ; essai++) {
-    try {
-      return valider(await produire(rappel));
-    } catch (e) {
-      if (essai >= TENTATIVES) throw e;
-      rappel = (e as Error).message;
-      rejet(rappel);
-    }
+  try {
+    return valider(await produire());
+  } catch (e) {
+    if (e instanceof ErreurDefinitive) throw e;
+    const raison = (e as Error).message;
+    rejet(raison);
+    return valider(await (repli ?? produire)(raison));
   }
 }
 

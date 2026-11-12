@@ -8,7 +8,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import {
-  abandonne, aEnrichir, chargerTags, enrichirOutils, extraireContenu, instructions, instructionsEcart, lireContenu, MAX_TAGS, MIN_EXTRAIT, obtenirPage, problemesMarkdown, sauverTags,
+  abandonne, aEnrichir, chargerTags, enrichirOutils, ErreurDefinitive, modelesDepuisEnv, MODELE_PAR_DEFAUT, MODELE_REPLI_PAR_DEFAUT, obtenirValide, extraireContenu, instructions, instructionsEcart, lireContenu, MAX_TAGS, MIN_EXTRAIT, obtenirPage, problemesMarkdown, sauverTags,
   schemaReponse, validerEcart, validerProposition, type Expliqueur, type Generateur, type Tag, appelerOpenAI, estimerCoutEnrichissement } from "../enrichir.ts";
 import type { Usage } from "../prix.ts";
 import type { Outil } from "../extract.ts";
@@ -542,6 +542,74 @@ test("appelerOpenAI: le compteur reçoit les jetons de chaque appel, et le conte
     const contenu = await appelerOpenAI("k", "m", { nom: "x", schema: {}, instructions: "i", messages: ["m"], maxTokens: 10 }, (u) => usages.push(u));
     assert.deepEqual(contenu, { a: 1 });
     assert.deepEqual(usages, [{ entree: 100, sortie: 20, cache_lecture: 10, cache_ecriture: 0 }]);
+  } finally {
+    globalThis.fetch = vrai;
+  }
+});
+
+// ---------- modèles, repli et erreurs définitives ----------
+
+test("modelesDepuisEnv: terra et sol par défaut; OPENAI_MODEL et OPENAI_MODEL_FALLBACK les remplacent; un repli vide ou égal au principal est désactivé", () => {
+  assert.deepEqual(modelesDepuisEnv({}), { principal: MODELE_PAR_DEFAUT, repli: MODELE_REPLI_PAR_DEFAUT });
+  assert.deepEqual(modelesDepuisEnv({ OPENAI_MODEL: "gpt-6-astra", OPENAI_MODEL_FALLBACK: "gpt-6.1-terra" }), { principal: "gpt-6-astra", repli: "gpt-6.1-terra" });
+  assert.deepEqual(modelesDepuisEnv({ OPENAI_MODEL_FALLBACK: "" }), { principal: MODELE_PAR_DEFAUT, repli: null });
+  assert.deepEqual(modelesDepuisEnv({ OPENAI_MODEL: "gpt-6.1-sol" }), { principal: "gpt-6.1-sol", repli: null });
+  assert.equal(MODELE_PAR_DEFAUT, "gpt-6.1-terra");
+  assert.equal(MODELE_REPLI_PAR_DEFAUT, "gpt-6.1-sol");
+});
+
+test("obtenirValide: sans repli, une seconde tentative par le même producteur avec la raison; deux rejets, c'est une erreur", async () => {
+  const appels: (string | undefined)[] = [];
+  const rejets: string[] = [];
+  const v = await obtenirValide(async (rappel) => (appels.push(rappel), appels.length === 1 ? "mauvais" : "bon"), (b) => { if (b !== "bon") throw new Error("pas bon"); return b; }, (r) => rejets.push(r));
+  assert.equal(v, "bon");
+  assert.deepEqual(appels, [undefined, "pas bon"]);
+  assert.deepEqual(rejets, ["pas bon"]);
+  await assert.rejects(obtenirValide(async () => "mauvais", (b) => { if (b !== "bon") throw new Error("pas bon"); return b; }, () => {}), /pas bon/);
+});
+
+test("obtenirValide: avec repli, la seconde tentative passe par le repli (avec la raison), et le principal n'est pas réessayé", async () => {
+  const principal: (string | undefined)[] = [];
+  const repli: (string | undefined)[] = [];
+  const v = await obtenirValide(
+    async (rappel) => (principal.push(rappel), "mauvais"),
+    (b) => { if (b !== "bon") throw new Error("pas bon"); return b; },
+    () => {},
+    async (rappel) => (repli.push(rappel), "bon"),
+  );
+  assert.equal(v, "bon");
+  assert.deepEqual(principal, [undefined]);
+  assert.deepEqual(repli, ["pas bon"]);
+  await assert.rejects(obtenirValide(async () => "mauvais", (b) => { if (b !== "bon") throw new Error("pas bon"); return b; }, () => {}, async () => "mauvais aussi"), /pas bon/);
+});
+
+test("obtenirValide: une erreur définitive (clé invalide, requête refusée, refus du modèle) remonte sans seconde tentative ni repli", async () => {
+  let repli = 0;
+  const rejets: string[] = [];
+  await assert.rejects(obtenirValide(async () => { throw new ErreurDefinitive("OpenAI HTTP 401: clé invalide"); }, (b) => b, (r) => rejets.push(r), async () => (repli++, "bon")), /HTTP 401/);
+  assert.equal(repli, 0);
+  assert.deepEqual(rejets, []);
+});
+
+test("appelerOpenAI: HTTP 400, 401, 403 et 404 et un refus du modèle sont des erreurs définitives; 429 et 500 ne le sont pas; les jetons d'une réponse en erreur sont comptés", async () => {
+  const vrai = globalThis.fetch;
+  const reponse = (status: number, corps: unknown) => (async () => ({ ok: status < 400, status, json: async () => corps })) as unknown as typeof fetch;
+  const requete = { nom: "x", schema: {}, instructions: "i", messages: ["m"], maxTokens: 10 };
+  try {
+    for (const status of [400, 401, 403, 404]) {
+      globalThis.fetch = reponse(status, { error: { message: "non" } });
+      await assert.rejects(appelerOpenAI("k", "m", requete), (e: unknown) => e instanceof ErreurDefinitive && /HTTP/.test((e as Error).message), String(status));
+    }
+    for (const status of [429, 500, 503]) {
+      globalThis.fetch = reponse(status, { error: { message: "plus tard" } });
+      await assert.rejects(appelerOpenAI("k", "m", requete), (e: unknown) => !(e instanceof ErreurDefinitive) && /HTTP/.test((e as Error).message), String(status));
+    }
+    globalThis.fetch = reponse(200, { status: "completed", output: [{ type: "message", content: [{ type: "refusal", refusal: "non" }] }] });
+    await assert.rejects(appelerOpenAI("k", "m", requete), (e: unknown) => e instanceof ErreurDefinitive && /refus/.test((e as Error).message));
+    const usages: [Usage, string][] = [];
+    globalThis.fetch = reponse(429, { error: { message: "quota" }, usage: { input_tokens: 50, output_tokens: 0 } });
+    await assert.rejects(appelerOpenAI("k", "m", requete, (u, modele) => usages.push([u, modele])), /HTTP 429/);
+    assert.deepEqual(usages, [[{ entree: 50, sortie: 0, cache_lecture: 0, cache_ecriture: 0 }, "m"]]);
   } finally {
     globalThis.fetch = vrai;
   }
