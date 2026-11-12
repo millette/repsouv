@@ -118,3 +118,25 @@ Constats :
 - **Aucune citation rejetée,** aucun nouvel essai.
 
 Ce que ça dit : le critère « contrôle » n'est pas mesurable à partir des descriptions sans une convention de lecture ; la règle A en est une, raisonnable pour un répertoire qui qualifie lui-même ses outils de « canadiens », mais elle ne vérifie pas la propriété. Pour aller plus loin, il faudrait des sources sur la propriété des entreprises (registre, page « à propos »), ou une validation humaine d'un échantillon.
+
+## Essais E et F : retirer les critères que les données contredisent (`classify4.ts`)
+
+Puisque le classement de `classify.ts` est bon et que tout l'écart tient au **nombre** de critères (l'évaluation enrichie en confirme moins que d'étoiles pour 18 outils), les essais E et F cherchent des règles de **retrait**, sans paramètre ajusté, à partir des champs d'enrichissement (`source`, `tags`) et des confirmations de `confirmer.ts`. Scripts : `essais/essai-e.ts` (17 règles) et `essais/essai-f.ts`. Mesure sur une copie de `outils.json`, accord exact avec `evaluation_enrichie.criteres` sur les 57 outils enrichis.
+
+| Règle | Accord | Gagnés / perdus (contre `classify.ts`) |
+|---|---|---|
+| `classify.ts` (v1) | 39 sur 57 | |
+| v1 ∩ critères confirmés par Claude, ou par OpenAI, ou intersection des deux | 28 à 36 | pires : les IA laissent beaucoup de critères « indéterminés » que l'évaluation enrichie retenait |
+| top-k, k = nombre de critères confirmés par une IA | 27 à 32 | pires |
+| v1 sans les critères infirmés par OpenAI | 40 | +1 / 0 |
+| **R1** : « dépendance » retiré si propriétaire sans tag `auto-hebergeable` ni `hors-ligne` | **43** | +4 / 0 |
+| R1 + « données » retiré si a priori seul (indice < 2), sans IA | 38 | +7 / −8 (perd les fournisseurs canadiens dont la page confirme l'hébergement) |
+| **R1 + R2** : « données » retiré si a priori seul **et** non confirmé par Claude | **47** | **+10 / −2** |
+| R1 + R2 avec OpenAI, l'une ou l'autre, ou les deux | 47 | identique : les deux IA s'accordent à 100 % sur « données » |
+
+`classify4.ts` applique R1 (champs d'enrichissement seulement) et R2 (avec `--confirmations=F`). Résultat sur la copie : 47 sur 57 (82 %, Jaccard 0,874) ; 17 outils changent (5 par R1, des outils à 3 étoiles ; 12 par R2), toujours par retrait (jamais d'ajout), et ces 17 outils ont un critère de moins que d'étoiles. Sans fichier de confirmations (R1 seule) : 43 sur 57. Test des signes sur les 12 paires discordantes (10 gagnées, 2 perdues) : p ≈ 0,04.
+
+Réserves :
+- **Les règles ont été choisies en regardant ces 57 outils** (essai E en compte 17) ; l'amélioration est à reconfirmer sur d'autres outils. R1 et R2 ont toutefois une lecture simple : sans code ni installation chez soi, l'outil dépend de son fournisseur ; « fournisseur canadien » n'implique pas « hébergé au Canada » tant que la page ne le dit pas.
+- **Cohérence, pas vérité :** `source`, `tags` et `evaluation_enrichie` viennent du même appel à l'IA. Les confirmations de Claude sont indépendantes de cet appel, et R2 donne le même résultat avec OpenAI.
+- **`classify4.ts` rompt la convention « une étoile = un critère »** de `outils.json` : il n'est pas appliqué au fichier, et `build` et `update` utilisent toujours `classify.ts`. Les 10 outils qui restent en désaccord sont des fournisseurs canadiens propriétaires où l'évaluation enrichie ne confirme pas « contrôle » (ambiguïté connue, voir la règle A) ou ne confirme rien du tout.

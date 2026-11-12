@@ -96,6 +96,7 @@ Schémas          schemas-types.ts ──▶ obuild + RunTypes ──▶ generer
 | `outils.json`, `criteres.json`, `tags.json` | Les données (voir [Fichiers JSON](#fichiers-json)) |
 | `extract.ts`, `classify.ts`, `update.ts` | Les trois scripts du flux de travail |
 | `confirmer.ts`, `analyses/classification/` | Confirmation des critères par IA avec citation, et la trace de l'analyse de classification (essais, résultats chiffrés, sorties des deux fournisseurs) : voir [`analyses/classification/README.md`](analyses/classification/README.md) |
+| `classify4.ts` | Quatrième version : les critères de `classify.ts` moins ceux que l'enrichissement et les confirmations d'IA contredisent (47 outils sur 57 d'accord avec l'évaluation enrichie, contre 39). Pas utilisée par `build` ni `update` ; voir [Classification](#classification) |
 | `classify2.ts` | Deuxième version de `classify.ts` (mêmes critères, `confiance` recalibrée d'après l'évaluation enrichie). Pas encore utilisée par `build` ni par `update`; voir [Classification](#classification) |
 | `sommaire.ts`, `sommaire.md`, `graphiques/` | Le script du sommaire statistique, le sommaire qu'il a généré et les graphiques (SVG et PNG) qu'il contient (mis à jour automatiquement par `nub run enrichir`, ou par `nub run update --sommaire`, quand quelque chose a changé; sinon à regénérer avec `nub run sommaire`) |
 | `enrichir.ts`, `statistiques.ts`, `graphiques.ts`, `fichiers.ts`, `temps.ts`, `spdx.ts`, `progress.ts`, `couleurs.ts`, `ids.ts`, `cli.ts` | Modules utilisés par les scripts |
@@ -228,6 +229,14 @@ nub classify2.ts <outils.json> [sortie.json]
 ```
 
 Variante de `classify.ts` : mêmes options, mêmes `criteres` (le test vérifie qu'ils sont identiques pour tous les outils), mais `confiance` recalibrée (fonctions exportées `classer2` et `confianceV2`). Elle n'est appelée ni par `build` ni par `update`, et n'a pas été appliquée à `outils.json` : pour l'essayer sans risque, `nub classify2.ts outils.json /tmp/outils-v2.json`. Les raisons et les mesures sont dans [Classification](#classification).
+
+### `classify4.ts`
+
+```sh
+nub classify4.ts [--confirmations=F] <outils.json> [sortie.json]
+```
+
+Part des critères de `classify.ts` (et de la confiance de `classify2.ts`) et en **retire** ceux que les données contredisent, sans jamais en ajouter : R1, « dépendance » pour un outil propriétaire sans tag `auto-hebergeable` ni `hors-ligne` (champs d'enrichissement) ; R2, « données » quand il ne tient qu'à l'a priori « un fournisseur canadien héberge au Canada » et qu'aucune confirmation d'IA ne l'établit (`--confirmations=F`, un fichier de `confirmer.ts` ; sans lui, R2 ne s'applique pas). Un outil non enrichi garde les critères de `classify.ts`. Le résultat peut compter **moins de critères que d'étoiles**, ce qui rompt la convention de `outils.json` : à utiliser sur une copie ou un fichier de sortie. Mesures et réserves dans [Classification](#classification).
 
 ### `confirmer.ts`
 
@@ -380,6 +389,8 @@ Ce qui s'améliore, c'est `confiance`. `classify.ts` la tire de l'écart entre l
 
 La capacité de la confiance à séparer les outils où l'IA est d'accord de ceux où elle ne l'est pas (AUC) passe de 0,756 à 0,811. **Cet écart n'est pas significatif** avec 57 outils (intervalle bootstrap à 95 % de la différence : environ de -0,08 à +0,19), et la règle a été choisie en regardant ces mêmes données : à confirmer quand d'autres outils seront enrichis. Limite : la description seule ne permet pas de prévoir quels critères « canadiens » l'IA ne confirmera pas (les descriptions des outils confirmés et non confirmés sont indiscernables), et l'IA n'est pas une vérité : c'est un deuxième avis.
 
+**`classify4.ts` : retirer plutôt que choisir.** Puisque le classement est bon et que l'écart tient au nombre de critères, `classify4.ts` retire ceux que les données contredisent (règles R1 et R2 ci-dessus). Sur une copie de `outils.json`, avec les confirmations de Claude : 47 outils sur 57 d'accord avec l'évaluation enrichie (82 %, Jaccard 0,874) contre 39 (68 %), 10 outils gagnés et 2 perdus (test des signes, p ≈ 0,04) ; 17 outils changent, par retrait seulement, et ont alors un critère de moins que d'étoiles. Sans confirmations (R1 seule) : 43. Les règles ont été choisies en regardant ces mêmes 57 outils, et `source` et `tags` viennent du même appel à l'IA que l'évaluation enrichie : c'est une cohérence, à reconfirmer sur d'autres outils. Le détail des 17 règles essayées est dans [`analyses/classification/README.md`](analyses/classification/README.md).
+
 ## Enrichissement par IA
 
 `update.ts --enrichir` génère, **une seule fois** par outil, les champs décrits plus haut : description longue, tags, `source`, `licence` (ou `custom_license`), `repo` et `evaluation_enrichie`. Un outil qui a déjà une `description_longue` n'est jamais régénéré, même si sa description courte change. Les outils retirés sont ignorés. L'enrichissement s'exécute aussi quand la page n'a pas changé. Quand tous les outils sont déjà enrichis, aucun appel d'enrichissement n'est fait et la clé n'est pas nécessaire (seule la mise à jour du sommaire, si quelque chose a changé, la demande).
@@ -529,7 +540,8 @@ Si le `score` ou les `criteres` d'un outil déjà enrichi changent, après un `c
 | `nub run schemas:verifier` | Comme `schemas`, mais sans rien écrire : échoue si les schémas commités sont périmés |
 | `nub run licences` | `uvx reuse lint` : vérifie que chaque fichier suivi déclare sa licence et son droit d'auteur ([REUSE](https://reuse.software/) 3.3). Demande [uv](https://docs.astral.sh/uv/) et un accès réseau la première fois ; non inclus dans `nub run test` |
 | `nub run confirmer` | `nub confirmer.ts` : confirme les critères un par un avec une IA (`--fournisseur=openai` ou `--fournisseur=claude`, obligatoire), citation à l'appui. **Appelle une API payante** ; voir [`confirmer.ts`](#confirmerts) |
-| `nub run test` | Lance les quinze fichiers de tests, puis `schemas:verifier` |
+| `nub run classify4` | `nub classify4.ts --confirmations=analyses/classification/confirmations-claude.json outils.json` : comme `classify`, mais retire les critères que l'enrichissement et les confirmations contredisent (pas adopté ; **modifie `outils.json` en place** et y laisse des outils avec moins de critères que d'étoiles, voir [Classification](#classification)) |
+| `nub run test` | Lance les seize fichiers de tests, puis `schemas:verifier` |
 | `nub run typecheck` | `tsrs -p .` : vérifie les types avec [tsrs](https://www.npmjs.com/package/tsrs), un portage en Rust de `tsc` |
 
 ## Tests
@@ -538,6 +550,7 @@ Dans `test/`, avec `node:test` lancé par `nub` :
 
 - `classify.test.ts` : cas de classification connus, un nombre de critères égal au score pour les 60 outils, les options de la ligne de commande, le refus d'un fichier au mauvais format, et la couleur de « Erreur: ».
 - `confirmer.test.ts` : validation des verdicts (statuts, citation obligatoire, exacte et d'au plus 300 caractères), accord entre ensembles, coût OpenAI, lecture de la sortie de `claude -p`, et la boucle avec de faux fournisseurs (nouvel essai, échec, page inaccessible, budget, limite, requête sans score ni critères du répertoire).
+- `classify4.test.ts` : repli sur `classify.ts` sans enrichissement, règles R1 et R2 (cas gardés et retirés), sous-ensemble ordonné de `classify.ts` pour tous les outils, confiance de `classify2.ts`, accord de 47 contre 39 avec l'évaluation enrichie sur les confirmations commitées, lecture des confirmations, et la CLI sur une copie.
 - `classify2.test.ts` : mêmes critères que `classify.ts` pour tous les outils, les niveaux de `confiance` (élevée, moyenne, faible, indéterminée, trois étoiles), `confianceV2`, la comparaison avec l'évaluation enrichie (aucun faux négatif, AUC au moins égale à celle de `classify.ts`), et la CLI sur une copie de `outils.json`.
 - `extract.test.ts` : conversion de la date de la page en heure de Toronto, cohérence de `criteres.json` et `outils.json`, rejet d'une page sans date, téléchargement (sur un serveur local, sans réseau), erreurs de téléchargement, le garde-fou contre l'écrasement (avec et sans `--force`, y compris pour un fichier au mauvais format), et la preuve qu'aucun fichier HTML local n'est lu.
 - `update.test.ts` : nouveau, modification, retrait, comeback, conservation des dates des outils inchangés et des champs d'enrichissement, la présentation colorée du résumé et du journal (même texte avec ou sans couleurs), et les conditions de la mise à jour automatique du sommaire (dont `--sommaire` et `--sans-sommaire`) et l'avertissement quand le sommaire n'est pas à jour.
