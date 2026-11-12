@@ -12,6 +12,7 @@ import {
   schemaReponse, validerEcart, validerProposition, type Expliqueur, type Generateur, type Tag, appelerOpenAI, estimerCoutEnrichissement } from "../enrichir.ts";
 import type { Usage } from "../prix.ts";
 import type { Outil } from "../extract.ts";
+import type { OutilClasse } from "../classify.ts";
 import { CRITERES } from "./donnees-fictives.ts";
 
 const VOCAB: Tag[] = [
@@ -668,4 +669,18 @@ test("effort de raisonnement: « low » par défaut, OPENAI_REASONING_EFFORT le 
   } finally {
     globalThis.fetch = vrai;
   }
+});
+
+test("enrichir: un outil au score estimé (sans étoiles dans sa source) prend le score, les critères et la confiance de l'évaluation enrichie, sans explication d'écart", async () => {
+  const outils: OutilClasse[] = [{ ...outil("p", { score: 1, score_estime: true }), criteres: ["donnees"], confiance: "indéterminée" }];
+  let explications = 0;
+  const r = await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, lire: pageOk, generer: async () => valide(), expliquer: async () => (explications++, { ecart: "x" }) });
+  assert.deepEqual(r.enrichis, ["p"]);
+  assert.deepEqual(r.ecarts, []);
+  assert.equal(explications, 0);
+  assert.equal(outils[0]!.score, 2);
+  assert.deepEqual(outils[0]!.criteres, ["donnees", "dependance"]);
+  assert.equal(outils[0]!.confiance, "moyenne");
+  assert.equal(outils[0]!.score_estime, true);
+  assert.equal(outils[0]!.evaluation_enrichie!.ecart, undefined);
 });

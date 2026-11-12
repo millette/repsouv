@@ -575,7 +575,8 @@ export async function enrichirOutils(outils: OutilARevoir[], options: OptionsEnr
 
       const ev = champs.evaluation_enrichie;
       const repertoire: EvaluationRepertoire = { score: outil.score, criteres: outil.criteres ?? [], confiance: outil.confiance };
-      const different = ev.score !== outil.score || !memesCriteres(ev.criteres, outil.criteres);
+      // Un score estimé (source sans étoiles) n'est pas une référence: l'évaluation enrichie le remplace, sans écart à expliquer.
+      const different = !outil.score_estime && (ev.score !== outil.score || !memesCriteres(ev.criteres, outil.criteres));
       if (different) {
         ev.ecart = await obtenirValide(
           (rappel) => expliquer(outil, contenu, { repertoire, enrichie: ev, criteres, ...(rappel && { rappel }) }),
@@ -587,7 +588,8 @@ export async function enrichirOutils(outils: OutilARevoir[], options: OptionsEnr
 
       for (const n of nouveaux_tags) tags.push({ ...n, propose_pour: outil.nom });
       const { echecs_enrichissement: _echecs, ...sansCompteur } = outil;
-      outils[i] = { ...sansCompteur, ...champs, enrichi_le: horloge() };
+      const alignement = outil.score_estime ? { score: ev.score, criteres: [...ev.criteres], confiance: ev.confiance } : {};
+      outils[i] = { ...sansCompteur, ...champs, ...alignement, enrichi_le: horloge() };
       resultat.enrichis.push(outil.nom);
       journal(`  ${outil.nom}: ${champs.tags.join(", ")} (${champs.source})`, "succes");
       if (different) {
