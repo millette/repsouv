@@ -29,10 +29,12 @@ Pour l'enrichissement et le résumé du sommaire, copier `.env.example` vers `.e
 ### Flux de travail
 
 ```
-Suivi courant    page en ligne ──▶ update.ts ──▶ outils.json + categories.json + criteres.json   (nouveau, modification, retrait, comeback; import initial si outils.json manque)
+Suivi courant    page en ligne ──▶ update.ts ──▶ outils.json + categories.json + criteres.json + sources.json   (nouveau, modification, retrait, comeback, pour les outils de la source Praxis; import initial si outils.json manque)
+Ajout manuel     ajouter.ts ──▶ outils.json (+ sources.json)   (outil d'une autre source, enrichi ensuite par update)
 Reconstruction   page en ligne ──▶ extract.ts --force ──▶ classify.ts ──▶ outils.json   (volontaire: remplace tout, enrichissement compris)
 Enrichissement   update.ts (toujours, pour les outils non enrichis) ──▶ API OpenAI ──▶ outils.json (+ tags.json si de nouveaux tags)
 Vérification     update.ts (outils enrichis sans verdict) ──▶ API OpenAI ──▶ outils.json (criteres_confirmes)
+Open Hub         update.ts (logiciels libres enrichis sans données) ──▶ API Open Hub ──▶ outils.json (openhub_id, openhub)
 Catégories       update.ts (catégories sans description) ──▶ API OpenAI ──▶ categories.json (description) ──▶ sommaire (si quelque chose a changé)
 Sommaire         outils.json ──▶ sommaire.ts ──▶ sommaire.md + graphiques/   (vl-convert; résumé: API OpenAI)
 Schémas          schemas-types.ts ──▶ obuild + RunTypes ──▶ generer-schemas.ts ──▶ schemas/*.schema.json   (à relancer après un changement de type)
@@ -44,13 +46,15 @@ Schémas          schemas-types.ts ──▶ obuild + RunTypes ──▶ generer
 
 | Fichier | Rôle |
 |---|---|
-| `outils.json`, `categories.json`, `criteres.json`, `tags.json` | Les données (voir [Fichiers JSON](README.md#fichiers-json)) |
+| `outils.json`, `categories.json`, `criteres.json`, `tags.json`, `sources.json` | Les données (voir [Fichiers JSON](README.md#fichiers-json)) |
 | `update.ts` | Le script du suivi : synchronise `outils.json`, `categories.json` et `criteres.json` avec la page en ligne (import initial compris), enrichit les outils qui ne le sont pas encore, vérifie leurs critères, décrit les catégories et met le sommaire à jour quand quelque chose a changé |
 | `extract.ts`, `classify.ts` | Les deux outils exceptionnels, sans script npm : reconstruction forcée depuis la page, et reclassement de tous les outils après un changement des règles |
 | `confirmer.ts` | Module de la vérification des critères (`criteres_confirmes`), appelé par `update.ts` après l'enrichissement |
+| `ajouter.ts` | Ajout à la main d'un outil qui ne vient pas d'un répertoire extrait, avec sa source (`sources.json`) |
+| `sources.ts`, `openhub.ts` | Les sources des outils (validation, écriture de `sources.json`) et la lecture des données publiques d'Open Hub |
 | `sommaire.ts`, `sommaire.md`, `graphiques/` | Le script du sommaire statistique, le sommaire qu'il a généré et les graphiques (SVG) qu'il contient (mis à jour automatiquement par `nub run update` quand quelque chose a changé; sinon à regénérer avec `nub run sommaire`) |
 | `categories.ts`, `enrichir.ts`, `prix.ts`, `statistiques.ts`, `graphiques.ts`, `fichiers.ts`, `temps.ts`, `spdx.ts`, `progress.ts`, `duree.ts`, `couleurs.ts`, `ids.ts`, `cli.ts`, `env.ts` | Modules utilisés par les scripts |
-| `schemas/`, `generer-schemas.ts`, `schemas-types.ts`, `affiner-schema.ts`, `build.config.ts`, `tsconfig.schemas.json` | Les schémas JSON des quatre fichiers de données et ce qui les génère (voir [Schémas JSON](#schémas-json)) |
+| `schemas/`, `generer-schemas.ts`, `schemas-types.ts`, `affiner-schema.ts`, `build.config.ts`, `tsconfig.schemas.json` | Les schémas JSON des cinq fichiers de données et ce qui les génère (voir [Schémas JSON](#schémas-json)) |
 | `test/`, `test/donnees/` | Les tests unitaires (fixtures et dossiers temporaires, sans données) et les tests des fichiers de données réels |
 | `package.json`, `nub.lock`, `tsconfig.json` | Dépendances (`dependencies` pour l'exécution, `devDependencies` pour le développement, dont `vega` et `vega-lite` qui ne servent qu'aux types), scripts npm, les deux environnements (`engines.node` pour l'exécution, `devEngines.runtime` et `devEngines.packageManager` pour le développement) et configuration TypeScript. `nub.lock` n'est lu que par nub ; `npm install` résout les versions d'après les plages de `package.json` |
 | `.env.example` | Modèle du fichier `.env` (la clé OpenAI, avec les instructions pour l'obtenir) |
@@ -74,7 +78,7 @@ Les schémas valent pour du JSON ordinaire : les types du dépôt (chaînes, nom
 
 ## Scripts
 
-Quatre scripts se lancent avec `node` (ou `nub`) : `update.ts` et `sommaire.ts` (usage courant), `extract.ts` et `classify.ts` (opérations exceptionnelles); `generer-schemas.ts` est un cinquième programme, qui ne se lance que par `nub run schemas` (il doit d'abord être empaqueté, voir plus bas); les autres fichiers sont des modules, utilisés par les scripts et par les tests. Tout est en TypeScript. Les fonctions principales sont exportées pour être réutilisables; le code de ligne de commande ne s'exécute que lorsque le script est lancé directement.
+Cinq scripts se lancent avec `node` (ou `nub`) : `update.ts` et `sommaire.ts` (usage courant), `ajouter.ts` (ajout manuel), `extract.ts` et `classify.ts` (opérations exceptionnelles); `generer-schemas.ts` est un cinquième programme, qui ne se lance que par `nub run schemas` (il doit d'abord être empaqueté, voir plus bas); les autres fichiers sont des modules, utilisés par les scripts et par les tests. Tout est en TypeScript. Les fonctions principales sont exportées pour être réutilisables; le code de ligne de commande ne s'exécute que lorsque le script est lancé directement.
 
 ### `extract.ts`
 
@@ -206,6 +210,22 @@ Couleurs ANSI sans dépendance : `couleursActives(flux, env, sansCouleur)` déci
 ### `env.ts`
 
 `chargerEnv(chemin = ".env")` charge le fichier `.env` du dossier courant dans `process.env` (`process.loadEnvFile`), pour que `update.ts` et `sommaire.ts` trouvent `OPENAI_API_KEY` et `OPENAI_MODEL` lancés par `node` seul. Un fichier absent n'est pas une erreur ; toute autre erreur l'est. Une variable déjà présente dans l'environnement n'est jamais écrasée, donc nub, qui charge aussi `.env`, et `node` donnent le même résultat.
+
+### `ajouter.ts`
+
+```sh
+node ajouter.ts <lien> --nom=… --categorie=<id> --description=… --source=<id> [--score=N] [--alternative-a=url,…] [--source-nom=… --source-url=… --source-pdc=… --source-donnees=… --soumis-par-nom=… --soumis-par-url=… --soumis-par-email=…] [outils.json]
+```
+
+Ajoute un outil qui ne vient pas d'un répertoire extrait : la description est rédigée par la personne qui l'ajoute, la catégorie doit exister dans `categories.json`, le nom doit être libre. `--source` nomme sa source (`sources.json`) ; si elle n'existe pas, `--source-nom` et `--source-url` la créent (extracteur `manuel`), avec `--source-pdc`, `--source-donnees` et `--soumis-par-*` facultatifs (le courriel est validé). Sans `--score`, l'outil reçoit `score_estime` : score et critères viennent d'abord de la classification par seuil de la description (`classer` sans score, confiance « indéterminée »), puis `update`, à l'enrichissement, les remplace par ceux de l'évaluation enrichie (sans explication d'écart, puisqu'il n'y a pas d'étoiles de référence). L'outil est écrit avec `changement: "nouveau"` et la date du moment ; `update` l'enrichit ensuite et ne le retire jamais, puisqu'il n'appartient pas à la source Praxis.
+
+### `sources.ts`
+
+Les sources (`sources.json`) : `Source` (`id`, `nom`, `url`, `extracteur`, `pdc?`, `donnees?`, `soumis_par?`), `SOURCE_PRAXIS`, `problemesSource` (slug, URL http(s), courriel), `sourcesAvec` (ajout ou mise à jour), `chargerSources`, `sauverSources`. `update` crée le fichier avec Praxis s'il manque et rattache à Praxis les outils sans `source_repertoire_id` (données d'avant ce champ).
+
+### `openhub.ts`
+
+Données publiques d'[Open Hub](https://www.openhub.net/) par son API XML (`OPENHUB_API_KEY`, 1 000 requêtes par jour, lecture seule). Pour chaque outil enrichi au code public sans `openhub` (`aCompleterOpenHub`) : recherche par nom (`p.xml?query=`), puis concordance sûre, dans l'ordre : même hôte entre la page d'accueil Open Hub et `lien` ; même dépôt, ou même organisation sur une forge (GitHub, GitLab, Codeberg, Framagit, Bitbucket, SourceHut), entre un lien ou la page d'accueil Open Hub et `repo` ; sinon, pour les trois premiers candidats, leurs dépôts (`enlistments.xml`) comparés à `repo` de la même façon. Sans concordance, rien n'est écrit : le journal donne les meilleurs candidats (nom, nom court, page) et `echecs_openhub` est incrémenté (abandon à `--max-echecs`, comme l'enrichissement). Avec concordance, le projet est lu avec son analyse (`p/<id>.xml`) et `openhub_id` et `openhub` sont inscrits ; le journal rappelle les licences déclarées sur Open Hub, à comparer à `licence`. `update` l'exécute après la vérification des critères, avec une barre de progression ; `--dry-run` compte les requêtes prévues (au plus cinq par outil).
 
 ### `ids.ts`
 
@@ -400,6 +420,9 @@ Avec `node:test`, lancé par `nub --test` (le développement et les tests passen
 - `graphiques.test.ts` : spécifications Vega-Lite (données incluses, champs existants, pourcentages, verdicts des critères vérifiés, graphiques omis sans données), écriture et nettoyage des fichiers, suivi de l'écriture (titre avant, nombre après), message si vl-convert est absent, et conversion réelle en SVG autonome (ignorée si vl-convert n'est pas installé). Les données fictives des tests sont dans `donnees-fictives.ts`.
 - `schemas.test.ts` : des données fictives complètes sont valides selon les schémas (avec Ajv, indépendant de RunTypes), et des variantes invalides sont refusées (clé inconnue, `score` hors de 0 à 3, `echecs_enrichissement` nul ou non entier, `source` ou `changement` inconnus, tags en trop ou en double, date non ISO, `meta` manquant).
 - `documentation.test.ts` : les trois fichiers Markdown rédigés (README, `implementation.md`, `historique.md`) existent, leurs liens relatifs et leurs ancres existent (ancres calculées comme GitHub, liens dans le code ignorés, liens vers le `sommaire.md` généré laissés à `test:data`), chacun commence par un titre et la ligne *Documentation*, sans tiret cadratin ni balise HTML (sauf l'image du README). Les outils communs (ancres, liens, conventions) sont dans `markdown.ts`.
+- `sources.test.ts` : source Praxis, validation des sources (slug, URL, extracteur, soumis_par et courriel), `sourcesAvec`, écriture et relecture de `sources.json`.
+- `ajouter.test.ts` : source demandée (connue, nouvelle, manquante), outil demandé (validation, score estimé ou donné, alternatives), écriture dans les fichiers, options de la ligne de commande, CLI.
+- `openhub.test.ts` : lecture du XML (collection, projet avec analyse, dépôts, erreur de statut), concordance directe et par les dépôts, champs écrits, outils à compléter, boucle avec un faux client (concordance, candidats journalisés, compteur et abandon, erreur réseau), client HTTP.
 - `en-tetes.test.ts` : chaque fichier `.ts` porte les en-têtes SPDX; la licence du code est la même dans `package.json`; les textes de licence sont présents, à la racine (`LICENSE*`) et dans `LICENSES/` (AGPL, CC BY-SA, MIT); chaque schéma JSON déclare la licence du code dans `$comment`; et `REUSE.toml` annote `schemas/**` et le reste des fichiers sans en-tête (AGPL-3.0-or-later), les données et leurs dérivés (CC-BY-SA-4.0) et le skill `.claude/**` (MIT). Ce test ne remplace pas `nub run licences`, qui contrôle tous les fichiers.
 
 **`test/donnees/*.test.ts`, données réelles** (`nub run test:data`), après un `nub run update` terminé ; chaque fichier commence par `exigerFichiers` (`garde.ts`), qui échoue avec un message clair si un fichier manque :
@@ -426,6 +449,10 @@ Avec `node:test`, lancé par `nub --test` (le développement et les tests passen
 | `OpenAI HTTP 401: …`, `403`, `400`, `404` ou `refus du modèle: …` | Erreur définitive : clé invalide, requête ou modèle refusé (`OPENAI_MODEL` inexistant), ou refus du modèle. Aucune seconde tentative ni repli ; vérifier la clé et les noms de modèles dans `.env` |
 | `OpenAI HTTP 429: …` ou `5xx` | Quota ou crédit épuisé, ou erreur passagère de l'API : la seconde tentative passe par le modèle de repli ; si elle échoue aussi, l'outil compte un échec et sera retenté à la prochaine exécution (vérifier le crédit sur <https://platform.openai.com/settings/organization/billing/>) |
 | `Fichier d'environnement illisible (.env): …` | `.env` existe mais n'a pas pu être lu (droits, ou un dossier de ce nom). Le corriger ou le retirer : sans `.env`, les scripts tournent sans clé |
+| `Open Hub sauté: OPENHUB_API_KEY absente` | `update` a des logiciels libres à compléter mais pas de clé Open Hub dans `.env` (facultatif : voir `.env.example`) |
+| `<outil>: Open Hub: aucune concordance sûre …; candidats: …` | Aucun projet Open Hub ne correspond au lien ni au dépôt de l'outil ; les candidats listés permettent de vérifier à la main (le projet est peut-être absent d'Open Hub, ou nommé autrement). Après 3 échecs, l'outil n'est plus cherché (`--max-echecs=N` pour retenter) |
+| `Open Hub HTTP 401` ou `Open Hub: Invalid API key` | Clé Open Hub invalide ; `HTTP 429` : limite quotidienne atteinte, réessayer le lendemain |
+| `source « x » absente de sources.json: donner --source-nom et --source-url` | `ajouter.ts` : la source n'existe pas encore ; la créer avec ces options, ou choisir un identifiant existant |
 | `Option inconnue: …` | Option mal orthographiée. Les options valides sont décrites dans la section de chaque script |
 
 ## Documentation

@@ -22,7 +22,7 @@ Les mises à jour peuvent **coûter de l'argent** : l'enrichissement par IA et l
 
 1. **Node.js 26** (toute version 26.x, `engines.node` : `>=26 <27`), avec npm : <https://nodejs.org/>. Les scripts sont en TypeScript, que Node exécute tel quel.
 2. **Cloner le dépôt** et s'y placer : `git clone <url du dépôt> && cd outils-souverainete-numerique`.
-3. **Configurer la clé OpenAI** : `cp .env.example .env`, puis mettre la clé dans `OPENAI_API_KEY=`. Avec un compte OpenAI, la clé se crée sur <https://platform.openai.com/api-keys> (« Create new secret key » ; elle commence par `sk-` et n'est affichée qu'une fois) et le crédit se vérifie sur <https://platform.openai.com/account/billing/overview>. Le fichier `.env` est ignoré par Git et la clé n'est transmise qu'à `api.openai.com`. Sans clé, `update` synchronise les données mais saute tout ce qui passe par l'API (enrichissement, vérification, descriptions, résumé). Facultatif : `OPENAI_MODEL` (modèle principal, `gpt-6.1-sol` par défaut), `OPENAI_MODEL_FALLBACK` (modèle de repli, `gpt-6-astra` par défaut, qui reprend un appel dont la réponse a été rejetée ; vide pour s'en passer) et `OPENAI_REASONING_EFFORT` (effort de raisonnement, `low` par défaut) ; ces valeurs viennent d'un [banc d'essai](analyse-effort/analyse.md) sur 20 outils.
+3. **Configurer la clé OpenAI** : `cp .env.example .env`, puis mettre la clé dans `OPENAI_API_KEY=`. Avec un compte OpenAI, la clé se crée sur <https://platform.openai.com/api-keys> (« Create new secret key » ; elle commence par `sk-` et n'est affichée qu'une fois) et le crédit se vérifie sur <https://platform.openai.com/account/billing/overview>. Le fichier `.env` est ignoré par Git et la clé n'est transmise qu'à `api.openai.com`. Sans clé, `update` synchronise les données mais saute tout ce qui passe par l'API (enrichissement, vérification, descriptions, résumé). Facultatif aussi : `OPENHUB_API_KEY`, clé de l'API [Open Hub](https://www.openhub.net/accounts/me/api_keys/new) (gratuite, 1 000 requêtes par jour), pour compléter les logiciels libres avec leurs données publiques (champ `openhub`). Facultatif : `OPENAI_MODEL` (modèle principal, `gpt-6.1-sol` par défaut), `OPENAI_MODEL_FALLBACK` (modèle de repli, `gpt-6-astra` par défaut, qui reprend un appel dont la réponse a été rejetée ; vide pour s'en passer) et `OPENAI_REASONING_EFFORT` (effort de raisonnement, `low` par défaut) ; ces valeurs viennent d'un [banc d'essai](analyse-effort/analyse.md) sur 20 outils.
 4. **Installer les dépendances** : `npm install`. Pour les graphiques du sommaire, installer aussi [vl-convert](https://github.com/vega/vl-convert) (binaire ou `cargo install`, voir [Outils à installer](#outils-à-installer)) ; sans lui, le sommaire est sauté par `update` et `node sommaire.ts --sans-graphiques` reste possible.
 5. **Premier import** : `node update.ts --dry-run` pour voir ce qui serait fait et le coût estimé, puis `node update.ts`, qui crée `outils.json`, `categories.json` et `criteres.json` depuis la page en ligne, enrichit les outils par IA, vérifie leurs critères, citation à l'appui, décrit les catégories (après confirmation des coûts : 1 pour poursuivre, 2 pour arrêter), et génère `sommaire.md` et `graphiques/`. Le dépôt contenant déjà ces fichiers, cette étape ne s'applique qu'à partir d'un dossier vide ; sur un clone, `node update.ts` se contente de mettre à jour.
 6. **Mises à jour** : `node update.ts`, aussi souvent que voulu. Il compare la page en ligne aux données, enrichit et vérifie les outils nouveaux et régénère le sommaire et les graphiques seulement si quelque chose a changé ; une page inchangée ne coûte rien.
@@ -64,7 +64,8 @@ Les champs d'enrichissement résument des pages tierces (voir [D'où viennent le
 
 ### D'où viennent les champs
 
-- **De la source :** la catégorie (nom et icône), le nom, le score, le lien et la description de chaque outil, ainsi que les trois critères.
+- **De la source :** la catégorie (nom et icône), le nom, le score, le lien et la description de chaque outil, ainsi que les trois critères. La source de chaque outil est nommée par `source_repertoire_id` (voir [`sources.json`](#sourcesjson)) ; un outil ajouté à la main avec `node ajouter.ts` a une description rédigée par la personne qui l'ajoute et, sans étoiles, un score estimé (`score_estime`).
+- **D'Open Hub** (données publiques, [openhub.net](https://www.openhub.net/)) : `openhub_id` et `openhub` des logiciels au code public (activité, contributeurs, commits, licences déclarées, langage, taille), relevés par `update` avec `OPENHUB_API_KEY`.
 - **Rédigé pour ce dépôt :** le vocabulaire de `tags.json` (identifiants et descriptions des 37 tags de départ).
 - **Calculé et généré par les scripts :** `sommaire.md` et `graphiques/` (statistiques calculées à partir des données, plus un résumé rédigé par un modèle d'IA).
 - **Calculé par les scripts :** `meta` (licence et dates des fichiers), `derniere_modification`, `changement`, `removed` et `enrichi_le` (voir `update.ts`, `enrichir.ts` et `fichiers.ts`).
@@ -83,6 +84,8 @@ node update.ts --dry-run         # montre ce que update ferait (changements, out
 node update.ts                   # synchronise les données avec la page, enrichit par IA les outils qui ne le sont pas encore, vérifie leurs critères, décrit les catégories (OPENAI_API_KEY), puis met le sommaire à jour si quelque chose a changé
 node update.ts --accepter-couts  # premier import hors terminal: accepte les coûts d'enrichissement sans la confirmation interactive
 node sommaire.ts                 # écrit sommaire.md et graphiques/ (--sans-resume, --sans-graphiques pour s'en passer, --sans-couleur)
+node ajouter.ts <lien> --nom=… --categorie=<id> --description=… --source=<id> [--score=N] [--alternative-a=url,…] [--source-nom=… --source-url=… --soumis-par-nom=…]
+                                 # ajoute à la main un outil (et sa source dans sources.json); node update.ts l'enrichit ensuite
 ```
 
 Développement, avec nub (commandes définies dans `package.json`) :
@@ -155,7 +158,7 @@ Sur Linux et WSL, vérifier que `~/.local/bin` est dans le `PATH` (`echo "$PATH"
 
 ## Fichiers JSON
 
-Les quatre fichiers de données sont validés par des [schémas JSON](implementation.md#schémas-json) (`schemas/`, draft 2020-12). Ils ont la même structure : un objet dont le champ `meta` porte les métadonnées du fichier, suivi du tableau de données.
+Les cinq fichiers de données sont validés par des [schémas JSON](implementation.md#schémas-json) (`schemas/`, draft 2020-12). Ils ont la même structure : un objet dont le champ `meta` porte les métadonnées du fichier, suivi du tableau de données.
 
 ```json
 {
@@ -173,7 +176,7 @@ Les quatre fichiers de données sont validés par des [schémas JSON](implementa
 | `meta.data_license` | Licence des données, toujours `CC-BY-SA-4.0` (identifiant SPDX). Si un fichier en porte une autre, les scripts la rétablissent à l'écriture (un fichier sans `data_license` est refusé) |
 | `meta.created_at` | Date et heure de création du fichier. Fixée une fois, puis conservée par tous les scripts, même quand `extract` remplace le contenu |
 | `meta.updated_at` | Date et heure de la dernière modification du **contenu**. Un script qui réécrit le même contenu ne la change pas |
-| `outils`, `categories`, `criteres` ou `tags` | Le tableau de données, nommé d'après le fichier |
+| `outils`, `categories`, `criteres`, `tags` ou `sources` | Le tableau de données, nommé d'après le fichier |
 
 **Toutes les dates et heures sont locales, en heure de Toronto** (`America/Toronto`, heure d'été comprise), au format ISO 8601 avec le décalage : `-05:00` en hiver, `-04:00` en été. C'est le cas de `meta.created_at` et `meta.updated_at`, et aussi de `derniere_modification` de chaque outil. Cette dernière est la date affichée par la page d'origine, qui donne l'heure de l'Est (Toronto), à laquelle on ajoute le décalage de la saison; elle ne se confond pas avec `meta.updated_at`, qui date des écritures du fichier.
 
@@ -187,13 +190,16 @@ Fichier unifié : le tableau `outils` contient 60 outils (plus d'éventuels outi
 |---|---|
 | `categorie` | Identifiant de la catégorie : `categories[].id` de [`categories.json`](#categoriesjson) (le schéma impose un slug et annote le renvoi ; un test vérifie que chaque valeur existe) |
 | `nom` | Nom de l'outil. Sert de clé d'identification |
-| `score` | Nombre d'étoiles ★ sur 3 |
+| `source_repertoire_id` | Identifiant de la source de l'outil : `sources[].id` de [`sources.json`](#sourcesjson) (`praxis` pour le répertoire Praxis ; une autre valeur pour un outil ajouté à la main ou extrait d'une autre collection). `update` ne retire que les outils de la source qu'il synchronise |
+| `score` | Nombre d'étoiles ★ sur 3, donné par la source |
+| `score_estime` | Présent (`true`) quand la source ne donne pas d'étoiles (outil ajouté à la main sans `--score`) : `score`, `criteres` et `confiance` viennent de l'évaluation enrichie, ou, avant l'enrichissement, de la classification par seuil de la description |
+| `alternative_a` | Services, souvent propriétaires, auxquels l'outil se substitue (liste d'URL), quand la source le dit (collections comme FACiL, ou `--alternative-a` de `ajouter.ts`) ; absent sinon |
 | `lien` | Lien externe de l'outil |
 | `description` | Description fournie par la source |
 | `derniere_modification` | Dernière date de modification connue : ISO 8601 en heure de Toronto, avec le décalage (ex. `2026-11-05T09:53:00-05:00`) |
 | `changement` | Dernier changement détecté par `update.ts` : `"nouveau"`, `"modification"`, `"retrait"` ou `"comeback"`; `null` si jamais modifié depuis l'import |
 | `removed` | Présent (`true`) seulement pour un outil disparu de la page; l'entrée est conservée, à la fin du tableau |
-| `echecs_enrichissement`, `echecs_confirmation` | Nombre d'échecs consécutifs d'enrichissement, et de vérification des critères (page inaccessible ou presque vide, réponses invalides). Présent seulement sur un outil pas encore enrichi qui a échoué au moins une fois ; retiré dès que l'enrichissement réussit. À 3 (`--max-echecs=N` pour changer), `update` ne tente plus l'outil |
+| `echecs_enrichissement`, `echecs_confirmation`, `echecs_openhub` | Nombre d'échecs consécutifs d'enrichissement, de vérification des critères, et de recherche Open Hub (page inaccessible ou presque vide, réponses invalides). Présent seulement sur un outil pas encore enrichi qui a échoué au moins une fois ; retiré dès que l'enrichissement réussit. À 3 (`--max-echecs=N` pour changer), `update` ne tente plus l'outil |
 | `criteres` | Identifiants (voir `criteres.json`) des critères que les étoiles représentent. Déduits, voir [Classification](implementation.md#classification) |
 | `confiance` | Fiabilité de cette déduction : `"élevée"`, `"moyenne"` ou `"faible"` |
 
@@ -211,6 +217,13 @@ Champs ajoutés par l'[enrichissement](implementation.md#enrichissement-par-ia),
 | `enrichi_le` | Date et heure de l'enrichissement de l'outil (ISO 8601, heure de Toronto), exacte pour chaque outil : les 57 enrichissements de `outils.json` datent du réimport du 2026-11-12 (de 12:36 à 12:55) |
 | `evaluation_enrichie` | Second avis du modèle sur la souveraineté de l'outil : `score` (nombre de critères satisfaits, de 0 à 3, égal à `criteres.length`), `criteres` (identifiants de `criteres.json`) et `confiance` (`"élevée"`, `"moyenne"` ou `"faible"`). S'y ajoute `ecart`, une explication en français de la différence, seulement quand cette évaluation diffère du `score` et des `criteres` du répertoire |
 | `criteres_confirmes` | Critères **vérifiés** par une IA d'après la page de l'outil, citation à l'appui (`confirmer.ts`, appelé par `update`) : `criteres` (ceux qui sont confirmés, dans l'ordre de `criteres.json`), `preuves` (une citation copiée mot pour mot de la description ou de la page, pour chaque critère confirmé), `infirmes` (une citation pour chaque critère que la page contredit ; un critère absent des deux est indéterminé), `modele` et `date` (heure de Toronto). Indépendant de `criteres`, qui reste lié aux étoiles : il peut en compter moins, jamais plus. Rempli par `update` pour tout outil enrichi qui ne l'a pas encore, avec le modèle de l'enrichissement (`gpt-6.1-sol` par défaut) ou, si celui-ci a dû prendre la relève, le modèle de repli : `modele` nomme celui qui a produit le verdict ; règle de lecture « la nationalité mentionnée suffit » pour « contrôle ». Présent pour les 57 outils enrichis, tous vérifiés par `gpt-6-astra` (le modèle par défaut d'alors) |
+
+Champs relevés sur [Open Hub](https://www.openhub.net/) par `update` (`openhub.ts`, clé `OPENHUB_API_KEY`), seulement pour les logiciels au code public (`source` libre, partiel ou source-disponible) dont un projet Open Hub concorde avec `lien` ou `repo` :
+
+| Champ | Description |
+|---|---|
+| `openhub_id` | Nom court du projet sur Open Hub (`vanity_name`, ex. `jami`) : page <https://www.openhub.net/p/jami> |
+| `openhub` | `organisation` (porteuse du projet), `activite` (indice Open Hub : « Inactive » à « Very High »), `licences` (noms Open Hub, à comparer à `licence`), `langage_principal`, `lignes_de_code`, `contributeurs_total`, `contributeurs_12_mois`, `commits_12_mois`, `premier_mois`, `dernier_mois` (`null` quand Open Hub ne le donne pas) et `consulte_le` (date de la lecture) |
 
 La page n'affiche qu'une seule date pour toute la note. `derniere_modification` est donc la date de la page au moment où l'outil a été ajouté ou a changé, et non la date exacte du changement de cet outil.
 
@@ -235,6 +248,10 @@ Les `id` sont la forme courte utilisée dans les champs `criteres` de `outils.js
 Le vocabulaire restreint de tags : le tableau `tags` contient des `{ id, description }`, avec une description en français pour chaque tag (37 au départ). Chaque outil reçoit de 1 à 5 de ces tags, jamais plus.
 
 De nouveaux tags peuvent s'ajouter après cette première phase, avec `node update.ts --nouveaux-tags`. Chaque tag ajouté doit être **justifié** : il porte alors en plus un champ `justification` (pourquoi aucun tag existant ne convient) et `propose_pour` (l'outil pour lequel il a été proposé). Un nouveau tag peut ne concerner qu'un seul outil.
+
+### `sources.json`
+
+Les sources des outils, dans le tableau `sources` : `{ id, nom, url, extracteur, pdc?, donnees?, soumis_par? }`. `id` est un slug référencé par `outils[].source_repertoire_id` ; `extracteur` dit qui sait lire la source : `praxis` (le répertoire, extrait par `extract.ts`), `facil` (à venir) ou `manuel` (outils saisis avec `node ajouter.ts`) ; `pdc` et `donnees` sont les pages de politique de confidentialité et de données de la collection, quand elle en publie ; `soumis_par` dit qui a soumis une collection ajoutée à la main (`nom` obligatoire, `url` et `email` facultatifs ; le courriel, s'il est donné, est publié avec les données). `update` crée le fichier avec la source `praxis` s'il manque ; `ajouter.ts` y ajoute les sources manuelles.
 
 ## Sommaire statistique
 
