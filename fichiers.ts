@@ -73,5 +73,7 @@ export function ecrireFichier<T>(
     updated_at: inchange ? avant.meta.updated_at : maintenant,
   };
   writeFileSync(chemin, JSON.stringify({ meta, [cle]: donnees }, null, 2) + "\n");
-  return { donnees, meta };
+  // Copie: l'appelant peut modifier `donnees` en place avant la prochaine écriture (enrichissement outil par
+  // outil); comparer avec le même tableau dirait toujours « inchangé » et updated_at n'avancerait jamais.
+  return { donnees: structuredClone(donnees), meta };
 }

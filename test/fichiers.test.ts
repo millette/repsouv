@@ -42,6 +42,15 @@ test("contenu modifié: updated_at change, created_at est conservé", () => {
   assert.equal(apres.meta.created_at, T0);
   assert.equal(apres.meta.updated_at, T1);
 });
+test("tableau modifié en place entre deux écritures (enrichissement): updated_at change quand même", () => {
+  const f = fichier();
+  const outils: { nom: string; licence?: string }[] = [{ nom: "a" }];
+  const avant = ecrireFichier(f, "outils", outils, null, T0);
+  outils[0]!.licence = "MIT";
+  const apres = ecrireFichier(f, "outils", outils, avant, T1);
+  assert.equal(apres.meta.updated_at, T1);
+  assert.equal(lireFichier(f, "outils").meta.updated_at, T1);
+});
 test("contenu remplacé en entier: created_at est tout de même conservé", () => {
   const f = fichier();
   ecrireFichier(f, "outils", [{ nom: "a" }], null, T0);
