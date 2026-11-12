@@ -20,7 +20,7 @@ Les mises à jour peuvent **coûter de l'argent** : l'enrichissement par IA et l
 
 **Utiliser** les scripts ne demande que Node.js ; **développer** (tests, types, schémas, licences) demande en plus [nub](https://nubjs.com/), voir [implementation.md](implementation.md).
 
-1. **Node.js 26** (`26.13.1` ou plus récent, voir `engines.node` dans `package.json`), avec npm : <https://nodejs.org/>. Les scripts sont en TypeScript, que Node exécute tel quel.
+1. **Node.js 26** (toute version 26.x, `engines.node` : `>=26 <27`), avec npm : <https://nodejs.org/>. Les scripts sont en TypeScript, que Node exécute tel quel.
 2. **Cloner le dépôt** et s'y placer : `git clone <url du dépôt> && cd outils-souverainete-numerique`.
 3. **Configurer la clé OpenAI** : `cp .env.example .env`, puis mettre la clé dans `OPENAI_API_KEY=`. Avec un compte OpenAI, la clé se crée sur <https://platform.openai.com/api-keys> (« Create new secret key » ; elle commence par `sk-` et n'est affichée qu'une fois) et le crédit se vérifie sur <https://platform.openai.com/account/billing/overview>. Le fichier `.env` est ignoré par Git et la clé n'est transmise qu'à `api.openai.com`. Sans clé, `update` synchronise les données mais saute tout ce qui passe par l'API (enrichissement, vérification, descriptions, résumé).
 4. **Installer les dépendances** : `npm install`. Pour les graphiques du sommaire, installer aussi [vl-convert](https://github.com/vega/vl-convert) (`cargo install vl-convert` ou un binaire de ses versions, dans le `PATH`) ; sans lui, le sommaire est sauté par `update` et `node sommaire.ts --sans-graphiques` reste possible.

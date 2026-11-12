@@ -23,7 +23,7 @@
     "spdx-license-ids": "^3.0.24"
   },
   "engines": {
-    "node": "^26.13.1"
+    "node": ">=26 <27"
   },
   "devEngines": {
     "packageManager": {
