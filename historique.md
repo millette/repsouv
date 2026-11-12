@@ -1,6 +1,6 @@
 # Historique du projet
 
-*Documentation : [README](README.md) · [Implémentation](implementation.md) · [Historique](historique.md) · [Sommaire statistique](sommaire.md) · [Analyse de la classification](analyses/classification/README.md)*
+*Documentation : [README](README.md) · [Implémentation](implementation.md) · [Historique](historique.md) · [Sommaire statistique](sommaire.md)*
 
 Les étapes du projet et les décisions prises, par date, d'après l'historique Git (`git log`) et les notes qui accompagnaient les changements. Les dates sont en heure de Toronto. Pour l'état actuel, voir le [README](README.md) et [implementation.md](implementation.md).
 
@@ -13,8 +13,8 @@ Les étapes du projet et les décisions prises, par date, d'après l'historique 
 | 2026-11-05 09:53 | Date de modification affichée par la page du répertoire au moment de l'import initial : tous les outils portent cette `derniere_modification` |
 | 2026-11-11 16:43 | Création des trois fichiers de données (`meta.created_at`), avec `meta` et les dates en heure de Toronto |
 | 2026-11-11 17:29 à 17:43 | Enrichissement par IA de 57 outils sur 60 ; les 3 autres (En commun, Paperless-ngx, CIRA Canadian Shield) ont une page inaccessible ou vide |
-| 2026-11-12 07:41 | Confirmation des critères par Claude, citation à l'appui (`criteres_confirmes`) |
-| 2026-11-12 08:30 | Dernière génération de `sommaire.md` |
+| 2026-11-12 09:00 | Confirmation des critères par OpenAI et Claude sur les 57 outils enrichis, règle A, citation à l'appui (`confirmations/`, puis `criteres_confirmes`) |
+| 2026-11-12 09:12 | Dernière génération de `sommaire.md` |
 
 ## 2026-11-11
 
@@ -34,11 +34,9 @@ Les étapes du projet et les décisions prises, par date, d'après l'historique 
 
 - **Schémas JSON.** Analyse de l'adoption de schema.org (non retenue : le JSON-LD serait une couche d'export séparée) puis des générateurs de JSON Schema. Expérience `spike-mion` (branches `mion-smoke`, `mion-smoke-tsdown`) : les schémas de mion RunTypes décrivent le JSON échangé pour les types simples, mais encodent à leur façon les unions avec `Date`, les `Map` et autres types propres à JavaScript ; tsdown et esbuild donnent la même sortie. Adoption de RunTypes pour générer `schemas/*.schema.json` (draft 2020-12), d'abord avec tsdown puis avec obuild (branche `mion-smoke-obuild`, schémas identiques octet pour octet), avec `affiner-schema.ts` pour les contraintes que les types ne disent pas.
 - **Licence du code** : passage de `AGPL-3.0-only` à `AGPL-3.0-or-later` ; les schémas déclarent leur licence dans `$comment` ; conformité à la spécification REUSE 3.3 (`LICENSES/`, `REUSE.toml`, `nub run licences`).
-- **Analyse de la classification** (voir [analyses/classification/README.md](analyses/classification/README.md)) :
-  - `classify2.ts` : mêmes critères que `classify.ts`, `confiance` recalibrée d'après l'évaluation enrichie (non adopté) ;
-  - `confirmer.ts` : confirmation de chaque critère par une IA, citation vérifiable à l'appui, avec OpenAI (`gpt-6-astra`, 1,43 $ pour 57 outils) et Claude (`claude-fable-5-2`, 3,13 $) ; désaccord sur « contrôle » pour 21 outils, levé par la règle A (la nationalité mentionnée suffit), relancée sur ces 21 outils (0,52 $ et 1,12 $) ;
-  - `classify4.ts` : retrait des critères que l'enrichissement et les confirmations contredisent, 47 outils sur 57 d'accord avec l'évaluation enrichie contre 39 (non adopté : il rompt « une étoile = un critère ») ;
-  - **décision** : `criteres` reste lié aux étoiles de la source, et les critères vérifiés sont exposés à part dans `criteres_confirmes`, avec la citation, inscrits par `appliquer-confirmations.ts` à partir des confirmations de Claude.
+- **Analyse de la classification.** Sur les 57 outils enrichis, `criteres` (déduit) et `evaluation_enrichie.criteres` concordent pour 39 ; tous les écarts sont des outils où l'IA confirme moins de critères que d'étoiles. Des variantes de `classify.ts` ont été essayées puis retirées (`classify2`, confiance recalibrée ; `classify4`, retrait des critères contredits par l'enrichissement et les confirmations, 47 sur 57) : règles choisies en regardant ces mêmes données, et `classify4` contredisait les étoiles.
+- **Confirmation des critères par IA** (`confirmer.ts`) : chaque critère est confirmé, infirmé ou jugé indéterminé d'après la page de l'outil, citation vérifiable à l'appui, par OpenAI (`gpt-6-astra`) et Claude (`claude-fable-5-2`). Sans convention, les deux divergeaient sur « contrôle » pour 21 outils ; la règle A (la nationalité mentionnée suffit) les met d'accord. Les deux exécutions finales portent sur les 57 outils avec la règle A (`confirmations/`).
+- **Décision** : `criteres` reste lié aux étoiles de la source, et les critères vérifiés sont exposés à part dans `criteres_confirmes`, avec la citation, inscrits par `appliquer-confirmations.ts` à partir des confirmations de Claude.
 - **Sommaire** : sous-section et graphique des critères vérifiés (confirmés, infirmés, indéterminés par statut du code source) ; `sommaire.md` régénéré.
 - **Documentation** scindée en trois fichiers : README (source, crédits, usage, données), `implementation.md` (scripts, classification, enrichissement, sommaire, tests, dépannage) et ce fichier.
 
@@ -55,5 +53,5 @@ Les étapes du projet et les décisions prises, par date, d'après l'historique 
 | Les types des fichiers de données évitent `Date`, `Map` et les unions avec `Date` | RunTypes décrirait alors son propre encodage, pas le JSON naturel |
 | `AGPL-3.0-or-later` pour le code et les schémas, CC BY-SA 4.0 pour les données et leurs dérivés | Les données adaptent le répertoire d'origine, publié sous CC BY-SA 4.0 ; conformité REUSE pour que chaque fichier déclare sa licence |
 | `criteres` reste lié aux étoiles ; les critères vérifiés vont dans `criteres_confirmes` | Les étoiles sont une donnée de la source, les critères vérifiés dépendent de ce que la page de l'outil dit : aucune règle ne les fait coïncider sans sacrifier l'une des deux informations |
-| `classify2.ts` et `classify4.ts` restent des variantes non adoptées | Leurs règles ont été choisies en regardant les 57 outils enrichis ; `classify4.ts` contredit les étoiles |
+| Variantes de `classify.ts` essayées puis retirées (confiance recalibrée, retrait de critères) | Règles choisies en regardant les 57 outils enrichis ; l'une contredisait les étoiles, et `criteres_confirmes` répond au besoin |
 | Règle A pour « contrôle » : la nationalité mentionnée suffit | Les descriptions ne disent jamais qui possède l'entreprise ; sans convention, les IA divergent sur 21 outils. L'accord obtenu est une convention, pas une vérification de la propriété |

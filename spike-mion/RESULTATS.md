@@ -1,6 +1,6 @@
 # Expérience : les schémas de mion RunTypes décrivent-ils le JSON échangé ?
 
-*Documentation : [README](../README.md) · [Implémentation](../implementation.md) · [Historique](../historique.md) · [Sommaire statistique](../sommaire.md) · [Analyse de la classification](../analyses/classification/README.md)*
+*Documentation : [README](../README.md) · [Implémentation](../implementation.md) · [Historique](../historique.md) · [Sommaire statistique](../sommaire.md)*
 
 Branche `mion-smoke`. Dossier isolé (son propre `package.json`), sans effet sur le projet principal.
 

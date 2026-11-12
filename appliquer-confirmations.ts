@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Inscrit dans outils.json le champ `criteres_confirmes` de chaque outil à partir d'un fichier de confirmer.ts: les critères
 // qu'une IA a confirmés d'après la page de l'outil, avec la citation à l'appui, et ceux qu'elle a infirmés. `criteres`
-// reste lié aux étoiles de la source; `criteres_confirmes` peut en compter moins (voir analyses/classification/README.md).
+// reste lié aux étoiles de la source; `criteres_confirmes` peut en compter moins (voir implementation.md).
 //
 // Usage: nub appliquer-confirmations.ts <confirmations.json> <outils.json> [sortie.json]
 //   (réécrit outils.json en place sans sortie; les outils sans verdict dans le fichier gardent leur champ tel quel)

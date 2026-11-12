@@ -9,7 +9,6 @@ import { test } from "node:test";
 
 export const FICHIERS_MD = [
   "README.md", "implementation.md", "historique.md", "sommaire.md",
-  "analyses/classification/README.md", "analyses/classification/resultats-confirmations.md", "analyses/classification/resultats-regle-a.md",
   "spike-mion/RESULTATS.md",
 ] as const;
 
@@ -70,10 +69,10 @@ test("tous les fichiers Markdown existent et leurs liens relatifs et ancres sont
   }
 });
 
-test("chaque fichier Markdown commence par un titre de niveau 1 suivi de la ligne « Documentation », qui relie les cinq fichiers principaux", () => {
+test("chaque fichier Markdown commence par un titre de niveau 1 suivi de la ligne « Documentation », qui relie les quatre fichiers principaux", () => {
   for (const f of FICHIERS_MD) {
     const md = lire(f)!;
-    assert.match(md, /^# .+\n\n\*Documentation : \[README\]\([^)]*README\.md\) · \[Implémentation\]\([^)]*implementation\.md\) · \[Historique\]\([^)]*historique\.md\) · \[Sommaire statistique\]\([^)]*sommaire\.md\) · \[Analyse de la classification\]\([^)]*analyses\/classification\/README\.md\)\*\n/, f);
+    assert.match(md, /^# .+\n\n\*Documentation : \[README\]\([^)]*README\.md\) · \[Implémentation\]\([^)]*implementation\.md\) · \[Historique\]\([^)]*historique\.md\) · \[Sommaire statistique\]\([^)]*sommaire\.md\)\*\n/, f);
   }
 });
 
@@ -89,7 +88,7 @@ test("aucun tiret cadratin, et aucune balise HTML sauf l'image en tête du READM
 });
 
 test("les fichiers générés disent par quel script et ne doivent pas être modifiés à la main", () => {
-  for (const f of ["sommaire.md", "analyses/classification/resultats-confirmations.md", "analyses/classification/resultats-regle-a.md"]) {
+  for (const f of ["sommaire.md"]) {
     assert.match(lire(f)!, /Généré le .+ par .+\. Ne pas modifier/, f);
   }
 });

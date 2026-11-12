@@ -2,7 +2,7 @@
   "meta": {
     "data_license": "CC-BY-SA-4.0",
     "created_at": "2026-11-11T16:43:11-05:00",
-    "updated_at": "2026-11-12T08:17:21-05:00"
+    "updated_at": "2026-11-12T09:12:13-05:00"
   },
   "outils": [
     {
@@ -44,19 +44,17 @@
       "enrichi_le": "2026-11-11T17:29:24-05:00",
       "criteres_confirmes": {
         "criteres": [
-          "donnees",
-          "dependance"
+          "donnees"
         ],
         "preuves": {
-          "donnees": "peut être auto-hébergé sur l’infrastructure de son choix",
-          "dependance": "Host Matomo on-premise or in the cloud with full ownership, no lock-in, and the flexibility to extend it your way."
+          "donnees": "peut être auto-hébergé sur l’infrastructure de son choix"
         },
         "infirmes": {
-          "controle": "Il est d'origine internationale"
+          "controle": "Il est d'origine internationale mais offre le contrôle des données"
         },
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -100,8 +98,8 @@
         "preuves": {},
         "infirmes": {},
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -151,13 +149,13 @@
         ],
         "preuves": {
           "donnees": "Vos documents ne quittent jamais le Canada.",
-          "controle": "Outil canadien de rédaction et de tableur collaboratifs permettant de créer, modifier et partager des documents à plusieurs.",
+          "controle": "Outil canadien de rédaction et de tableur collaboratifs",
           "dependance": "Tous les documents sont stockés et traités sur des serveurs bare metal indépendants à Montréal, Québec, sous les lois canadiennes, avec des sauvegardes chaque nuit à Toronto."
         },
         "infirmes": {},
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -201,17 +199,15 @@
       "enrichi_le": "2026-11-11T17:29:24-05:00",
       "criteres_confirmes": {
         "criteres": [
-          "donnees",
           "controle"
         ],
         "preuves": {
-          "donnees": "Le logiciel s’installe localement sur votre ordinateur Windows ou Mac.",
           "controle": "Outil québécois d’aide à la rédaction en français et en anglais combinant correcteur avancé, dictionnaires et guides linguistiques."
         },
         "infirmes": {},
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -253,15 +249,19 @@
       "enrichi_le": "2026-11-11T17:29:24-05:00",
       "criteres_confirmes": {
         "criteres": [
-          "donnees"
+          "donnees",
+          "dependance"
         ],
         "preuves": {
-          "donnees": "L'outil peut être auto-hébergé ou utilisé via une instance québécoise."
+          "donnees": "L'outil peut être auto-hébergé ou utilisé via une instance québécoise.",
+          "dependance": "L'outil peut être auto-hébergé ou utilisé via une instance québécoise."
         },
-        "infirmes": {},
+        "infirmes": {
+          "controle": "easy and smart solution - European project!"
+        },
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -307,15 +307,15 @@
           "dependance"
         ],
         "preuves": {
-          "donnees": "Besides, our solutions can be deployed on private servers.",
-          "dependance": "Cet outil, d'origine internationale, est libre et auto-hébergeable pour conserver la maîtrise de ses données."
+          "donnees": "Cet outil, d'origine internationale, est libre et auto-hébergeable pour conserver la maîtrise de ses données.",
+          "dependance": "ONLYOFFICE is open-source and GDPR compliant"
         },
         "infirmes": {
           "controle": "ONLYOFFICE is owned by Ascensio System SIA, a Latvian company which is a subsidiary of OnlyOffice Capital Group Pte. Ltd."
         },
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -367,8 +367,8 @@
           "controle": "Suite bureautique internationale libre"
         },
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -410,19 +410,17 @@
       "enrichi_le": "2026-11-11T17:29:24-05:00",
       "criteres_confirmes": {
         "criteres": [
-          "donnees",
-          "dependance"
+          "donnees"
         ],
         "preuves": {
-          "donnees": "Conçu en France mais auto-hébergeable au Canada.",
-          "dependance": "Ensemble d’outils numériques libres et gratuits pour créer, modifier et partager des contenus, collaborer et animer des ateliers ou des formations."
+          "donnees": "Conçu en France mais auto-hébergeable au Canada."
         },
         "infirmes": {
           "controle": "Conçu en France mais auto-hébergeable au Canada."
         },
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -464,19 +462,17 @@
       "enrichi_le": "2026-11-11T17:29:24-05:00",
       "criteres_confirmes": {
         "criteres": [
-          "donnees",
-          "dependance"
+          "donnees"
         ],
         "preuves": {
-          "donnees": "elle peut être auto-hébergée sur l’infrastructure choisie par l’organisation",
-          "dependance": "Euro-Office is open source and developed in public by a community of individuals and organizations."
+          "donnees": "elle peut être auto-hébergée sur l’infrastructure choisie par l’organisation."
         },
         "infirmes": {
           "controle": "Suite bureautique « open source » d'origine internationale"
         },
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -518,19 +514,17 @@
       "enrichi_le": "2026-11-11T17:29:24-05:00",
       "criteres_confirmes": {
         "criteres": [
-          "donnees",
-          "dependance"
+          "donnees"
         ],
         "preuves": {
-          "donnees": "Bien que français, il s'agit d'un logiciel libre qui peut être installé sur un serveur canadien.",
-          "dependance": "Sa licence libre vous autorise à étudier son code, à y contribuer ainsi qu’à l’installer sur votre propre serveur."
+          "donnees": "il s'agit d'un logiciel libre qui peut être installé sur un serveur canadien."
         },
         "infirmes": {
           "controle": "Framapad est proposé par une association française à but non lucratif : Framasoft"
         },
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -579,14 +573,14 @@
           "dependance"
         ],
         "preuves": {
-          "donnees": "Jami is completely peer-to-peer and doesn't require a server for relaying data between users.",
+          "donnees": "Son architecture pair-à-pair évite de faire transiter les conversations par un serveur central.",
           "controle": "Outil québécois de communication chiffrée",
-          "dependance": "Users who are on the same local network can communicate with Jami even if they are disconnected from the internet."
+          "dependance": "Jami is completely peer-to-peer and doesn't require a server for relaying data between users."
         },
         "infirmes": {},
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -639,8 +633,8 @@
           "controle": "Cet outil non canadien"
         },
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -685,13 +679,15 @@
           "dependance"
         ],
         "preuves": {
-          "donnees": "Cet outil international peut être utilisé gratuitement en ligne ou auto-hébergé sur l’infrastructure de son choix, sans compte utilisateur obligatoire.",
-          "dependance": "auto-hébergé sur l’infrastructure de son choix"
+          "donnees": "auto-hébergé sur l’infrastructure de son choix",
+          "dependance": "peut être utilisé gratuitement en ligne ou auto-hébergé sur l’infrastructure de son choix, sans compte utilisateur obligatoire"
         },
-        "infirmes": {},
+        "infirmes": {
+          "controle": "Cet outil international"
+        },
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -750,15 +746,15 @@
           "dependance"
         ],
         "preuves": {
-          "donnees": "Mastodon est un réseau social libre et décentralisé qui peut être hébergé au Canada, permettant ainsi de mieux maîtriser les données.",
+          "donnees": "Mastodon est un réseau social libre et décentralisé qui peut être hébergé au Canada",
           "dependance": "Mastodon peut être déployé sur votre propre infrastructure, ce qui vous permet de suivre et d'être suivi depuis n'importe quel autre serveur Mastodon et de n'être contrôlé par personne d'autre que vous."
         },
         "infirmes": {
-          "controle": "Bien que d’origine allemande, Mastodon est un réseau social libre et décentralisé"
+          "controle": "Bien que d’origine allemande"
         },
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -799,19 +795,17 @@
       "enrichi_le": "2026-11-11T17:29:24-05:00",
       "criteres_confirmes": {
         "criteres": [
-          "donnees",
-          "dependance"
+          "donnees"
         ],
         "preuves": {
-          "donnees": "peut être auto-hébergé pour garder la maîtrise des échanges et des données des membres",
-          "dependance": "The entire Discourse codebase is freely available on GitHub. No black boxes, no vendor lock-in, no surprises."
+          "donnees": "peut être auto-hébergé pour garder la maîtrise des échanges et des données des membres"
         },
         "infirmes": {
           "controle": "L'outil n'est pas canadien"
         },
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -860,8 +854,8 @@
         },
         "infirmes": {},
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -906,8 +900,8 @@
         },
         "infirmes": {},
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -951,12 +945,12 @@
           "controle"
         ],
         "preuves": {
-          "controle": "Plateforme québécoise de collecte de fonds"
+          "controle": "Plateforme québécoise de collecte de fonds permettant aux OBNL de recevoir des dons"
         },
         "infirmes": {},
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -1002,8 +996,8 @@
         },
         "infirmes": {},
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -1054,8 +1048,8 @@
         },
         "infirmes": {},
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -1106,8 +1100,8 @@
           "controle": "Elle est non canadienne mais libre et peut être auto-hébergée"
         },
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -1156,8 +1150,8 @@
         },
         "infirmes": {},
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -1207,8 +1201,8 @@
           "controle": "Plateforme libre non canadienne"
         },
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -1253,14 +1247,14 @@
           "donnees"
         ],
         "preuves": {
-          "donnees": "Non canadien, il propose une édition libre et auto-hébergeable."
+          "donnees": "il propose une édition libre et auto-hébergeable"
         },
         "infirmes": {
           "controle": "Non canadien, il propose une édition libre et auto-hébergeable."
         },
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -1302,17 +1296,19 @@
       "enrichi_le": "2026-11-11T17:29:24-05:00",
       "criteres_confirmes": {
         "criteres": [
-          "donnees"
+          "donnees",
+          "dependance"
         ],
         "preuves": {
-          "donnees": "OpenProject can be installed on-premises in your own organizations’s infrastructure, giving you complete control over your data and allowing you to manage it 100% yourself."
+          "donnees": "Sa version communautaire auto-hébergeable permet de conserver les données sur une infrastructure choisie.",
+          "dependance": "OpenProject can be installed on-premises in your own organizations’s infrastructure, giving you complete control over your data and allowing you to manage it 100% yourself."
         },
         "infirmes": {
           "controle": "Logiciel libre non canadien de gestion de projets"
         },
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -1362,8 +1358,8 @@
           "controle": "Il n'est pas canadien mais peut être auto-hébergé."
         },
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -1414,8 +1410,8 @@
           "controle": "Logiciel libre non canadien mais auto-hébergeable de gestion des tâches et projets"
         },
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -1462,8 +1458,8 @@
         },
         "infirmes": {},
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -1513,11 +1509,11 @@
           "dependance": "CiviCRM gives you total freedom in your choice of host. You're not tied to a particular data centre or country."
         },
         "infirmes": {
-          "controle": "Logiciel libre non canadien destiné aux associations et OBNL"
+          "controle": "Logiciel libre non canadien destiné aux associations et OBNL pour gérer leurs membres, donateurs, contacts, événements et communications."
         },
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -1562,8 +1558,8 @@
         },
         "infirmes": {},
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -1610,11 +1606,11 @@
           "donnees": "Checkout the documentation to install your own instance or contact us for professional hosting services."
         },
         "infirmes": {
-          "controle": "Outil non canadien de gestion d’événements et de groupes"
+          "controle": "Outil non canadien de gestion d’événements et de groupes permettant de publier des activités, créer des pages communautaires et mobiliser des participants."
         },
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -1660,12 +1656,12 @@
         ],
         "preuves": {
           "donnees": "100% données hébergées au Canada. Toujours.",
-          "controle": "Canadien. Depuis le tout premier jour."
+          "controle": "Signature électronique 100 % québécoise, sécurisée et légale, avec envois illimités, support humain et hébergement canadien."
         },
         "infirmes": {},
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -1725,14 +1721,14 @@
           "donnees"
         ],
         "preuves": {
-          "donnees": "Non canadienne, elle propose une édition auto-hébergeable."
+          "donnees": "elle propose une édition auto-hébergeable"
         },
         "infirmes": {
           "controle": "Non canadienne, elle propose une édition auto-hébergeable."
         },
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -1784,8 +1780,8 @@
         },
         "infirmes": {},
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -1836,8 +1832,8 @@
         },
         "infirmes": {},
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -1886,8 +1882,8 @@
         },
         "infirmes": {},
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -1934,12 +1930,12 @@
         ],
         "preuves": {
           "donnees": "Your contact lists and campaign data are stored on Canadian servers, under Canadian and Québec privacy law.",
-          "controle": "Invest in a homegrown tech company that understands Canadian businesses."
+          "controle": "Outil québécois de marketing par courriel"
         },
         "infirmes": {},
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -1990,8 +1986,8 @@
           "controle": "Avec ce logiciel non canadien"
         },
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -2039,12 +2035,11 @@
           "donnees": "Les données de navigation peuvent rester entièrement sur l’appareil."
         },
         "infirmes": {
-          "controle": "Navigateur Internet non canadien axé sur la protection de la vie privée",
-          "dependance": "Navigateur Internet non canadien axé sur la protection de la vie privée"
+          "controle": "Navigateur Internet non canadien axé sur la protection de la vie privée"
         },
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -2089,13 +2084,13 @@
           "controle"
         ],
         "preuves": {
-          "donnees": "Les serveurs et la base de donnée de Feuille de temps sont situés au Canada et alimentés par de l'énergie verte.",
+          "donnees": "Les serveurs et la base de donnée de Feuille de temps sont situés au Canada",
           "controle": "Feuille de temps est développé par Aynils, une compagnie basée à Moncton"
         },
         "infirmes": {},
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -2134,12 +2129,16 @@
       "page_lue": true,
       "enrichi_le": "2026-11-11T17:29:24-05:00",
       "criteres_confirmes": {
-        "criteres": [],
-        "preuves": {},
+        "criteres": [
+          "controle"
+        ],
+        "preuves": {
+          "controle": "Solution RH conçue au Québec"
+        },
         "infirmes": {},
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -2202,8 +2201,8 @@
         },
         "infirmes": {},
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -2245,17 +2244,19 @@
       "enrichi_le": "2026-11-11T17:29:53-05:00",
       "criteres_confirmes": {
         "criteres": [
-          "donnees"
+          "donnees",
+          "dependance"
         ],
         "preuves": {
-          "donnees": "Disponible dans le nuage ou en auto-hébergement sur l’infrastructure de son choix."
+          "donnees": "Disponible dans le nuage ou en auto-hébergement sur l’infrastructure de son choix.",
+          "dependance": "Disponible dans le nuage ou en auto-hébergement sur l’infrastructure de son choix."
         },
         "infirmes": {
-          "controle": "Gestionnaire de mots de passe non canadien libre permettant de stocker, générer et partager mots de passe, clés d’accès et informations sensibles dans un coffre chiffré."
+          "controle": "Gestionnaire de mots de passe non canadien libre"
         },
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -2300,15 +2301,15 @@
           "dependance"
         ],
         "preuves": {
-          "donnees": "perfect for self-hosted deployment where running the official resource-heavy service might not be ideal.",
-          "dependance": "il permet de stocker et partager mots de passe et autres informations sensibles sur un serveur contrôlé par l’organisation."
+          "donnees": "perfect for self-hosted deployment where running the official resource-heavy service might not be ideal",
+          "dependance": "stocker et partager mots de passe et autres informations sensibles sur un serveur contrôlé par"
         },
         "infirmes": {
-          "controle": "Non canadien, il permet de stocker et partager mots de passe et autres informations sensibles sur un serveur contrôlé par l’organisation."
+          "controle": "Non canadien"
         },
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -2354,15 +2355,15 @@
           "dependance"
         ],
         "preuves": {
-          "donnees": "Data stored locally, not sent to third-party servers",
+          "donnees": "Local-first:Data stored locally, not sent to third-party servers",
           "dependance": "Fonctionne hors ligne, sans compte utilisateur, avec sauvegarde facultative chiffrée dans iCloud ou Google Drive."
         },
         "infirmes": {
           "controle": "Application d’authentification à deux facteurs non canadienne"
         },
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -2409,14 +2410,14 @@
         ],
         "preuves": {
           "donnees": "You decide where to store your Items. You can store it in your own cloud or keep it as an encrypted file on an external drive.",
-          "dependance": "You store everything where you choose, and you don't need the Internet to access your Items."
+          "dependance": "La synchronisation est facultative et peut passer par une infrastructure auto-hébergée, sans compte utilisateur obligatoire."
         },
         "infirmes": {
           "controle": "gestionnaire de mots de passe non canadien"
         },
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -2463,13 +2464,13 @@
           "controle"
         ],
         "preuves": {
-          "donnees": "Nous vous assurons que l’intégralité de vos données sera hébergée en sol canadien, garantissant ainsi que vos informations sensibles ne quitteront jamais le pays.",
+          "donnees": "Nous vous assurons que l’intégralité de vos données sera hébergée en sol canadien",
           "controle": "Fièrement une entreprise à propriété 100% canadienne"
         },
         "infirmes": {},
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -2523,8 +2524,8 @@
           "dependance": "When data is uploaded to TitanFile, it is encrypted and stored on ISO-certified AWS and Azure data centers."
         },
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -2575,8 +2576,8 @@
           "dependance": "Il renforce la maîtrise des sauvegardes sans supprimer la dépendance aux plateformes d'origine."
         },
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -2623,14 +2624,14 @@
         ],
         "preuves": {
           "donnees": "Peut être auto-hébergée sur l’infrastructure choisie.",
-          "dependance": "Enjoy constant improvements from a thriving and transparent, entirely open-source community development model, free of lockins or paywalls."
+          "dependance": "Keep your data on servers you own, at all times. Nothing leaks, not even metadata."
         },
         "infirmes": {
           "controle": "Suite collaborative non canadienne"
         },
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -2675,12 +2676,12 @@
           "controle"
         ],
         "preuves": {
-          "controle": "ce service canadien de stockage infonuagique"
+          "controle": "ce service canadien de stockage infonuagique permet de sauvegarder, synchroniser et partager des fichiers en toute sécurité"
         },
         "infirmes": {},
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -2731,8 +2732,8 @@
         },
         "infirmes": {},
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -2773,12 +2774,16 @@
       "page_lue": true,
       "enrichi_le": "2026-11-11T17:34:05-05:00",
       "criteres_confirmes": {
-        "criteres": [],
-        "preuves": {},
+        "criteres": [
+          "controle"
+        ],
+        "preuves": {
+          "controle": "Assistant de réunions conçu au Canada"
+        },
         "infirmes": {},
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -2825,14 +2830,14 @@
         ],
         "preuves": {
           "donnees": "La reconnaissance vocale s’effectue localement sur l’ordinateur, sans envoyer les enregistrements ou transcriptions dans le nuage.",
-          "dependance": "Your voice stays on your computer. Get transcriptions without sending audio to the cloud."
+          "dependance": "Handy is an open source speech-to-text application that you can run on your own computer."
         },
         "infirmes": {
           "controle": "Outil non canadien, gratuit et libre de dictée vocale"
         },
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -2887,8 +2892,8 @@
         },
         "infirmes": {},
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -2940,8 +2945,8 @@
           "controle": "Lecteur de flux RSS non canadien, libre et minimaliste"
         },
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     },
     {
@@ -2987,15 +2992,15 @@
           "dependance"
         ],
         "preuves": {
-          "donnees": "Install wallabag on your own server and keep full control over updates, backups, data and access.",
+          "donnees": "Il peut être auto-hébergé pour conserver la maîtrise de ses archives.",
           "dependance": "Install wallabag on your own server and keep full control over updates, backups, data and access."
         },
         "infirmes": {
-          "controle": "Outil non canadien libre"
+          "controle": "Outil non canadien libre permettant de sauvegarder des articles et des pages Web pour les lire plus tard, sans publicité ni distractions."
         },
         "modele": "claude-fable-5-2",
-        "regle": null,
-        "date": "2026-11-12T07:41:55-05:00"
+        "regle": "A",
+        "date": "2026-11-12T09:00:02-05:00"
       }
     }
   ]

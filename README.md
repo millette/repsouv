@@ -1,6 +1,6 @@
 # Répertoire d'outils favorisant la souveraineté numérique : données
 
-*Documentation : [README](README.md) · [Implémentation](implementation.md) · [Historique](historique.md) · [Sommaire statistique](sommaire.md) · [Analyse de la classification](analyses/classification/README.md)*
+*Documentation : [README](README.md) · [Implémentation](implementation.md) · [Historique](historique.md) · [Sommaire statistique](sommaire.md)*
 
 ## En bref
 
@@ -161,7 +161,7 @@ De nouveaux tags peuvent s'ajouter après cette première phase, avec `--enrichi
 - **60 outils** répartis en **20 catégories** ; **8 outils à 3 étoiles** et **52 à 2 étoiles**.
 - **57 outils enrichis** sur 60, dont **30 logiciels libres ou partiellement libres** (52,6 %) : 24 libres, 6 partiellement libres, 1 à code source disponible, 26 propriétaires ; 3 outils ne sont pas encore enrichis.
 - **8 licences SPDX distinctes**, **5 forges de code** et **37 tags** utilisés sur 37.
-- Critères déduits des descriptions (`criteres`) : « données » pour les 60 outils, « contrôle » pour 29, « dépendance » pour 39. Critères **vérifiés** d'après la page de l'outil (`criteres_confirmes`, 57 outils) : « données » confirmé pour 45 et indéterminé pour 12 ; « contrôle » confirmé pour 24, infirmé pour 28, indéterminé pour 5 ; « dépendance » confirmé pour 22, infirmé pour 3, indéterminé pour 32.
+- Critères déduits des descriptions (`criteres`) : « données » pour les 60 outils, « contrôle » pour 29, « dépendance » pour 39. Critères **vérifiés** d'après la page de l'outil (`criteres_confirmes`, 57 outils) : « données » confirmé pour 44 et indéterminé pour 13 ; « contrôle » confirmé pour 26, infirmé pour 30, indéterminé pour 1 ; « dépendance » confirmé pour 20, infirmé pour 2, indéterminé pour 35.
 
 Le sommaire détaille chaque point par catégorie et par statut du code source, avec neuf graphiques possibles (huit dans l'état actuel), les licences, les forges, les tags et les écarts entre les critères déduits, l'évaluation enrichie et les critères vérifiés.
 
@@ -200,5 +200,4 @@ jaq '.outils[] | select(.criteres_confirmes and (.criteres_confirmes.criteres | 
 | [implementation.md](implementation.md) | Le flux de travail, le contenu du dépôt, les schémas, chaque script et ses options, la classification et ses analyses, l'enrichissement, la génération du sommaire, les scripts npm, les tests, le dépannage et les conventions de documentation |
 | [historique.md](historique.md) | Les étapes du projet et les décisions prises, par date |
 | [sommaire.md](sommaire.md) | Le sommaire statistique généré (données, dates, catégories, statuts, licences, critères, forges, tags, fiabilité) |
-| [analyses/classification/README.md](analyses/classification/README.md) | L'analyse de la classification des étoiles : essais, confirmations par IA, coûts, décision |
 | [spike-mion/RESULTATS.md](spike-mion/RESULTATS.md) | L'expérience sur les schémas JSON de mion RunTypes (dossier isolé, hors du projet principal) |

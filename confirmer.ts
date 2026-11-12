@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Confirmation des critères un par un, avec citation vérifiable (piste 1 de l'analyse de classification, voir
-// analyses/classification/README.md). Pour chaque outil enrichi, on donne à une IA la page de l'outil et les trois
+// implementation.md). Pour chaque outil enrichi, on donne à une IA la page de l'outil et les trois
 // critères (sans le score ni les critères du répertoire), et on lui demande, pour chacun, « confirmé », « infirmé » ou
 // « indéterminé », avec une citation copiée mot pour mot des textes fournis. Une citation introuvable rejette la réponse.
 // Les jetons et le coût en dollars de chaque appel sont comptés et inscrits dans le fichier de sortie.
@@ -391,7 +391,7 @@ export function fournisseurClaude(modele: string): Fournisseur {
 
 // ---------- ligne de commande ----------
 
-const DOSSIER = "analyses/classification";
+const DOSSIER = "confirmations";
 
 if (import.meta.main) {
   await lancer(async () => {

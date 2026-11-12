@@ -1,6 +1,6 @@
 # Implémentation du répertoire d'outils favorisant la souveraineté numérique
 
-*Documentation : [README](README.md) · [Implémentation](implementation.md) · [Historique](historique.md) · [Sommaire statistique](sommaire.md) · [Analyse de la classification](analyses/classification/README.md)*
+*Documentation : [README](README.md) · [Implémentation](implementation.md) · [Historique](historique.md) · [Sommaire statistique](sommaire.md)*
 
 Ce document décrit comment les données du [README](README.md) sont produites et maintenues : le flux de travail, les scripts et leurs options, la classification et ses analyses, l'enrichissement par IA, la génération du sommaire, les tests et le dépannage. Le code est en TypeScript, exécuté avec [nub](https://nubjs.com/).
 
@@ -43,9 +43,7 @@ Schémas          schemas-types.ts ──▶ obuild + RunTypes ──▶ generer
 |---|---|
 | `outils.json`, `criteres.json`, `tags.json` | Les données (voir [Fichiers JSON](README.md#fichiers-json)) |
 | `extract.ts`, `classify.ts`, `update.ts` | Les trois scripts du flux de travail |
-| `confirmer.ts`, `appliquer-confirmations.ts`, `analyses/classification/` | Confirmation des critères par IA avec citation, son inscription dans `outils.json` (`criteres_confirmes`), et la trace de l'analyse de classification (essais, résultats chiffrés, sorties des deux fournisseurs) : voir [`analyses/classification/README.md`](analyses/classification/README.md) |
-| `classify4.ts` | Quatrième version : les critères de `classify.ts` moins ceux que l'enrichissement et les confirmations d'IA contredisent (47 outils sur 57 d'accord avec l'évaluation enrichie, contre 39). Pas utilisée par `build` ni `update` ; voir [Classification](#classification) |
-| `classify2.ts` | Deuxième version de `classify.ts` (mêmes critères, `confiance` recalibrée d'après l'évaluation enrichie). Pas encore utilisée par `build` ni par `update`; voir [Classification](#classification) |
+| `confirmer.ts`, `appliquer-confirmations.ts`, `confirmations/` | Confirmation des critères par IA, citation à l'appui, son inscription dans `outils.json` (`criteres_confirmes`), et les verdicts des deux fournisseurs (`confirmations-openai.json`, `confirmations-claude.json`, avec jetons et coût par appel) |
 | `sommaire.ts`, `sommaire.md`, `graphiques/` | Le script du sommaire statistique, le sommaire qu'il a généré et les graphiques (SVG et PNG) qu'il contient (mis à jour automatiquement par `nub run enrichir`, ou par `nub run update --sommaire`, quand quelque chose a changé; sinon à regénérer avec `nub run sommaire`) |
 | `enrichir.ts`, `statistiques.ts`, `graphiques.ts`, `fichiers.ts`, `temps.ts`, `spdx.ts`, `progress.ts`, `couleurs.ts`, `ids.ts`, `cli.ts` | Modules utilisés par les scripts |
 | `schemas/`, `generer-schemas.ts`, `schemas-types.ts`, `affiner-schema.ts`, `build.config.ts`, `tsconfig.schemas.json` | Les schémas JSON des trois fichiers de données et ce qui les génère (voir [Schémas JSON](#schémas-json)) |
@@ -55,7 +53,7 @@ Schémas          schemas-types.ts ──▶ obuild + RunTypes ──▶ generer
 | `LICENSE` | Texte de la licence AGPL-3.0 du code |
 | `LICENSE-CC-BY-SA-4.0` | Texte de la licence CC BY-SA 4.0 des données (voir [Licences](README.md#licences)) |
 | `LICENSES/`, `REUSE.toml` | Les mêmes textes de licence, nommés par identifiant SPDX (`AGPL-3.0-or-later.txt`, `CC-BY-SA-4.0.txt`), et la déclaration de licence des fichiers sans en-tête, selon la spécification [REUSE](https://reuse.software/) (voir [Licences](README.md#licences)) |
-| `.gitignore` | Ignore `.env`, `node_modules/`, `dist/` et `.mion/` (sorties de la génération des schémas), `analyses/classification/.cache/` (pages téléchargées par `confirmer.ts`), les dossiers locaux `.claude` et `.agents` (et `skills-lock.json`), et des copies de sauvegarde (`pre-enrichir-outils.json`, voir [Enrichissement par IA](#enrichissement-par-ia), et `orig-sommaire.md`) |
+| `.gitignore` | Ignore `.env`, `node_modules/`, `dist/` et `.mion/` (sorties de la génération des schémas), `confirmations/.cache/` (pages téléchargées par `confirmer.ts`), les dossiers locaux `.claude` et `.agents` (et `skills-lock.json`), et des copies de sauvegarde (`pre-enrichir-outils.json`, voir [Enrichissement par IA](#enrichissement-par-ia), et `orig-sommaire.md`) |
 
 ## Schémas JSON
 
@@ -91,34 +89,19 @@ nub classify.ts <outils.json> [sortie.json]
 
 Ajoute `criteres` et `confiance` à chaque outil (réécrit `outils.json` en place si aucune sortie n'est donnée), en gardant tous les autres champs. `meta.updated_at` ne change que si le contenu change. Voir [Classification](#classification). Une option inconnue est refusée; seule `--force` est tolérée, sans effet, pour que `nub run build --force` ne laisse pas un fichier à moitié construit.
 
-### `classify2.ts`
-
-```sh
-nub classify2.ts <outils.json> [sortie.json]
-```
-
-Variante de `classify.ts` : mêmes options, mêmes `criteres` (le test vérifie qu'ils sont identiques pour tous les outils), mais `confiance` recalibrée (fonctions exportées `classer2` et `confianceV2`). Elle n'est appelée ni par `build` ni par `update`, et n'a pas été appliquée à `outils.json` : pour l'essayer sans risque, `nub classify2.ts outils.json /tmp/outils-v2.json`. Les raisons et les mesures sont dans [Classification](#classification).
-
-### `classify4.ts`
-
-```sh
-nub classify4.ts [--confirmations=F] <outils.json> [sortie.json]
-```
-
-Part des critères de `classify.ts` (et de la confiance de `classify2.ts`) et en **retire** ceux que les données contredisent, sans jamais en ajouter : R1, « dépendance » pour un outil propriétaire sans tag `auto-hebergeable` ni `hors-ligne` (champs d'enrichissement) ; R2, « données » quand il ne tient qu'à l'a priori « un fournisseur canadien héberge au Canada » et qu'aucune confirmation d'IA ne l'établit (`--confirmations=F`, un fichier de `confirmer.ts` ; sans lui, R2 ne s'applique pas). Un outil non enrichi garde les critères de `classify.ts`. Le résultat peut compter **moins de critères que d'étoiles**, ce qui rompt la convention de `outils.json` : à utiliser sur une copie ou un fichier de sortie. Mesures et réserves dans [Classification](#classification).
-
 ### `confirmer.ts`
 
 ```sh
 nub confirmer.ts --fournisseur=openai|claude [--modele=M] [--limite=N] [--budget=USD] [--sortie=F] [--regle=A] [--liste=noms.json] [--dry-run] [outils.json]
 ```
 
-Pour chaque outil enrichi, donne à une IA la page de l'outil et les trois critères (sans le score ni les critères du répertoire) et lui demande, critère par critère, « confirmé », « infirmé » ou « indéterminé », avec une **citation copiée mot pour mot** des textes fournis. Une citation introuvable rejette la réponse (redemandée une fois). C'est la piste 1 de l'[analyse de classification](analyses/classification/README.md) ; le résultat est écrit dans `analyses/classification/confirmations-<fournisseur>.json`, puis inscrit dans `outils.json` (champ `criteres_confirmes`) par `appliquer-confirmations.ts`.
+Pour chaque outil enrichi, donne à une IA la page de l'outil et les trois critères (sans le score ni les critères du répertoire) et lui demande, critère par critère, « confirmé », « infirmé » ou « indéterminé », avec une **citation copiée mot pour mot** des textes fournis. Une citation introuvable rejette la réponse (redemandée une fois). Le résultat est écrit dans `confirmations/confirmations-<fournisseur>.json`, puis inscrit dans `outils.json` (champ `criteres_confirmes`) par `appliquer-confirmations.ts`.
 
 - `openai` : API OpenAI (Responses), clé `OPENAI_API_KEY` ; modèle par défaut celui de l'enrichissement. `claude` : la commande `claude -p` (aucune clé `ANTHROPIC_API_KEY`, mais la session Claude Code ; isolée du projet, sans outil), modèle par défaut `claude-fable-5-2`.
 - **Coût :** les jetons et le coût en dollars de chaque appel sont inscrits dans la sortie (`totaux`). Pour OpenAI, le coût est calculé avec les prix de `PRIX` ; pour `claude`, c'est le coût au prix catalogue que rapporte la CLI. `--budget` (15 $ par défaut) arrête avant l'appel suivant quand le coût cumulé l'atteint.
 - **Reprise :** les outils déjà confirmés dans le fichier de sortie ne sont pas redemandés. `--liste=F` limite aux outils nommés dans `F` (tableau JSON de noms).
-- **Règles de lecture :** `--regle=A` ajoute aux consignes une précision pour le critère « contrôle » (la nationalité mentionnée suffit, sauf origine ou filiale étrangère), sans modifier `criteres.json`. Les règles sont dans `REGLES` ; leur effet est mesuré dans l'[analyse](analyses/classification/README.md).
+- **Règles de lecture :** `--regle=A` ajoute aux consignes une précision pour le critère « contrôle » (la nationalité mentionnée suffit, sauf origine ou filiale étrangère), sans modifier `criteres.json`. Les règles sont dans `REGLES` ; sans règle, les deux fournisseurs divergeaient sur « contrôle » pour 21 outils sur 57 (OpenAI répondait « indéterminé » à la seule nationalité, Claude « confirmé »).
+- **Résultats (2026-11-12, règle A, 57 outils, aucune citation rejetée) :** OpenAI `gpt-6-astra`, 57 appels, 105 927 jetons en entrée et 8 710 en sortie, 1,49 $ ; Claude `claude-fable-5-2`, 57 appels, 243 084 jetons en entrée (dont 102 058 lus du cache, la CLI ajoutant son propre contexte) et 15 033 en sortie, 2,88 $ au prix catalogue. Les deux donnent le même statut pour « contrôle » sur les 57 outils (26 confirmés, 30 infirmés, 1 indéterminé), pour « données » sur 56 et pour « dépendance » sur 49 ; les ensembles de critères confirmés sont identiques pour 49 outils sur 57. Aucun outil n'a plus de critères confirmés que d'étoiles ; 27 (Claude) ou 33 (OpenAI) en ont autant. Les verdicts de Claude, modèle indépendant de celui de l'enrichissement, sont ceux inscrits dans `criteres_confirmes`.
 - **Confidentialité :** le nom, la catégorie, le lien, la description et l'extrait de la page (6 000 caractères au plus) de chaque outil sont envoyés au fournisseur choisi.
 
 ### `appliquer-confirmations.ts`
@@ -252,23 +235,11 @@ C'est une heuristique, pas une vérité : un critère retenu avec une confiance 
 
 Le [sommaire](sommaire.md) montre l'effet de cette heuristique : dans l'état actuel du répertoire, elle attribue le critère « données » à tous les outils, alors que l'évaluation enrichie ne le retient que pour une partie des outils enrichis. Les critères du répertoire sont donc des déductions prudentes à lire avec l'évaluation enrichie, pas des mesures.
 
-### Comparaison avec l'évaluation enrichie et `classify2.ts`
+### Comparaison avec l'évaluation enrichie
 
 Sur les 57 outils enrichis, `criteres` (déduit) et `evaluation_enrichie.criteres` (second avis de l'IA) concordent exactement pour 39 outils (68 %). Ces 39 sont **tous** les outils où l'IA retient autant de critères que d'étoiles. Pour les 18 autres, l'IA confirme **moins** de critères que d'étoiles (9 outils à 2 étoiles avec 1 critère confirmé, 4 avec aucun, 5 outils à 3 étoiles avec 2) et ne retient jamais un critère que `classify.ts` a écarté. Le **choix** des critères est donc déjà au plafond : la différence vient de ce que la page de l'outil permet de confirmer, pas d'une erreur de classement, et le `score` de la source reste la référence. Une version qui produirait moins de critères que d'étoiles contredirait la source.
 
-Ce qui s'améliore, c'est `confiance`. `classify.ts` la tire de l'écart entre le dernier critère retenu et le premier écarté : à 3 étoiles, tous les critères sont retenus, donc elle vaut toujours « élevée », alors que l'IA n'en confirme que deux pour 5 des 8 outils à 3 étoiles. `classify2.ts` tient aussi compte du nombre de critères retenus **sans aucun indice dans la description** (0 : « élevée », 1 : « moyenne », 2 ou plus : « faible ») et garde le plus bas des deux niveaux. Mesure sur une copie de `outils.json` (10 outils changent de confiance, aucun critère ne change) :
-
-| Confiance | Accord de l'IA sur le nombre de critères, `classify.ts` | `classify2.ts` |
-|---|---|---|
-| élevée | 33 sur 39 | 27 sur 29 |
-| moyenne | 5 sur 15 | 10 sur 21 |
-| faible | 1 sur 3 | 2 sur 7 |
-
-La capacité de la confiance à séparer les outils où l'IA est d'accord de ceux où elle ne l'est pas (AUC) passe de 0,756 à 0,811. **Cet écart n'est pas significatif** avec 57 outils (intervalle bootstrap à 95 % de la différence : environ de -0,08 à +0,19), et la règle a été choisie en regardant ces mêmes données : à confirmer quand d'autres outils seront enrichis. Limite : la description seule ne permet pas de prévoir quels critères « canadiens » l'IA ne confirmera pas (les descriptions des outils confirmés et non confirmés sont indiscernables), et l'IA n'est pas une vérité : c'est un deuxième avis.
-
-**`classify4.ts` : retirer plutôt que choisir.** Puisque le classement est bon et que l'écart tient au nombre de critères, `classify4.ts` retire ceux que les données contredisent (règles R1 et R2 ci-dessus). Sur une copie de `outils.json`, avec les confirmations de Claude : 47 outils sur 57 d'accord avec l'évaluation enrichie (82 %, Jaccard 0,874) contre 39 (68 %), 10 outils gagnés et 2 perdus (test des signes, p ≈ 0,04) ; 17 outils changent, par retrait seulement, et ont alors un critère de moins que d'étoiles. Sans confirmations (R1 seule) : 43. Les règles ont été choisies en regardant ces mêmes 57 outils, et `source` et `tags` viennent du même appel à l'IA que l'évaluation enrichie : c'est une cohérence, à reconfirmer sur d'autres outils. Le détail des 17 règles essayées est dans [`analyses/classification/README.md`](analyses/classification/README.md).
-
-**Décision.** Les étoiles et les critères vérifiés ne mesurent pas la même chose : les premières sont une donnée de la source, les seconds dépendent de ce que la page de l'outil dit. Aucune règle ne peut les faire coïncider sans sacrifier l'une des deux informations. `criteres` reste donc lié aux étoiles, et les critères vérifiés sont exposés à part, dans `criteres_confirmes`, avec la citation à l'appui (voir [`outils.json`](README.md#outilsjson)). `classify2.ts` et `classify4.ts` restent disponibles comme variantes, non adoptées.
+**Décision.** Les étoiles et les critères vérifiés ne mesurent pas la même chose : les premières sont une donnée de la source, les seconds dépendent de ce que la page de l'outil dit. Aucune règle ne peut les faire coïncider sans sacrifier l'une des deux informations. `criteres` reste donc lié aux étoiles, et les critères vérifiés sont exposés à part, dans `criteres_confirmes`, avec la citation à l'appui (voir [`outils.json`](README.md#outilsjson)). Des variantes de `classify.ts` (confiance recalibrée, retrait des critères contredits) ont été essayées sur ces 57 outils puis retirées : leurs règles avaient été choisies en regardant ces mêmes données, et aucune ne faisait mieux que cette séparation (voir [historique.md](historique.md)).
 
 ## Enrichissement par IA
 
@@ -410,7 +381,6 @@ Si le `score` ou les `criteres` d'un outil déjà enrichi changent, après un `c
 |---|---|
 | `nub run extract` | `nub extract.ts outils.json criteres.json` : importe depuis la page en ligne. Refuse d'écraser un travail existant sans `--force` |
 | `nub run classify` | `nub classify.ts outils.json` : classe les outils en place |
-| `nub run classify2` | `nub classify2.ts outils.json` : comme `classify`, avec la `confiance` recalibrée (pas encore adoptée; modifie `confiance` et `meta.updated_at` de `outils.json`, voir [Classification](#classification)) |
 | `nub run build` | `extract` puis `classify` : construit `outils.json` depuis la page en ligne. Refuse d'écraser un enrichissement ou un historique existant |
 | `nub run build:force` | Comme `build`, mais **remplace tout**, enrichissement et historique compris |
 | `nub run update` | `nub update.ts` : synchronise `outils.json` avec la page en ligne. Les options passent directement : `nub run update --dry-run`, ou `nub run update --sommaire` pour mettre aussi le sommaire à jour si des changements sont détectés |
@@ -420,9 +390,8 @@ Si le `score` ou les `criteres` d'un outil déjà enrichi changent, après un `c
 | `nub run schemas:verifier` | Comme `schemas`, mais sans rien écrire : échoue si les schémas commités sont périmés |
 | `nub run licences` | `uvx reuse lint` : vérifie que chaque fichier suivi déclare sa licence et son droit d'auteur ([REUSE](https://reuse.software/) 3.3). Demande [uv](https://docs.astral.sh/uv/) et un accès réseau la première fois ; non inclus dans `nub run test` |
 | `nub run confirmer` | `nub confirmer.ts` : confirme les critères un par un avec une IA (`--fournisseur=openai` ou `--fournisseur=claude`, obligatoire), citation à l'appui. **Appelle une API payante** ; voir [`confirmer.ts`](#confirmerts) |
-| `nub run classify4` | `nub classify4.ts --confirmations=analyses/classification/confirmations-claude.json outils.json` : comme `classify`, mais retire les critères que l'enrichissement et les confirmations contredisent (pas adopté ; **modifie `outils.json` en place** et y laisse des outils avec moins de critères que d'étoiles, voir [Classification](#classification)) |
-| `nub run appliquer-confirmations` | `nub appliquer-confirmations.ts analyses/classification/confirmations-claude.json outils.json` : inscrit `criteres_confirmes` dans `outils.json` à partir des confirmations de Claude commitées |
-| `nub run test` | Lance les dix-huit fichiers de tests, puis `schemas:verifier` |
+| `nub run appliquer-confirmations` | `nub appliquer-confirmations.ts confirmations/confirmations-claude.json outils.json` : inscrit `criteres_confirmes` dans `outils.json` à partir des confirmations de Claude commitées |
+| `nub run test` | Lance les seize fichiers de tests, puis `schemas:verifier` |
 | `nub run typecheck` | `tsrs -p .` : vérifie les types avec [tsrs](https://www.npmjs.com/package/tsrs), un portage en Rust de `tsc` |
 
 ## Tests
@@ -432,8 +401,6 @@ Dans `test/`, avec `node:test` lancé par `nub` :
 - `classify.test.ts` : cas de classification connus, un nombre de critères égal au score pour les 60 outils, les options de la ligne de commande, le refus d'un fichier au mauvais format, et la couleur de « Erreur: ».
 - `confirmer.test.ts` : validation des verdicts (statuts, citation obligatoire, exacte et d'au plus 300 caractères), accord entre ensembles, coût OpenAI, lecture de la sortie de `claude -p`, et la boucle avec de faux fournisseurs (nouvel essai, échec, page inaccessible, budget, limite, requête sans score ni critères du répertoire).
 - `appliquer-confirmations.test.ts` : forme de `criteres_confirmes` (critères, citations des confirmés et des infirmés, modèle, règle, date de Toronto), outils sans verdict laissés intacts, entrées non modifiées, champ compté parmi les champs d'enrichissement, la CLI sur une copie, et le fichier réel (le champ est présent pour chaque outil enrichi, chaque critère confirmé a sa citation, jamais plus de critères confirmés que d'étoiles).
-- `classify4.test.ts` : repli sur `classify.ts` sans enrichissement, règles R1 et R2 (cas gardés et retirés), sous-ensemble ordonné de `classify.ts` pour tous les outils, confiance de `classify2.ts`, accord de 47 contre 39 avec l'évaluation enrichie sur les confirmations commitées, lecture des confirmations, et la CLI sur une copie.
-- `classify2.test.ts` : mêmes critères que `classify.ts` pour tous les outils, les niveaux de `confiance` (élevée, moyenne, faible, indéterminée, trois étoiles), `confianceV2`, la comparaison avec l'évaluation enrichie (aucun faux négatif, AUC au moins égale à celle de `classify.ts`), et la CLI sur une copie de `outils.json`.
 - `extract.test.ts` : conversion de la date de la page en heure de Toronto, cohérence de `criteres.json` et `outils.json`, rejet d'une page sans date, téléchargement (sur un serveur local, sans réseau), erreurs de téléchargement, le garde-fou contre l'écrasement (avec et sans `--force`, y compris pour un fichier au mauvais format), et la preuve qu'aucun fichier HTML local n'est lu.
 - `update.test.ts` : nouveau, modification, retrait, comeback, conservation des dates des outils inchangés et des champs d'enrichissement, la présentation colorée du résumé et du journal (même texte avec ou sans couleurs), et les conditions de la mise à jour automatique du sommaire (dont `--sommaire` et `--sans-sommaire`) et l'avertissement quand le sommaire n'est pas à jour.
 - `enrichir.test.ts` : vocabulaire de `tags.json`, date d'enrichissement, validation (tags, Markdown permis et interdit, licences SPDX et maison, évaluation), explication des écarts, extraction de la page, pages inaccessibles ou presque vides (avertissement, refus par défaut, `--sans-page`), enrichissement une seule fois, limite, reprise et échecs, avec de faux générateurs.
@@ -445,7 +412,7 @@ Dans `test/`, avec `node:test` lancé par `nub` :
 - `sommaire.test.ts` : statistiques (statuts, licences, familles, tags, critères par statut, critères vérifiés par verdict et par statut, forges, dates), rendu Markdown (sections, images insérées dans leur section, cas sans outil enrichi), validation du résumé et nouvelle tentative, `genererSommaire` (écriture, options, conservation du sommaire existant en cas d'échec), avec des données fictives (jamais `outils.json`, jamais le réseau).
 - `graphiques.test.ts` : spécifications Vega-Lite (données incluses, champs existants, pourcentages, verdicts des critères vérifiés, graphiques omis sans données), écriture et nettoyage des fichiers, message si vl-convert est absent, et conversion réelle en SVG et PNG (ignorée si vl-convert n'est pas installé). Les données fictives des tests sont dans `donnees-fictives.ts`.
 - `schemas.test.ts` : les trois fichiers de données réels sont valides selon les schémas (avec Ajv, indépendant de RunTypes), et des variantes invalides sont refusées (clé inconnue, `score` hors de 0 à 3, `source` ou `changement` inconnus, tags en trop ou en double, date non ISO, `meta` manquant).
-- `documentation.test.ts` : les huit fichiers Markdown du dépôt (README, `implementation.md`, `historique.md`, `sommaire.md`, l'analyse et ses résultats, le spike) existent, leurs liens relatifs et leurs ancres existent (ancres calculées comme GitHub, liens dans le code ignorés), chacun commence par un titre et la ligne *Documentation*, sans tiret cadratin ni balise HTML (sauf l'image du README), et les fichiers générés disent par quel script et qu'ils ne se modifient pas à la main.
+- `documentation.test.ts` : les cinq fichiers Markdown du dépôt (README, `implementation.md`, `historique.md`, `sommaire.md`, le spike) existent, leurs liens relatifs et leurs ancres existent (ancres calculées comme GitHub, liens dans le code ignorés), chacun commence par un titre et la ligne *Documentation*, sans tiret cadratin ni balise HTML (sauf l'image du README), et les fichiers générés disent par quel script et qu'ils ne se modifient pas à la main.
 - `en-tetes.test.ts` : chaque fichier `.ts` porte les en-têtes SPDX; la licence du code est la même dans `package.json`; les deux textes de licence sont présents, à la racine (`LICENSE*`) et dans `LICENSES/`; chaque schéma JSON déclare la licence du code dans `$comment`; et `REUSE.toml` annote `schemas/**` et le reste des fichiers sans en-tête (AGPL-3.0-or-later), ainsi que les données et leurs dérivés (CC-BY-SA-4.0). Ce test ne remplace pas `nub run licences`, qui contrôle tous les fichiers.
 
 ## Dépannage
@@ -469,7 +436,7 @@ Dans `test/`, avec `node:test` lancé par `nub` :
 
 Les fichiers Markdown du dépôt suivent les mêmes conventions :
 
-- un titre de niveau 1, puis une ligne *Documentation :* qui relie les six fichiers ([README](README.md), [implementation.md](implementation.md), [historique.md](historique.md), [sommaire.md](sommaire.md), [analyses/classification/README.md](analyses/classification/README.md), [spike-mion/RESULTATS.md](spike-mion/RESULTATS.md)) ; les fichiers générés (`sommaire.md`, `analyses/classification/resultats-*.md`) ajoutent une ligne qui donne la date et le script qui les produit, et ne se modifient pas à la main ;
+- un titre de niveau 1, puis une ligne *Documentation :* qui relie les cinq fichiers ([README](README.md), [implementation.md](implementation.md), [historique.md](historique.md), [sommaire.md](sommaire.md), [spike-mion/RESULTATS.md](spike-mion/RESULTATS.md)) ; les fichiers générés (`sommaire.md`) ajoutent une ligne qui donne la date et le script qui les produit, et ne se modifient pas à la main ;
 - un sommaire du fichier (**Sommaire :**) quand il a plus de quatre sections ;
 - des liens relatifs au fichier, et des ancres de la forme `fichier.md#section` pour renvoyer à une section d'un autre fichier ;
 - la typographie française (espace avant « : », « ; », « ? » et « ! », guillemets « ») ; pas de tiret cadratin ; aucune balise HTML, sauf le `<img>` en tête du README, pour fixer la largeur de l'image ;

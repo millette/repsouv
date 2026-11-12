@@ -2,21 +2,22 @@
   "meta": {
     "fournisseur": "claude",
     "modele": "claude-fable-5-2",
+    "regle": "A",
     "prix": {
       "entree": 8,
       "cache_lecture": 0.2,
       "sortie": 40
     },
-    "date": "2026-11-12T12:41:55.825Z",
+    "date": "2026-11-12T14:00:02.078Z",
     "arret": null
   },
   "totaux": {
     "appels": 57,
-    "entree": 231456,
-    "sortie": 21562,
-    "cache_lecture": 90831,
-    "cache_ecriture": 140511,
-    "cout_usd": 3.1297342,
+    "entree": 243084,
+    "sortie": 15033,
+    "cache_lecture": 102058,
+    "cache_ecriture": 140912,
+    "cout_usd": 2.8772356,
     "echecs": 0
   },
   "resultats": [
@@ -31,20 +32,20 @@
         },
         "controle": {
           "statut": "infirme",
-          "preuve": "Il est d'origine internationale"
+          "preuve": "Il est d'origine internationale mais offre le contrôle des données"
         },
         "dependance": {
-          "statut": "confirme",
-          "preuve": "Host Matomo on-premise or in the cloud with full ownership, no lock-in, and the flexibility to extend it your way."
+          "statut": "indetermine",
+          "preuve": null
         }
       },
       "usage": {
-        "entree": 4708,
-        "sortie": 522,
-        "cache_lecture": 4706,
-        "cache_ecriture": 0
+        "entree": 4912,
+        "sortie": 163,
+        "cache_lecture": 1638,
+        "cache_ecriture": 3272
       },
-      "cout_usd": 0.021837199999999998
+      "cout_usd": 0.0592156
     },
     {
       "nom": "Klipfolio",
@@ -65,12 +66,12 @@
         }
       },
       "usage": {
-        "entree": 3839,
+        "entree": 4043,
         "sortie": 119,
-        "cache_lecture": 3837,
-        "cache_ecriture": 0
+        "cache_lecture": 1638,
+        "cache_ecriture": 2403
       },
-      "cout_usd": 0.0055434
+      "cout_usd": 0.0435516
     },
     {
       "nom": "cDox",
@@ -83,7 +84,7 @@
         },
         "controle": {
           "statut": "confirme",
-          "preuve": "Outil canadien de rédaction et de tableur collaboratifs permettant de créer, modifier et partager des documents à plusieurs."
+          "preuve": "Outil canadien de rédaction et de tableur collaboratifs"
         },
         "dependance": {
           "statut": "confirme",
@@ -91,12 +92,12 @@
         }
       },
       "usage": {
-        "entree": 4854,
-        "sortie": 688,
-        "cache_lecture": 4852,
+        "entree": 5058,
+        "sortie": 472,
+        "cache_lecture": 5056,
         "cache_ecriture": 0
       },
-      "cout_usd": 0.0285064
+      "cout_usd": 0.0199072
     },
     {
       "nom": "Antidote",
@@ -104,8 +105,8 @@
       "tentatives": 1,
       "confirmation": {
         "donnees": {
-          "statut": "confirme",
-          "preuve": "Le logiciel s’installe localement sur votre ordinateur Windows ou Mac."
+          "statut": "indetermine",
+          "preuve": null
         },
         "controle": {
           "statut": "confirme",
@@ -117,12 +118,12 @@
         }
       },
       "usage": {
-        "entree": 4744,
-        "sortie": 444,
-        "cache_lecture": 1434,
-        "cache_ecriture": 3308
+        "entree": 4948,
+        "sortie": 172,
+        "cache_lecture": 4946,
+        "cache_ecriture": 0
       },
-      "cout_usd": 0.0709908
+      "cout_usd": 0.007885200000000002
     },
     {
       "nom": "CryptPad",
@@ -134,21 +135,21 @@
           "preuve": "L'outil peut être auto-hébergé ou utilisé via une instance québécoise."
         },
         "controle": {
-          "statut": "indetermine",
-          "preuve": null
+          "statut": "infirme",
+          "preuve": "easy and smart solution - European project!"
         },
         "dependance": {
-          "statut": "indetermine",
-          "preuve": null
+          "statut": "confirme",
+          "preuve": "L'outil peut être auto-hébergé ou utilisé via une instance québécoise."
         }
       },
       "usage": {
-        "entree": 4158,
-        "sortie": 152,
-        "cache_lecture": 1434,
+        "entree": 4362,
+        "sortie": 494,
+        "cache_lecture": 1638,
         "cache_ecriture": 2722
       },
-      "cout_usd": 0.0499348
+      "cout_usd": 0.0636556
     },
     {
       "nom": "OnlyOffice",
@@ -157,7 +158,7 @@
       "confirmation": {
         "donnees": {
           "statut": "confirme",
-          "preuve": "Besides, our solutions can be deployed on private servers."
+          "preuve": "Cet outil, d'origine internationale, est libre et auto-hébergeable pour conserver la maîtrise de ses données."
         },
         "controle": {
           "statut": "infirme",
@@ -165,16 +166,16 @@
         },
         "dependance": {
           "statut": "confirme",
-          "preuve": "Cet outil, d'origine internationale, est libre et auto-hébergeable pour conserver la maîtrise de ses données."
+          "preuve": "ONLYOFFICE is open-source and GDPR compliant"
         }
       },
       "usage": {
-        "entree": 4677,
-        "sortie": 626,
-        "cache_lecture": 1434,
+        "entree": 4881,
+        "sortie": 672,
+        "cache_lecture": 1638,
         "cache_ecriture": 3241
       },
-      "cout_usd": 0.0771988
+      "cout_usd": 0.0790796
     },
     {
       "nom": "Collabora Online",
@@ -195,12 +196,12 @@
         }
       },
       "usage": {
-        "entree": 4183,
-        "sortie": 604,
-        "cache_lecture": 1434,
+        "entree": 4387,
+        "sortie": 485,
+        "cache_lecture": 1638,
         "cache_ecriture": 2747
       },
-      "cout_usd": 0.0684148
+      "cout_usd": 0.06369559999999999
     },
     {
       "nom": "La Digitale",
@@ -216,17 +217,17 @@
           "preuve": "Conçu en France mais auto-hébergeable au Canada."
         },
         "dependance": {
-          "statut": "confirme",
-          "preuve": "Ensemble d’outils numériques libres et gratuits pour créer, modifier et partager des contenus, collaborer et animer des ateliers ou des formations."
+          "statut": "indetermine",
+          "preuve": null
         }
       },
       "usage": {
-        "entree": 5033,
-        "sortie": 514,
-        "cache_lecture": 1434,
+        "entree": 5237,
+        "sortie": 159,
+        "cache_lecture": 1638,
         "cache_ecriture": 3597
       },
-      "cout_usd": 0.0784148
+      "cout_usd": 0.0642556
     },
     {
       "nom": "Euro-Office",
@@ -235,24 +236,24 @@
       "confirmation": {
         "donnees": {
           "statut": "confirme",
-          "preuve": "elle peut être auto-hébergée sur l’infrastructure choisie par l’organisation"
+          "preuve": "elle peut être auto-hébergée sur l’infrastructure choisie par l’organisation."
         },
         "controle": {
           "statut": "infirme",
           "preuve": "Suite bureautique « open source » d'origine internationale"
         },
         "dependance": {
-          "statut": "confirme",
-          "preuve": "Euro-Office is open source and developed in public by a community of individuals and organizations."
+          "statut": "indetermine",
+          "preuve": null
         }
       },
       "usage": {
-        "entree": 4113,
-        "sortie": 693,
-        "cache_lecture": 1434,
+        "entree": 4317,
+        "sortie": 363,
+        "cache_lecture": 1638,
         "cache_ecriture": 2677
       },
-      "cout_usd": 0.0708548
+      "cout_usd": 0.0576956
     },
     {
       "nom": "Framapad",
@@ -261,24 +262,24 @@
       "confirmation": {
         "donnees": {
           "statut": "confirme",
-          "preuve": "Bien que français, il s'agit d'un logiciel libre qui peut être installé sur un serveur canadien."
+          "preuve": "il s'agit d'un logiciel libre qui peut être installé sur un serveur canadien."
         },
         "controle": {
           "statut": "infirme",
           "preuve": "Framapad est proposé par une association française à but non lucratif : Framasoft"
         },
         "dependance": {
-          "statut": "confirme",
-          "preuve": "Sa licence libre vous autorise à étudier son code, à y contribuer ainsi qu’à l’installer sur votre propre serveur."
+          "statut": "indetermine",
+          "preuve": null
         }
       },
       "usage": {
-        "entree": 4906,
-        "sortie": 506,
-        "cache_lecture": 1434,
+        "entree": 5110,
+        "sortie": 338,
+        "cache_lecture": 1638,
         "cache_ecriture": 3470
       },
-      "cout_usd": 0.0760628
+      "cout_usd": 0.0693836
     },
     {
       "nom": "Jami",
@@ -287,7 +288,7 @@
       "confirmation": {
         "donnees": {
           "statut": "confirme",
-          "preuve": "Jami is completely peer-to-peer and doesn't require a server for relaying data between users."
+          "preuve": "Son architecture pair-à-pair évite de faire transiter les conversations par un serveur central."
         },
         "controle": {
           "statut": "confirme",
@@ -295,16 +296,16 @@
         },
         "dependance": {
           "statut": "confirme",
-          "preuve": "Users who are on the same local network can communicate with Jami even if they are disconnected from the internet."
+          "preuve": "Jami is completely peer-to-peer and doesn't require a server for relaying data between users."
         }
       },
       "usage": {
-        "entree": 3402,
-        "sortie": 504,
-        "cache_lecture": 1434,
-        "cache_ecriture": 1966
+        "entree": 3606,
+        "sortie": 388,
+        "cache_lecture": 3604,
+        "cache_ecriture": 0
       },
-      "cout_usd": 0.0519188
+      "cout_usd": 0.0162568
     },
     {
       "nom": "Mattermost",
@@ -325,12 +326,12 @@
         }
       },
       "usage": {
-        "entree": 4281,
-        "sortie": 487,
-        "cache_lecture": 1434,
+        "entree": 4485,
+        "sortie": 501,
+        "cache_lecture": 1638,
         "cache_ecriture": 2845
       },
-      "cout_usd": 0.0653028
+      "cout_usd": 0.0659036
     },
     {
       "nom": "Jitsi Meet",
@@ -339,24 +340,24 @@
       "confirmation": {
         "donnees": {
           "statut": "confirme",
-          "preuve": "Cet outil international peut être utilisé gratuitement en ligne ou auto-hébergé sur l’infrastructure de son choix, sans compte utilisateur obligatoire."
+          "preuve": "auto-hébergé sur l’infrastructure de son choix"
         },
         "controle": {
-          "statut": "indetermine",
-          "preuve": null
+          "statut": "infirme",
+          "preuve": "Cet outil international"
         },
         "dependance": {
           "statut": "confirme",
-          "preuve": "auto-hébergé sur l’infrastructure de son choix"
+          "preuve": "peut être utilisé gratuitement en ligne ou auto-hébergé sur l’infrastructure de son choix, sans compte utilisateur obligatoire"
         }
       },
       "usage": {
-        "entree": 2771,
-        "sortie": 507,
-        "cache_lecture": 1434,
+        "entree": 2975,
+        "sortie": 570,
+        "cache_lecture": 1638,
         "cache_ecriture": 1335
       },
-      "cout_usd": 0.0419428
+      "cout_usd": 0.044503600000000004
     },
     {
       "nom": "Mastodon",
@@ -365,11 +366,11 @@
       "confirmation": {
         "donnees": {
           "statut": "confirme",
-          "preuve": "Mastodon est un réseau social libre et décentralisé qui peut être hébergé au Canada, permettant ainsi de mieux maîtriser les données."
+          "preuve": "Mastodon est un réseau social libre et décentralisé qui peut être hébergé au Canada"
         },
         "controle": {
           "statut": "infirme",
-          "preuve": "Bien que d’origine allemande, Mastodon est un réseau social libre et décentralisé"
+          "preuve": "Bien que d’origine allemande"
         },
         "dependance": {
           "statut": "confirme",
@@ -377,12 +378,12 @@
         }
       },
       "usage": {
-        "entree": 4425,
-        "sortie": 677,
-        "cache_lecture": 1434,
+        "entree": 4629,
+        "sortie": 243,
+        "cache_lecture": 1638,
         "cache_ecriture": 2989
       },
-      "cout_usd": 0.07520679999999999
+      "cout_usd": 0.0578876
     },
     {
       "nom": "Discourse",
@@ -398,17 +399,17 @@
           "preuve": "L'outil n'est pas canadien"
         },
         "dependance": {
-          "statut": "confirme",
-          "preuve": "The entire Discourse codebase is freely available on GitHub. No black boxes, no vendor lock-in, no surprises."
+          "statut": "indetermine",
+          "preuve": null
         }
       },
       "usage": {
-        "entree": 4068,
-        "sortie": 457,
-        "cache_lecture": 1434,
+        "entree": 4272,
+        "sortie": 161,
+        "cache_lecture": 1638,
         "cache_ecriture": 2632
       },
-      "cout_usd": 0.06069479999999999
+      "cout_usd": 0.0488956
     },
     {
       "nom": "Kashoo",
@@ -429,12 +430,12 @@
         }
       },
       "usage": {
-        "entree": 3825,
-        "sortie": 296,
-        "cache_lecture": 1434,
+        "entree": 4029,
+        "sortie": 273,
+        "cache_lecture": 1638,
         "cache_ecriture": 2389
       },
-      "cout_usd": 0.0503668
+      "cout_usd": 0.04948760000000001
     },
     {
       "nom": "Elodia",
@@ -455,12 +456,12 @@
         }
       },
       "usage": {
-        "entree": 3999,
-        "sortie": 234,
-        "cache_lecture": 1434,
+        "entree": 4203,
+        "sortie": 165,
+        "cache_lecture": 1638,
         "cache_ecriture": 2563
       },
-      "cout_usd": 0.0506708
+      "cout_usd": 0.047951600000000004
     },
     {
       "nom": "Zeffy",
@@ -473,7 +474,7 @@
         },
         "controle": {
           "statut": "confirme",
-          "preuve": "Plateforme québécoise de collecte de fonds"
+          "preuve": "Plateforme québécoise de collecte de fonds permettant aux OBNL de recevoir des dons"
         },
         "dependance": {
           "statut": "indetermine",
@@ -481,12 +482,12 @@
         }
       },
       "usage": {
-        "entree": 4792,
-        "sortie": 258,
-        "cache_lecture": 1434,
+        "entree": 4996,
+        "sortie": 153,
+        "cache_lecture": 1638,
         "cache_ecriture": 3356
       },
-      "cout_usd": 0.0643188
+      "cout_usd": 0.0601596
     },
     {
       "nom": "CanaDon",
@@ -507,12 +508,12 @@
         }
       },
       "usage": {
-        "entree": 3518,
-        "sortie": 333,
-        "cache_lecture": 1434,
+        "entree": 3722,
+        "sortie": 155,
+        "cache_lecture": 1638,
         "cache_ecriture": 2082
       },
-      "cout_usd": 0.0469348
+      "cout_usd": 0.039855600000000005
     },
     {
       "nom": "Webnames.ca",
@@ -533,12 +534,12 @@
         }
       },
       "usage": {
-        "entree": 4433,
-        "sortie": 276,
-        "cache_lecture": 1434,
+        "entree": 4637,
+        "sortie": 143,
+        "cache_lecture": 1638,
         "cache_ecriture": 2997
       },
-      "cout_usd": 0.0592948
+      "cout_usd": 0.054015600000000004
     },
     {
       "nom": "Penpot",
@@ -559,12 +560,12 @@
         }
       },
       "usage": {
-        "entree": 2675,
+        "entree": 2879,
         "sortie": 171,
-        "cache_lecture": 1434,
+        "cache_lecture": 1638,
         "cache_ecriture": 1239
       },
-      "cout_usd": 0.026966800000000003
+      "cout_usd": 0.027007600000000003
     },
     {
       "nom": "La Bibli",
@@ -585,12 +586,12 @@
         }
       },
       "usage": {
-        "entree": 4762,
+        "entree": 4966,
         "sortie": 200,
-        "cache_lecture": 1434,
+        "cache_lecture": 1638,
         "cache_ecriture": 3326
       },
-      "cout_usd": 0.0615188
+      "cout_usd": 0.0615596
     },
     {
       "nom": "Omeka S",
@@ -611,12 +612,12 @@
         }
       },
       "usage": {
-        "entree": 2564,
-        "sortie": 147,
-        "cache_lecture": 1434,
+        "entree": 2768,
+        "sortie": 142,
+        "cache_lecture": 1638,
         "cache_ecriture": 1128
       },
-      "cout_usd": 0.024230800000000004
+      "cout_usd": 0.024071600000000002
     },
     {
       "nom": "Leantime",
@@ -625,7 +626,7 @@
       "confirmation": {
         "donnees": {
           "statut": "confirme",
-          "preuve": "Non canadien, il propose une édition libre et auto-hébergeable."
+          "preuve": "il propose une édition libre et auto-hébergeable"
         },
         "controle": {
           "statut": "infirme",
@@ -637,12 +638,12 @@
         }
       },
       "usage": {
-        "entree": 4222,
-        "sortie": 402,
-        "cache_lecture": 1434,
+        "entree": 4426,
+        "sortie": 159,
+        "cache_lecture": 1638,
         "cache_ecriture": 2786
       },
-      "cout_usd": 0.060958799999999994
+      "cout_usd": 0.051279599999999995
     },
     {
       "nom": "OpenProject",
@@ -651,24 +652,24 @@
       "confirmation": {
         "donnees": {
           "statut": "confirme",
-          "preuve": "OpenProject can be installed on-premises in your own organizations’s infrastructure, giving you complete control over your data and allowing you to manage it 100% yourself."
+          "preuve": "Sa version communautaire auto-hébergeable permet de conserver les données sur une infrastructure choisie."
         },
         "controle": {
           "statut": "infirme",
           "preuve": "Logiciel libre non canadien de gestion de projets"
         },
         "dependance": {
-          "statut": "indetermine",
-          "preuve": null
+          "statut": "confirme",
+          "preuve": "OpenProject can be installed on-premises in your own organizations’s infrastructure, giving you complete control over your data and allowing you to manage it 100% yourself."
         }
       },
       "usage": {
-        "entree": 4109,
-        "sortie": 188,
-        "cache_lecture": 1434,
+        "entree": 4313,
+        "sortie": 223,
+        "cache_lecture": 1638,
         "cache_ecriture": 2673
       },
-      "cout_usd": 0.0505908
+      "cout_usd": 0.052031600000000004
     },
     {
       "nom": "Taiga",
@@ -689,12 +690,12 @@
         }
       },
       "usage": {
-        "entree": 3679,
+        "entree": 3883,
         "sortie": 180,
-        "cache_lecture": 1434,
+        "cache_lecture": 1638,
         "cache_ecriture": 2243
       },
-      "cout_usd": 0.04339080000000001
+      "cout_usd": 0.0434316
     },
     {
       "nom": "Vikunja",
@@ -715,12 +716,12 @@
         }
       },
       "usage": {
-        "entree": 3169,
-        "sortie": 450,
-        "cache_lecture": 1434,
+        "entree": 3373,
+        "sortie": 211,
+        "cache_lecture": 1638,
         "cache_ecriture": 1733
       },
-      "cout_usd": 0.0460308
+      "cout_usd": 0.0365116
     },
     {
       "nom": "Member365",
@@ -741,12 +742,12 @@
         }
       },
       "usage": {
-        "entree": 4005,
-        "sortie": 311,
-        "cache_lecture": 1434,
+        "entree": 4209,
+        "sortie": 145,
+        "cache_lecture": 1638,
         "cache_ecriture": 2569
       },
-      "cout_usd": 0.0538468
+      "cout_usd": 0.0472476
     },
     {
       "nom": "CiviCRM",
@@ -759,7 +760,7 @@
         },
         "controle": {
           "statut": "infirme",
-          "preuve": "Logiciel libre non canadien destiné aux associations et OBNL"
+          "preuve": "Logiciel libre non canadien destiné aux associations et OBNL pour gérer leurs membres, donateurs, contacts, événements et communications."
         },
         "dependance": {
           "statut": "confirme",
@@ -767,12 +768,12 @@
         }
       },
       "usage": {
-        "entree": 3675,
-        "sortie": 452,
-        "cache_lecture": 1434,
+        "entree": 3879,
+        "sortie": 232,
+        "cache_lecture": 1638,
         "cache_ecriture": 2239
       },
-      "cout_usd": 0.0542068
+      "cout_usd": 0.045447600000000005
     },
     {
       "nom": "Le point de vente",
@@ -793,12 +794,12 @@
         }
       },
       "usage": {
-        "entree": 5452,
-        "sortie": 230,
-        "cache_lecture": 1434,
+        "entree": 5656,
+        "sortie": 145,
+        "cache_lecture": 1638,
         "cache_ecriture": 4016
       },
-      "cout_usd": 0.0737588
+      "cout_usd": 0.07039959999999999
     },
     {
       "nom": "Mobilizon",
@@ -811,7 +812,7 @@
         },
         "controle": {
           "statut": "infirme",
-          "preuve": "Outil non canadien de gestion d’événements et de groupes"
+          "preuve": "Outil non canadien de gestion d’événements et de groupes permettant de publier des activités, créer des pages communautaires et mobiliser des participants."
         },
         "dependance": {
           "statut": "indetermine",
@@ -819,12 +820,12 @@
         }
       },
       "usage": {
-        "entree": 3263,
-        "sortie": 308,
-        "cache_lecture": 1434,
+        "entree": 3467,
+        "sortie": 197,
+        "cache_lecture": 1638,
         "cache_ecriture": 1827
       },
-      "cout_usd": 0.041854800000000005
+      "cout_usd": 0.037455600000000006
     },
     {
       "nom": "eZsign",
@@ -837,7 +838,7 @@
         },
         "controle": {
           "statut": "confirme",
-          "preuve": "Canadien. Depuis le tout premier jour."
+          "preuve": "Signature électronique 100 % québécoise, sécurisée et légale, avec envois illimités, support humain et hébergement canadien."
         },
         "dependance": {
           "statut": "indetermine",
@@ -845,12 +846,12 @@
         }
       },
       "usage": {
-        "entree": 4860,
-        "sortie": 316,
-        "cache_lecture": 1434,
+        "entree": 5064,
+        "sortie": 178,
+        "cache_lecture": 1638,
         "cache_ecriture": 3424
       },
-      "cout_usd": 0.0677268
+      "cout_usd": 0.0622476
     },
     {
       "nom": "DocuSeal",
@@ -859,7 +860,7 @@
       "confirmation": {
         "donnees": {
           "statut": "confirme",
-          "preuve": "Non canadienne, elle propose une édition auto-hébergeable."
+          "preuve": "elle propose une édition auto-hébergeable"
         },
         "controle": {
           "statut": "infirme",
@@ -871,12 +872,12 @@
         }
       },
       "usage": {
-        "entree": 4747,
-        "sortie": 369,
-        "cache_lecture": 1434,
+        "entree": 4951,
+        "sortie": 156,
+        "cache_lecture": 1638,
         "cache_ecriture": 3311
       },
-      "cout_usd": 0.06803880000000001
+      "cout_usd": 0.059559600000000004
     },
     {
       "nom": "Envoke",
@@ -897,12 +898,12 @@
         }
       },
       "usage": {
-        "entree": 3265,
-        "sortie": 336,
-        "cache_lecture": 1434,
+        "entree": 3469,
+        "sortie": 156,
+        "cache_lecture": 1638,
         "cache_ecriture": 1829
       },
-      "cout_usd": 0.0430068
+      "cout_usd": 0.0358476
     },
     {
       "nom": "Cyberimpact",
@@ -923,12 +924,12 @@
         }
       },
       "usage": {
-        "entree": 4383,
-        "sortie": 360,
-        "cache_lecture": 1434,
+        "entree": 4587,
+        "sortie": 151,
+        "cache_lecture": 1638,
         "cache_ecriture": 2947
       },
-      "cout_usd": 0.0618548
+      "cout_usd": 0.0535356
     },
     {
       "nom": "Dialogue Insight",
@@ -949,12 +950,12 @@
         }
       },
       "usage": {
-        "entree": 4174,
-        "sortie": 226,
-        "cache_lecture": 1434,
+        "entree": 4378,
+        "sortie": 134,
+        "cache_lecture": 1638,
         "cache_ecriture": 2738
       },
-      "cout_usd": 0.0531508
+      "cout_usd": 0.0495116
     },
     {
       "nom": "Cakemail",
@@ -967,7 +968,7 @@
         },
         "controle": {
           "statut": "confirme",
-          "preuve": "Invest in a homegrown tech company that understands Canadian businesses."
+          "preuve": "Outil québécois de marketing par courriel"
         },
         "dependance": {
           "statut": "indetermine",
@@ -975,12 +976,12 @@
         }
       },
       "usage": {
-        "entree": 3503,
-        "sortie": 437,
-        "cache_lecture": 1434,
+        "entree": 3707,
+        "sortie": 173,
+        "cache_lecture": 1638,
         "cache_ecriture": 2067
       },
-      "cout_usd": 0.05085479999999999
+      "cout_usd": 0.0403356
     },
     {
       "nom": "Thunderbird",
@@ -1001,12 +1002,12 @@
         }
       },
       "usage": {
-        "entree": 3832,
-        "sortie": 403,
-        "cache_lecture": 1434,
+        "entree": 4036,
+        "sortie": 397,
+        "cache_lecture": 1638,
         "cache_ecriture": 2396
       },
-      "cout_usd": 0.054758799999999996
+      "cout_usd": 0.0545596
     },
     {
       "nom": "Firefox",
@@ -1022,17 +1023,17 @@
           "preuve": "Navigateur Internet non canadien axé sur la protection de la vie privée"
         },
         "dependance": {
-          "statut": "infirme",
-          "preuve": "Navigateur Internet non canadien axé sur la protection de la vie privée"
+          "statut": "indetermine",
+          "preuve": null
         }
       },
       "usage": {
-        "entree": 4819,
-        "sortie": 193,
-        "cache_lecture": 1434,
+        "entree": 5023,
+        "sortie": 168,
+        "cache_lecture": 1638,
         "cache_ecriture": 3383
       },
-      "cout_usd": 0.062150800000000006
+      "cout_usd": 0.0611916
     },
     {
       "nom": "Feuille de temps",
@@ -1041,7 +1042,7 @@
       "confirmation": {
         "donnees": {
           "statut": "confirme",
-          "preuve": "Les serveurs et la base de donnée de Feuille de temps sont situés au Canada et alimentés par de l'énergie verte."
+          "preuve": "Les serveurs et la base de donnée de Feuille de temps sont situés au Canada"
         },
         "controle": {
           "statut": "confirme",
@@ -1053,12 +1054,12 @@
         }
       },
       "usage": {
-        "entree": 4676,
-        "sortie": 190,
-        "cache_lecture": 1434,
+        "entree": 4880,
+        "sortie": 176,
+        "cache_lecture": 1638,
         "cache_ecriture": 3240
       },
-      "cout_usd": 0.0597428
+      "cout_usd": 0.059223599999999994
     },
     {
       "nom": "Folks HR",
@@ -1070,8 +1071,8 @@
           "preuve": null
         },
         "controle": {
-          "statut": "indetermine",
-          "preuve": null
+          "statut": "confirme",
+          "preuve": "Solution RH conçue au Québec"
         },
         "dependance": {
           "statut": "indetermine",
@@ -1079,12 +1080,12 @@
         }
       },
       "usage": {
-        "entree": 4613,
-        "sortie": 180,
-        "cache_lecture": 1434,
+        "entree": 4817,
+        "sortie": 131,
+        "cache_lecture": 1638,
         "cache_ecriture": 3177
       },
-      "cout_usd": 0.058334800000000006
+      "cout_usd": 0.0564156
     },
     {
       "nom": "1Password",
@@ -1105,12 +1106,12 @@
         }
       },
       "usage": {
-        "entree": 3111,
-        "sortie": 222,
-        "cache_lecture": 1434,
+        "entree": 3315,
+        "sortie": 143,
+        "cache_lecture": 1638,
         "cache_ecriture": 1675
       },
-      "cout_usd": 0.0359828
+      "cout_usd": 0.0328636
     },
     {
       "nom": "Bitwarden",
@@ -1123,20 +1124,20 @@
         },
         "controle": {
           "statut": "infirme",
-          "preuve": "Gestionnaire de mots de passe non canadien libre permettant de stocker, générer et partager mots de passe, clés d’accès et informations sensibles dans un coffre chiffré."
+          "preuve": "Gestionnaire de mots de passe non canadien libre"
         },
         "dependance": {
-          "statut": "indetermine",
-          "preuve": null
+          "statut": "confirme",
+          "preuve": "Disponible dans le nuage ou en auto-hébergement sur l’infrastructure de son choix."
         }
       },
       "usage": {
-        "entree": 4341,
-        "sortie": 213,
-        "cache_lecture": 1434,
+        "entree": 4545,
+        "sortie": 204,
+        "cache_lecture": 1638,
         "cache_ecriture": 2905
       },
-      "cout_usd": 0.0553028
+      "cout_usd": 0.0549836
     },
     {
       "nom": "Vaultwarden",
@@ -1145,24 +1146,24 @@
       "confirmation": {
         "donnees": {
           "statut": "confirme",
-          "preuve": "perfect for self-hosted deployment where running the official resource-heavy service might not be ideal."
+          "preuve": "perfect for self-hosted deployment where running the official resource-heavy service might not be ideal"
         },
         "controle": {
           "statut": "infirme",
-          "preuve": "Non canadien, il permet de stocker et partager mots de passe et autres informations sensibles sur un serveur contrôlé par l’organisation."
+          "preuve": "Non canadien"
         },
         "dependance": {
           "statut": "confirme",
-          "preuve": "il permet de stocker et partager mots de passe et autres informations sensibles sur un serveur contrôlé par l’organisation."
+          "preuve": "stocker et partager mots de passe et autres informations sensibles sur un serveur contrôlé par"
         }
       },
       "usage": {
-        "entree": 4515,
-        "sortie": 678,
-        "cache_lecture": 1434,
+        "entree": 4719,
+        "sortie": 665,
+        "cache_lecture": 1638,
         "cache_ecriture": 3079
       },
-      "cout_usd": 0.0766868
+      "cout_usd": 0.0762076
     },
     {
       "nom": "2FAS Auth",
@@ -1171,7 +1172,7 @@
       "confirmation": {
         "donnees": {
           "statut": "confirme",
-          "preuve": "Data stored locally, not sent to third-party servers"
+          "preuve": "Local-first:Data stored locally, not sent to third-party servers"
         },
         "controle": {
           "statut": "infirme",
@@ -1183,12 +1184,12 @@
         }
       },
       "usage": {
-        "entree": 3905,
-        "sortie": 534,
-        "cache_lecture": 1434,
+        "entree": 4109,
+        "sortie": 595,
+        "cache_lecture": 1638,
         "cache_ecriture": 2469
       },
-      "cout_usd": 0.06116679999999999
+      "cout_usd": 0.0636476
     },
     {
       "nom": "2FAS Pass",
@@ -1205,16 +1206,16 @@
         },
         "dependance": {
           "statut": "confirme",
-          "preuve": "You store everything where you choose, and you don't need the Internet to access your Items."
+          "preuve": "La synchronisation est facultative et peut passer par une infrastructure auto-hébergée, sans compte utilisateur obligatoire."
         }
       },
       "usage": {
-        "entree": 3905,
-        "sortie": 589,
-        "cache_lecture": 1434,
+        "entree": 4109,
+        "sortie": 507,
+        "cache_lecture": 1638,
         "cache_ecriture": 2469
       },
-      "cout_usd": 0.0633668
+      "cout_usd": 0.060127599999999996
     },
     {
       "nom": "Micrologic",
@@ -1223,7 +1224,7 @@
       "confirmation": {
         "donnees": {
           "statut": "confirme",
-          "preuve": "Nous vous assurons que l’intégralité de vos données sera hébergée en sol canadien, garantissant ainsi que vos informations sensibles ne quitteront jamais le pays."
+          "preuve": "Nous vous assurons que l’intégralité de vos données sera hébergée en sol canadien"
         },
         "controle": {
           "statut": "confirme",
@@ -1235,12 +1236,12 @@
         }
       },
       "usage": {
-        "entree": 4682,
-        "sortie": 460,
-        "cache_lecture": 1434,
+        "entree": 4886,
+        "sortie": 388,
+        "cache_lecture": 1638,
         "cache_ecriture": 3246
       },
-      "cout_usd": 0.0706388
+      "cout_usd": 0.0677996
     },
     {
       "nom": "TitanFile",
@@ -1261,12 +1262,12 @@
         }
       },
       "usage": {
-        "entree": 4309,
-        "sortie": 444,
-        "cache_lecture": 1434,
+        "entree": 4513,
+        "sortie": 198,
+        "cache_lecture": 1638,
         "cache_ecriture": 2873
       },
-      "cout_usd": 0.0640308
+      "cout_usd": 0.054231600000000005
     },
     {
       "nom": "La Réserve",
@@ -1287,12 +1288,12 @@
         }
       },
       "usage": {
-        "entree": 3886,
-        "sortie": 428,
-        "cache_lecture": 1434,
+        "entree": 4090,
+        "sortie": 209,
+        "cache_lecture": 1638,
         "cache_ecriture": 2450
       },
-      "cout_usd": 0.0566228
+      "cout_usd": 0.047903600000000005
     },
     {
       "nom": "Nextcloud",
@@ -1309,16 +1310,16 @@
         },
         "dependance": {
           "statut": "confirme",
-          "preuve": "Enjoy constant improvements from a thriving and transparent, entirely open-source community development model, free of lockins or paywalls."
+          "preuve": "Keep your data on servers you own, at all times. Nothing leaks, not even metadata."
         }
       },
       "usage": {
-        "entree": 4178,
-        "sortie": 496,
-        "cache_lecture": 1434,
+        "entree": 4382,
+        "sortie": 187,
+        "cache_lecture": 1638,
         "cache_ecriture": 2742
       },
-      "cout_usd": 0.0640148
+      "cout_usd": 0.0516956
     },
     {
       "nom": "Sync.com",
@@ -1331,7 +1332,7 @@
         },
         "controle": {
           "statut": "confirme",
-          "preuve": "ce service canadien de stockage infonuagique"
+          "preuve": "ce service canadien de stockage infonuagique permet de sauvegarder, synchroniser et partager des fichiers en toute sécurité"
         },
         "dependance": {
           "statut": "indetermine",
@@ -1339,12 +1340,12 @@
         }
       },
       "usage": {
-        "entree": 3376,
-        "sortie": 229,
-        "cache_lecture": 1434,
+        "entree": 3580,
+        "sortie": 169,
+        "cache_lecture": 1638,
         "cache_ecriture": 1940
       },
-      "cout_usd": 0.040502800000000005
+      "cout_usd": 0.0381436
     },
     {
       "nom": "Manni",
@@ -1365,12 +1366,12 @@
         }
       },
       "usage": {
-        "entree": 4859,
-        "sortie": 289,
-        "cache_lecture": 1434,
+        "entree": 5063,
+        "sortie": 164,
+        "cache_lecture": 1638,
         "cache_ecriture": 3423
       },
-      "cout_usd": 0.06663079999999999
+      "cout_usd": 0.0616716
     },
     {
       "nom": "Fellow",
@@ -1382,8 +1383,8 @@
           "preuve": null
         },
         "controle": {
-          "statut": "indetermine",
-          "preuve": null
+          "statut": "confirme",
+          "preuve": "Assistant de réunions conçu au Canada"
         },
         "dependance": {
           "statut": "indetermine",
@@ -1391,12 +1392,12 @@
         }
       },
       "usage": {
-        "entree": 4247,
-        "sortie": 293,
-        "cache_lecture": 1434,
+        "entree": 4451,
+        "sortie": 134,
+        "cache_lecture": 1638,
         "cache_ecriture": 2811
       },
-      "cout_usd": 0.0569988
+      "cout_usd": 0.050679600000000005
     },
     {
       "nom": "Handy",
@@ -1413,16 +1414,16 @@
         },
         "dependance": {
           "statut": "confirme",
-          "preuve": "Your voice stays on your computer. Get transcriptions without sending audio to the cloud."
+          "preuve": "Handy is an open source speech-to-text application that you can run on your own computer."
         }
       },
       "usage": {
-        "entree": 2880,
-        "sortie": 497,
-        "cache_lecture": 1434,
+        "entree": 3084,
+        "sortie": 445,
+        "cache_lecture": 1638,
         "cache_ecriture": 1444
       },
-      "cout_usd": 0.0432868
+      "cout_usd": 0.041247599999999995
     },
     {
       "nom": "Obsidian",
@@ -1443,12 +1444,12 @@
         }
       },
       "usage": {
-        "entree": 4325,
-        "sortie": 446,
-        "cache_lecture": 1434,
+        "entree": 4529,
+        "sortie": 414,
+        "cache_lecture": 1638,
         "cache_ecriture": 2889
       },
-      "cout_usd": 0.0643668
+      "cout_usd": 0.0631276
     },
     {
       "nom": "Miniflux",
@@ -1469,12 +1470,12 @@
         }
       },
       "usage": {
-        "entree": 2732,
-        "sortie": 381,
-        "cache_lecture": 1434,
+        "entree": 2936,
+        "sortie": 195,
+        "cache_lecture": 1638,
         "cache_ecriture": 1296
       },
-      "cout_usd": 0.0362788
+      "cout_usd": 0.028879600000000002
     },
     {
       "nom": "Wallabag",
@@ -1483,11 +1484,11 @@
       "confirmation": {
         "donnees": {
           "statut": "confirme",
-          "preuve": "Install wallabag on your own server and keep full control over updates, backups, data and access."
+          "preuve": "Il peut être auto-hébergé pour conserver la maîtrise de ses archives."
         },
         "controle": {
           "statut": "infirme",
-          "preuve": "Outil non canadien libre"
+          "preuve": "Outil non canadien libre permettant de sauvegarder des articles et des pages Web pour les lire plus tard, sans publicité ni distractions."
         },
         "dependance": {
           "statut": "confirme",
@@ -1495,12 +1496,12 @@
         }
       },
       "usage": {
-        "entree": 3029,
-        "sortie": 417,
-        "cache_lecture": 1434,
+        "entree": 3233,
+        "sortie": 402,
+        "cache_lecture": 1638,
         "cache_ecriture": 1593
       },
-      "cout_usd": 0.0424708
+      "cout_usd": 0.0419116
     }
   ]
 }

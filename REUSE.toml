@@ -5,13 +5,13 @@ version = 1
 
 # Code, schémas JSON, configuration et documentation du dépôt.
 [[annotations]]
-path = ["schemas/**", "analyses/**/*.md", "README.md", "implementation.md", "historique.md", "package.json", "nub.lock", "tsconfig.json", "tsconfig.schemas.json", ".gitignore", ".env.example", "spike-mion/**"]
+path = ["schemas/**", "README.md", "implementation.md", "historique.md", "package.json", "nub.lock", "tsconfig.json", "tsconfig.schemas.json", ".gitignore", ".env.example", "spike-mion/**"]
 SPDX-FileCopyrightText = "2026 Robin Millette <https://robin.millette.info/>"
 SPDX-License-Identifier = "AGPL-3.0-or-later"
 
 # Données, adaptées du répertoire d'origine (Praxis), et ce qui en est dérivé: sommaire et graphiques.
 [[annotations]]
-path = ["outils.json", "criteres.json", "tags.json", "sommaire.md", "graphiques/**", "analyses/**/*.json"]
+path = ["outils.json", "criteres.json", "tags.json", "sommaire.md", "graphiques/**", "confirmations/*.json"]
 SPDX-FileCopyrightText = [
   "2026 Sven Buridans, François Delnooz, Marie-Renee Duguay (Praxis), Répertoire d'outils favorisant la souveraineté numérique",
   "2026 Robin Millette <https://robin.millette.info/>",
