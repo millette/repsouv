@@ -8,7 +8,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import {
-  abandonne, aEnrichir, chargerTags, effortDepuisEnv, enrichirOutils, ErreurDefinitive, modelesDepuisEnv, MODELE_PAR_DEFAUT, MODELE_REPLI_PAR_DEFAUT, obtenirValide, extraireContenu, instructions, instructionsEcart, lireContenu, MAX_TAGS, MIN_EXTRAIT, obtenirPage, problemesMarkdown, sauverTags,
+  abandonne, aEnrichir, chargerTags, EFFORT_PAR_DEFAUT, effortDepuisEnv, enrichirOutils, ErreurDefinitive, modelesDepuisEnv, MODELE_PAR_DEFAUT, MODELE_REPLI_PAR_DEFAUT, obtenirValide, extraireContenu, instructions, instructionsEcart, lireContenu, MAX_TAGS, MIN_EXTRAIT, obtenirPage, problemesMarkdown, sauverTags,
   schemaReponse, validerEcart, validerProposition, type Expliqueur, type Generateur, type Tag, appelerOpenAI, estimerCoutEnrichissement } from "../enrichir.ts";
 import type { Usage } from "../prix.ts";
 import type { Outil } from "../extract.ts";
@@ -553,9 +553,9 @@ test("modelesDepuisEnv: terra et sol par défaut; OPENAI_MODEL et OPENAI_MODEL_F
   assert.deepEqual(modelesDepuisEnv({}), { principal: MODELE_PAR_DEFAUT, repli: MODELE_REPLI_PAR_DEFAUT });
   assert.deepEqual(modelesDepuisEnv({ OPENAI_MODEL: "gpt-6-astra", OPENAI_MODEL_FALLBACK: "gpt-6.1-terra" }), { principal: "gpt-6-astra", repli: "gpt-6.1-terra" });
   assert.deepEqual(modelesDepuisEnv({ OPENAI_MODEL_FALLBACK: "" }), { principal: MODELE_PAR_DEFAUT, repli: null });
-  assert.deepEqual(modelesDepuisEnv({ OPENAI_MODEL: "gpt-6.1-sol" }), { principal: "gpt-6.1-sol", repli: null });
-  assert.equal(MODELE_PAR_DEFAUT, "gpt-6.1-terra");
-  assert.equal(MODELE_REPLI_PAR_DEFAUT, "gpt-6.1-sol");
+  assert.deepEqual(modelesDepuisEnv({ OPENAI_MODEL: "gpt-6-astra" }), { principal: "gpt-6-astra", repli: null });
+  assert.equal(MODELE_PAR_DEFAUT, "gpt-6.1-sol");
+  assert.equal(MODELE_REPLI_PAR_DEFAUT, "gpt-6-astra");
 });
 
 test("obtenirValide: sans repli, une seconde tentative par le même producteur avec la raison; deux rejets, c'est une erreur", async () => {
@@ -648,10 +648,11 @@ test("enrichir: principal et repli rejetés, un seul échec compté; expliquerRe
   assert.equal(b[0]!.evaluation_enrichie!.ecart, "Le répertoire suppose les données au Canada.");
 });
 
-test("effort de raisonnement: OPENAI_REASONING_EFFORT est envoyé dans reasoning.effort; absent ou vide, rien n'est envoyé", async () => {
-  assert.equal(effortDepuisEnv({}), null);
+test("effort de raisonnement: « low » par défaut, OPENAI_REASONING_EFFORT le remplace, vide laisse le défaut du modèle (rien n'est envoyé)", async () => {
+  assert.equal(effortDepuisEnv({}), EFFORT_PAR_DEFAUT);
+  assert.equal(EFFORT_PAR_DEFAUT, "low");
   assert.equal(effortDepuisEnv({ OPENAI_REASONING_EFFORT: "" }), null);
-  assert.equal(effortDepuisEnv({ OPENAI_REASONING_EFFORT: "low" }), "low");
+  assert.equal(effortDepuisEnv({ OPENAI_REASONING_EFFORT: "high" }), "high");
   const vrai = globalThis.fetch;
   const corps = { status: "completed", usage: { input_tokens: 1, output_tokens: 1 }, output: [{ type: "message", content: [{ type: "output_text", text: "{}" }] }] };
   const envois: string[] = [];
@@ -660,8 +661,10 @@ test("effort de raisonnement: OPENAI_REASONING_EFFORT est envoyé dans reasoning
     const requete = { nom: "x", schema: {}, instructions: "i", messages: ["m"], maxTokens: 10 };
     await appelerOpenAI("k", "m", requete, undefined, { effort: "low" });
     assert.deepEqual(JSON.parse(envois[0]!).reasoning, { effort: "low" });
-    await appelerOpenAI("k", "m", requete);
+    await appelerOpenAI("k", "m", requete, undefined, { effort: null });
     assert.equal("reasoning" in JSON.parse(envois[1]!), false);
+    await appelerOpenAI("k", "m", requete, undefined, { effort: effortDepuisEnv({}) });
+    assert.deepEqual(JSON.parse(envois[2]!).reasoning, { effort: "low" });
   } finally {
     globalThis.fetch = vrai;
   }

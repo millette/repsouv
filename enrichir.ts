@@ -17,9 +17,12 @@ import { horodatage } from "./temps.ts";
 export const MAX_TAGS = 5;
 export const SOURCES = ["libre", "partiel", "source-disponible", "proprietaire"] as const;
 export type Source = (typeof SOURCES)[number];
-export const MODELE_PAR_DEFAUT = "gpt-6.1-terra";
+// Choix mesurés sur 20 outils (analyse-effort/): gpt-6.1-sol à effort « low » reproduit gpt-6-astra pour un cinquième du prix.
+export const MODELE_PAR_DEFAUT = "gpt-6.1-sol";
 /** Modèle de repli: reprend un appel que le modèle principal a raté (réponse rejetée, erreur passagère de l'API). */
-export const MODELE_REPLI_PAR_DEFAUT = "gpt-6.1-sol";
+export const MODELE_REPLI_PAR_DEFAUT = "gpt-6-astra";
+/** Effort de raisonnement par défaut (reasoning.effort): « low » suffit à ces tâches, voir analyse-effort/. */
+export const EFFORT_PAR_DEFAUT = "low";
 
 /** Modèles d'après OPENAI_MODEL et OPENAI_MODEL_FALLBACK; un repli vide, ou identique au principal, désactive le repli. */
 export function modelesDepuisEnv(env: Record<string, string | undefined> = process.env): { principal: string; repli: string | null } {
@@ -34,9 +37,13 @@ export function modelesDepuisEnv(env: Record<string, string | undefined> = proce
  */
 export class ErreurDefinitive extends Error {}
 
-/** Effort de raisonnement demandé à l'API (reasoning.effort) d'après OPENAI_REASONING_EFFORT; null: le défaut du modèle. */
+/**
+ * Effort de raisonnement demandé à l'API (reasoning.effort): OPENAI_REASONING_EFFORT, sinon EFFORT_PAR_DEFAUT;
+ * la variable vide (« OPENAI_REASONING_EFFORT= ») laisse au modèle son propre défaut (null: rien n'est envoyé).
+ */
 export function effortDepuisEnv(env: Record<string, string | undefined> = process.env): string | null {
-  return env.OPENAI_REASONING_EFFORT || null;
+  const effort = env.OPENAI_REASONING_EFFORT;
+  return effort === undefined ? EFFORT_PAR_DEFAUT : effort || null;
 }
 const IDS_CRITERES: readonly string[] = [DONNEES, CONTROLE, DEPENDANCE];
 const CONFIANCES: readonly ConfianceEvaluation[] = ["élevée", "moyenne", "faible"];
