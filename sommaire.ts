@@ -18,6 +18,7 @@ import type { OutilClasse } from "./classify.ts";
 import { lancer } from "./cli.ts";
 import { construireGraphiques, ecrireGraphiques, verifierVlConvert, type Convertisseur, type GraphiqueEcrit } from "./graphiques.ts";
 import { chargerCategories } from "./categories.ts";
+import { chargerEnv } from "./env.ts";
 import { appelerOpenAI, chargerCriteres, chargerTags, MAX_ECHECS_PAR_DEFAUT, MODELE_PAR_DEFAUT, obtenirValide, problemesMarkdown } from "./enrichir.ts";
 import { lireFichier } from "./fichiers.ts";
 import {
@@ -388,6 +389,7 @@ export async function genererSommaire(o: OptionsSommaire): Promise<ResultatSomma
 
 if (import.meta.main) {
   await lancer(async () => {
+    chargerEnv();
     const args = process.argv.slice(2);
     const sansResume = args.includes("--sans-resume");
     const sansGraphiques = args.includes("--sans-graphiques");

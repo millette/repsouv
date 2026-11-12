@@ -51,6 +51,7 @@ import { estimerCoutEnrichissement, type Estimation, abandonne, MAX_ECHECS_PAR_D
 import { lancer } from "./cli.ts";
 import { existsSync } from "node:fs";
 import { createInterface } from "node:readline/promises";
+import { chargerEnv } from "./env.ts";
 import { ecrireFichier, lireFichier, lireSiExiste, type Lu } from "./fichiers.ts";
 import { CHAMPS_ENRICHIS, telechargerRepertoire, type Changement, type Critere, type Outil } from "./extract.ts";
 import { verifierVlConvert } from "./graphiques.ts";
@@ -253,6 +254,7 @@ export function ligneJournal(message: string, niveau: NiveauJournal, c: Couleurs
 
 if (import.meta.main) {
   await lancer(async () => {
+    chargerEnv();
     const args = process.argv.slice(2);
     const dryRun = args.includes("--dry-run");
     const nouveauxTags = args.includes("--nouveaux-tags");
