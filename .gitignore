@@ -3,4 +3,6 @@ node_modules/
 pre-enrichir-outils.json
 .claude
 orig-sommaire.md
+.agents
+skills-lock.json
 
