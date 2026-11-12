@@ -11,6 +11,8 @@ nub run schema:tjs     # ts-json-schema-generator 2.9.1-next.18 + typescript 6.0
 nub run construire     # esbuild + plugin RunTypes -> mion.mjs (ignoré par git)
 nub run comparer       # tableau des 10 échantillons, 5 validateurs
 nub run complement     # décodeur et checkUnknowns
+nub run schema:tjs2    # schémas du générateur pour les cas limites (types2.ts)
+nub run cas-limites    # récursion, union avec Date, Map, union objet/Date, portable
 nub run typecheck
 ```
 
@@ -44,4 +46,32 @@ Constats:
 
 ## Limites de l'expérience
 
-Un seul type, 10 échantillons, un seul bundler. Non testés: `portable: true`, contraintes de format (`TF.*`), `tags.json`/`criteres.json`, un fichier `{meta, outils}` complet, les clés inconnues avec `checkUnknowns` sur le JSON brut.
+Un seul bundler, quelques types. Non testés: contraintes de format (`TF.*`), `tags.json`/`criteres.json`, un fichier `{meta, outils}` complet, `checkUnknowns` sur le JSON brut, `null` dans une union, `bigint`, `Set`, `URL`.
+
+## Deuxième série: cas limites (`types2.ts`, `cas-limites.ts`)
+
+Quatre types: `Noeud` (récursif), `UnionDate` (`Date | string`), `Compteurs` (`Map<string, number>`), `Melange` (`{kind:"a",x} | Date`).
+Pour chacun: schéma RunTypes, schéma RunTypes avec `portable: true` (`schema({libraryOptions:{portable:true}})`), schéma du générateur, sortie réelle de `createJsonEncoderFn`, et des échantillons validés par Ajv.
+
+| Cas | Schéma RunTypes | Schéma du générateur (TJS) | JSON « naturel » |
+|---|---|---|---|
+| Récursion | `{"$ref":"#"}`, correct | `$ref` vers une définition, correct | les deux schémas donnent le même verdict |
+| `Date \| string` | tuple étiqueté `[0, string]` ou `[1, date-time]` | `anyOf` de deux chaînes | **RunTypes refuse la chaîne ISO naturelle**; TJS l'accepte |
+| `Map<string, number>` | tableau de paires `[["a",1]]` | `{size: number}`, **incorrect** | RunTypes accepte les paires et refuse `{a:1}`; TJS refuse les deux |
+| objet `\| Date` | tuples étiquetés `[1, date-time]` et `[-1, objet]` | `anyOf` objet ou `date-time` | **RunTypes refuse l'objet et la date naturels** |
+
+Constats:
+
+1. **Récursion:** les deux outils sont corrects et équivalents.
+2. **Dès qu'une union contient un membre propre à JavaScript (`Date`), le schéma de RunTypes décrit son encodage étiqueté, pas le JSON naturel.** La sortie de l'encodeur valide contre le schéma de RunTypes, mais pas contre celui du générateur, et inversement pour les échantillons naturels. Les unions d'objets simples (première série) restent des `anyOf` sans étiquette.
+3. **Les étiquettes sont peu intuitives:** dans `Melange`, la `Date` a l'indice `1` et l'objet `-1`; dans `UnionDate`, la chaîne a l'indice `0`. Un client externe ne peut pas les deviner.
+4. **`portable: true` ne change rien à l'encodage.** Il retire seulement `jsType` (et laisse `format: date-time`); les tuples étiquetés restent. Pour `Noeud`, le schéma est identique.
+5. **Le décodeur de RunTypes lève une exception** (colonne `ERR`) sur du JSON naturel pour ces unions, au lieu de le rejeter proprement; il n'accepte que la forme étiquetée.
+6. **`Map`:** le générateur produit `{size: number}`, un schéma faux qui décrit les membres de la classe et non des données. RunTypes produit la forme qu'il écrit réellement (paires), cohérente avec son encodeur.
+7. **Aller-retour interne:** pour les quatre types, encodeur, décodeur puis validateur donnent `oui`. RunTypes est cohérent avec lui-même; la question est l'interopérabilité avec du JSON non produit par lui.
+
+### Conclusion de cette série
+
+- Pour un format de fichier strict et lisible par d'autres outils (`outils.json`), il faut éviter les types qui déclenchent l'encodage propre à RunTypes: unions avec `Date`, `Map`, `Set`, `bigint`. Avec des types JSON simples (objets, chaînes, nombres, tableaux, énumérations, unions d'objets discriminées), RunTypes et le générateur décrivent le même JSON, avec la réserve de `additionalProperties`.
+- Les données du dépôt n'utilisent que des types JSON simples (voir `extract.ts`: chaînes, nombres, booléens, tableaux, `null`, unions littérales). Elles évitent donc les cas problématiques.
+- Le générateur échoue silencieusement sur `Map` (schéma faux), tandis que RunTypes échoue de façon visible sur le JSON naturel. Aucun des deux ne remplace une revue des types exposés.

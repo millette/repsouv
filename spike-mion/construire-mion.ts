@@ -3,8 +3,9 @@ import { build } from "esbuild";
 import runtypes from "@mionjs/devtools/runtypes/esbuild";
 
 await build({
-  entryPoints: ["mion-entree.ts"],
-  outfile: "mion.mjs",
+  entryPoints: { mion: "mion-entree.ts", mion2: "mion-entree2.ts" },
+  outdir: ".",
+  outExtension: { ".js": ".mjs" },
   bundle: true,
   format: "esm",
   platform: "node",

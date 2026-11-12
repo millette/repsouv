@@ -19,6 +19,8 @@
     "construire": "nub construire-mion.ts",
     "comparer": "nub comparer.ts",
     "complement": "nub complement.ts",
-    "typecheck": "../node_modules/.bin/tsrs -p ."
+    "typecheck": "../node_modules/.bin/tsrs -p .",
+    "schema:tjs2": "ts-json-schema-generator --path types2.ts --type Noeud --tsconfig tsconfig.json -o schemas/tjs2-Noeud.schema.json && ts-json-schema-generator --path types2.ts --type UnionDate --tsconfig tsconfig.json -o schemas/tjs2-UnionDate.schema.json && ts-json-schema-generator --path types2.ts --type Compteurs --tsconfig tsconfig.json -o schemas/tjs2-Compteurs.schema.json && ts-json-schema-generator --path types2.ts --type Melange --tsconfig tsconfig.json -o schemas/tjs2-Melange.schema.json",
+    "cas-limites": "nub cas-limites.ts"
   }
 }

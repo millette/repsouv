@@ -1,0 +1,25 @@
+{
+  "$ref": "#/definitions/Noeud",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "Noeud": {
+      "additionalProperties": false,
+      "properties": {
+        "enfants": {
+          "items": {
+            "$ref": "#/definitions/Noeud"
+          },
+          "type": "array"
+        },
+        "nom": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "nom",
+        "enfants"
+      ],
+      "type": "object"
+    }
+  }
+}
