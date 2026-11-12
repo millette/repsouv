@@ -17,12 +17,6 @@ importers:
       spdx-license-ids:
         specifier: ^3.0.24
         version: 3.0.24
-      vega:
-        specifier: ^6.4.0
-        version: 6.4.0
-      vega-lite:
-        specifier: ^6.5.0
-        version: 6.5.0(vega@6.4.0)
     devDependencies:
       '@mionjs/bin-compiler':
         specifier: 0.14.0
@@ -54,6 +48,12 @@ importers:
       tsrs:
         specifier: ^0.24.0-ts7.1.0-beta
         version: 0.24.0-ts7.1.0-beta
+      vega:
+        specifier: ^6.4.0
+        version: 6.4.0
+      vega-lite:
+        specifier: ^6.5.0
+        version: 6.5.0(vega@6.4.0)
 
 packages:
 
