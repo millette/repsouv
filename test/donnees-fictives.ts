@@ -3,7 +3,7 @@
 // Données fictives partagées par les tests du sommaire et des graphiques (jamais outils.json).
 import type { OutilClasse } from "../classify.ts";
 import type { Tag } from "../enrichir.ts";
-import type { Critere } from "../extract.ts";
+import type { Critere, CriteresConfirmes } from "../extract.ts";
 import type { Entree } from "../statistiques.ts";
 
 export const META = { data_license: "CC-BY-SA-4.0", created_at: "2026-11-11T16:43:11-05:00", updated_at: "2026-11-12T10:00:00-05:00" };
@@ -40,17 +40,30 @@ export const sansDate = (o: OutilClasse): OutilClasse => {
   return o;
 };
 
+/** Verdicts d'IA (criteres_confirmes): `c` confirmé avec citation, `x` infirmé avec citation, `?` indéterminé. */
+export const confirmes = (donnees: "c" | "x" | "?", controle: "c" | "x" | "?", dependance: "c" | "x" | "?"): CriteresConfirmes => {
+  const v = { donnees, controle, dependance };
+  const ids = ["donnees", "controle", "dependance"] as const;
+  return {
+    criteres: ids.filter((id) => v[id] === "c"),
+    preuves: Object.fromEntries(ids.filter((id) => v[id] === "c").map((id) => [id, `preuve ${id}`])),
+    infirmes: Object.fromEntries(ids.filter((id) => v[id] === "x").map((id) => [id, `contre ${id}`])),
+    modele: "claude-fable-5-2", regle: null, date: "2026-11-12T07:41:55-05:00",
+  };
+};
+
 export const OUTILS: OutilClasse[] = [
-  enrichi("A", { tags: ["chiffrement", "auto-hebergeable"] }),
+  enrichi("A", { tags: ["chiffrement", "auto-hebergeable"], criteres_confirmes: confirmes("c", "x", "c") }),
   enrichi("B", {
     source: "partiel", licence: "MIT", repo: "https://gitlab.com/org/B", tags: ["chiffrement", "auto-hebergeable", "gratuit"],
     criteres: ["donnees", "controle"], enrichi_le: "2026-11-12T09:00:20-05:00",
     evaluation_enrichie: { score: 1, criteres: ["controle"], confiance: "faible", ecart: "Le répertoire suppose les données au Canada." },
+    criteres_confirmes: confirmes("x", "c", "?"),
   }),
   enrichi("C", { source: "proprietaire", licence: null, repo: null, score: 3, criteres: ["donnees", "controle", "dependance"], tags: ["gratuit"], categorie: "Cat2", enrichi_le: "2026-11-13T08:00:00-05:00",
-    evaluation_enrichie: { score: 3, criteres: ["donnees", "controle", "dependance"], confiance: "élevée" } }),
+    evaluation_enrichie: { score: 3, criteres: ["donnees", "controle", "dependance"], confiance: "élevée" }, criteres_confirmes: confirmes("c", "c", "c") }),
   outil("D", { categorie: "Cat2", changement: "nouveau", derniere_modification: D1 }),
-  enrichi("Maison", { source: "source-disponible", licence: null, custom_license: "Licence maison", custom_license_url: "https://maison.example/licence", repo: "https://git.exemple.org/x/Maison", tags: [] }),
+  enrichi("Maison", { source: "source-disponible", criteres_confirmes: confirmes("?", "?", "?"), licence: null, custom_license: "Licence maison", custom_license_url: "https://maison.example/licence", repo: "https://git.exemple.org/x/Maison", tags: [] }),
   sansDate(enrichi("G", { licence: "Apache-2.0 OR MIT", page_lue: false, categorie: "Cat2" })),
   outil("Retire", { removed: true, changement: "retrait", derniere_modification: D1 }),
 ];

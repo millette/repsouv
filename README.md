@@ -260,7 +260,7 @@ Pour chaque outil enrichi, donne à une IA la page de l'outil et les trois crit�
 nub appliquer-confirmations.ts <confirmations.json> <outils.json> [sortie.json]
 ```
 
-Inscrit `criteres_confirmes` (voir [`outils.json`](#outilsjson)) dans chaque outil qui a un verdict dans le fichier de `confirmer.ts` ; les autres gardent leur champ tel quel. Fonction exportée `appliquerConfirmations`. `nub run appliquer-confirmations` applique les confirmations de Claude commitées. Le champ est protégé par `extract.ts` et conservé par `update.ts`, comme les autres champs d'enrichissement.
+Inscrit `criteres_confirmes` (voir [`outils.json`](#outilsjson)) dans chaque outil qui a un verdict dans le fichier de `confirmer.ts` ; les autres gardent leur champ tel quel. Fonction exportée `appliquerConfirmations`. `nub run appliquer-confirmations` applique les confirmations de Claude commitées. Le champ est protégé par `extract.ts` et conservé par `update.ts`, comme les autres champs d'enrichissement. Le [sommaire](#sommaire-statistique) l'exploite : une sous-section et un graphique donnent la part des critères confirmés, infirmés et indéterminés par statut du code source.
 
 ### `update.ts`
 
@@ -466,7 +466,7 @@ Le sommaire est mis à jour **automatiquement** par `update.ts --enrichir` (ou `
 - les **catégories** (outils, enrichis, libres ou partiels, score moyen);
 - le **statut du code source** (libre, partiellement libre, code source disponible, propriétaire, pas encore enrichi);
 - les **licences** : par licence SPDX, par famille (copyleft fort ou faible, permissive; classement indicatif d'après l'identifiant), licences maison, et outils sans licence connue;
-- les **critères de souveraineté** : nombre d'outils par critère, et critères satisfaits par statut du code source, d'abord pour le répertoire (déduits) puis pour l'évaluation enrichie, avec les écarts entre les deux;
+- les **critères de souveraineté** : nombre d'outils par critère, et critères satisfaits par statut du code source, d'abord pour le répertoire (déduits) puis pour l'évaluation enrichie, avec les écarts entre les deux, et enfin les **critères vérifiés** d'après la page de l'outil (`criteres_confirmes`) : part des critères confirmés, infirmés et indéterminés par statut du code source, modèle, outils sans verdict, outils ayant autant de critères confirmés que d'étoiles;
 - les **forges de code** : nombre d'outils par forge (GitHub, GitLab, Codeberg…) et logiciels libres sans dépôt connu;
 - les **tags** : utilisation de chacun, tags inutilisés, moyenne par outil, paires les plus fréquentes, tags ajoutés;
 - la **fiabilité** : confiance de la classification, outils enrichis sans page lisible, outils restant à enrichir;
@@ -493,6 +493,7 @@ Les graphiques sont des spécifications Vega-Lite construites à partir des stat
 | `categories-statut` | Outils par catégorie, empilés par statut | Catégories |
 | `criteres-repertoire-enrichie` | Part des outils satisfaisant chaque critère, répertoire (déduit) et évaluation enrichie | Critères de souveraineté |
 | `criteres-par-statut` | Carte de chaleur : critères satisfaits par statut, répertoire et évaluation enrichie | Critères de souveraineté |
+| `criteres-verdicts` | Barres empilées : part des critères confirmés, infirmés et indéterminés (`criteres_confirmes`) par statut, un panneau par critère ; omis sans outil vérifié | Critères de souveraineté |
 | `licences` | Outils par licence SPDX, colorés par famille | Licences |
 | `forges` | Outils par forge de code | Forges de code |
 | `tags` | Les 15 tags les plus fréquents | Tags |
@@ -574,8 +575,8 @@ Dans `test/`, avec `node:test` lancé par `nub` :
 - `couleurs.test.ts` : règles d'activation (terminal, `NO_COLOR`, `FORCE_COLOR`, `TERM=dumb`, `--sans-couleur`) et codes ANSI.
 - `temps.test.ts` : heure de Toronto (hiver, été, minuit, passage à l'heure d'été), décalage ajouté à une date locale.
 - `fichiers.test.ts` : structure et `meta` des fichiers de données (création, contenu inchangé ou modifié, licence rétablie, refus des formats invalides), et conformité des trois fichiers du dépôt.
-- `sommaire.test.ts` : statistiques (statuts, licences, familles, tags, critères par statut, forges, dates), rendu Markdown (sections, images insérées dans leur section, cas sans outil enrichi), validation du résumé et nouvelle tentative, `genererSommaire` (écriture, options, conservation du sommaire existant en cas d'échec), avec des données fictives (jamais `outils.json`, jamais le réseau).
-- `graphiques.test.ts` : spécifications Vega-Lite (données incluses, champs existants, pourcentages, graphiques omis sans données), écriture et nettoyage des fichiers, message si vl-convert est absent, et conversion réelle en SVG et PNG (ignorée si vl-convert n'est pas installé). Les données fictives des tests sont dans `donnees-fictives.ts`.
+- `sommaire.test.ts` : statistiques (statuts, licences, familles, tags, critères par statut, critères vérifiés par verdict et par statut, forges, dates), rendu Markdown (sections, images insérées dans leur section, cas sans outil enrichi), validation du résumé et nouvelle tentative, `genererSommaire` (écriture, options, conservation du sommaire existant en cas d'échec), avec des données fictives (jamais `outils.json`, jamais le réseau).
+- `graphiques.test.ts` : spécifications Vega-Lite (données incluses, champs existants, pourcentages, verdicts des critères vérifiés, graphiques omis sans données), écriture et nettoyage des fichiers, message si vl-convert est absent, et conversion réelle en SVG et PNG (ignorée si vl-convert n'est pas installé). Les données fictives des tests sont dans `donnees-fictives.ts`.
 - `schemas.test.ts` : les trois fichiers de données réels sont valides selon les schémas (avec Ajv, indépendant de RunTypes), et des variantes invalides sont refusées (clé inconnue, `score` hors de 0 à 3, `source` ou `changement` inconnus, tags en trop ou en double, date non ISO, `meta` manquant).
 - `en-tetes.test.ts` : chaque fichier `.ts` porte les en-têtes SPDX; la licence du code est la même dans `package.json`; les deux textes de licence sont présents, à la racine (`LICENSE*`) et dans `LICENSES/`; chaque schéma JSON déclare la licence du code dans `$comment`; et `REUSE.toml` annote `schemas/**` et le reste des fichiers sans en-tête (AGPL-3.0-or-later), ainsi que les données et leurs dérivés (CC-BY-SA-4.0). Ce test ne remplace pas `nub run licences`, qui contrôle tous les fichiers.
 

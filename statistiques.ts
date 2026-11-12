@@ -64,6 +64,18 @@ export interface LigneCriteres {
   total: number;
 }
 
+/** Nombre d'outils par verdict d'IA (criteres_confirmes) pour un critère. */
+export interface Verdicts {
+  confirme: number;
+  infirme: number;
+  indetermine: number;
+}
+export interface LigneVerdicts {
+  source: string;
+  outils: number;
+  parCritere: Record<string, Verdicts>;
+}
+
 export interface Statistiques {
   meta: Metadonnees;
   total: number;
@@ -84,6 +96,18 @@ export interface Statistiques {
     definitions: { id: string; titre: string }[];
     repertoire: { parCritere: Compte[]; parSource: LigneCriteres[] };
     enrichie: { parCritere: Compte[]; parSource: LigneCriteres[]; concordants: number; confiance: Compte[] };
+    /** Critères vérifiés par une IA d'après la page de l'outil, citation à l'appui (criteres_confirmes). */
+    confirmes: {
+      outils: number;
+      /** Outils enrichis sans criteres_confirmes. */
+      sansVerdict: string[];
+      modeles: Compte[];
+      parSource: LigneVerdicts[];
+      /** Outils dont le nombre de critères confirmés égale le nombre d'étoiles. */
+      autantQueEtoiles: number;
+      /** Outils dont les critères confirmés sont exactement ceux de l'évaluation enrichie. */
+      identiquesEvaluation: number;
+    };
   };
   forges: { forge: string; hotes: string[]; outils: string[] }[];
   sansDepot: { libresOuPartiels: string[]; autres: number };
@@ -140,6 +164,29 @@ function lignesCriteres(outils: OutilClasse[], ids: string[], criteresDe: (o: Ou
     .concat(outils.length ? [ligne("Ensemble", outils)] : []);
 }
 
+function lignesVerdicts(outils: OutilClasse[], ids: string[], sourceDe: (o: OutilClasse) => string): LigneVerdicts[] {
+  const verdict = (o: OutilClasse, id: string): keyof Verdicts => {
+    const c = o.criteres_confirmes!;
+    return c.criteres.includes(id as never) ? "confirme" : id in c.infirmes ? "infirme" : "indetermine";
+  };
+  const ligne = (source: string, os: OutilClasse[]): LigneVerdicts => ({
+    source,
+    outils: os.length,
+    parCritere: Object.fromEntries(ids.map((id) => {
+      const v: Verdicts = { confirme: 0, infirme: 0, indetermine: 0 };
+      for (const o of os) v[verdict(o, id)]++;
+      return [id, v];
+    })),
+  });
+  const groupes = new Map<string, OutilClasse[]>();
+  for (const o of outils) groupes.set(sourceDe(o), [...(groupes.get(sourceDe(o)) ?? []), o]);
+  const ordre = [...SOURCES, NON_ENRICHI];
+  return [...groupes]
+    .sort((a, b) => ordre.indexOf(a[0]) - ordre.indexOf(b[0]))
+    .map(([source, os]) => ligne(source, os))
+    .concat(outils.length ? [ligne("Ensemble", outils)] : []);
+}
+
 export function calculerStatistiques({ outils: tous, tags, criteres, meta }: Entree): Statistiques {
   const outils = tous.filter((o) => !o.removed);
   const enrichis = outils.filter((o) => o.description_longue);
@@ -185,6 +232,8 @@ export function calculerStatistiques({ outils: tous, tags, criteres, meta }: Ent
     ids.map((id) => ({ cle: id, n: os.filter((o) => de(o).includes(id)).length }));
   const enrichiesCriteres = (o: OutilClasse) => o.evaluation_enrichie?.criteres ?? [];
   const avecEvaluation = enrichis.filter((o) => o.evaluation_enrichie);
+  const avecVerdict = enrichis.filter((o) => o.criteres_confirmes);
+  const memesEnsembles = (a: string[], b: string[]) => a.length === b.length && a.every((x) => b.includes(x));
 
   // Forges
   const parForge = new Map<string, { hotes: Set<string>; outils: string[] }>();
@@ -262,6 +311,14 @@ export function calculerStatistiques({ outils: tous, tags, criteres, meta }: Ent
         parSource: lignesCriteres(avecEvaluation, ids, enrichiesCriteres, sourceDe),
         concordants: avecEvaluation.filter((o) => !o.evaluation_enrichie?.ecart).length,
         confiance: trier(compter(avecEvaluation.map((o) => o.evaluation_enrichie!.confiance))),
+      },
+      confirmes: {
+        outils: avecVerdict.length,
+        sansVerdict: enrichis.filter((o) => !o.criteres_confirmes).map((o) => o.nom),
+        modeles: trier(compter(avecVerdict.map((o) => o.criteres_confirmes!.modele))),
+        parSource: lignesVerdicts(avecVerdict, ids, sourceDe),
+        autantQueEtoiles: avecVerdict.filter((o) => o.criteres_confirmes!.criteres.length === o.score).length,
+        identiquesEvaluation: avecVerdict.filter((o) => memesEnsembles(o.criteres_confirmes!.criteres, enrichiesCriteres(o))).length,
       },
     },
     forges: [...parForge]

@@ -11,7 +11,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { basename, join } from "node:path";
 import type { TopLevelSpec } from "vega-lite";
-import { familleLicence, NOMS_SOURCES, NON_ENRICHI, SOURCES, type LigneCriteres, type Statistiques } from "./statistiques.ts";
+import { familleLicence, NOMS_SOURCES, NON_ENRICHI, SOURCES, type LigneCriteres, type Statistiques, type Verdicts } from "./statistiques.ts";
 
 // ---------- apparence ----------
 
@@ -97,7 +97,7 @@ export interface Graphique {
 
 /** Les identifiants de tous les graphiques possibles (pour nettoyer les fichiers périmés). */
 export const IDS_GRAPHIQUES = [
-  "statut-code-source", "categories-statut", "criteres-repertoire-enrichie", "criteres-par-statut",
+  "statut-code-source", "categories-statut", "criteres-repertoire-enrichie", "criteres-par-statut", "criteres-verdicts",
   "licences", "forges", "tags", "enrichissement-jours",
 ] as const;
 
@@ -221,6 +221,47 @@ function graphiqueCriteresParStatut(s: Statistiques): Graphique {
   };
 }
 
+const VERDICTS: { cle: keyof Verdicts; nom: string; couleur: string }[] = [
+  { cle: "confirme", nom: "Confirmé", couleur: "#009E73" },
+  { cle: "infirme", nom: "Infirmé", couleur: "#D55E00" },
+  { cle: "indetermine", nom: "Indéterminé", couleur: "#BBBBBB" },
+];
+
+function graphiqueVerdicts(s: Statistiques): Graphique | null {
+  const c = s.criteres.confirmes;
+  if (!c.outils) return null;
+  const titre = (id: string) => NOMS_CRITERES[id] ?? id;
+  const ids = s.criteres.definitions.map((d) => d.id);
+  const lignes = c.parSource.filter((l) => l.source !== "Ensemble");
+  const valeurs = lignes.flatMap((l) =>
+    ids.flatMap((id) => VERDICTS.map((v, rang) => ({ statut: nomStatut(l.source), critere: titre(id), verdict: v.nom, rang, n: l.parCritere[id]![v.cle], pct: pct(l.parCritere[id]![v.cle], l.outils), outils: l.outils }))),
+  );
+  const statuts = ORDRE_STATUTS.filter((k) => lignes.some((l) => l.source === k)).map(nomStatut);
+  const description = `Barres empilées : pour chaque critère et chaque statut du code source, part des outils vérifiés dont le critère est confirmé, infirmé ou indéterminé d'après la page de l'outil (${c.outils} outils vérifiés).`;
+  return {
+    id: "criteres-verdicts",
+    titre: "Critères vérifiés d'après la page de l'outil",
+    description,
+    spec: {
+      ...base("Critères vérifiés d'après la page de l'outil", `${c.outils} outils vérifiés par IA, citation à l'appui : confirmé, infirmé ou indéterminé, par statut du code source`, description),
+      data: { values: valeurs },
+      facet: { column: { field: "critere", type: "nominal", title: null, sort: ids.map(titre), header: { labelFontSize: 13, labelFontWeight: "bold" } } },
+      spec: {
+        width: 200,
+        height: { step: 26 },
+        mark: { type: "bar" },
+        encoding: {
+          y: { field: "statut", type: "nominal", sort: statuts, title: null, axis: { labelLimit: 200 } },
+          x: { field: "pct", type: "quantitative", title: "% des outils vérifiés du statut", scale: { domain: [0, 100] }, axis: { format: "d" } },
+          color: { field: "verdict", type: "nominal", title: null, sort: VERDICTS.map((v) => v.nom), scale: { domain: VERDICTS.map((v) => v.nom), range: VERDICTS.map((v) => v.couleur) } },
+          order: { field: "rang", type: "quantitative" },
+          tooltip: [{ field: "statut" }, { field: "verdict" }, { field: "n", title: "Outils" }, { field: "outils", title: "Outils du statut" }],
+        },
+      },
+    } as TopLevelSpec,
+  };
+}
+
 function graphiqueLicences(s: Statistiques): Graphique | null {
   if (!s.licences.spdx.length) return null;
   const valeurs = s.licences.spdx.map((c) => ({ licence: c.cle, n: c.n, famille: familleLicence(c.cle) }));
@@ -303,6 +344,7 @@ export function construireGraphiques(s: Statistiques): Graphique[] {
     graphiqueCategories(s),
     graphiqueCriteres(s),
     graphiqueCriteresParStatut(s),
+    graphiqueVerdicts(s),
     graphiqueLicences(s),
     graphiqueForges(s),
     graphiqueTags(s),

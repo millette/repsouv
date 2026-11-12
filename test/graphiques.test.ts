@@ -11,7 +11,7 @@ import {
   construireGraphiques, convertirAvecVlConvert, ecrireGraphiques, IDS_GRAPHIQUES, verifierVlConvert, type Graphique,
 } from "../graphiques.ts";
 import { calculerStatistiques } from "../statistiques.ts";
-import { entree, outil } from "./donnees-fictives.ts";
+import { entree, outil, OUTILS } from "./donnees-fictives.ts";
 
 const stats = () => calculerStatistiques(entree());
 const ids = (gs: Graphique[]) => gs.map((g) => g.id);
@@ -29,10 +29,23 @@ const champsUtilises = (o: unknown, trouves = new Set<string>()): Set<string> =>
   return trouves;
 };
 
-test("graphiques: les huit graphiques attendus (celui des jours exige au moins deux jours d'enrichissement, ce qu'ont les données fictives)", () => {
+test("graphiques: les neuf graphiques attendus (celui des jours exige au moins deux jours d'enrichissement, ce qu'ont les données fictives)", () => {
   assert.deepEqual(ids(construireGraphiques(stats())), [
-    "statut-code-source", "categories-statut", "criteres-repertoire-enrichie", "criteres-par-statut", "licences", "forges", "tags", "enrichissement-jours",
+    "statut-code-source", "categories-statut", "criteres-repertoire-enrichie", "criteres-par-statut", "criteres-verdicts", "licences", "forges", "tags", "enrichissement-jours",
   ]);
+});
+test("critères vérifiés: une ligne par statut, critère et verdict, en pourcentage des outils du statut, sans la ligne Ensemble", () => {
+  const g = construireGraphiques(stats()).find((x) => x.id === "criteres-verdicts")!;
+  const lignes = valeurs(g);
+  assert.deepEqual([...new Set(lignes.map((l) => l.verdict))], ["Confirmé", "Infirmé", "Indéterminé"]);
+  assert.ok(!lignes.some((l) => l.statut === "Ensemble"));
+  const libreControle = lignes.filter((l) => l.statut === "Libre" && l.critere === "Contrôle");
+  assert.deepEqual(libreControle.map((l) => [l.verdict, l.n, l.pct]), [["Confirmé", 0, 0], ["Infirmé", 1, 100], ["Indéterminé", 0, 0]]);
+  assert.match(g.description, /confirmé/);
+});
+test("critères vérifiés: pas de graphique sans criteres_confirmes", () => {
+  const sans = calculerStatistiques(entree(OUTILS.map((o) => { const { criteres_confirmes: _c, ...reste } = o; return reste as typeof o; })));
+  assert.ok(!ids(construireGraphiques(sans)).includes("criteres-verdicts"));
 });
 test("graphiques: tous les identifiants produits sont connus (pour nettoyer les fichiers périmés)", () => {
   for (const id of ids(construireGraphiques(stats()))) assert.ok((IDS_GRAPHIQUES as readonly string[]).includes(id), id);

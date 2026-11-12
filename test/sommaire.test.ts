@@ -75,6 +75,28 @@ test("statistiques: critères par critère et par statut du code source, répert
   assert.equal(criteres.enrichie.concordants, 4);
   assert.deepEqual(cles(criteres.enrichie.confiance), { élevée: 4, faible: 1 });
 });
+test("statistiques: critères vérifiés (criteres_confirmes): confirmés, infirmés et indéterminés par critère et par statut", () => {
+  const { confirmes } = calculerStatistiques(entree()).criteres;
+  assert.equal(confirmes.outils, 4);
+  assert.deepEqual(confirmes.sansVerdict, ["G"]);
+  assert.deepEqual(cles(confirmes.modeles), { "claude-fable-5-2": 4 });
+  assert.deepEqual(confirmes.parSource.map((l) => l.source), ["libre", "partiel", "source-disponible", "proprietaire", "Ensemble"]);
+  const ensemble = confirmes.parSource.at(-1)!;
+  assert.equal(ensemble.outils, 4);
+  assert.deepEqual(ensemble.parCritere, {
+    donnees: { confirme: 2, infirme: 1, indetermine: 1 },
+    controle: { confirme: 2, infirme: 1, indetermine: 1 },
+    dependance: { confirme: 2, infirme: 0, indetermine: 2 },
+  });
+  const libre = confirmes.parSource.find((l) => l.source === "libre")!;
+  assert.deepEqual([libre.outils, libre.parCritere.controle], [1, { confirme: 0, infirme: 1, indetermine: 0 }]);
+  assert.equal(confirmes.autantQueEtoiles, 2);
+  assert.equal(confirmes.identiquesEvaluation, 3);
+});
+test("statistiques: sans aucun criteres_confirmes, la section est vide", () => {
+  const { confirmes } = calculerStatistiques(entree(OUTILS.map((o) => { const { criteres_confirmes: _c, ...reste } = o; return reste as typeof o; }))).criteres;
+  assert.deepEqual([confirmes.outils, confirmes.parSource, confirmes.sansVerdict.length], [0, [], 5]);
+});
 test("statistiques: forges, et logiciels libres sans dépôt", () => {
   const s = calculerStatistiques(entree([...OUTILS, enrichi("Sans", { repo: null })]));
   assert.deepEqual(s.forges.map((f) => [f.forge, f.outils.length]), [["GitHub", 2], ["git.exemple.org", 1], ["GitLab", 1]]);
@@ -208,7 +230,7 @@ test("statistiques: nombre d'outils par catégorie et par statut du code source"
 
 const GRAPHIQUE = (id: string) => ({ id, titre: `Titre ${id}`, description: `Texte alternatif de ${id} [avec crochets].`, png: `graphiques/${id}.png`, svg: `graphiques/${id}.svg` });
 test("rendu: chaque image PNG est insérée dans la section du graphique, avec son texte alternatif", () => {
-  const ids = ["statut-code-source", "categories-statut", "criteres-repertoire-enrichie", "criteres-par-statut", "licences", "forges", "tags", "enrichissement-jours"];
+  const ids = ["statut-code-source", "categories-statut", "criteres-repertoire-enrichie", "criteres-par-statut", "criteres-verdicts", "licences", "forges", "tags", "enrichissement-jours"];
   const md = rendreMarkdown(calculerStatistiques(entree()), { genereLe: GENERE_LE, graphiques: ids.map(GRAPHIQUE) });
   for (const id of ids) {
     assert.ok(md.includes(`](graphiques/${id}.png)`), id);
@@ -221,8 +243,21 @@ test("rendu: chaque image PNG est insérée dans la section du graphique, avec s
   assert.ok(section("Forges de code").includes("forges.png"));
   assert.ok(section("Tags").includes("tags.png"));
   assert.ok(section("Critères de souveraineté").includes("criteres-repertoire-enrichie.png") && section("Critères de souveraineté").includes("criteres-par-statut.png"));
+  assert.ok(section("Critères de souveraineté").includes("criteres-verdicts.png"));
   assert.ok(section("Dates").includes("enrichissement-jours.png"));
   assert.doesNotMatch(md, /\.svg/); // seules les images PNG sont insérées
+});
+test("rendu: les critères vérifiés ont leur sous-section, avec les trois verdicts par statut, le modèle et les outils sans verdict", () => {
+  const md = rendreMarkdown(calculerStatistiques(entree()), { genereLe: GENERE_LE });
+  const section = md.slice(md.indexOf("### Critères vérifiés"), md.indexOf("\n## ", md.indexOf("### Critères vérifiés")));
+  assert.match(section, /citation/);
+  assert.match(section, /\| Libre \| 1 \| 1 \/ 0 \/ 0 \| 0 \/ 1 \/ 0 \| 1 \/ 0 \/ 0 \|/);
+  assert.match(section, /\| Ensemble \| 4 \| 2 \/ 1 \/ 1 \| 2 \/ 1 \/ 1 \| 2 \/ 0 \/ 2 \|/);
+  assert.match(section, /claude-fable-5-2/);
+  assert.match(section, /sans verdict[^\n]*G/);
+  assert.match(section, /\*\*2\*\* outil\(s\) sur 4 ont autant de critères confirmés que d'étoiles/);
+  const sans = rendreMarkdown(calculerStatistiques(entree(OUTILS.map((o) => { const { criteres_confirmes: _c, ...reste } = o; return reste as typeof o; }))), { genereLe: GENERE_LE });
+  assert.match(sans, /### Critères vérifiés[\s\S]*?\*Aucun critère n'a encore été vérifié/);
 });
 test("rendu: sans graphiques, aucune image; l'image précède son tableau", () => {
   const sans = rendreMarkdown(calculerStatistiques(entree()), { genereLe: GENERE_LE });

@@ -177,6 +177,19 @@ ${matrice(c.enrichie.parSource)}
 
 - **${c.enrichie.concordants}** évaluation(s) sur ${c.enrichie.parSource.at(-1)!.outils} concordent avec le répertoire (${pourcent(c.enrichie.concordants, c.enrichie.parSource.at(-1)!.outils)}) ; **${s.enrichissement.avecEcart.length}** s'en écartent${s.enrichissement.avecEcart.length ? ` (${liste(s.enrichissement.avecEcart, 10)})` : ""}.
 - Confiance de l'évaluation enrichie : ${c.enrichie.confiance.map((x) => `${x.cle} ${x.n}`).join(", ") || "aucune"}.` : aucunEnrichi}
+
+### Critères vérifiés d'après la page de l'outil (citation à l'appui)
+
+Pour chaque outil enrichi, une IA a lu la page de l'outil et répondu, critère par critère, **confirmé**, **infirmé** ou **indéterminé**, avec une citation copiée mot pour mot (champ \`criteres_confirmes\` de \`outils.json\`). Un critère indéterminé n'est pas contredit : la page ne permet simplement pas de conclure. Ce nombre peut être inférieur au nombre d'étoiles, qui reste celui de la source.
+
+${c.confirmes.outils ? `${image("criteres-verdicts")}${tableau(
+    ["Statut", "Outils", ...c.definitions.map((x) => `${titre(x.id)} (confirmés / infirmés / indéterminés)`)],
+    c.confirmes.parSource.map((r) => [NOMS_SOURCES[r.source] ?? r.source, r.outils, ...c.definitions.map((x) => { const v = r.parCritere[x.id]!; return `${v.confirme} / ${v.infirme} / ${v.indetermine}`; })]),
+  )}
+
+- **${c.confirmes.outils}** outil(s) vérifié(s) sur ${ens} enrichis, par ${c.confirmes.modeles.map((m) => `${m.cle} (${m.n})`).join(", ")}${c.confirmes.sansVerdict.length ? ` ; sans verdict : ${liste(c.confirmes.sansVerdict, 10)}` : ""}.
+- **${c.confirmes.autantQueEtoiles}** outil(s) sur ${c.confirmes.outils} ont autant de critères confirmés que d'étoiles (${pourcent(c.confirmes.autantQueEtoiles, c.confirmes.outils)}) ; pour les autres, la page n'établit pas tous les critères que les étoiles représentent.
+- **${c.confirmes.identiquesEvaluation}** outil(s) sur ${c.confirmes.outils} ont exactement les critères de l'évaluation enrichie (${pourcent(c.confirmes.identiquesEvaluation, c.confirmes.outils)}).` : "*Aucun critère n'a encore été vérifié (voir confirmer.ts et appliquer-confirmations.ts dans le README).*"}
 `);
 
   // Forges
