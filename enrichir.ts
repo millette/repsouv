@@ -9,6 +9,7 @@ import { parseHTML } from "linkedom";
 import type { ConfianceEvaluation, Critere, EvaluationEnrichie, Outil } from "./extract.ts";
 import { ecrireFichier, lireFichier, lireSiExiste } from "./fichiers.ts";
 import { CONTROLE, DEPENDANCE, DONNEES } from "./ids.ts";
+import { additionner, coutPour, USAGE_VIDE, usageDepuisOpenAI, type Usage } from "./prix.ts";
 import { problemeLicenceSpdx } from "./spdx.ts";
 import { horodatage } from "./temps.ts";
 
@@ -313,10 +314,14 @@ ${liste}`;
 }
 
 /** Appelle l'API Responses d'OpenAI avec une sortie JSON structurée et retourne l'objet JSON parsé. */
+/** Reçoit les jetons de chaque appel à l'API (pour le coût). */
+export type Compteur = (usage: Usage) => void;
+
 export async function appelerOpenAI(
   cle: string,
   modele: string,
   requete: { nom: string; schema: unknown; instructions: string; messages: string[]; maxTokens: number },
+  compteur?: Compteur,
 ): Promise<unknown> {
   const reponse = await fetch("https://api.openai.com/v1/responses", {
     method: "POST",
@@ -334,6 +339,7 @@ export async function appelerOpenAI(
   });
   const corps = (await reponse.json().catch(() => ({}))) as Record<string, any>;
   if (!reponse.ok) throw new Error(`OpenAI HTTP ${reponse.status}: ${corps.error?.message ?? "erreur inconnue"}`);
+  compteur?.(usageDepuisOpenAI(corps)); // les jetons sont facturés même si la réponse est inutilisable
   if (corps.status === "incomplete") throw new Error(`réponse incomplète (${corps.incomplete_details?.reason})`);
   const contenuMessage = (corps.output ?? []).filter((o: any) => o.type === "message").flatMap((o: any) => o.content ?? []);
   const refus = contenuMessage.find((c: any) => c.type === "refusal");
@@ -354,7 +360,7 @@ const resumePage = (outil: Outil, contenu: Contenu | null) => ({
   liens_depot: contenu?.liens_depot ?? [],
 });
 
-export function generateurOpenAI(cle: string, modele: string): Generateur {
+export function generateurOpenAI(cle: string, modele: string, compteur?: Compteur): Generateur {
   return (outil, contenu, { tags, criteres, autoriserNouveauxTags, rappel }) =>
     appelerOpenAI(cle, modele, {
       nom: "fiche_outil",
@@ -362,7 +368,7 @@ export function generateurOpenAI(cle: string, modele: string): Generateur {
       instructions: instructions(tags, criteres, autoriserNouveauxTags),
       messages: [JSON.stringify(resumePage(outil, contenu)), ...(rappel ? [messageRappel(rappel)] : [])],
       maxTokens: 4000,
-    });
+    }, compteur);
 }
 
 // ---------- explication des écarts ----------
@@ -409,7 +415,7 @@ export const schemaEcart = {
   additionalProperties: false,
 };
 
-export function expliqueurOpenAI(cle: string, modele: string): Expliqueur {
+export function expliqueurOpenAI(cle: string, modele: string, compteur?: Compteur): Expliqueur {
   return (outil, contenu, { repertoire, enrichie, criteres, rappel }) =>
     appelerOpenAI(cle, modele, {
       nom: "ecart_evaluation",
@@ -420,7 +426,7 @@ export function expliqueurOpenAI(cle: string, modele: string): Expliqueur {
         ...(rappel ? [messageRappel(rappel)] : []),
       ],
       maxTokens: 1000,
-    });
+    }, compteur);
 }
 
 // ---------- orchestration ----------
@@ -450,12 +456,6 @@ export interface OptionsEnrichissement {
   /** Contenu de la page de l'outil; par défaut, téléchargé. */
   lire?: (url: string) => Promise<Contenu | null>;
   autoriserNouveauxTags?: boolean;
-  /**
-   * Par défaut, un outil dont la page est inaccessible ou presque vide n'est pas enrichi (échec
-   * consigné, retenté plus tard). Avec cette option, il l'est à partir de sa seule description et
-   * porte `page_lue: false`.
-   */
-  accepterSansPage?: boolean;
   /** Date et heure du moment, pour `enrichi_le` (ISO 8601, heure de Toronto). Par défaut, l'heure actuelle. */
   horloge?: () => string;
   /** Nombre d'échecs consécutifs à partir duquel un outil n'est plus tenté (MAX_ECHECS_PAR_DEFAUT). */
@@ -475,8 +475,6 @@ export interface ResultatEnrichissement {
   erreurs: { nom: string; message: string }[];
   /** Outils dont evaluation_enrichie diffère de score/criteres du répertoire. */
   ecarts: string[];
-  /** Outils enrichis sans page lisible (page_lue: false). */
-  sansPage: string[];
   /** Outils non tentés parce qu'ils ont atteint le nombre maximal d'échecs consécutifs. */
   abandonnes: string[];
 }
@@ -510,9 +508,9 @@ export async function obtenirValide<T>(
  * Un outil n'est modifié que si TOUT son enrichissement, explication d'écart comprise, a réussi.
  */
 export async function enrichirOutils(outils: OutilARevoir[], options: OptionsEnrichissement): Promise<ResultatEnrichissement> {
-  const { tags, criteres, generer, expliquer, autoriserNouveauxTags = false, maxEchecs = MAX_ECHECS_PAR_DEFAUT, lire = lireContenu, accepterSansPage = false, horloge = horodatage } = options;
+  const { tags, criteres, generer, expliquer, autoriserNouveauxTags = false, maxEchecs = MAX_ECHECS_PAR_DEFAUT, lire = lireContenu, horloge = horodatage } = options;
   const journal = options.journal ?? (() => {});
-  const resultat: ResultatEnrichissement = { enrichis: [], erreurs: [], ecarts: [], sansPage: [], abandonnes: [] };
+  const resultat: ResultatEnrichissement = { enrichis: [], erreurs: [], ecarts: [], abandonnes: [] };
   let traites = 0;
 
   for (const [i, outil] of outils.entries()) {
@@ -526,9 +524,7 @@ export async function enrichirOutils(outils: OutilARevoir[], options: OptionsEnr
       const { contenu, probleme } = await obtenirPage(outil.lien, lire);
       if (probleme) {
         journal(`  ${outil.nom}: AVERTISSEMENT: ${probleme}`, "avertissement");
-        if (!accepterSansPage) {
-          throw new Error(`${probleme}; outil non enrichi (ou utiliser --sans-page pour l'enrichir à partir de sa description seule)`);
-        }
+        throw new Error(`${probleme}; outil non enrichi`);
       }
       const proposition = await obtenirValide(
         (rappel) => generer(outil, contenu, { tags, criteres, autoriserNouveauxTags, ...(rappel && { rappel }) }),
@@ -550,9 +546,8 @@ export async function enrichirOutils(outils: OutilARevoir[], options: OptionsEnr
 
       for (const n of nouveaux_tags) tags.push({ ...n, propose_pour: outil.nom });
       const { echecs_enrichissement: _echecs, ...sansCompteur } = outil;
-      outils[i] = { ...sansCompteur, ...champs, page_lue: !probleme, enrichi_le: horloge() };
+      outils[i] = { ...sansCompteur, ...champs, page_lue: true, enrichi_le: horloge() };
       resultat.enrichis.push(outil.nom);
-      if (probleme) resultat.sansPage.push(outil.nom);
       journal(`  ${outil.nom}: ${champs.tags.join(", ")} (${champs.source})`, "succes");
       if (different) {
         resultat.ecarts.push(outil.nom);
@@ -570,4 +565,43 @@ export async function enrichirOutils(outils: OutilARevoir[], options: OptionsEnr
     options.progression?.(++traites);
   }
   return resultat;
+}
+
+// ---------- estimation du coût ----------
+
+/** Jetons d'un texte, borne haute (3 caractères par jeton, le français en compte plutôt 3,5 à 4). */
+export const estimerJetons = (texte: string) => Math.ceil(texte.length / 3);
+
+/** Sortie attendue par appel (description longue de 350 mots, champs JSON, marge pour le raisonnement), borne haute. */
+const SORTIE_FICHE = 2500;
+const SORTIE_ECART = 600;
+
+export interface Estimation {
+  outils: number;
+  usage: Usage;
+  /** Coût en dollars, ou null si le prix du modèle est inconnu. */
+  cout: number | null;
+  hypotheses: string;
+}
+
+/**
+ * Borne haute des jetons et du coût pour enrichir `outils`: pour chaque outil, un appel avec les consignes, la fiche et un
+ * extrait de page de 6 000 caractères, plus un second appel (explication de l'écart) compté pour tous les outils.
+ */
+export function estimerCoutEnrichissement(outils: Outil[], tags: Tag[], criteres: Critere[], modele: string): Estimation {
+  const extraitMax = "x".repeat(6000);
+  let usage: Usage = { ...USAGE_VIDE };
+  for (const outil of outils) {
+    const fiche = JSON.stringify(resumePage(outil, { titre: outil.nom, meta_description: outil.description, extrait: extraitMax, liens_depot: [] }));
+    const consignes = instructions(tags, criteres, false);
+    const appelFiche: Usage = { entree: estimerJetons(consignes) + estimerJetons(fiche), sortie: SORTIE_FICHE, cache_lecture: 0, cache_ecriture: 0 };
+    const appelEcart: Usage = { entree: estimerJetons(instructionsEcart(criteres)) + estimerJetons(fiche) + 200, sortie: SORTIE_ECART, cache_lecture: 0, cache_ecriture: 0 };
+    usage = additionner(additionner(usage, appelFiche), appelEcart);
+  }
+  return {
+    outils: outils.length,
+    usage,
+    cout: coutPour(usage, modele),
+    hypotheses: "borne haute: 3 caractères par jeton, extrait de page de 6 000 caractères, et un second appel (écart) pour chaque outil",
+  };
 }

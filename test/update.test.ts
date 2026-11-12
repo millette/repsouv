@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { classer, type OutilClasse } from "../classify.ts";
 import { creerCouleurs } from "../couleurs.ts";
-import { avertissementSommaireNonMisAJour, ligneJournal, lignesResume, mettreAJour, raisonDeSauterSommaire, sommaireNecessaire } from "../update.ts";
+import { interpreterChoix, ligneJournal, lignesResume, mettreAJour, raisonDeSauterSommaire, sommaireNecessaire, texteConfirmation } from "../update.ts";
 
 const base = (nom: string, extra: Partial<OutilClasse> = {}): OutilClasse => {
   const o = {
@@ -136,14 +136,30 @@ test("ligneJournal: succès en vert (nom en gras), avertissement en jaune, erreu
 
 // ---------- sommaire automatique ----------
 
-test("sommaireNecessaire: seulement avec --enrichir, hors simulation, et si quelque chose a changé", () => {
-  const base = { enrichir: true, dryRun: false, changements: 0, enrichis: 0 };
-  assert.equal(sommaireNecessaire({ ...base, changements: 2 }), true); // outils nouveaux, modifiés ou retirés
-  assert.equal(sommaireNecessaire({ ...base, enrichis: 3 }), true); // outils enrichis
-  assert.equal(sommaireNecessaire({ ...base, changements: 1, enrichis: 1 }), true);
-  assert.equal(sommaireNecessaire(base), false); // rien n'a changé
-  assert.equal(sommaireNecessaire({ ...base, changements: 2, enrichir: false }), false); // update seul ne touche pas au sommaire
-  assert.equal(sommaireNecessaire({ ...base, changements: 2, enrichis: 3, dryRun: true }), false); // simulation
+test("sommaireNecessaire: hors simulation, dès que quelque chose a changé ou a été enrichi", () => {
+  assert.equal(sommaireNecessaire({ dryRun: false, changements: 2, enrichis: 0 }), true);
+  assert.equal(sommaireNecessaire({ dryRun: false, changements: 0, enrichis: 3 }), true);
+  assert.equal(sommaireNecessaire({ dryRun: false, changements: 1, enrichis: 1 }), true);
+  assert.equal(sommaireNecessaire({ dryRun: false, changements: 0, enrichis: 0 }), false);
+  assert.equal(sommaireNecessaire({ dryRun: true, changements: 2, enrichis: 3 }), false);
+});
+test("interpreterChoix: 1 ou oui accepte les coûts, 2 passe en simulation, 3, vide ou autre chose arrête", () => {
+  assert.equal(interpreterChoix("1"), "accepter");
+  assert.equal(interpreterChoix(" Oui "), "accepter");
+  assert.equal(interpreterChoix("2"), "simulation");
+  assert.equal(interpreterChoix("3"), "arreter");
+  assert.equal(interpreterChoix(""), "arreter");
+  assert.equal(interpreterChoix("peut-être"), "arreter");
+});
+test("texteConfirmation: le premier import annonce le nombre d'outils, le coût estimé et les trois choix", () => {
+  const texte = texteConfirmation(60, "≈ 12,34 $");
+  assert.match(texte, /Premier import/);
+  assert.match(texte, /60 outil\(s\)/);
+  assert.match(texte, /≈ 12,34 \$/);
+  assert.match(texte, /1\. [^\n]*coûts/i);
+  assert.match(texte, /2\. [^\n]*simulation/i);
+  assert.match(texte, /3\. [^\n]*arrêter/i);
+  assert.match(texte, /\[1\/2\/3\]/);
 });
 test("raisonDeSauterSommaire: clé API absente, vl-convert introuvable, ou rien à signaler", () => {
   const present = () => "vl-convert 1.9.0";
@@ -154,22 +170,6 @@ test("raisonDeSauterSommaire: clé API absente, vl-convert introuvable, ou rien 
   assert.match(raisonDeSauterSommaire(undefined, present)!, /OPENAI_API_KEY absente/);
   assert.match(raisonDeSauterSommaire("", present)!, /OPENAI_API_KEY absente/);
   assert.match(raisonDeSauterSommaire("sk-test", absent)!, /vl-convert est introuvable/);
-});
-
-test("avertissement: update seul avec des changements, et à l'import initial; jamais en simulation ni avec --enrichir", () => {
-  const base = { enrichir: false, dryRun: false, changements: 2, enrichis: 0 };
-  assert.equal(avertissementSommaireNonMisAJour(base), "Le sommaire n'est plus à jour (des changements ont été détectés): lancer `nub run sommaire`.");
-  assert.equal(avertissementSommaireNonMisAJour({ ...base, changements: 60, importInitial: true }), "Aucun sommaire n'a encore été généré: lancer `nub run sommaire`.");
-  assert.equal(avertissementSommaireNonMisAJour({ ...base, changements: 0 }), null); // aucun changement
-  assert.equal(avertissementSommaireNonMisAJour({ ...base, dryRun: true }), null); // simulation: rien d'écrit
-  assert.equal(avertissementSommaireNonMisAJour({ ...base, enrichir: true }), null); // --enrichir: le sommaire sera mis à jour
-  assert.equal(avertissementSommaireNonMisAJour({ ...base, enrichir: true, changements: 0, enrichis: 1 }), null);
-});
-test("un avertissement et une mise à jour du sommaire s'excluent toujours", () => {
-  for (const enrichir of [true, false]) for (const dryRun of [true, false]) for (const importInitial of [true, false]) for (const [changements, enrichis] of [[0, 0], [2, 0], [0, 3], [1, 1]]) {
-    const o = { enrichir, dryRun, importInitial, changements: changements!, enrichis: enrichis! };
-    assert.equal(avertissementSommaireNonMisAJour(o) !== null && sommaireNecessaire(o), false, JSON.stringify(o));
-  }
 });
 
 // ---------- synchroniser: import initial, écriture de outils.json et de criteres.json ----------

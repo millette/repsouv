@@ -85,7 +85,7 @@ export interface Outil {
   evaluation_enrichie?: EvaluationEnrichie;
   /**
    * true si la page de l'outil a servi à l'enrichissement; false si l'outil a été enrichi sans
-   * page lisible (option --sans-page), à partir de sa seule description: résultat moins fiable.
+   * page lisible (ancienne option --sans-page, retirée: valeur historique), à partir de sa seule description: résultat moins fiable.
    */
   page_lue?: boolean;
   /** Date et heure de l'enrichissement de l'outil (ISO 8601, heure de Toronto, avec décalage). Absente pour les outils enrichis avant l'ajout de ce champ. */

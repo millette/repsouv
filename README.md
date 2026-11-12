@@ -67,9 +67,9 @@ nub run test                     # lance les tests (et vérifie que les schémas
 nub run typecheck                # vérifie les types
 nub run schemas                  # régénère schemas/*.schema.json à partir des types
 nub run licences                 # vérifie la conformité REUSE des licences (uvx reuse lint; demande uv)
-nub run update --dry-run         # compare outils.json à la page en ligne, sans rien écrire (import initial annoncé si le fichier manque)
-nub run update                   # synchronise outils.json et criteres.json avec la page en ligne; sans outils.json, c'est l'import initial
-nub run update --enrichir         # enrichit par IA les outils qui ne le sont pas encore (nécessite OPENAI_API_KEY), puis met à jour le sommaire si quelque chose a changé
+nub run update --dry-run         # montre ce que update ferait (changements, outils à enrichir, jetons et coût estimés), sans rien écrire
+nub run update                   # synchronise outils.json et criteres.json avec la page, enrichit par IA les outils qui ne le sont pas encore (OPENAI_API_KEY) et met le sommaire à jour si quelque chose a changé
+nub run update --accepter-couts  # premier import hors terminal: accepte les coûts d'enrichissement sans la confirmation interactive
 nub run sommaire                 # écrit sommaire.md et graphiques/ (--sans-resume, --sans-graphiques pour s'en passer)
 ```
 
@@ -114,7 +114,7 @@ Fichier unifié : le tableau `outils` contient 60 outils (plus d'éventuels outi
 | `derniere_modification` | Dernière date de modification connue : ISO 8601 en heure de Toronto, avec le décalage (ex. `2026-11-05T09:53:00-05:00`) |
 | `changement` | Dernier changement détecté par `update.ts` : `"nouveau"`, `"modification"`, `"retrait"` ou `"comeback"`; `null` si jamais modifié depuis l'import |
 | `removed` | Présent (`true`) seulement pour un outil disparu de la page; l'entrée est conservée, à la fin du tableau |
-| `echecs_enrichissement` | Nombre d'échecs consécutifs d'enrichissement (page inaccessible ou presque vide, réponses invalides). Présent seulement sur un outil pas encore enrichi qui a échoué au moins une fois ; retiré dès que l'enrichissement réussit. À 3 (`--max-echecs=N` pour changer), `update --enrichir` ne tente plus l'outil |
+| `echecs_enrichissement` | Nombre d'échecs consécutifs d'enrichissement (page inaccessible ou presque vide, réponses invalides). Présent seulement sur un outil pas encore enrichi qui a échoué au moins une fois ; retiré dès que l'enrichissement réussit. À 3 (`--max-echecs=N` pour changer), `update` ne tente plus l'outil |
 | `criteres` | Identifiants (voir `criteres.json`) des critères que les étoiles représentent. Déduits, voir [Classification](implementation.md#classification) |
 | `confiance` | Fiabilité de cette déduction : `"élevée"`, `"moyenne"` ou `"faible"` |
 
@@ -130,7 +130,7 @@ Champs ajoutés par l'[enrichissement](implementation.md#enrichissement-par-ia),
 | `custom_license_url` | URL du texte de la licence maison, quand elle est disponible; `null` sinon. Exige `custom_license` |
 | `repo` | URL du dépôt de code source, sur n'importe quelle forge (GitHub, GitLab, Codeberg, Framagit…); `null` si aucun ou inconnu |
 | `enrichi_le` | Date et heure de l'enrichissement de l'outil (ISO 8601, heure de Toronto). Les 41 outils enrichis avant l'ajout de ce champ portent la date de substitution `2026-11-11T17:29:24-05:00` (celle du premier enrichissement daté), qui n'est pas leur date exacte; la date des enrichissements suivants est exacte. Dans `outils.json`, 42 outils portent cette valeur : les 41 de substitution et le premier enrichissement daté |
-| `page_lue` | `true` si la page de l'outil a servi à l'enrichissement; `false` si l'outil a été enrichi sans page lisible (option `--sans-page`), à partir de sa seule description : résultat moins fiable, voir [Pages inaccessibles](implementation.md#pages-inaccessibles-ou-presque-vides) |
+| `page_lue` | `true` si la page de l'outil a servi à l'enrichissement; `false` si l'outil a été enrichi sans page lisible, à partir de sa seule description (ancienne option `--sans-page`, retirée : un outil dont la page est illisible n'est plus enrichi) |
 | `evaluation_enrichie` | Second avis du modèle sur la souveraineté de l'outil : `score` (nombre de critères satisfaits, de 0 à 3, égal à `criteres.length`), `criteres` (identifiants de `criteres.json`) et `confiance` (`"élevée"`, `"moyenne"` ou `"faible"`). S'y ajoute `ecart`, une explication en français de la différence, seulement quand cette évaluation diffère du `score` et des `criteres` du répertoire |
 | `criteres_confirmes` | Critères **vérifiés** par une IA d'après la page de l'outil, citation à l'appui (`confirmer.ts`, puis `appliquer-confirmations.ts`) : `criteres` (ceux qui sont confirmés, dans l'ordre de `criteres.json`), `preuves` (une citation copiée mot pour mot de la description ou de la page, pour chaque critère confirmé), `infirmes` (une citation pour chaque critère que la page contredit ; un critère absent des deux est indéterminé), `modele`, `regle` (règle de lecture ajoutée aux consignes, ou `null`) et `date` (heure de Toronto). Indépendant de `criteres`, qui reste lié aux étoiles : il peut en compter moins, jamais plus. Présent pour les 57 outils enrichis (modèle `claude-fable-5-2`), absent pour les autres |
 
@@ -152,7 +152,7 @@ Les `id` sont la forme courte utilisée dans les champs `criteres` de `outils.js
 
 Le vocabulaire restreint de tags : le tableau `tags` contient des `{ id, description }`, avec une description en français pour chaque tag (37 au départ). Chaque outil reçoit de 1 à 5 de ces tags, jamais plus.
 
-De nouveaux tags peuvent s'ajouter après cette première phase, avec `--enrichir --nouveaux-tags`. Chaque tag ajouté doit être **justifié** : il porte alors en plus un champ `justification` (pourquoi aucun tag existant ne convient) et `propose_pour` (l'outil pour lequel il a été proposé). Un nouveau tag peut ne concerner qu'un seul outil.
+De nouveaux tags peuvent s'ajouter après cette première phase, avec `nub run update --nouveaux-tags`. Chaque tag ajouté doit être **justifié** : il porte alors en plus un champ `justification` (pourquoi aucun tag existant ne convient) et `propose_pour` (l'outil pour lequel il a été proposé). Un nouveau tag peut ne concerner qu'un seul outil.
 
 ## Sommaire statistique
 

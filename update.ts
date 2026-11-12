@@ -4,7 +4,7 @@
 // porte d'entrée pour suivre le répertoire: si outils.json n'existe pas, c'est l'import initial, et tous les outils
 // sont écrits avec changement "nouveau" (voir synchroniser). Reconstruction forcée: extract.ts --force; reclassement
 // de tous les outils après un changement des règles: classify.ts.
-// Usage: nub update.ts [--dry-run] [--sans-couleur] [--enrichir [--nouveaux-tags] [--sans-page] [--max-echecs=N]] [outils.json] [url]
+// Usage: nub update.ts [--dry-run] [--sans-couleur] [--nouveaux-tags] [--max-echecs=N] [--accepter-couts] [outils.json] [url]
 //
 // Pour chaque outil, selon la comparaison avec la page en ligne:
 //   - absent du fichier → changement "nouveau"
@@ -15,24 +15,25 @@
 // Les outils nouveaux ou modifiés reçoivent la date de modification de la page et sont reclassés.
 // Les champs d'enrichissement (description longue, tags, source, licence, repo, évaluation) survivent à une modification.
 //
-// Option --enrichir (clé OPENAI_API_KEY dans .env; modèle: OPENAI_MODEL):
+// Enrichissement (clé OPENAI_API_KEY dans .env; modèle: OPENAI_MODEL), toujours, dès qu'un outil n'est pas enrichi:
 //   génère UNE SEULE FOIS, pour chaque outil qui n'a pas encore de description_longue, une description
 //   longue en français (Markdown), de 1 à 5 tags de tags.json, source/licence/repo pour les logiciels libres
 //   et une évaluation indépendante des critères et du score (evaluation_enrichie, avec un sous-champ
 //   `ecart` qui explique la différence quand elle ne concorde pas avec le répertoire).
 //   Une barre de progression et le journal vont sur stderr.
-//   Un outil déjà enrichi n'est jamais régénéré. Avec --dry-run, liste seulement les outils concernés.
+//   Un outil déjà enrichi n'est jamais régénéré. Avec --dry-run, liste les outils concernés et estime les jetons et le coût.
 //   Si la page de l'outil est inaccessible ou presque vide, un avertissement est affiché et l'outil n'est PAS
-//   enrichi (échec consigné, retenté à la prochaine exécution) pour ne pas figer un résultat peu fiable.
-//   --sans-page     : enrichit quand même, à partir de la description seule; l'outil porte alors page_lue: false.
+//   enrichi (échec consigné, retenté jusqu'à --max-echecs) pour ne pas figer un résultat peu fiable.
+//   Sans clé, l'enrichissement est sauté avec un avertissement.
+//   Premier import (outils.json absent): l'estimation du coût est affichée et une confirmation est demandée (1. poursuivre
+//   en acceptant les coûts, 2. simulation, 3. arrêter); hors terminal, --accepter-couts tient lieu de réponse 1.
 //   --nouveaux-tags : le modèle peut proposer de nouveaux tags (justification obligatoire, ajoutés à tags.json).
 //   --max-echecs=N  : un outil qui a échoué N fois de suite (echecs_enrichissement) n'est plus tenté; 3 par défaut.
 //
-// Sommaire: avec --enrichir (hors --dry-run), le sommaire (sommaire.md et graphiques/, voir sommaire.ts) est mis à jour
-// automatiquement à la fin, mais SEULEMENT si quelque chose a changé (un outil nouveau, modifié ou retiré, ou au moins un
-// outil enrichi). Il faut pour cela la clé OPENAI_API_KEY et vl-convert; s'ils manquent, un avertissement le dit et le
-// sommaire existant reste tel quel. Si le résumé ne peut pas être rédigé, le sommaire existant est aussi conservé (code de
-// sortie 1). Sans --enrichir, update ne touche jamais au sommaire: s'il y a eu des changements, un avertissement le dit.
+// Sommaire: hors --dry-run, le sommaire (sommaire.md et graphiques/, voir sommaire.ts) est mis à jour automatiquement
+// à la fin, mais SEULEMENT si quelque chose a changé (un outil nouveau, modifié ou retiré, ou au moins un outil enrichi).
+// Il faut pour cela la clé OPENAI_API_KEY et vl-convert; s'ils manquent, un avertissement le dit et le sommaire existant
+// reste tel quel. Si le résumé ne peut pas être rédigé, le sommaire existant est aussi conservé (code de sortie 1).
 //
 // Couleurs (terminal seulement): résumé sur stdout, journal et barre sur stderr; chaque flux est coloré
 // s'il est un terminal. NO_COLOR ou --sans-couleur les désactive, FORCE_COLOR les impose. Hors terminal,
@@ -40,17 +41,19 @@
 import { dirname, join } from "node:path";
 import { couleursActives, creerCouleurs, type Couleurs } from "./couleurs.ts";
 import { classer, type OutilClasse } from "./classify.ts";
-import { abandonne, MAX_ECHECS_PAR_DEFAUT,
+import { estimerCoutEnrichissement, type Estimation, abandonne, MAX_ECHECS_PAR_DEFAUT,
   aEnrichir, chargerCriteres, chargerTags, enrichirOutils, expliqueurOpenAI, generateurOpenAI, MODELE_PAR_DEFAUT, sauverTags,
   type NiveauJournal,
 } from "./enrichir.ts";
 import { lancer } from "./cli.ts";
 import { existsSync } from "node:fs";
+import { createInterface } from "node:readline/promises";
 import { ecrireFichier, lireFichier, lireSiExiste, type Lu } from "./fichiers.ts";
 import { CHAMPS_ENRICHIS, telechargerRepertoire, type Changement, type Critere, type Outil } from "./extract.ts";
 import { verifierVlConvert } from "./graphiques.ts";
 import { createProgress } from "./progress.ts";
 import { genererSommaire } from "./sommaire.ts";
+import { additionner, dollars, formaterCout, USAGE_VIDE, type Usage } from "./prix.ts";
 
 const CHAMPS_COMPARES = ["categorie", "icone", "score", "lien", "description"] as const;
 /** Les champs à reporter sur la version à jour d'un outil: l'enrichissement et le compteur d'échecs. */
@@ -152,25 +155,40 @@ export function synchroniser(fichier: string, page: Outil[], criteres: Critere[]
 // ---------- sommaire automatique ----------
 
 /**
- * Le sommaire est mis à jour avec --enrichir, hors simulation, et seulement si quelque chose a changé.
+ * Le sommaire est mis à jour hors simulation, et seulement si quelque chose a changé ou a été enrichi.
  */
-export function sommaireNecessaire(o: { enrichir: boolean; dryRun: boolean; changements: number; enrichis: number }): boolean {
-  return o.enrichir && !o.dryRun && (o.changements > 0 || o.enrichis > 0);
+export function sommaireNecessaire(o: { dryRun: boolean; changements: number; enrichis: number }): boolean {
+  return !o.dryRun && (o.changements > 0 || o.enrichis > 0);
 }
 
-/**
- * L'avertissement quand le sommaire n'est PAS mis à jour parce qu'on ne l'a pas demandé (update sans --enrichir),
- * alors que des changements ont eu lieu; à l'import initial, le message dit qu'aucun sommaire
- * n'existe encore. Null s'il n'y a rien à signaler. Les autres cas
- * (clé ou vl-convert manquant, résumé impossible) ont leur propre message.
- */
-export function avertissementSommaireNonMisAJour(o: { enrichir: boolean; dryRun: boolean; changements: number; enrichis: number; importInitial?: boolean }): string | null {
-  const change = !o.dryRun && (o.changements > 0 || o.enrichis > 0);
-  if (!change || sommaireNecessaire(o)) return null;
-  // À l'import initial, il n'y a pas de sommaire antérieur: rien n'est périmé, il reste à le générer.
-  return o.importInitial
-    ? "Aucun sommaire n'a encore été généré: lancer `nub run sommaire`."
-    : "Le sommaire n'est plus à jour (des changements ont été détectés): lancer `nub run sommaire`.";
+/** Réponse à la confirmation du premier import: 1 ou oui accepte les coûts, 2 passe en simulation, tout le reste arrête. */
+export function interpreterChoix(reponse: string): "accepter" | "simulation" | "arreter" {
+  const r = reponse.trim().toLowerCase();
+  if (r === "1" || r === "oui" || r === "o") return "accepter";
+  if (r === "2") return "simulation";
+  return "arreter";
+}
+
+/** Le texte de la confirmation demandée au premier import, avant toute écriture. */
+export function texteConfirmation(nbOutils: number, coutEstime: string): string {
+  return [
+    `Premier import: ${nbOutils} outil(s) seront enrichis par l'API OpenAI (coût estimé ${coutEstime}, borne haute).`,
+    "  1. poursuivre en acceptant les coûts OpenAI (import, enrichissement et sommaire);",
+    "  2. poursuivre en simulation (--dry-run): estimation détaillée, rien n'est dépensé ni écrit;",
+    "  3. arrêter.",
+    "Votre choix [1/2/3] (3 par défaut): ",
+  ].join("\n");
+}
+
+/** Les lignes d'estimation du coût pour `--dry-run` et la confirmation du premier import. */
+export function lignesEstimation(estimation: Estimation, modele: string, nbOutilsRepertoire: number, c: Couleurs): string[] {
+  const sommaire: Usage = { entree: 2000 + 120 * nbOutilsRepertoire, sortie: 1500, cache_lecture: 0, cache_ecriture: 0 };
+  const lignes = [`${c.gras("Coût estimé")} (${estimation.hypotheses}):`];
+  lignes.push(`  enrichissement de ${estimation.outils} outil(s): ${formaterCout(estimation.usage, modele)}`);
+  lignes.push(`  sommaire (un appel pour le résumé): ${formaterCout(sommaire, modele)}`);
+  const total = additionner(estimation.usage, sommaire);
+  lignes.push(`  total: ${c.jaune(formaterCout(total, modele))}`);
+  return lignes;
 }
 
 /**
@@ -221,16 +239,14 @@ if (import.meta.main) {
   await lancer(async () => {
     const args = process.argv.slice(2);
     const dryRun = args.includes("--dry-run");
-    const enrichir = args.includes("--enrichir");
     const nouveauxTags = args.includes("--nouveaux-tags");
-    const sansPage = args.includes("--sans-page");
+    const accepterCouts = args.includes("--accepter-couts");
     const maxEchecsArg = args.find((a) => a.startsWith("--max-echecs="));
     const maxEchecs = maxEchecsArg ? Number(maxEchecsArg.slice("--max-echecs=".length)) : MAX_ECHECS_PAR_DEFAUT;
     const sansCouleur = args.includes("--sans-couleur");
-    const connues = ["--dry-run", "--sans-couleur", "--enrichir", "--nouveaux-tags", "--sans-page", "--max-echecs"];
+    const connues = ["--dry-run", "--sans-couleur", "--nouveaux-tags", "--max-echecs", "--accepter-couts"];
     const inconnue = args.find((a) => a.startsWith("--") && !connues.some((o) => a === o || a.startsWith(`${o}=`)));
     if (inconnue) throw new Error(`Option inconnue: ${inconnue}`);
-    if ((nouveauxTags || sansPage || maxEchecsArg) && !enrichir) throw new Error("--nouveaux-tags, --sans-page et --max-echecs nécessitent --enrichir");
     if (!(Number.isInteger(maxEchecs) && maxEchecs > 0)) throw new Error("--max-echecs=N: entier positif attendu");
     const [fichier = "outils.json", url] = args.filter((a) => !a.startsWith("--"));
 
@@ -239,35 +255,69 @@ if (import.meta.main) {
     const suivi = creerCouleurs(couleursActives(process.stderr, process.env, sansCouleur));
 
     const { outils: page, criteres: criteresPage, modification } = await telechargerRepertoire(url);
-    // Dernier état écrit de outils.json: les métadonnées (updated_at) sont maintenues par ecrireFichier.
-    const sync = synchroniser(fichier, page, criteresPage, modification, dryRun);
-    let courant = sync.courant;
-    const { outils, resume } = sync;
+    const modele = process.env.OPENAI_MODEL || MODELE_PAR_DEFAUT;
+    const fichierTags = join(dirname(fichier), "tags.json");
 
-    let nbEnrichis = 0;
+    // Aperçu sans rien écrire: ce que la synchronisation ferait, et ce qu'il resterait à enrichir.
+    const apercu = synchroniser(fichier, page, criteresPage, modification, true);
+    const resume = apercu.resume;
     const total = Object.values(resume).reduce((n, noms) => n + noms.length, 0);
-    if (sync.importInitial) console.log(sortie.attenue(`Import initial: ${fichier} n'existe pas, tous les outils de la page sont nouveaux`));
+    const aFaire = apercu.outils.filter(aEnrichir);
+    const abandonnes = aFaire.filter((o) => abandonne(o, maxEchecs));
+    const tagsPresents = existsSync(fichierTags);
+    const prevus = tagsPresents ? aFaire.filter((o) => !abandonne(o, maxEchecs)) : [];
+    const estimation = estimerCoutEnrichissement(prevus, tagsPresents ? chargerTags(fichierTags) : [], criteresPage, modele);
+
+    if (apercu.importInitial) console.log(sortie.attenue(`Import initial: ${fichier} n'existe pas, tous les outils de la page sont nouveaux`));
     for (const ligne of lignesResume(resume, modification, sortie)) console.log(ligne);
-    if (dryRun) console.log(sortie.attenue("Simulation (--dry-run): rien n'est écrit"));
+    console.log(`${sortie.gras("Enrichissement")}: ${prevus.length ? sortie.jaune(String(prevus.length)) : sortie.vert("0")} outil(s) à enrichir${tagsPresents ? "" : sortie.rouge(` (${fichierTags} absent: enrichissement impossible)`)}`);
+    if (prevus.length) console.log(`  à enrichir (${prevus.length}): ${sortie.cyan(prevus.map((o) => o.nom).join(", "))}`);
+    if (abandonnes.length) console.log(`  ${sortie.jaune(`abandonnés après ${maxEchecs} échecs consécutifs`)} (${abandonnes.length}): ${sortie.cyan(abandonnes.map((o) => `${o.nom} (${o.echecs_enrichissement})`).join(", "))}; relancer avec --max-echecs plus élevé pour les retenter`);
+    if (prevus.length || total) for (const ligne of lignesEstimation(estimation, modele, apercu.outils.filter((o) => !o.removed).length, sortie)) console.log(ligne);
+    if (dryRun) {
+      console.log(sortie.attenue("Simulation (--dry-run): rien n'est écrit"));
+      return;
+    }
+
+    // Premier import: on demande avant de dépenser et d'écrire.
+    if (apercu.importInitial && prevus.length && !accepterCouts) {
+      const cout = estimation.cout === null ? `inconnu pour ${modele}` : `≈ ${dollars(estimation.cout)}`;
+      if (!process.stdin.isTTY) {
+        console.error(suivi.jaune(`Premier import hors terminal: ${prevus.length} outil(s) à enrichir (coût estimé ${cout}). Relancer avec --accepter-couts pour poursuivre, ou --dry-run pour l'estimation détaillée. Rien n'est écrit.`));
+        process.exitCode = 1;
+        return;
+      }
+      const rl = createInterface({ input: process.stdin, output: process.stderr });
+      const choix = interpreterChoix(await rl.question(texteConfirmation(prevus.length, cout)));
+      rl.close();
+      if (choix === "simulation") {
+        console.log(sortie.attenue("Simulation: rien n'est écrit (l'estimation est ci-dessus)"));
+        return;
+      }
+      if (choix === "arreter") {
+        console.log(sortie.attenue("Arrêt: rien n'est écrit"));
+        return;
+      }
+    }
+
+    // Dernier état écrit de outils.json: les métadonnées (updated_at) sont maintenues par ecrireFichier.
+    const sync = synchroniser(fichier, page, criteresPage, modification, false);
+    let courant = sync.courant;
+    const { outils } = sync;
+    let nbEnrichis = 0;
     if (sync.ecrit) console.log(`${sortie.vert(fichier)} mis à jour`);
     if (sync.criteresEcrits) console.log(`${sortie.vert(join(dirname(fichier), "criteres.json"))} mis à jour`);
 
-    if (enrichir) {
-      const fichierTags = join(dirname(fichier), "tags.json");
-      const aFaire = outils.filter(aEnrichir);
-      const abandonnes = aFaire.filter((o) => abandonne(o, maxEchecs));
-      const prevus = aFaire.filter((o) => !abandonne(o, maxEchecs));
-      console.log(`${sortie.gras("Enrichissement")}: ${prevus.length ? sortie.jaune(String(prevus.length)) : sortie.vert("0")} outil(s) à enrichir`);
-      if (abandonnes.length) console.log(`  ${sortie.jaune(`abandonnés après ${maxEchecs} échecs consécutifs`)} (${abandonnes.length}): ${sortie.cyan(abandonnes.map((o) => `${o.nom} (${o.echecs_enrichissement})`).join(", "))}; relancer avec --max-echecs plus élevé pour les retenter`);
-      if (dryRun) {
-        if (prevus.length) console.log(`  à enrichir (${prevus.length}): ${sortie.cyan(prevus.map((o) => o.nom).join(", "))}`);
-      } else if (prevus.length) {
-        const cle = process.env.OPENAI_API_KEY;
-        if (!cle) throw new Error("OPENAI_API_KEY absente (voir .env.example)");
+    if (prevus.length) {
+      const cle = process.env.OPENAI_API_KEY;
+      if (!cle) {
+        console.error(suivi.jaune(`Enrichissement sauté: OPENAI_API_KEY absente (voir .env.example); ${prevus.length} outil(s) restent à enrichir`));
+      } else {
         const tags = chargerTags(fichierTags);
         const criteres = chargerCriteres(join(dirname(fichier), "criteres.json"));
         const nbTags = tags.length;
-        const modele = process.env.OPENAI_MODEL || MODELE_PAR_DEFAUT;
+        let usage: Usage = { ...USAGE_VIDE };
+        const compteur = (u: Usage) => { usage = additionner(usage, u); };
         const progression = createProgress(prevus.length, {
           logWhenNotTTY: true,
           paint: { filled: suivi.vert, empty: suivi.attenue, label: suivi.cyan },
@@ -276,10 +326,9 @@ if (import.meta.main) {
         const resultat = await enrichirOutils(outils, {
           tags,
           criteres,
-          generer: generateurOpenAI(cle, modele),
-          expliquer: expliqueurOpenAI(cle, modele),
+          generer: generateurOpenAI(cle, modele, compteur),
+          expliquer: expliqueurOpenAI(cle, modele, compteur),
           autoriserNouveauxTags: nouveauxTags,
-          accepterSansPage: sansPage,
           maxEchecs,
           apresChaque: (os, ts) => {
             courant = ecrireFichier(fichier, "outils", os as OutilClasse[], courant);
@@ -295,17 +344,14 @@ if (import.meta.main) {
         nbEnrichis = resultat.enrichis.length;
         const enrichis = resultat.enrichis.length ? sortie.gras(sortie.vert(String(resultat.enrichis.length))) : "0";
         const echecs = resultat.erreurs.length ? sortie.gras(sortie.rouge(String(resultat.erreurs.length))) : sortie.vert("0");
-        console.log(`Enrichis: ${enrichis}; échecs: ${echecs}`);
+        console.log(`Enrichis: ${enrichis}; échecs: ${echecs}; ${formaterCout(usage, modele)}`);
         if (resultat.ecarts.length) console.log(`${sortie.jaune("Évaluation différente du répertoire")}: ${resultat.ecarts.join(", ")}`);
-        if (resultat.sansPage.length) console.log(`${sortie.jaune("Enrichis sans page lisible (page_lue: false)")}: ${resultat.sansPage.join(", ")}`);
         if (tags.length > nbTags) console.log(`${sortie.cyan("Nouveaux tags")}: ${tags.slice(nbTags).map((t) => t.id).join(", ")}`);
         if (resultat.erreurs.length) process.exitCode = 1;
       }
     }
 
-    const nonMisAJour = avertissementSommaireNonMisAJour({ enrichir, dryRun, changements: total, enrichis: nbEnrichis, importInitial: sync.importInitial });
-    if (nonMisAJour) console.error(suivi.jaune(nonMisAJour));
-    if (sommaireNecessaire({ enrichir, dryRun, changements: total, enrichis: nbEnrichis })) {
+    if (sommaireNecessaire({ dryRun, changements: total, enrichis: nbEnrichis })) {
       const raison = raisonDeSauterSommaire(process.env.OPENAI_API_KEY, verifierVlConvert);
       if (raison) {
         console.error(suivi.jaune(`Sommaire non mis à jour: ${raison}. Le sommaire existant est conservé; relancer \`nub run sommaire\` ensuite.`));

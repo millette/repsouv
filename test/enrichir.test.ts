@@ -9,8 +9,8 @@ import { join } from "node:path";
 import { test } from "node:test";
 import {
   abandonne, aEnrichir, chargerCriteres, chargerTags, enrichirOutils, extraireContenu, instructions, instructionsEcart, lireContenu, MAX_TAGS, MIN_EXTRAIT, obtenirPage, problemesMarkdown, sauverTags,
-  schemaReponse, validerEcart, validerProposition, type Expliqueur, type Generateur, type Tag,
-} from "../enrichir.ts";
+  schemaReponse, validerEcart, validerProposition, type Expliqueur, type Generateur, type Tag, appelerOpenAI, estimerCoutEnrichissement } from "../enrichir.ts";
+import type { Usage } from "../prix.ts";
 import type { Outil } from "../extract.ts";
 
 const VOCAB: Tag[] = [
@@ -420,7 +420,7 @@ test("page: une page normale donne page_lue: true, sans avertissement", async ()
   const outils = [outil("a")];
   const r = await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer: g.generer, lire: pageOk, journal: (m) => journal.push(m) });
   assert.equal(outils[0]!.page_lue, true);
-  assert.deepEqual(r.sansPage, []);
+  assert.deepEqual(r.enrichis, ["a"]);
   assert.equal(journal.some((m) => m.includes("AVERTISSEMENT")), false);
 });
 for (const [cas, lire, raison] of [
@@ -436,29 +436,13 @@ for (const [cas, lire, raison] of [
     assert.equal(g.appels(), 0);
     assert.deepEqual(r.enrichis, []);
     assert.match(r.erreurs[0]!.message, raison);
-    assert.match(r.erreurs[0]!.message, /--sans-page/);
+    assert.doesNotMatch(r.erreurs[0]!.message, /--sans-page/);
     assert.ok(journal.some((m) => m.includes("AVERTISSEMENT") && raison.test(m)));
     assert.equal(outils[0]!.description_longue, undefined);
     assert.equal(outils[0]!.page_lue, undefined);
     assert.equal(aEnrichir(outils[0]!), true);
   });
-  test(`page ${cas}, avec accepterSansPage: enrichi à partir de la description seule et marqué page_lue: false`, async () => {
-    const g = unOutilAvecGenerateur();
-    const outils = [outil("a")];
-    const r = await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer: g.generer, lire, accepterSansPage: true });
-    assert.equal(g.appels(), 1);
-    assert.deepEqual(r.enrichis, ["a"]);
-    assert.deepEqual(r.sansPage, ["a"]);
-    assert.equal(outils[0]!.page_lue, false);
-    assert.ok(outils[0]!.description_longue);
-  });
 }
-test("page: sans page lisible, le modèle reçoit « inaccessible » et aucun lien de dépôt", async () => {
-  let recu: unknown = "non appelé";
-  const generer: Generateur = async (_o, contenu) => ((recu = contenu), valide());
-  await enrichirOutils([outil("a")], { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer, lire: sansPage, accepterSansPage: true });
-  assert.equal(recu, null);
-});
 test("page: un outil dont la page est inaccessible n'empêche pas les autres d'être enrichis", async () => {
   const outils = [outil("a"), outil("b")];
   const lire = async (url: string) => (url.includes("//a.") ? null : pageOk());
@@ -550,4 +534,29 @@ test("journal: une réponse rejetée est un avertissement", async () => {
   const reponses = [valide({ tags: [] }), valide()];
   await enrichirOutils([outil("a")], { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer: async () => reponses.shift(), lire: pageOk, journal: (m, n) => vus.push([m, n]) });
   assert.equal(vus.find(([m]) => m.includes("réponse rejetée"))?.[1], "avertissement");
+});
+
+test("estimerCoutEnrichissement: borne haute par outil, proportionnelle au nombre d'outils, coût nul pour un modèle sans prix", () => {
+  const un = estimerCoutEnrichissement([outil("a")], VOCAB, CRITERES, "gpt-6-astra");
+  const deux = estimerCoutEnrichissement([outil("a"), outil("b")], VOCAB, CRITERES, "gpt-6-astra");
+  assert.equal(un.outils, 1);
+  assert.ok(un.usage.entree > 1000 && un.usage.sortie > 500, JSON.stringify(un.usage));
+  assert.equal(deux.usage.entree, 2 * un.usage.entree);
+  assert.equal(deux.usage.sortie, 2 * un.usage.sortie);
+  assert.ok(un.cout! > 0 && Math.abs(deux.cout! - 2 * un.cout!) < 1e-9);
+  assert.equal(estimerCoutEnrichissement([outil("a")], VOCAB, CRITERES, "modele-inconnu").cout, null);
+  assert.deepEqual(estimerCoutEnrichissement([], VOCAB, CRITERES, "gpt-6-astra").usage, { entree: 0, sortie: 0, cache_lecture: 0, cache_ecriture: 0 });
+});
+test("appelerOpenAI: le compteur reçoit les jetons de chaque appel, et le contenu est retourné", async () => {
+  const vrai = globalThis.fetch;
+  const corps = { status: "completed", usage: { input_tokens: 100, output_tokens: 20, input_tokens_details: { cached_tokens: 10 } }, output: [{ type: "message", content: [{ type: "output_text", text: "{\"a\":1}" }] }] };
+  globalThis.fetch = (async () => ({ ok: true, status: 200, json: async () => corps })) as unknown as typeof fetch;
+  try {
+    const usages: Usage[] = [];
+    const contenu = await appelerOpenAI("k", "m", { nom: "x", schema: {}, instructions: "i", messages: ["m"], maxTokens: 10 }, (u) => usages.push(u));
+    assert.deepEqual(contenu, { a: 1 });
+    assert.deepEqual(usages, [{ entree: 100, sortie: 20, cache_lecture: 10, cache_ecriture: 0 }]);
+  } finally {
+    globalThis.fetch = vrai;
+  }
 });

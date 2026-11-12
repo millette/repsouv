@@ -18,6 +18,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { lancer } from "./cli.ts";
+import { coutOpenAI, PRIX, type Prix, type Usage } from "./prix.ts";
 import type { OutilClasse } from "./classify.ts";
 import { MODELE_PAR_DEFAUT, lireContenu, obtenirPage, type Contenu } from "./enrichir.ts";
 import type { Critere } from "./extract.ts";
@@ -36,13 +37,6 @@ export type Confirmation = Record<CritereId, Verdict>;
 
 export const LONGUEUR_MAX_PREUVE = 300;
 
-/** Jetons d'un appel; `entree` comprend les jetons en cache (lus ou écrits). */
-export interface Usage {
-  entree: number;
-  sortie: number;
-  cache_lecture: number;
-  cache_ecriture: number;
-}
 export interface Appel {
   contenu: unknown;
   usage: Usage;
@@ -61,27 +55,7 @@ export interface Fournisseur {
   appeler(requete: Requete): Promise<Appel>;
 }
 
-/** Prix en dollars par million de jetons (pages de tarifs OpenAI et Anthropic, consultées le 2026-11-12). */
-export interface Prix {
-  entree: number;
-  cache_lecture: number;
-  sortie: number;
-}
-export const PRIX: Readonly<Record<string, Prix>> = {
-  "gpt-6-astra": { entree: 10, cache_lecture: 1, sortie: 50 },
-  "gpt-6.1-sol": { entree: 2, cache_lecture: 0.1, sortie: 10 },
-  "gpt-6.1-terra": { entree: 1, cache_lecture: 0.05, sortie: 5 },
-  "gpt-6-luna": { entree: 0.1, cache_lecture: 0.01, sortie: 0.5 },
-  "claude-fable-5-2": { entree: 8, cache_lecture: 0.2, sortie: 40 },
-  "claude-opus-5-5": { entree: 4, cache_lecture: 0.2, sortie: 20 },
-  "claude-sonnet-5-5": { entree: 2, cache_lecture: 0.1, sortie: 10 },
-  "claude-haiku-5-5": { entree: 0.1, cache_lecture: 0.01, sortie: 0.5 },
-};
-
-/** Coût d'un appel OpenAI: entrées non mises en cache, entrées en cache et sorties (les jetons de raisonnement sont facturés comme sorties). */
-export function coutOpenAI(usage: Usage, prix: Prix): number {
-  return ((usage.entree - usage.cache_lecture) * prix.entree + usage.cache_lecture * prix.cache_lecture + usage.sortie * prix.sortie) / 1e6;
-}
+export { coutOpenAI, PRIX, type Prix, type Usage } from "./prix.ts";
 
 // ---------- validation ----------
 
