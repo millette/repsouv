@@ -146,3 +146,23 @@ test("estimerCoutConfirmation: un appel par outil, proportionnel, coût nul pour
   assert.ok(un.cout! > 0);
   assert.equal(estimerCoutConfirmation([outil("A")], CRITERES, "inconnu").cout, null);
 });
+
+test("confirmerOutils: avec confirmerRepli et modeleRepli, une réponse rejetée est reprise par le repli, dont le nom est inscrit dans le verdict", async () => {
+  const requetes: Requete[] = [];
+  const outils = [outil("A")];
+  const journal: string[] = [];
+  const r = await confirmerOutils(outils, options(faux([brut({ statut: "confirme", preuve: "inventé" }), brut({ statut: "confirme", preuve: "inventé" })]), {
+    confirmerRepli: faux([], requetes), modeleRepli: "gpt-repli", journal: (m) => journal.push(m),
+  }));
+  assert.deepEqual(r.confirmes, ["A"]);
+  assert.equal(requetes.length, 1);
+  assert.match(requetes[0]!.messages.at(-1)!, /rejetée.*introuvable/);
+  assert.equal(outils[0]!.criteres_confirmes!.modele, "gpt-repli");
+  assert.equal(outils[0]!.echecs_confirmation, undefined);
+  assert.ok(journal.some((m) => /nouvel essai avec le modèle de repli/.test(m)));
+  const mauvaise = brut({ statut: "confirme", preuve: "inventé" });
+  const deux = [outil("B")];
+  const s = await confirmerOutils(deux, options(faux([mauvaise]), { confirmerRepli: faux([mauvaise]), modeleRepli: "gpt-repli" }));
+  assert.deepEqual(s.confirmes, []);
+  assert.equal(deux[0]!.echecs_confirmation, 1);
+});

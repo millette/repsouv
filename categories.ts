@@ -3,7 +3,7 @@
 // Les catégories du répertoire (categories.json): un identifiant (slug du nom), le nom et l'icône tels que la page les
 // affiche, et une description en français, générée une seule fois par l'API OpenAI (update.ts) à partir des outils de la
 // catégorie. Dans outils.json, chaque outil porte l'identifiant de sa catégorie (champ `categorie`).
-import { appelerOpenAI, obtenirValide, problemesMarkdown, type Compteur } from "./enrichir.ts";
+import { appelerOpenAI, nouvelEssai, obtenirValide, problemesMarkdown, type Compteur } from "./enrichir.ts";
 import { ecrireFichier, lireFichier, lireSiExiste } from "./fichiers.ts";
 import { additionner, coutPour, USAGE_VIDE, type Usage } from "./prix.ts";
 
@@ -89,6 +89,8 @@ export const generateurDescriptionOpenAI = (cle: string, modele: string, compteu
 
 export interface OptionsDescriptions {
   generer: GenerateurDescription;
+  /** Générateur du modèle de repli, qui reprend une réponse rejetée. */
+  genererRepli?: GenerateurDescription;
   /** Appelé après chaque catégorie décrite, pour persister categories.json. */
   apresChaque?: (categories: Categorie[]) => void;
   /** Appelé au début de chaque catégorie (son nom), puis après chaque tentative avec le nombre traité: pour une barre de progression. */
@@ -110,7 +112,8 @@ export async function decrireCategories(categories: Categorie[], outils: { categ
       const description = await obtenirValide(
         (rappel) => options.generer(requeteCategorie(categorie, siens, rappel)),
         validerDescriptionCategorie,
-        (raison) => journal(`  ${categorie.nom}: réponse rejetée (${raison}), nouvel essai`, "avertissement"),
+        (raison) => journal(`  ${categorie.nom}: réponse rejetée (${raison}), ${nouvelEssai(options.genererRepli)}`, "avertissement"),
+        (rappel) => (options.genererRepli ?? options.generer)(requeteCategorie(categorie, siens, rappel)),
       );
       categories[i] = { ...categorie, description };
       resultat.decrites.push(categorie.id);

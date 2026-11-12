@@ -8,7 +8,7 @@
 // « controle »: la nationalité mentionnée suffit. Comme l'enrichissement, la vérification se fait une seule fois par outil
 // et les échecs consécutifs sont comptés (echecs_confirmation) jusqu'à l'abandon.
 import type { OutilClasse } from "./classify.ts";
-import { appelerOpenAI, MAX_ECHECS_PAR_DEFAUT, obtenirPage, type Compteur, type Contenu } from "./enrichir.ts";
+import { appelerOpenAI, MAX_ECHECS_PAR_DEFAUT, nouvelEssai, obtenirPage, obtenirValide, type Compteur, type Contenu } from "./enrichir.ts";
 import type { Critere, CriteresConfirmes, Outil } from "./extract.ts";
 import { CONTROLE, DEPENDANCE, DONNEES, type CritereId } from "./ids.ts";
 import { additionner, coutPour, USAGE_VIDE, type Usage } from "./prix.ts";
@@ -163,6 +163,9 @@ export interface OptionsConfirmation {
   criteres: Critere[];
   /** Nom du modèle inscrit dans criteres_confirmes. */
   modele: string;
+  /** Confirmateur du modèle de repli, qui reprend une réponse rejetée, et le nom inscrit dans ce cas. */
+  confirmerRepli?: Confirmateur;
+  modeleRepli?: string;
   categories?: readonly Categorie[];
   /** Contenu de la page de l'outil; par défaut, téléchargé. */
   lire?: (url: string) => Promise<Contenu | null>;
@@ -198,21 +201,17 @@ export async function confirmerOutils(outils: OutilClasse[], options: OptionsCon
     try {
       const { contenu, probleme } = await obtenirPage(outil.lien, lire);
       if (!contenu || probleme) throw new Error(`${probleme ?? "page inaccessible"}; critères non vérifiés`);
-      let rappel: string | undefined;
-      let confirmation: Confirmation | undefined;
-      for (let essai = 1; essai <= 2 && !confirmation; essai++) {
-        try {
-          confirmation = validerConfirmation(await confirmer(requeteOutil(outil, contenu, criteres, rappel, options.categories)), textesSource(outil, contenu));
-        } catch (e) {
-          rappel = (e as Error).message;
-          if (essai === 2) throw e;
-          journal(`  ${outil.nom}: réponse rejetée (${rappel}), nouvel essai`, "avertissement");
-        }
-      }
+      let parRepli = false;
+      const confirmation = await obtenirValide(
+        (rappel) => confirmer(requeteOutil(outil, contenu, criteres, rappel, options.categories)),
+        (brut) => validerConfirmation(brut, textesSource(outil, contenu)),
+        (raison) => journal(`  ${outil.nom}: réponse rejetée (${raison}), ${nouvelEssai(options.confirmerRepli)}`, "avertissement"),
+        options.confirmerRepli && ((rappel) => { parRepli = true; return options.confirmerRepli!(requeteOutil(outil, contenu, criteres, rappel, options.categories)); }),
+      );
       const { echecs_confirmation: _echecs, ...sansCompteur } = outil;
-      outils[i] = { ...sansCompteur, criteres_confirmes: champConfirmes(confirmation!, modele, horloge()) };
+      outils[i] = { ...sansCompteur, criteres_confirmes: champConfirmes(confirmation, parRepli && options.modeleRepli ? options.modeleRepli : modele, horloge()) };
       resultat.confirmes.push(outil.nom);
-      journal(`  ${outil.nom}: ${ensembleConfirme(confirmation!).join(", ") || "aucun critère confirmé"}`, "succes");
+      journal(`  ${outil.nom}: ${ensembleConfirme(confirmation).join(", ") || "aucun critère confirmé"}`, "succes");
     } catch (e) {
       const echecs = (outil.echecs_confirmation ?? 0) + 1;
       outils[i] = { ...outil, echecs_confirmation: echecs };

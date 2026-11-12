@@ -614,3 +614,36 @@ test("appelerOpenAI: HTTP 400, 401, 403 et 404 et un refus du modèle sont des e
     globalThis.fetch = vrai;
   }
 });
+
+test("enrichir: avec genererRepli, une réponse rejetée est reprise par le repli (avec la raison) et compte un succès; le journal le dit", async () => {
+  const rappels: (string | undefined)[] = [];
+  const outils = [outil("a")];
+  const journal: string[] = [];
+  const r = await enrichirOutils(outils, {
+    tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, lire: pageOk,
+    generer: async () => valide({ tags: [] }),
+    genererRepli: async (_o, _c, ctx) => (rappels.push(ctx.rappel), valide()),
+    journal: (m) => journal.push(m),
+  });
+  assert.deepEqual(r.enrichis, ["a"]);
+  assert.equal(outils[0]!.echecs_enrichissement, undefined);
+  assert.match(rappels[0]!, /1 à 5 tags/);
+  assert.ok(journal.some((m) => /nouvel essai avec le modèle de repli/.test(m)), journal.join("\n"));
+});
+test("enrichir: principal et repli rejetés, un seul échec compté; expliquerRepli reprend l'explication de l'écart", async () => {
+  const outils = [outil("a")];
+  const r = await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, lire: pageOk, generer: async () => valide({ tags: [] }), genererRepli: async () => valide({ tags: [] }) });
+  assert.deepEqual(r.enrichis, []);
+  assert.equal(outils[0]!.echecs_enrichissement, 1);
+
+  const b = [outil("b")]; // sans critères connus: l'évaluation enrichie diffère, donc l'écart est expliqué
+  let repli = 0;
+  const s = await enrichirOutils(b, {
+    tags: VOCAB, criteres: CRITERES, lire: pageOk, generer: async () => valide(),
+    expliquer: async () => ({ ecart: "" }),
+    expliquerRepli: async () => (repli++, { ecart: "Le répertoire suppose les données au Canada." }),
+  });
+  assert.deepEqual(s.enrichis, ["b"]);
+  assert.equal(repli, 1);
+  assert.equal(b[0]!.evaluation_enrichie!.ecart, "Le répertoire suppose les données au Canada.");
+});

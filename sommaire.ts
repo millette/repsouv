@@ -21,7 +21,7 @@ import { formaterDuree } from "./duree.ts";
 import { construireGraphiques, ecrireGraphiques, verifierVlConvert, type Convertisseur, type GraphiqueEcrit } from "./graphiques.ts";
 import { chargerCategories } from "./categories.ts";
 import { chargerEnv } from "./env.ts";
-import { appelerOpenAI, chargerCriteres, chargerTags, MAX_ECHECS_PAR_DEFAUT, MODELE_PAR_DEFAUT, obtenirValide, problemesMarkdown } from "./enrichir.ts";
+import { appelerOpenAI, chargerCriteres, chargerTags, MAX_ECHECS_PAR_DEFAUT, MODELE_PAR_DEFAUT, nouvelEssai, obtenirValide, problemesMarkdown } from "./enrichir.ts";
 import { lireFichier } from "./fichiers.ts";
 import { createProgress, type Progress } from "./progress.ts";
 import {
@@ -303,9 +303,12 @@ export function validerResume(brut: unknown): string[] {
   });
 }
 
-/** Rédige le résumé, avec une seconde tentative (et la raison du rejet) si la réponse est invalide. */
-export function produireResume(charge: ChargeResume, generer: GenerateurResume, rejet: (raison: string) => void = () => {}): Promise<string[]> {
-  return obtenirValide((rappel) => generer(charge, rappel), validerResume, rejet);
+/**
+ * Rédige le résumé, avec une seconde tentative (et la raison du rejet) si la réponse est invalide, par le générateur de
+ * repli s'il est donné.
+ */
+export function produireResume(charge: ChargeResume, generer: GenerateurResume, rejet: (raison: string) => void = () => {}, genererRepli?: GenerateurResume): Promise<string[]> {
+  return obtenirValide((rappel) => generer(charge, rappel), validerResume, rejet, genererRepli && ((rappel) => genererRepli(charge, rappel)));
 }
 
 // ---------- génération du sommaire ----------
@@ -324,8 +327,11 @@ export interface OptionsSommaire {
   conserverSiEchec?: boolean;
   cle?: string | undefined;
   modele?: string | undefined;
-  /** Générateur du résumé et convertisseur des graphiques: par défaut OpenAI et vl-convert (injectables pour les tests). */
+  /** Modèle de repli pour le résumé (seconde tentative); null ou absent: le même modèle réessaie. */
+  modeleRepli?: string | null | undefined;
+  /** Générateur du résumé (et son repli) et convertisseur des graphiques: par défaut OpenAI et vl-convert (injectables pour les tests). */
   generer?: GenerateurResume;
+  genererRepli?: GenerateurResume;
   convertir?: Convertisseur;
   /** Messages de suivi (une réponse de l'IA rejetée, par exemple). */
   journal?: (message: string) => void;
@@ -380,9 +386,13 @@ export async function genererSommaire(o: OptionsSommaire): Promise<ResultatSomma
   if (!o.sansResume) {
     const modele = o.modele ?? MODELE_PAR_DEFAUT;
     const generer = o.generer ?? generateurResumeOpenAI(o.cle!, modele);
+    const genererRepli = o.genererRepli ?? (o.modeleRepli ? generateurResumeOpenAI(o.cle!, o.modeleRepli) : undefined);
+    let parRepli = false;
+    const repli = genererRepli && ((charge: ChargeResume, rappel?: string) => { parRepli = true; return genererRepli(charge, rappel); });
     barre?.update(etape, `résumé (${modele})`);
     try {
-      resume = { paragraphes: await produireResume(chargeResume(statistiques, lu.donnees), generer, (r) => journal(`Résumé rejeté (${r}), nouvel essai`)), modele, date: horodatage() };
+      const paragraphes = await produireResume(chargeResume(statistiques, lu.donnees), generer, (r) => journal(`Résumé rejeté (${r}), ${nouvelEssai(genererRepli)}`), repli);
+      resume = { paragraphes, modele: parRepli && o.modeleRepli ? o.modeleRepli : modele, date: horodatage() };
     } catch (e) {
       resume = { erreur: (e as Error).message };
       if (o.conserverSiEchec) {

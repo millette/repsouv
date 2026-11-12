@@ -406,3 +406,16 @@ test("genererSommaire: sans résumé ni graphiques, la barre ne compte que l'éc
   assert.equal(r.ecrit, false);
   assert.equal(echec.journal.fin, 1);
 });
+
+test("produireResume et genererSommaire: avec un repli, la seconde tentative passe par lui et le résumé porte le modèle de repli", async () => {
+  const charge = chargeResume(calculerStatistiques(entree()), OUTILS);
+  const rappels: (string | undefined)[] = [];
+  const resume = await produireResume(charge, async () => ({ paragraphes: [PARA] }), () => {}, async (_c, rappel) => (rappels.push(rappel), PARAS));
+  assert.equal(resume.length, 3);
+  assert.match(rappels[0]!, /3 ou 4/);
+
+  const d = dossierDeDonnees();
+  const r = await genererSommaire({ source: join(d, "outils.json"), generer: async () => ({ paragraphes: [] }), genererRepli: async () => PARAS, modele: "gpt-test", modeleRepli: "gpt-repli", convertir: fauxConvertir([]) });
+  assert.equal(r.resume, "oui");
+  assert.match(readFileSync(join(d, "sommaire.md"), "utf8"), /modèle d'IA \(gpt-repli\)/);
+});

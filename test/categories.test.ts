@@ -80,3 +80,16 @@ test("estimerCoutDescriptions: un appel par catégorie sans description, proport
   assert.equal(estimerCoutDescriptions(cats, outils, "inconnu").cout, null);
   assert.deepEqual(estimerCoutDescriptions([cats[1]!], outils, "gpt-6-astra").usage, { entree: 0, sortie: 0, cache_lecture: 0, cache_ecriture: 0 });
 });
+
+test("decrireCategories: avec genererRepli, une réponse rejetée est reprise par le repli, et la catégorie est décrite", async () => {
+  const cats: Categorie[] = [{ id: "a", nom: "A", icone: "1" }];
+  const outils = [{ categorie: "a", nom: "X", description: "Un outil pour a." }];
+  let repli = 0;
+  const r = await decrireCategories(cats, outils, {
+    generer: async () => ({ description: "Court." }),
+    genererRepli: async (req) => (repli++, assert.match(req.messages.at(-1)!, /rejetée/), { description: "Des outils qui font a, pour les organismes culturels." }),
+  });
+  assert.deepEqual(r.decrites, ["a"]);
+  assert.equal(repli, 1);
+  assert.equal(cats[0]!.description, "Des outils qui font a, pour les organismes culturels.");
+});

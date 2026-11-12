@@ -473,6 +473,9 @@ export interface OptionsEnrichissement {
   generer: Generateur;
   /** Explique l'écart quand l'évaluation enrichie diffère du répertoire (voir evaluation_enrichie.ecart). */
   expliquer: Expliqueur;
+  /** Générateurs du modèle de repli: reprennent un appel dont la réponse a été rejetée (voir obtenirValide). */
+  genererRepli?: Generateur;
+  expliquerRepli?: Expliqueur;
   /** Contenu de la page de l'outil; par défaut, téléchargé. */
   lire?: (url: string) => Promise<Contenu | null>;
   autoriserNouveauxTags?: boolean;
@@ -498,6 +501,9 @@ export interface ResultatEnrichissement {
   /** Outils non tentés parce qu'ils ont atteint le nombre maximal d'échecs consécutifs. */
   abandonnes: string[];
 }
+
+/** Texte du journal pour la seconde tentative, selon qu'un repli la fait ou non. */
+export const nouvelEssai = (repli: unknown) => (repli ? "nouvel essai avec le modèle de repli" : "nouvel essai");
 
 /**
  * Demande une réponse au modèle, au plus deux fois: si la première est rejetée (validation, erreur passagère de
@@ -544,10 +550,12 @@ export async function enrichirOutils(outils: OutilARevoir[], options: OptionsEnr
         journal(`  ${outil.nom}: AVERTISSEMENT: ${probleme}`, "avertissement");
         throw new Error(`${probleme}; outil non enrichi`);
       }
+      const contexte = (rappel?: string) => ({ tags, criteres, autoriserNouveauxTags, ...(options.categories && { categories: options.categories }), ...(rappel && { rappel }) });
       const proposition = await obtenirValide(
-        (rappel) => generer(outil, contenu, { tags, criteres, autoriserNouveauxTags, ...(options.categories && { categories: options.categories }), ...(rappel && { rappel }) }),
+        (rappel) => generer(outil, contenu, contexte(rappel)),
         (brut) => validerProposition(brut, tags, autoriserNouveauxTags),
-        (raison) => journal(`  ${outil.nom}: réponse rejetée (${raison}), nouvel essai`, "avertissement"),
+        (raison) => journal(`  ${outil.nom}: réponse rejetée (${raison}), ${nouvelEssai(options.genererRepli)}`, "avertissement"),
+        options.genererRepli && ((rappel) => options.genererRepli!(outil, contenu, contexte(rappel))),
       );
       const { nouveaux_tags, ...champs } = proposition;
 
@@ -558,7 +566,8 @@ export async function enrichirOutils(outils: OutilARevoir[], options: OptionsEnr
         ev.ecart = await obtenirValide(
           (rappel) => expliquer(outil, contenu, { repertoire, enrichie: ev, criteres, ...(rappel && { rappel }) }),
           validerEcart,
-          (raison) => journal(`  ${outil.nom}: explication de l'écart rejetée (${raison}), nouvel essai`, "avertissement"),
+          (raison) => journal(`  ${outil.nom}: explication de l'écart rejetée (${raison}), ${nouvelEssai(options.expliquerRepli)}`, "avertissement"),
+          options.expliquerRepli && ((rappel) => options.expliquerRepli!(outil, contenu, { repertoire, enrichie: ev, criteres, rappel })),
         );
       }
 
