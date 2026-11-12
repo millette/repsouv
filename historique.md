@@ -39,6 +39,7 @@ Les étapes du projet et les décisions prises, par date, d'après l'historique 
 - **Décision** : `criteres` reste lié aux étoiles de la source, et les critères vérifiés sont exposés à part dans `criteres_confirmes`, avec la citation, inscrits par `appliquer-confirmations.ts` à partir des confirmations de Claude.
 - **Sommaire** : sous-section et graphique des critères vérifiés (confirmés, infirmés, indéterminés par statut du code source) ; `sommaire.md` régénéré.
 - **`update` porte d'entrée unique** : sans `outils.json`, il fait l'import initial (tous les outils « nouveau ») et il écrit aussi `criteres.json` ; les scripts npm `build`, `build:force`, `extract`, `classify` et l'alias `enrichir` sont retirés. `extract.ts --force` (reconstruction) et `classify.ts` (reclassement) restent des commandes explicites, sans script npm.
+- **Options de `update` réduites** : `--sommaire`, `--sans-sommaire` et `--limite` retirés ; le sommaire se met à jour avec `--enrichir` seulement, et `update` seul avertit. Nouveau champ `echecs_enrichissement` : après 3 échecs consécutifs (`--max-echecs=N`), un outil n'est plus tenté.
 - **Documentation** scindée en trois fichiers : README (source, crédits, usage, données), `implementation.md` (scripts, classification, enrichissement, sommaire, tests, dépannage) et ce fichier.
 
 ## Décisions
@@ -46,7 +47,8 @@ Les étapes du projet et les décisions prises, par date, d'après l'historique 
 | Décision | Raison |
 |---|---|
 | `update` est la seule porte d'entrée, import initial compris ; `build` est retiré | Tout ce que faisait `build` était déjà dans `update`, sauf l'amorçage et `criteres.json` ; une seule commande à connaître, et les opérations destructrices (`extract.ts --force`) restent explicites |
-| `update` seul ne met pas le sommaire à jour ; `--enrichir` ou `--sommaire` le font, seulement si quelque chose a changé | Le sommaire coûte un appel à l'API et environ 30 secondes ; un avertissement signale un sommaire en retard |
+| `update` seul ne met pas le sommaire à jour ; `--enrichir` le fait, seulement si quelque chose a changé ; pas d'option `--sommaire`, `--sans-sommaire` ni `--limite` | Le sommaire coûte un appel à l'API et une trentaine de secondes, et son résumé change à chaque exécution ; un avertissement signale un sommaire en retard. Sans enrichissement par lots, l'option de refus n'avait plus d'objet |
+| Compteur `echecs_enrichissement` et abandon après 3 échecs consécutifs (`--max-echecs=N`) | Sans lui, les outils dont la page est durablement inaccessible étaient retentés à chaque exécution (délais et code de sortie 1), sans fin |
 | `extract` ne lit jamais de fichier HTML local et refuse d'écraser du travail sans `--force` | Un réimport détruit l'enrichissement et l'historique ; la page doit être l'unique source |
 | Un outil enrichi n'est jamais régénéré | L'enrichissement coûte des appels à l'API ; pour le refaire, supprimer ses champs puis relancer |
 | Les dates sont en heure de Toronto, avec le décalage | La page du répertoire donne l'heure de l'Est ; un horodatage avec décalage reste sans ambiguïté |

@@ -85,3 +85,9 @@ test("critères et tags: champs obligatoires et clés inconnues", () => {
   t.tags[0].extra = true;
   assert.equal(tags(t), false);
 });
+
+test("un outil: echecs_enrichissement est un entier d'au moins 1", () => {
+  assert.equal(outils(avec((o) => { o.echecs_enrichissement = 2; })), true, JSON.stringify(outils.errors));
+  assert.equal(outils(avec((o) => { o.echecs_enrichissement = 0; })), false);
+  assert.equal(outils(avec((o) => { o.echecs_enrichissement = 1.5; })), false);
+});

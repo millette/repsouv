@@ -17,7 +17,7 @@ import { dirname, join } from "node:path";
 import type { OutilClasse } from "./classify.ts";
 import { lancer } from "./cli.ts";
 import { construireGraphiques, ecrireGraphiques, verifierVlConvert, type Convertisseur, type GraphiqueEcrit } from "./graphiques.ts";
-import { appelerOpenAI, chargerCriteres, chargerTags, MODELE_PAR_DEFAUT, obtenirValide, problemesMarkdown } from "./enrichir.ts";
+import { appelerOpenAI, chargerCriteres, chargerTags, MAX_ECHECS_PAR_DEFAUT, MODELE_PAR_DEFAUT, obtenirValide, problemesMarkdown } from "./enrichir.ts";
 import { lireFichier } from "./fichiers.ts";
 import {
   arrondi, calculerStatistiques, forgeDe, NOMS_SOURCES, NON_ENRICHI, type LigneCriteres, type Statistiques,
@@ -215,11 +215,13 @@ ${tg.ajoutes.length ? `\n**Tags ajoutés après le vocabulaire initial** :\n\n${
 `);
 
   // Fiabilité
+  const ab = s.enrichissement.abandonnes;
+  const abandonnesTexte = ab.length ? `, dont ${ab.length} abandonné(s) après ${MAX_ECHECS_PAR_DEFAUT} échecs consécutifs d'enrichissement (${liste(ab, 10)})` : "";
   parts.push(`## Fiabilité et suivi
 
 - Confiance de la déduction des critères : ${s.confianceClassification.map((x) => `${x.cle} ${x.n}`).join(", ")}.
 ${ens ? `- Outils enrichis **sans page lisible** (résultat moins fiable) : ${s.enrichissement.sansPage.length ? `${s.enrichissement.sansPage.length} (${liste(s.enrichissement.sansPage, 10)})` : "aucun"}.
-- Outils restant à enrichir : ${s.total - ens}.` : `- Outils restant à enrichir : ${s.total}.`}
+- Outils restant à enrichir : ${s.total - ens}${abandonnesTexte}.` : `- Outils restant à enrichir : ${s.total}${abandonnesTexte}.`}
 `);
 
   return parts.join("\n").replace(/\n{3,}/g, "\n\n").trimEnd() + "\n";

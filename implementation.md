@@ -18,8 +18,7 @@ nub run schemas                  # régénère schemas/*.schema.json à partir d
 nub run licences                 # vérifie la conformité REUSE des licences (uvx reuse lint; demande uv)
 nub run update --dry-run         # compare outils.json à la page en ligne, sans rien écrire (import initial annoncé si le fichier manque)
 nub run update                   # synchronise outils.json et criteres.json avec la page en ligne; sans outils.json, c'est l'import initial
-nub run update --sommaire        # idem, puis met à jour le sommaire si la synchronisation a détecté des changements
-nub run update --enrichir --limite=5   # enrichit 5 outils par IA (nécessite OPENAI_API_KEY), puis met à jour le sommaire si quelque chose a changé
+nub run update --enrichir         # enrichit par IA les outils qui ne le sont pas encore (nécessite OPENAI_API_KEY), puis met à jour le sommaire si quelque chose a changé
 nub run sommaire                 # écrit sommaire.md et graphiques/ (--sans-resume, --sans-graphiques pour s'en passer)
 ```
 
@@ -28,7 +27,7 @@ Pour l'enrichissement, copier `.env.example` vers `.env` et y mettre la clé `OP
 ### Flux de travail
 
 ```
-Suivi courant    page en ligne ──▶ update.ts ──▶ outils.json + criteres.json   (nouveau, modification, retrait, comeback; import initial si outils.json manque)   [──▶ sommaire avec --sommaire]
+Suivi courant    page en ligne ──▶ update.ts ──▶ outils.json + criteres.json   (nouveau, modification, retrait, comeback; import initial si outils.json manque)
 Reconstruction   page en ligne ──▶ extract.ts --force ──▶ classify.ts ──▶ outils.json   (volontaire: remplace tout, enrichissement compris)
 Enrichissement   update.ts --enrichir ──▶ API OpenAI ──▶ outils.json (+ tags.json si de nouveaux tags) ──▶ sommaire (si quelque chose a changé)
 Sommaire         outils.json ──▶ sommaire.ts ──▶ sommaire.md + graphiques/   (vl-convert; résumé: API OpenAI)
@@ -42,10 +41,10 @@ Schémas          schemas-types.ts ──▶ obuild + RunTypes ──▶ generer
 | Fichier | Rôle |
 |---|---|
 | `outils.json`, `criteres.json`, `tags.json` | Les données (voir [Fichiers JSON](README.md#fichiers-json)) |
-| `update.ts` | Le script du suivi : synchronise `outils.json` et `criteres.json` avec la page en ligne (import initial compris), enrichit avec `--enrichir`, met le sommaire à jour avec `--sommaire` |
+| `update.ts` | Le script du suivi : synchronise `outils.json` et `criteres.json` avec la page en ligne (import initial compris), enrichit avec `--enrichir`, ce qui met aussi le sommaire à jour |
 | `extract.ts`, `classify.ts` | Les deux outils exceptionnels, sans script npm : reconstruction forcée depuis la page, et reclassement de tous les outils après un changement des règles |
 | `confirmer.ts`, `appliquer-confirmations.ts`, `confirmations/` | Confirmation des critères par IA, citation à l'appui, son inscription dans `outils.json` (`criteres_confirmes`), et les verdicts des deux fournisseurs (`confirmations-openai.json`, `confirmations-claude.json`, avec jetons et coût par appel) |
-| `sommaire.ts`, `sommaire.md`, `graphiques/` | Le script du sommaire statistique, le sommaire qu'il a généré et les graphiques (SVG et PNG) qu'il contient (mis à jour automatiquement par `nub run update --enrichir`, ou par `nub run update --sommaire`, quand quelque chose a changé; sinon à regénérer avec `nub run sommaire`) |
+| `sommaire.ts`, `sommaire.md`, `graphiques/` | Le script du sommaire statistique, le sommaire qu'il a généré et les graphiques (SVG et PNG) qu'il contient (mis à jour automatiquement par `nub run update --enrichir` quand quelque chose a changé; sinon à regénérer avec `nub run sommaire`) |
 | `enrichir.ts`, `statistiques.ts`, `graphiques.ts`, `fichiers.ts`, `temps.ts`, `spdx.ts`, `progress.ts`, `couleurs.ts`, `ids.ts`, `cli.ts` | Modules utilisés par les scripts |
 | `schemas/`, `generer-schemas.ts`, `schemas-types.ts`, `affiner-schema.ts`, `build.config.ts`, `tsconfig.schemas.json` | Les schémas JSON des trois fichiers de données et ce qui les génère (voir [Schémas JSON](#schémas-json)) |
 | `test/` | Les tests |
@@ -62,7 +61,7 @@ Le dossier `schemas/` contient un [JSON Schema](https://json-schema.org/) (draft
 
 Ils sont générés, pas écrits à la main : les types TypeScript (`schemas-types.ts`, qui s'appuie sur `Outil`, `OutilClasse`, `Critere`, `Tag` et `Metadonnees`) sont convertis par [mion RunTypes](https://mion.io/runtypes) (`createJsonSchemaFn<T>()`), le générateur étant empaqueté par [obuild](https://github.com/unjs/obuild) avec le plugin RunTypes pour rolldown (`build.config.ts`). Après un changement de type, `nub run schemas` régénère les trois fichiers, et `nub run schemas:verifier` échoue si les fichiers commités sont périmés (il est aussi lancé par `nub run test`).
 
-Ce que les types ne disent pas est ajouté par `affiner-schema.ts`, par nom de champ : `score` entier de 0 à 3, `tags` de 1 à 5 identifiants distincts, `criteres` d'au plus 3 identifiants distincts, dates `derniere_modification`, `enrichi_le`, `created_at` et `updated_at` au format ISO 8601 avec décalage. Les règles qui croisent plusieurs champs ou fichiers (licence SPDX valide, `custom_license` exclusif avec `licence`, tags présents dans `tags.json`, `score` égal au nombre de critères) ne sont pas dans les schémas : elles restent dans les scripts et les tests.
+Ce que les types ne disent pas est ajouté par `affiner-schema.ts`, par nom de champ : `score` entier de 0 à 3, `echecs_enrichissement` entier d'au moins 1, `tags` de 1 à 5 identifiants distincts, `criteres` d'au plus 3 identifiants distincts, dates `derniere_modification`, `enrichi_le`, `created_at` et `updated_at` au format ISO 8601 avec décalage. Les règles qui croisent plusieurs champs ou fichiers (licence SPDX valide, `custom_license` exclusif avec `licence`, tags présents dans `tags.json`, `score` égal au nombre de critères) ne sont pas dans les schémas : elles restent dans les scripts et les tests.
 
 Les schémas valent pour du JSON ordinaire : les types du dépôt (chaînes, nombres, booléens, tableaux, `null`, valeurs littérales, objets) donnent le même JSON que celui du fichier. Si un champ devait un jour utiliser `Date`, `Map` ou une union contenant un `Date`, le schéma de RunTypes décrirait son propre encodage (tableaux étiquetés) et non le JSON naturel : à éviter dans les fichiers de données. Pour valider un fichier avec [Ajv](https://ajv.js.org/), utiliser `Ajv2020` (voir `test/schemas.test.ts`). Les versions de RunTypes (`@mionjs/*` 0.14.0) et d'obuild sont figées dans `package.json` : RunTypes n'a pas encore atteint la version 1.0.
 
@@ -116,7 +115,7 @@ Inscrit `criteres_confirmes` (voir [`outils.json`](README.md#outilsjson)) dans c
 ### `update.ts`
 
 ```sh
-nub update.ts [--dry-run] [--sans-couleur] [--sommaire] [--enrichir [--nouveaux-tags] [--sans-page] [--sans-sommaire] [--limite=N]] [outils.json] [url]
+nub update.ts [--dry-run] [--sans-couleur] [--enrichir [--nouveaux-tags] [--sans-page] [--max-echecs=N]] [outils.json] [url]
 ```
 
 Télécharge la page en ligne (`[url]`, par défaut celle du répertoire; le même téléchargement qu'`extract.ts`), la compare à `outils.json` (par défaut `./outils.json`) et met le fichier à jour. **Si `outils.json` n'existe pas, c'est l'import initial** : tous les outils de la page sont écrits avec `changement: "nouveau"` et la date de la page, et une ligne « Import initial » le dit. `criteres.json`, dans le même dossier, est écrit lui aussi, à chaque exécution, et une ligne le signale quand son contenu change (ou s'il est créé). Un `outils.json` au mauvais format est refusé, pas remplacé. `--dry-run` affiche les changements sans écrire (et le rappelle par une ligne « Simulation »). Pour chaque outil :
@@ -129,26 +128,19 @@ Télécharge la page en ligne (`[url]`, par défaut celle du répertoire; le mê
 
 Les outils nouveaux, modifiés, retirés ou de retour reçoivent la date de modification de la page; les nouveaux, modifiés et de retour sont reclassés. Les champs d'enrichissement d'un outil survivent à une modification ou à un retour, mais ils ne sont pas recalculés (voir la dernière remarque de [Importer ou réimporter](#importer-ou-réimporter-depuis-le-web)). Le fichier n'est réécrit que s'il y a au moins un changement; `meta.updated_at` est alors mis à jour, et `tags.json` aussi quand de nouveaux tags s'ajoutent.
 
-Avec `--enrichir`, la synchronisation est suivie de l'[enrichissement](#enrichissement-par-ia), qui lit `tags.json` et `criteres.json` dans le même dossier que `outils.json`. Une option inconnue est refusée, de même que `--nouveaux-tags`, `--sans-page` ou `--sans-sommaire` sans `--enrichir`.
+Avec `--enrichir`, la synchronisation est suivie de l'[enrichissement](#enrichissement-par-ia), qui lit `tags.json` et `criteres.json` dans le même dossier que `outils.json`. Une option inconnue est refusée, de même que `--nouveaux-tags`, `--sans-page` ou `--max-echecs` sans `--enrichir`.
 
-**Sommaire automatique.** Avec `--enrichir`, ou avec `--sommaire` seul (hors `--dry-run`), `update.ts` met à jour le [sommaire](#génération-du-sommaire-statistique) à la fin de l'exécution, **seulement si quelque chose a changé** : au moins un outil nouveau, modifié ou retiré, ou au moins un outil enrichi. Une page inchangée sans enrichissement ne fait rien.
-
-- Avec `--enrichir`, c'est le comportement **par défaut** : il n'y a pas d'option pour le demander, et `--sans-sommaire` le désactive (si quelque chose a changé, un avertissement le rappelle, voir plus bas).
-- Sans `--enrichir`, `nub run update --sommaire` le demande au besoin. Rien n'est enrichi : le sommaire n'est mis à jour que si la synchronisation a détecté des changements. `--sommaire` est inutile avec `--enrichir`, et `--sommaire` avec `--sans-sommaire` est refusé.
-- `nub run update` seul ne touche pas au sommaire, mais **avertit** si des changements ont été détectés (voir ci-dessous).
+**Sommaire automatique.** Avec `--enrichir` (hors `--dry-run`), `update.ts` met à jour le [sommaire](#génération-du-sommaire-statistique) à la fin de l'exécution, **seulement si quelque chose a changé** : au moins un outil nouveau, modifié ou retiré, ou au moins un outil enrichi. Une page inchangée sans enrichissement ne fait rien. Sans `--enrichir`, `update` ne touche jamais au sommaire, mais **avertit** si des changements ont été détectés (voir ci-dessous) ; le sommaire se régénère alors avec `nub run sommaire`.
 
 La mise à jour demande la clé `OPENAI_API_KEY` (pour le résumé) et `vl-convert` (pour les graphiques), et prend environ 30 secondes. Deux garde-fous évitent d'abîmer un bon sommaire :
 
 - si la clé ou `vl-convert` manque, un avertissement jaune le dit, le sommaire n'est pas touché et le code de sortie n'est pas modifié; il reste à lancer `nub run sommaire` après avoir réglé le problème;
 - si le résumé ne peut pas être rédigé (erreur de l'API, réponses invalides), le sommaire existant et ses graphiques sont conservés tels quels, un message rouge l'explique et le code de sortie est 1. (Lancé directement, `nub run sommaire` écrit au contraire un sommaire avec une note à la place du résumé.)
 
-Un enrichissement par lots (`--limite=N`) met donc le sommaire à jour à chaque lot.
-
 **Avertissement.** Chaque fois que des changements ont eu lieu (un outil nouveau, modifié ou retiré, ou un outil enrichi) **sans** que le sommaire soit mis à jour, `update.ts` le dit, pour qu'on ne laisse pas un sommaire en retard sans le savoir :
 
-- `nub run update` seul : « Le sommaire n'est plus à jour (des changements ont été détectés): lancer `nub run sommaire`, ou ajouter --sommaire à update »;
-- à l'import initial (pas de `outils.json`), il n'y a pas de sommaire antérieur : le message devient « Aucun sommaire n'a encore été généré: lancer `nub run sommaire`, ou ajouter --sommaire à update » (mêmes conditions, mêmes options);
-- avec `--sans-sommaire` : « Le sommaire n'est plus à jour (… , --sans-sommaire): lancer `nub run sommaire` », où la parenthèse dit « des outils ont été enrichis » ou « des changements ont été détectés » selon le cas;
+- `nub run update` sans `--enrichir` : « Le sommaire n'est plus à jour (des changements ont été détectés): lancer `nub run sommaire` »;
+- à l'import initial (pas de `outils.json`), il n'y a pas de sommaire antérieur : « Aucun sommaire n'a encore été généré: lancer `nub run sommaire` » (mêmes conditions);
 - clé ou `vl-convert` manquant, ou résumé impossible : les messages décrits plus haut.
 
 L'avertissement est jaune, n'est pas une erreur (le code de sortie n'est pas modifié) et n'apparaît pas quand rien n'a changé, ni avec `--dry-run`, où rien n'est écrit.
@@ -172,7 +164,7 @@ Le résumé (stdout) et le journal avec la barre de progression (stderr) sont co
 nub sommaire.ts [--sans-resume] [--sans-graphiques] [outils.json] [sommaire.md]
 ```
 
-Écrit `sommaire.md` (par défaut dans le dossier de `outils.json`) et, à côté, le dossier `graphiques/` : voir [Sommaire statistique](#génération-du-sommaire-statistique). La fonction exportée `genererSommaire` fait ce travail; `update.ts` l'appelle après un enrichissement ou avec `--sommaire`.
+Écrit `sommaire.md` (par défaut dans le dossier de `outils.json`) et, à côté, le dossier `graphiques/` : voir [Sommaire statistique](#génération-du-sommaire-statistique). La fonction exportée `genererSommaire` fait ce travail; `update.ts` l'appelle après un enrichissement.
 
 ### `enrichir.ts`
 
@@ -250,10 +242,9 @@ Sur les 57 outils enrichis, `criteres` (déduit) et `evaluation_enrichie.critere
 | Option | Effet |
 |---|---|
 | `--enrichir` | Active l'enrichissement après la synchronisation |
-| `--limite=N` | N'enrichit pas plus de N outils par exécution. Seuls les succès comptent : un outil en échec ne compte pas dans la limite, mais n'est essayé qu'une fois par exécution |
 | `--sans-page` | Enrichit aussi les outils dont la page est inaccessible ou presque vide, à partir de leur seule description (ils portent alors `page_lue: false`). Voir [Pages inaccessibles](#pages-inaccessibles-ou-presque-vides) |
 | `--nouveaux-tags` | Autorise le modèle à proposer de nouveaux tags, au plus 2 par outil selon sa consigne (justification obligatoire, validée par le script); ils sont ajoutés à `tags.json` |
-| `--sans-sommaire` | Ne met pas à jour le sommaire à la fin (voir [`update.ts`](#updatets)) |
+| `--max-echecs=N` | Nombre d'échecs consécutifs à partir duquel un outil n'est plus tenté (3 par défaut, voir `echecs_enrichissement`). Pour retenter les outils abandonnés, relancer avec une valeur plus élevée |
 | `--dry-run` | Liste les outils concernés sans appeler l'API |
 
 **Conseil :** l'enrichissement coûte des appels à l'API et ne se refait pas (un outil enrichi n'est jamais régénéré). Avant de le lancer, commiter `outils.json` ou en garder une copie, par exemple `cp outils.json pre-enrichir-outils.json` : ce nom est ignoré par Git.
@@ -262,7 +253,7 @@ Sur les 57 outils enrichis, `criteres` (déduit) et `evaluation_enrichie.critere
 
 **Confidentialité :** pour chaque outil, le script télécharge la page publique (`lien`), en extrait le texte (limité à 6 000 caractères) et les liens vers des dépôts de code (GitHub, GitLab, Codeberg, Framagit, Bitbucket, SourceHut, SourceForge, et les hôtes `gitlab.*`, `git.*`, `forge.*` ou `gitea.*`), puis envoie à l'API OpenAI (Responses API, sortie JSON structurée) le nom, la catégorie, le lien, la description et cet extrait. Quand l'évaluation diffère du répertoire, le second appel y ajoute les deux évaluations. Les tags sont limités au vocabulaire de `tags.json`. La page est lue d'abord : voir [Pages inaccessibles ou presque vides](#pages-inaccessibles-ou-presque-vides).
 
-**Sommaire automatique :** la mise à jour du sommaire qui suit un enrichissement (ou `update --sommaire`) envoie aussi à l'API OpenAI les statistiques et la liste des outils (nom, catégorie, score, critères, statut, licence, forge, tags, description courte), comme décrit dans [Sommaire statistique](#génération-du-sommaire-statistique).
+**Sommaire automatique :** la mise à jour du sommaire qui suit un enrichissement envoie aussi à l'API OpenAI les statistiques et la liste des outils (nom, catégorie, score, critères, statut, licence, forge, tags, description courte), comme décrit dans [Sommaire statistique](#génération-du-sommaire-statistique).
 
 **Validation :** chaque réponse est vérifiée avant d'être écrite :
 
@@ -279,14 +270,14 @@ Une réponse invalide est redemandée une fois, avec la raison du rejet, puis co
 
 **Progression :** la barre de progression et le journal vont sur stderr; les résumés (changements, nombre d'outils enrichis, écarts, nouveaux tags) restent sur stdout. Le nom de l'outil en cours s'affiche à droite de la barre (en terminal) ou sur une ligne `Enrichissement de <outil>...` (hors terminal, où une ligne de pourcentage est aussi écrite par tranche de 10 %). Dans un terminal, la barre et le journal sont colorés (voir [Couleurs](#updatets)) : succès en vert, avertissements en jaune, échecs en rouge.
 
-**Reprise :** `outils.json` est écrit après chaque outil, donc une interruption ne perd rien et une relance reprend où on s'est arrêté. Le code de sortie est 1 si au moins un outil a échoué (page inaccessible comprise).
+**Reprise et échecs répétés :** `outils.json` est écrit après chaque outil, enrichi ou en échec, donc une interruption ne perd rien et une relance reprend où on s'est arrêté. Chaque échec (page inaccessible ou presque vide, deux réponses invalides) incrémente `echecs_enrichissement` sur l'outil ; à 3 échecs consécutifs (`--max-echecs=N` pour changer), l'outil est **abandonné** : `update --enrichir` ne le tente plus, le dit en tête de l'enrichissement (avec le compteur), et le sommaire le compte parmi les outils restant à enrichir. Un succès retire le compteur. Le code de sortie est 1 si au moins un outil a échoué pendant l'exécution (un outil abandonné, non tenté, ne compte pas).
 
 ### Pages inaccessibles ou presque vides
 
 La page de chaque outil est lue avant tout appel à l'API. Elle est jugée inutilisable si elle est inaccessible (erreur réseau, délai de 20 secondes dépassé, réponse HTTP non réussie comme un 403 de blocage anti-robot) ou presque vide (moins de 200 caractères de texte, par exemple un site rendu par JavaScript). Dans ce cas (exemples rencontrés : En commun, dont la page est vide parce qu'elle est générée par JavaScript, ainsi que Paperless-ngx et CIRA Canadian Shield, qui répondent par une erreur HTTP 403) :
 
 - un **avertissement** est affiché dans le journal, avec la raison;
-- **par défaut**, l'outil n'est **pas enrichi** : aucun appel à l'API n'est fait, l'échec est consigné (code de sortie 1) et l'outil sera retenté à la prochaine exécution. Un résultat bâti sur la seule description serait moins fiable (licence et dépôt tirés de la mémoire du modèle, description générique), et comme un outil enrichi n'est jamais régénéré, il serait figé;
+- **par défaut**, l'outil n'est **pas enrichi** : aucun appel à l'API n'est fait, l'échec est consigné (code de sortie 1, `echecs_enrichissement` incrémenté) et l'outil sera retenté à la prochaine exécution, jusqu'à 3 échecs consécutifs. Un résultat bâti sur la seule description serait moins fiable (licence et dépôt tirés de la mémoire du modèle, description générique), et comme un outil enrichi n'est jamais régénéré, il serait figé;
 - avec **`--sans-page`**, l'outil est enrichi quand même, à partir de la description seule. Le modèle est alors invité à la prudence (`null` pour la licence et le dépôt dans le doute, confiance faible). Le champ **`page_lue: false`** signale cet état, et le script liste ces outils à la fin de l'exécution.
 
 Les outils enrichis avec une page lisible portent `page_lue: true`. Pour refaire plus tard les outils enrichis sans page (une fois leur page redevenue accessible, ou après avoir changé de stratégie), supprimer leurs champs d'enrichissement, puis relancer `nub run update --enrichir` :
@@ -298,7 +289,7 @@ jaq '.outils |= map(if .page_lue == false then del(.description_longue, .tags, .
 
 ## Génération du sommaire statistique
 
-Le sommaire est mis à jour **automatiquement** par `update.ts --enrichir` (ou `update.ts --sommaire`) quand quelque chose a changé (voir [`update.ts`](#updatets)), et se lance aussi à la main avec `nub run sommaire`. Il analyse `outils.json` (et `tags.json` et `criteres.json`, lus dans le même dossier) et écrit `sommaire.md`, un document en Markdown qui regroupe :
+Le sommaire est mis à jour **automatiquement** par `update.ts --enrichir` quand quelque chose a changé (voir [`update.ts`](#updatets)), et se lance aussi à la main avec `nub run sommaire`. Il analyse `outils.json` (et `tags.json` et `criteres.json`, lus dans le même dossier) et écrit `sommaire.md`, un document en Markdown qui regroupe :
 
 - **un résumé de 3 ou 4 paragraphes** sur le répertoire et son utilité, rédigé par l'API OpenAI;
 - les **chiffres clés** (outils, catégories, scores, outils enrichis, libres ou partiels);
@@ -314,7 +305,7 @@ Le sommaire est mis à jour **automatiquement** par `update.ts --enrichir` (ou `
 
 Tant que tous les outils ont la même date (aucune modification détectée depuis l'import), les lignes « outils les plus anciens » et « outils les plus récents » sont identiques. Les outils enrichis avant l'ajout de `enrichi_le` ont tous la même date de substitution : ils apparaissent donc ensemble comme « premier enrichissement » (voir le champ `enrichi_le`).
 
-Les retirés (`removed`) sont comptés à part. Les statistiques sur le statut du code source, les licences, les forges et les tags ne portent que sur les outils déjà enrichis : le sommaire dit combien il y en a, et reste valide à n'importe quel stade de l'enrichissement. Il reflète l'état du fichier au moment de l'exécution. `update --enrichir` le met à jour tout seul quand quelque chose a changé, et `update --sommaire` fait de même après une simple synchronisation. Il reste à le relancer à la main après un `nub run update` sans `--sommaire`, après un enrichissement fait avec `--sans-sommaire`, ou quand la mise à jour automatique a été sautée.
+Les retirés (`removed`) sont comptés à part. Les statistiques sur le statut du code source, les licences, les forges et les tags ne portent que sur les outils déjà enrichis : le sommaire dit combien il y en a, et reste valide à n'importe quel stade de l'enrichissement. Il reflète l'état du fichier au moment de l'exécution. `update --enrichir` le met à jour tout seul quand quelque chose a changé. Il reste à le relancer à la main après un `nub run update` sans `--enrichir` qui a détecté des changements (un avertissement le dit), ou quand la mise à jour automatique a été sautée.
 
 Le calcul est local; seul le résumé passe par le réseau. Pour le rédiger, le script envoie à l'API OpenAI toutes les statistiques et, pour chaque outil du répertoire, son nom, sa catégorie, son score, ses critères, son statut, sa licence, sa forge, ses tags et sa description courte. Le résumé est validé (3 ou 4 paragraphes de texte continu, sans liste, sans gras, sans HTML, sans tiret cadratin ni émoji; redemandé une fois avec la raison du rejet), puis inscrit dans le sommaire avec le nom du modèle et la date, et la mention qu'il est à relire. Si la rédaction échoue, le sommaire, lancé directement, est tout de même écrit avec une note à la place du résumé, et le code de sortie est 1 (la mise à jour automatique, elle, conserve l'ancien sommaire).
 
@@ -369,7 +360,7 @@ Si le `score` ou les `criteres` d'un outil déjà enrichi changent, après un `c
 
 | Commande | Effet |
 |---|---|
-| `nub run update` | `nub update.ts` : synchronise `outils.json` et `criteres.json` avec la page en ligne (import initial si `outils.json` manque). Les options passent directement : `nub run update --dry-run`, `nub run update --sommaire` pour mettre aussi le sommaire à jour si des changements sont détectés, ou `nub run update --enrichir --limite=5` pour enrichir |
+| `nub run update` | `nub update.ts` : synchronise `outils.json` et `criteres.json` avec la page en ligne (import initial si `outils.json` manque). Les options passent directement : `nub run update --dry-run`, ou `nub run update --enrichir` pour enrichir, ce qui met aussi le sommaire à jour si quelque chose a changé |
 | `nub run sommaire` | `nub sommaire.ts` : écrit `sommaire.md` et `graphiques/` (`--sans-resume` évite l'appel à l'API, `--sans-graphiques` évite vl-convert) |
 | `nub run schemas` | `obuild && nub dist/generer-schemas.mjs` : régénère `schemas/*.schema.json` à partir des types (voir [Schémas JSON](#schémas-json)) |
 | `nub run schemas:verifier` | Comme `schemas`, mais sans rien écrire : échoue si les schémas commités sont périmés |
@@ -387,8 +378,8 @@ Dans `test/`, avec `node:test` lancé par `nub` :
 - `confirmer.test.ts` : validation des verdicts (statuts, citation obligatoire, exacte et d'au plus 300 caractères), accord entre ensembles, coût OpenAI, lecture de la sortie de `claude -p`, et la boucle avec de faux fournisseurs (nouvel essai, échec, page inaccessible, budget, limite, requête sans score ni critères du répertoire).
 - `appliquer-confirmations.test.ts` : forme de `criteres_confirmes` (critères, citations des confirmés et des infirmés, modèle, règle, date de Toronto), outils sans verdict laissés intacts, entrées non modifiées, champ compté parmi les champs d'enrichissement, la CLI sur une copie, et le fichier réel (le champ est présent pour chaque outil enrichi, chaque critère confirmé a sa citation, jamais plus de critères confirmés que d'étoiles).
 - `extract.test.ts` : conversion de la date de la page en heure de Toronto, cohérence de `criteres.json` et `outils.json`, rejet d'une page sans date, téléchargement (sur un serveur local, sans réseau), erreurs de téléchargement, le garde-fou contre l'écrasement (avec et sans `--force`, y compris pour un fichier au mauvais format), et la preuve qu'aucun fichier HTML local n'est lu.
-- `update.test.ts` : nouveau, modification, retrait, comeback, le message d'avertissement propre à l'import initial, `synchroniser` (import initial sans `outils.json`, simulation, fichier inchangé, écriture de `criteres.json` seulement quand il change, format invalide refusé), conservation des dates des outils inchangés et des champs d'enrichissement, la présentation colorée du résumé et du journal (même texte avec ou sans couleurs), et les conditions de la mise à jour automatique du sommaire (dont `--sommaire` et `--sans-sommaire`) et l'avertissement quand le sommaire n'est pas à jour.
-- `enrichir.test.ts` : vocabulaire de `tags.json`, date d'enrichissement, validation (tags, Markdown permis et interdit, licences SPDX et maison, évaluation), explication des écarts, extraction de la page, pages inaccessibles ou presque vides (avertissement, refus par défaut, `--sans-page`), enrichissement une seule fois, limite, reprise et échecs, avec de faux générateurs.
+- `update.test.ts` : nouveau, modification, retrait, comeback, le message d'avertissement propre à l'import initial, `synchroniser` (import initial sans `outils.json`, simulation, fichier inchangé, écriture de `criteres.json` seulement quand il change, format invalide refusé), conservation des dates des outils inchangés et des champs d'enrichissement, la présentation colorée du résumé et du journal (même texte avec ou sans couleurs), et les conditions de la mise à jour automatique du sommaire (avec `--enrichir` seulement) et l'avertissement quand le sommaire n'est pas à jour.
+- `enrichir.test.ts` : vocabulaire de `tags.json`, date d'enrichissement, validation (tags, Markdown permis et interdit, licences SPDX et maison, évaluation), explication des écarts, extraction de la page, pages inaccessibles ou presque vides (avertissement, refus par défaut, `--sans-page`), enrichissement une seule fois, compteur d'échecs consécutifs et abandon après `maxEchecs`, reprise, avec de faux générateurs.
 - `spdx.test.ts` : licences SPDX valides et refusées.
 - `progress.test.ts` : barre en terminal et hors terminal, bornes, étiquette, `end()` idempotent, `message()`, peinture de la barre.
 - `couleurs.test.ts` : règles d'activation (terminal, `NO_COLOR`, `FORCE_COLOR`, `TERM=dumb`, `--sans-couleur`) et codes ANSI.
@@ -396,7 +387,7 @@ Dans `test/`, avec `node:test` lancé par `nub` :
 - `fichiers.test.ts` : structure et `meta` des fichiers de données (création, contenu inchangé ou modifié, licence rétablie, refus des formats invalides), et conformité des trois fichiers du dépôt.
 - `sommaire.test.ts` : statistiques (statuts, licences, familles, tags, critères par statut, critères vérifiés par verdict et par statut, forges, dates), rendu Markdown (sections, images insérées dans leur section, cas sans outil enrichi), validation du résumé et nouvelle tentative, `genererSommaire` (écriture, options, conservation du sommaire existant en cas d'échec), avec des données fictives (jamais `outils.json`, jamais le réseau).
 - `graphiques.test.ts` : spécifications Vega-Lite (données incluses, champs existants, pourcentages, verdicts des critères vérifiés, graphiques omis sans données), écriture et nettoyage des fichiers, message si vl-convert est absent, et conversion réelle en SVG et PNG (ignorée si vl-convert n'est pas installé). Les données fictives des tests sont dans `donnees-fictives.ts`.
-- `schemas.test.ts` : les trois fichiers de données réels sont valides selon les schémas (avec Ajv, indépendant de RunTypes), et des variantes invalides sont refusées (clé inconnue, `score` hors de 0 à 3, `source` ou `changement` inconnus, tags en trop ou en double, date non ISO, `meta` manquant).
+- `schemas.test.ts` : les trois fichiers de données réels sont valides selon les schémas (avec Ajv, indépendant de RunTypes), et des variantes invalides sont refusées (clé inconnue, `score` hors de 0 à 3, `echecs_enrichissement` nul ou non entier, `source` ou `changement` inconnus, tags en trop ou en double, date non ISO, `meta` manquant).
 - `documentation.test.ts` : les cinq fichiers Markdown du dépôt (README, `implementation.md`, `historique.md`, `sommaire.md`, le spike) existent, leurs liens relatifs et leurs ancres existent (ancres calculées comme GitHub, liens dans le code ignorés), chacun commence par un titre et la ligne *Documentation*, sans tiret cadratin ni balise HTML (sauf l'image du README), et les fichiers générés disent par quel script et qu'ils ne se modifient pas à la main.
 - `en-tetes.test.ts` : chaque fichier `.ts` porte les en-têtes SPDX; la licence du code est la même dans `package.json`; les deux textes de licence sont présents, à la racine (`LICENSE*`) et dans `LICENSES/`; chaque schéma JSON déclare la licence du code dans `$comment`; et `REUSE.toml` annote `schemas/**` et le reste des fichiers sans en-tête (AGPL-3.0-or-later), ainsi que les données et leurs dérivés (CC-BY-SA-4.0). Ce test ne remplace pas `nub run licences`, qui contrôle tous les fichiers.
 
@@ -408,10 +399,10 @@ Dans `test/`, avec `node:test` lancé par `nub` :
 | `… format invalide …` ou `« meta » invalide …` | Un fichier de données n'a pas la structure décrite dans [Fichiers JSON](README.md#fichiers-json). Le restaurer depuis Git (`git checkout outils.json`) ou, pour `outils.json`, le recréer avec `nub extract.ts --force outils.json criteres.json` puis `nub classify.ts outils.json` |
 | `Téléchargement impossible (url): …` | Réseau, délai de 30 secondes dépassé ou erreur HTTP en téléchargeant le répertoire. Rien n'a été écrit : réessayer |
 | `OPENAI_API_KEY absente` | Il y a des outils à enrichir (ou un résumé à rédiger pour `nub run sommaire`), mais `.env` n'a pas la clé. La synchronisation, elle, a déjà été écrite. Pour le sommaire, `--sans-resume` évite la clé |
-| `page inaccessible …` ou `page presque vide …`, `outil non enrichi` | La page de l'outil n'a pas pu être lue : réessayer plus tard, ou enrichir à partir de la description seule avec `--sans-page`. Voir [Pages inaccessibles](#pages-inaccessibles-ou-presque-vides) |
+| `page inaccessible …` ou `page presque vide …`, `outil non enrichi` | La page de l'outil n'a pas pu être lue : réessayer plus tard, ou enrichir à partir de la description seule avec `--sans-page`. Après 3 échecs consécutifs, l'outil est abandonné (`abandonnés après 3 échecs consécutifs`) : `--max-echecs=N` plus élevé pour le retenter. Voir [Pages inaccessibles](#pages-inaccessibles-ou-presque-vides) |
 | Des séquences comme `^[[32m` ou `[32m` apparaissent dans la sortie | Les couleurs sont forcées (`FORCE_COLOR`). Les désactiver avec `--sans-couleur` (ou retirer `FORCE_COLOR`) |
-| `Le sommaire n'est plus à jour …` | `update` a détecté des changements (ou enrichi des outils) sans mettre le sommaire à jour, parce qu'on ne l'a pas demandé ou qu'on l'a refusé avec `--sans-sommaire`. Lancer `nub run sommaire`, ou utiliser `--sommaire` (ou `--enrichir`) la prochaine fois |
-| `Sommaire non mis à jour: …` | Après `--enrichir` ou `--sommaire`, le sommaire n'a pas pu être mis à jour : clé ou vl-convert manquant (avertissement, rien n'est modifié) ou résumé impossible à rédiger (le sommaire existant est conservé, code de sortie 1). Régler le problème, puis lancer `nub run sommaire` (ou le désactiver avec `--sans-sommaire`) |
+| `Le sommaire n'est plus à jour …` | `update` sans `--enrichir` a détecté des changements ; il ne met jamais le sommaire à jour. Lancer `nub run sommaire` |
+| `Sommaire non mis à jour: …` | Après `--enrichir`, le sommaire n'a pas pu être mis à jour : clé ou vl-convert manquant (avertissement, rien n'est modifié) ou résumé impossible à rédiger (le sommaire existant est conservé, code de sortie 1). Régler le problème, puis lancer `nub run sommaire`  |
 | `vl-convert est introuvable …` | Le sommaire a besoin de vl-convert pour ses graphiques. L'installer (voir [Graphiques](#graphiques)) ou utiliser `nub run sommaire --sans-graphiques` |
 | `vl-convert vl2svg: …` ou `vl-convert vl2png: …` | vl-convert a refusé une spécification de graphique : le message de vl-convert dit pourquoi. Vérifier sa version (`vl-convert --version`, 1.9 ou plus) |
 | `Schémas périmés ou absents: …` | `nub run schemas:verifier` (ou `nub run test`) a trouvé un schéma commité qui diffère de celui que les types produisent. Lancer `nub run schemas`, puis commiter `schemas/` |

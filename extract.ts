@@ -61,6 +61,11 @@ export interface Outil {
   changement: Changement | null;
   /** Présent (true) seulement si l'outil a disparu de la page; l'entrée est alors conservée. */
   removed?: true;
+  /**
+   * Nombre d'échecs consécutifs d'enrichissement (page inaccessible, réponses invalides); absent tant qu'aucun échec,
+   * retiré dès que l'enrichissement réussit. À MAX_ECHECS_PAR_DEFAUT (enrichir.ts), l'outil n'est plus tenté sans --max-echecs.
+   */
+  echecs_enrichissement?: number;
   // Champs ajoutés par `update.ts --enrichir` (voir enrichir.ts); absents tant que l'outil n'est pas enrichi.
   /** Description longue en français (Markdown, sans image ni HTML), générée une seule fois. */
   description_longue?: string;

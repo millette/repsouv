@@ -97,6 +97,13 @@ test("statistiques: sans aucun criteres_confirmes, la section est vide", () => {
   const { confirmes } = calculerStatistiques(entree(OUTILS.map((o) => { const { criteres_confirmes: _c, ...reste } = o; return reste as typeof o; }))).criteres;
   assert.deepEqual([confirmes.outils, confirmes.parSource, confirmes.sansVerdict.length], [0, [], 5]);
 });
+test("statistiques et rendu: outils abandonnés après des échecs d'enrichissement répétés", () => {
+  const st = calculerStatistiques(entree([outil("X", { echecs_enrichissement: 3 }), outil("Y", { echecs_enrichissement: 2 }), outil("Z")]));
+  assert.deepEqual(st.enrichissement.abandonnes, ["X"]);
+  const md = rendreMarkdown(st, { genereLe: GENERE_LE });
+  assert.ok(md.includes("- Outils restant à enrichir : 3, dont 1 abandonné(s) après 3 échecs consécutifs d'enrichissement (X)."));
+  assert.deepEqual(calculerStatistiques(entree()).enrichissement.abandonnes, []);
+});
 test("statistiques: forges, et logiciels libres sans dépôt", () => {
   const s = calculerStatistiques(entree([...OUTILS, enrichi("Sans", { repo: null })]));
   assert.deepEqual(s.forges.map((f) => [f.forge, f.outils.length]), [["GitHub", 2], ["git.exemple.org", 1], ["GitLab", 1]]);

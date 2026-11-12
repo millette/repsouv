@@ -8,7 +8,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import {
-  aEnrichir, chargerCriteres, chargerTags, enrichirOutils, extraireContenu, instructions, instructionsEcart, lireContenu, MAX_TAGS, MIN_EXTRAIT, obtenirPage, problemesMarkdown, sauverTags,
+  abandonne, aEnrichir, chargerCriteres, chargerTags, enrichirOutils, extraireContenu, instructions, instructionsEcart, lireContenu, MAX_TAGS, MIN_EXTRAIT, obtenirPage, problemesMarkdown, sauverTags,
   schemaReponse, validerEcart, validerProposition, type Expliqueur, type Generateur, type Tag,
 } from "../enrichir.ts";
 import type { Outil } from "../extract.ts";
@@ -121,15 +121,40 @@ test("enrichir: un second passage n'appelle plus le générateur", async () => {
   await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer, lire: pageOk });
   assert.equal(appels, 1);
 });
-test("enrichir: respecte la limite et sauvegarde après chaque outil", async () => {
-  const outils = [outil("a"), outil("b"), outil("c")];
+test("enrichir: sauvegarde après chaque outil enrichi", async () => {
+  const outils = [outil("a"), outil("b")];
   let sauvegardes = 0;
-  const r = await enrichirOutils(outils, {
-    tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer: async () => valide(), lire: pageOk, limite: 2, apresChaque: () => sauvegardes++,
-  });
+  const r = await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer: async () => valide(), lire: pageOk, apresChaque: () => sauvegardes++ });
   assert.deepEqual(r.enrichis, ["a", "b"]);
   assert.equal(sauvegardes, 2);
-  assert.equal(outils[2]!.description_longue, undefined);
+});
+test("enrichir: chaque échec incrémente echecs_enrichissement et est sauvegardé; après 3 échecs consécutifs, l'outil n'est plus tenté", async () => {
+  const outils = [outil("a")];
+  let appels = 0, sauvegardes = 0;
+  const options = { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer: (async () => (appels++, valide())) as Generateur, lire: async () => null, apresChaque: () => sauvegardes++ };
+  for (const attendu of [1, 2, 3]) {
+    const r = await enrichirOutils(outils, options);
+    assert.equal(r.erreurs.length, 1);
+    assert.equal(outils[0]!.echecs_enrichissement, attendu);
+    assert.deepEqual(r.abandonnes, []);
+  }
+  assert.equal(sauvegardes, 3);
+  const r = await enrichirOutils(outils, options);
+  assert.deepEqual(r.abandonnes, ["a"]);
+  assert.deepEqual(r.erreurs, []);
+  assert.equal(appels, 0, "la page inaccessible n'appelle jamais le générateur");
+  assert.equal(outils[0]!.echecs_enrichissement, 3, "un outil abandonné n'est plus compté");
+  assert.equal(abandonne(outils[0]!), true);
+});
+test("enrichir: maxEchecs est configurable, et un succès retire le compteur", async () => {
+  const un = [outil("a", { echecs_enrichissement: 1 })];
+  const r = await enrichirOutils(un, { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer: async () => valide(), lire: pageOk, maxEchecs: 1 });
+  assert.deepEqual([r.abandonnes, r.enrichis], [["a"], []]);
+  const deux = [outil("b", { echecs_enrichissement: 2 })];
+  const s = await enrichirOutils(deux, { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer: async () => valide(), lire: pageOk });
+  assert.deepEqual(s.enrichis, ["b"]);
+  assert.equal(deux[0]!.echecs_enrichissement, undefined);
+  assert.equal(abandonne(outil("c", { echecs_enrichissement: 5 }), 10), false);
 });
 test("enrichir: un second essai suit une réponse invalide", async () => {
   const reponses = [valide({ tags: [] }), valide()];

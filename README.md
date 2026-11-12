@@ -69,8 +69,7 @@ nub run schemas                  # régénère schemas/*.schema.json à partir d
 nub run licences                 # vérifie la conformité REUSE des licences (uvx reuse lint; demande uv)
 nub run update --dry-run         # compare outils.json à la page en ligne, sans rien écrire (import initial annoncé si le fichier manque)
 nub run update                   # synchronise outils.json et criteres.json avec la page en ligne; sans outils.json, c'est l'import initial
-nub run update --sommaire        # idem, puis met à jour le sommaire si la synchronisation a détecté des changements
-nub run update --enrichir --limite=5   # enrichit 5 outils par IA (nécessite OPENAI_API_KEY), puis met à jour le sommaire si quelque chose a changé
+nub run update --enrichir         # enrichit par IA les outils qui ne le sont pas encore (nécessite OPENAI_API_KEY), puis met à jour le sommaire si quelque chose a changé
 nub run sommaire                 # écrit sommaire.md et graphiques/ (--sans-resume, --sans-graphiques pour s'en passer)
 ```
 
@@ -115,6 +114,7 @@ Fichier unifié : le tableau `outils` contient 60 outils (plus d'éventuels outi
 | `derniere_modification` | Dernière date de modification connue : ISO 8601 en heure de Toronto, avec le décalage (ex. `2026-11-05T09:53:00-05:00`) |
 | `changement` | Dernier changement détecté par `update.ts` : `"nouveau"`, `"modification"`, `"retrait"` ou `"comeback"`; `null` si jamais modifié depuis l'import |
 | `removed` | Présent (`true`) seulement pour un outil disparu de la page; l'entrée est conservée, à la fin du tableau |
+| `echecs_enrichissement` | Nombre d'échecs consécutifs d'enrichissement (page inaccessible ou presque vide, réponses invalides). Présent seulement sur un outil pas encore enrichi qui a échoué au moins une fois ; retiré dès que l'enrichissement réussit. À 3 (`--max-echecs=N` pour changer), `update --enrichir` ne tente plus l'outil |
 | `criteres` | Identifiants (voir `criteres.json`) des critères que les étoiles représentent. Déduits, voir [Classification](implementation.md#classification) |
 | `confiance` | Fiabilité de cette déduction : `"élevée"`, `"moyenne"` ou `"faible"` |
 

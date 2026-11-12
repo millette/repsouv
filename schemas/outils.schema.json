@@ -67,6 +67,10 @@
           "removed": {
             "const": true
           },
+          "echecs_enrichissement": {
+            "type": "integer",
+            "minimum": 1
+          },
           "description_longue": {
             "type": "string"
           },

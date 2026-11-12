@@ -427,6 +427,11 @@ export function expliqueurOpenAI(cle: string, modele: string): Expliqueur {
 
 export const aEnrichir = (o: Outil) => !o.removed && !o.description_longue;
 
+/** Au-delà de ce nombre d'échecs consécutifs, un outil n'est plus tenté (option --max-echecs=N de update.ts). */
+export const MAX_ECHECS_PAR_DEFAUT = 3;
+/** true si l'outil a atteint le nombre maximal d'échecs consécutifs et ne doit plus être tenté. */
+export const abandonne = (o: Outil, maxEchecs: number = MAX_ECHECS_PAR_DEFAUT) => (o.echecs_enrichissement ?? 0) >= maxEchecs;
+
 /** Un outil, avec les critères déduits par classify.ts quand il en a. */
 type OutilARevoir = Outil & { criteres?: readonly string[]; confiance?: string };
 
@@ -453,8 +458,9 @@ export interface OptionsEnrichissement {
   accepterSansPage?: boolean;
   /** Date et heure du moment, pour `enrichi_le` (ISO 8601, heure de Toronto). Par défaut, l'heure actuelle. */
   horloge?: () => string;
-  limite?: number;
-  /** Appelé après chaque outil enrichi pour persister l'état (outils.json, tags.json). */
+  /** Nombre d'échecs consécutifs à partir duquel un outil n'est plus tenté (MAX_ECHECS_PAR_DEFAUT). */
+  maxEchecs?: number;
+  /** Appelé après chaque outil enrichi, et après chaque échec (compteur), pour persister l'état (outils.json, tags.json). */
   apresChaque?: (outils: OutilARevoir[], tags: Tag[]) => void;
   /** Appelé au début du traitement de chaque outil, avec son nom. */
   debut?: (nom: string) => void;
@@ -471,6 +477,8 @@ export interface ResultatEnrichissement {
   ecarts: string[];
   /** Outils enrichis sans page lisible (page_lue: false). */
   sansPage: string[];
+  /** Outils non tentés parce qu'ils ont atteint le nombre maximal d'échecs consécutifs. */
+  abandonnes: string[];
 }
 
 const TENTATIVES = 2;
@@ -502,21 +510,24 @@ export async function obtenirValide<T>(
  * Un outil n'est modifié que si TOUT son enrichissement, explication d'écart comprise, a réussi.
  */
 export async function enrichirOutils(outils: OutilARevoir[], options: OptionsEnrichissement): Promise<ResultatEnrichissement> {
-  const { tags, criteres, generer, expliquer, autoriserNouveauxTags = false, limite = Infinity, lire = lireContenu, accepterSansPage = false, horloge = horodatage } = options;
+  const { tags, criteres, generer, expliquer, autoriserNouveauxTags = false, maxEchecs = MAX_ECHECS_PAR_DEFAUT, lire = lireContenu, accepterSansPage = false, horloge = horodatage } = options;
   const journal = options.journal ?? (() => {});
-  const resultat: ResultatEnrichissement = { enrichis: [], erreurs: [], ecarts: [], sansPage: [] };
+  const resultat: ResultatEnrichissement = { enrichis: [], erreurs: [], ecarts: [], sansPage: [], abandonnes: [] };
   let traites = 0;
 
   for (const [i, outil] of outils.entries()) {
     if (!aEnrichir(outil)) continue;
-    if (resultat.enrichis.length >= limite) break;
+    if (abandonne(outil, maxEchecs)) {
+      resultat.abandonnes.push(outil.nom);
+      continue;
+    }
     options.debut?.(outil.nom);
     try {
       const { contenu, probleme } = await obtenirPage(outil.lien, lire);
       if (probleme) {
         journal(`  ${outil.nom}: AVERTISSEMENT: ${probleme}`, "avertissement");
         if (!accepterSansPage) {
-          throw new Error(`${probleme}; outil non enrichi, il sera retenté à la prochaine exécution (ou utiliser --sans-page pour l'enrichir à partir de sa description seule)`);
+          throw new Error(`${probleme}; outil non enrichi (ou utiliser --sans-page pour l'enrichir à partir de sa description seule)`);
         }
       }
       const proposition = await obtenirValide(
@@ -538,7 +549,8 @@ export async function enrichirOutils(outils: OutilARevoir[], options: OptionsEnr
       }
 
       for (const n of nouveaux_tags) tags.push({ ...n, propose_pour: outil.nom });
-      outils[i] = { ...outil, ...champs, page_lue: !probleme, enrichi_le: horloge() };
+      const { echecs_enrichissement: _echecs, ...sansCompteur } = outil;
+      outils[i] = { ...sansCompteur, ...champs, page_lue: !probleme, enrichi_le: horloge() };
       resultat.enrichis.push(outil.nom);
       if (probleme) resultat.sansPage.push(outil.nom);
       journal(`  ${outil.nom}: ${champs.tags.join(", ")} (${champs.source})`, "succes");
@@ -548,8 +560,12 @@ export async function enrichirOutils(outils: OutilARevoir[], options: OptionsEnr
       }
       options.apresChaque?.(outils, tags);
     } catch (e) {
+      const echecs = (outil.echecs_enrichissement ?? 0) + 1;
+      outils[i] = { ...outil, echecs_enrichissement: echecs };
       resultat.erreurs.push({ nom: outil.nom, message: (e as Error).message });
-      journal(`  ${outil.nom}: ÉCHEC: ${(e as Error).message}`, "erreur");
+      const suite = echecs >= maxEchecs ? `; abandonné après ${echecs} échec(s) consécutif(s), ne sera plus tenté sans --max-echecs plus élevé` : ` (échec ${echecs} sur ${maxEchecs})`;
+      journal(`  ${outil.nom}: ÉCHEC: ${(e as Error).message}${suite}`, "erreur");
+      options.apresChaque?.(outils, tags);
     }
     options.progression?.(++traites);
   }

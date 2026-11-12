@@ -3,7 +3,7 @@
 // Statistiques du répertoire: calcul pur, sans entrée-sortie, à partir des outils, des tags et des
 // critères. Utilisé par le sommaire (sommaire.ts) et par les graphiques (graphiques.ts).
 import type { OutilClasse } from "./classify.ts";
-import type { Tag } from "./enrichir.ts";
+import { abandonne, type Tag } from "./enrichir.ts";
 import type { Critere } from "./extract.ts";
 import type { Metadonnees } from "./fichiers.ts";
 
@@ -84,7 +84,7 @@ export interface Statistiques {
   /** Nombre d'outils par catégorie et par statut du code source (pour les graphiques). */
   categoriesSources: { categorie: string; source: string; n: number }[];
   scores: { deux: number; trois: number; moyen: number };
-  enrichissement: { enrichis: number; sansPage: string[]; avecEcart: string[]; sansDate: number };
+  enrichissement: { enrichis: number; sansPage: string[]; avecEcart: string[]; sansDate: number; /** Outils non enrichis abandonnés après des échecs consécutifs (voir enrichir.ts). */ abandonnes: string[] };
   changements: Compte[];
   confianceClassification: Compte[];
   dates: { premieres: DateExtreme | null; dernieres: DateExtreme | null; parDate: Compte[] };
@@ -270,6 +270,7 @@ export function calculerStatistiques({ outils: tous, tags, criteres, meta }: Ent
       sansPage: enrichis.filter((o) => o.page_lue === false).map((o) => o.nom),
       avecEcart: enrichis.filter((o) => o.evaluation_enrichie?.ecart).map((o) => o.nom),
       sansDate: enrichis.length - enrichiLe.length,
+      abandonnes: outils.filter((o) => !o.description_longue && abandonne(o)).map((o) => o.nom),
     },
     changements: trier(compter(outils.map((o) => o.changement ?? "aucun"))),
     confianceClassification: trier(compter(outils.map((o) => o.confiance ?? "inconnue"))),

@@ -142,19 +142,8 @@ test("sommaireNecessaire: seulement avec --enrichir, hors simulation, et si quel
   assert.equal(sommaireNecessaire({ ...base, enrichis: 3 }), true); // outils enrichis
   assert.equal(sommaireNecessaire({ ...base, changements: 1, enrichis: 1 }), true);
   assert.equal(sommaireNecessaire(base), false); // rien n'a changé
-  assert.equal(sommaireNecessaire({ ...base, changements: 2, enrichis: 3, enrichir: false }), false); // sans --enrichir
+  assert.equal(sommaireNecessaire({ ...base, changements: 2, enrichir: false }), false); // update seul ne touche pas au sommaire
   assert.equal(sommaireNecessaire({ ...base, changements: 2, enrichis: 3, dryRun: true }), false); // simulation
-  assert.equal(sommaireNecessaire({ ...base, changements: 2, enrichis: 3, sansSommaire: true }), false); // --sans-sommaire
-  assert.equal(sommaireNecessaire({ ...base, changements: 2, sansSommaire: false }), true);
-});
-test("sommaireNecessaire avec --sommaire seul (sans --enrichir): seulement si des changements sont détectés", () => {
-  const seul = { enrichir: false, dryRun: false, changements: 0, enrichis: 0, sommaire: true };
-  assert.equal(sommaireNecessaire({ ...seul, changements: 1 }), true);
-  assert.equal(sommaireNecessaire(seul), false); // rien n'a changé
-  assert.equal(sommaireNecessaire({ ...seul, changements: 1, dryRun: true }), false); // simulation
-  assert.equal(sommaireNecessaire({ ...seul, changements: 1, sansSommaire: true }), false);
-  assert.equal(sommaireNecessaire({ ...seul, changements: 1, sommaire: false }), false); // sans le flag, update seul ne touche pas au sommaire
-  assert.equal(sommaireNecessaire({ ...seul, changements: 1, enrichir: true }), true); // --sommaire est redondant avec --enrichir
 });
 test("raisonDeSauterSommaire: clé API absente, vl-convert introuvable, ou rien à signaler", () => {
   const present = () => "vl-convert 1.9.0";
@@ -167,30 +156,18 @@ test("raisonDeSauterSommaire: clé API absente, vl-convert introuvable, ou rien 
   assert.match(raisonDeSauterSommaire("sk-test", absent)!, /vl-convert est introuvable/);
 });
 
-test("avertissement si des changements ont eu lieu et que le sommaire n'est pas mis à jour (update seul)", () => {
+test("avertissement: update seul avec des changements, et à l'import initial; jamais en simulation ni avec --enrichir", () => {
   const base = { enrichir: false, dryRun: false, changements: 2, enrichis: 0 };
-  const a = avertissementSommaireNonMisAJour(base)!;
-  assert.match(a, /Le sommaire n'est plus à jour \(des changements ont été détectés\)/);
-  assert.match(a, /nub run sommaire/);
-  assert.match(a, /--sommaire/);
-});
-test("avertissement avec --sans-sommaire, y compris après un enrichissement", () => {
-  const a = avertissementSommaireNonMisAJour({ enrichir: true, dryRun: false, changements: 0, enrichis: 3, sansSommaire: true })!;
-  assert.match(a, /des outils ont été enrichis, --sans-sommaire/);
-  assert.match(a, /nub run sommaire/);
-  assert.doesNotMatch(a, /ajouter --sommaire/);
-});
-test("pas d'avertissement: rien n'a changé, simulation, ou sommaire mis à jour", () => {
-  const base = { enrichir: false, dryRun: false, changements: 0, enrichis: 0 };
-  assert.equal(avertissementSommaireNonMisAJour(base), null); // aucun changement
-  assert.equal(avertissementSommaireNonMisAJour({ ...base, changements: 2, dryRun: true }), null); // simulation: rien d'écrit
-  assert.equal(avertissementSommaireNonMisAJour({ ...base, changements: 2, sommaire: true }), null); // --sommaire: il sera mis à jour
-  assert.equal(avertissementSommaireNonMisAJour({ ...base, changements: 2, enrichir: true }), null); // --enrichir: idem
-  assert.equal(avertissementSommaireNonMisAJour({ ...base, enrichir: true, enrichis: 1 }), null);
+  assert.equal(avertissementSommaireNonMisAJour(base), "Le sommaire n'est plus à jour (des changements ont été détectés): lancer `nub run sommaire`.");
+  assert.equal(avertissementSommaireNonMisAJour({ ...base, changements: 60, importInitial: true }), "Aucun sommaire n'a encore été généré: lancer `nub run sommaire`.");
+  assert.equal(avertissementSommaireNonMisAJour({ ...base, changements: 0 }), null); // aucun changement
+  assert.equal(avertissementSommaireNonMisAJour({ ...base, dryRun: true }), null); // simulation: rien d'écrit
+  assert.equal(avertissementSommaireNonMisAJour({ ...base, enrichir: true }), null); // --enrichir: le sommaire sera mis à jour
+  assert.equal(avertissementSommaireNonMisAJour({ ...base, enrichir: true, changements: 0, enrichis: 1 }), null);
 });
 test("un avertissement et une mise à jour du sommaire s'excluent toujours", () => {
-  for (const enrichir of [true, false]) for (const sommaire of [true, false]) for (const sansSommaire of [true, false]) for (const dryRun of [true, false]) for (const [changements, enrichis] of [[0, 0], [1, 0], [0, 1], [2, 2]]) {
-    const o = { enrichir, sommaire, sansSommaire, dryRun, changements: changements!, enrichis: enrichis! };
+  for (const enrichir of [true, false]) for (const dryRun of [true, false]) for (const importInitial of [true, false]) for (const [changements, enrichis] of [[0, 0], [2, 0], [0, 3], [1, 1]]) {
+    const o = { enrichir, dryRun, importInitial, changements: changements!, enrichis: enrichis! };
     assert.equal(avertissementSommaireNonMisAJour(o) !== null && sommaireNecessaire(o), false, JSON.stringify(o));
   }
 });
@@ -256,12 +233,3 @@ test("synchroniser: fichier existant au mauvais format: refusé avec un message 
   assert.equal(statSync(f).size, 2);
 });
 
-test("avertissement à l'import initial: il n'y a pas encore de sommaire, le message le dit, sans changer les conditions", () => {
-  const base = { enrichir: false, dryRun: false, changements: 60, enrichis: 0, importInitial: true };
-  const a = avertissementSommaireNonMisAJour(base)!;
-  assert.equal(a, "Aucun sommaire n'a encore été généré: lancer `nub run sommaire`, ou ajouter --sommaire à update.");
-  assert.equal(avertissementSommaireNonMisAJour({ ...base, enrichir: true, sansSommaire: true }), "Aucun sommaire n'a encore été généré (--sans-sommaire): lancer `nub run sommaire`.");
-  assert.equal(avertissementSommaireNonMisAJour({ ...base, dryRun: true }), null);
-  assert.equal(avertissementSommaireNonMisAJour({ ...base, sommaire: true }), null);
-  assert.equal(avertissementSommaireNonMisAJour({ ...base, importInitial: false }), "Le sommaire n'est plus à jour (des changements ont été détectés): lancer `nub run sommaire`, ou ajouter --sommaire à update.");
-});
