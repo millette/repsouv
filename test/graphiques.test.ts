@@ -81,7 +81,8 @@ test("catégories: une ligne par catégorie et par statut, dans l'ordre des stat
   const g = construireGraphiques(s).find((x) => x.id === "categories-statut")!;
   assert.equal(valeurs(g).length, s.categoriesSources.length);
   assert.equal(valeurs(g).reduce((n, l) => n + (l.n as number), 0), s.total);
-  assert.deepEqual(spec(g).encoding.y.sort, s.categories.map((c) => c.categorie));
+  assert.deepEqual(spec(g).encoding.y.sort, s.categories.map((c) => c.nom));
+  assert.ok(valeurs(g).every((l) => l.categorie === "Cat1" || l.categorie === "Cat2"), "les libellés sont les noms, pas les identifiants");
   assert.equal(spec(g).encoding.order.field, "ordre");
 });
 test("critères: répertoire et évaluation enrichie, en pourcentages calculés sur le bon total", () => {

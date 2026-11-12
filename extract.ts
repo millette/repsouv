@@ -4,16 +4,19 @@
 // à partir de la page en ligne (téléchargée à chaque exécution).
 // Source: https://praxis.encommun.io/n/voRYZbuBYZKLejs8JyNkc5C4o7s/
 // Usage: nub extract.ts [--force] <outils.json> [criteres.json] [url]
+// categories.json est écrit à côté de outils.json (identifiant, nom et icône de chaque catégorie; les descriptions existantes sont conservées).
 // Les outils sont écrits sans classification; lancer ensuite classify.ts. Les fichiers écrits portent
 // leurs métadonnées (data_license, created_at, updated_at): voir fichiers.ts.
 // ATTENTION: le fichier de sortie est remplacé en entier. Sans --force, le script refuse d'écraser
 // un outils.json qui contient du travail impossible à retrouver (enrichissement, historique des
 // changements). Pour suivre la page sans rien perdre, utiliser update.ts.
 import { existsSync } from "node:fs";
+import { dirname, join } from "node:path";
 import { parseHTML } from "linkedom";
 import { lancer } from "./cli.ts";
 import { ecrireFichier, lireFichier, lireSiExiste, type Lu } from "./fichiers.ts";
 import { localVersIso } from "./temps.ts";
+import { categoriesDepuis, slug, type Categorie } from "./categories.ts";
 import { ID_PAR_ICONE, type CritereId } from "./ids.ts";
 
 export type ConfianceEvaluation = "élevée" | "moyenne" | "faible";
@@ -47,8 +50,8 @@ export interface CriteresConfirmes {
 export type Changement = "nouveau" | "modification" | "retrait" | "comeback";
 
 export interface Outil {
+  /** Identifiant de la catégorie: categories[].id de categories.json (slug du nom). */
   categorie: string;
-  icone: string;
   nom: string;
   score: number;
   lien: string;
@@ -98,6 +101,8 @@ export interface Critere {
 
 export interface Repertoire {
   outils: Outil[];
+  /** Les catégories de la page (id, nom, icône), sans description. */
+  categories: Categorie[];
   criteres: Critere[];
   /** Date de modification affichée sur la page, en ISO avec décalage (ex.: 2026-11-05T09:53:00-05:00). */
   modification: string;
@@ -151,10 +156,13 @@ export function extraire(html: string): Repertoire {
   const modification = dateIso(affichee);
 
   const outils: Outil[] = [];
+  const observees: { nom: string; icone: string }[] = [];
   for (const bq of document.querySelectorAll("blockquote")) {
     const titre = texte(bq.querySelector("h3"));
     if (!titre) continue;
-    const { icone, reste: categorie } = separerIcone(titre);
+    const { icone, reste: nomCategorie } = separerIcone(titre);
+    observees.push({ nom: nomCategorie, icone });
+    const categorie = slug(nomCategorie);
 
     for (const a of bq.querySelectorAll("p > strong > a[href]")) {
       const strong = a.parentElement!;
@@ -162,7 +170,6 @@ export function extraire(html: string): Repertoire {
       if (desc?.tagName !== "P") continue;
       outils.push({
         categorie,
-        icone,
         nom: texte(a),
         score: [...(strong.textContent ?? "")].filter((c) => c === "★").length,
         lien: a.getAttribute("href")!,
@@ -191,7 +198,7 @@ export function extraire(html: string): Repertoire {
       description: (li.textContent ?? "").replace(strong.textContent ?? "", "").trim(),
     });
   }
-  return { outils, criteres, modification };
+  return { outils, categories: categoriesDepuis(observees, []), criteres, modification };
 }
 
 /** Les champs ajoutés par l'enrichissement (voir enrichir.ts). */
@@ -250,9 +257,13 @@ if (import.meta.main) {
       if (perte.length) refuser(`${dstOutils} contient du travail qui serait perdu (${perte.join("; ")}).`);
     }
 
-    const { outils, criteres, modification } = await telechargerRepertoire(url);
+    const { outils, categories, criteres, modification } = await telechargerRepertoire(url);
     ecrireFichier(dstOutils, "outils", outils, existant);
     console.log(outils.length, "outils (modification:", modification + ")");
+    const dstCategories = join(dirname(dstOutils), "categories.json");
+    const connues = lireSiExiste<Categorie>(dstCategories, "categories");
+    ecrireFichier(dstCategories, "categories", categoriesDepuis(categories, connues?.donnees ?? []), connues);
+    console.log(categories.length, "catégories");
     if (dstCriteres) {
       ecrireFichier(dstCriteres, "criteres", criteres, lireSiExiste<Critere>(dstCriteres, "criteres"));
       console.log(criteres.length, "critères");

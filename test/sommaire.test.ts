@@ -6,7 +6,7 @@ import { existsSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
-import { CRITERES, D0, D1, entree, enrichi, META, outil, OUTILS, sansDate, TAGS } from "./donnees-fictives.ts";
+import { CATEGORIES, CRITERES, D0, D1, entree, enrichi, META, outil, OUTILS, sansDate, TAGS } from "./donnees-fictives.ts";
 import { ecrireFichier } from "../fichiers.ts";
 import {
   calculerStatistiques, chargeResume, familleLicence, forgeDe, genererSommaire, produireResume, rendreMarkdown, validerResume,
@@ -43,7 +43,9 @@ test("statistiques: les outils retirés sont comptés à part et exclus des agr�
 });
 test("statistiques: catégories, scores, sources", () => {
   const s = calculerStatistiques(entree());
-  assert.deepEqual(s.categories.map((c) => [c.categorie, c.outils, c.enrichis, c.libres]), [["Cat1", 3, 3, 2], ["Cat2", 3, 2, 1]]);
+  assert.deepEqual(s.categories.map((c) => [c.id, c.nom, c.icone, c.outils, c.enrichis, c.libres]), [["cat1", "Cat1", "🧪", 3, 3, 2], ["cat2", "Cat2", "🧫", 3, 2, 1]]);
+  assert.equal(s.categories[0]!.description, "Outils d'essai de la première catégorie, pour les tests.");
+  assert.equal(s.categories[1]!.description, undefined);
   assert.deepEqual(s.scores, { deux: 5, trois: 1, moyen: 2.17 });
   assert.deepEqual(s.sources.map((c) => [c.cle, c.n]), [["libre", 2], ["partiel", 1], ["source-disponible", 1], ["proprietaire", 1], ["non enrichi", 1]]);
 });
@@ -231,7 +233,7 @@ test("produireResume: deux réponses invalides, c'est une erreur", async () => {
 test("statistiques: nombre d'outils par catégorie et par statut du code source", () => {
   const { categoriesSources } = calculerStatistiques(entree());
   assert.equal(categoriesSources.reduce((n, r) => n + r.n, 0), 6);
-  assert.deepEqual(categoriesSources.filter((r) => r.categorie === "Cat2").map((r) => [r.source, r.n]).sort(), [["libre", 1], ["non enrichi", 1], ["proprietaire", 1]]);
+  assert.deepEqual(categoriesSources.filter((r) => r.categorie === "cat2" && r.nom === "Cat2").map((r) => [r.source, r.n]).sort(), [["libre", 1], ["non enrichi", 1], ["proprietaire", 1]]);
 });
 
 const GRAPHIQUE = (id: string) => ({ id, titre: `Titre ${id}`, description: `Texte alternatif de ${id} [avec crochets].`, png: `graphiques/${id}.png`, svg: `graphiques/${id}.svg` });
@@ -281,6 +283,7 @@ const dossierDeDonnees = () => {
   ecrireFichier(join(d, "outils.json"), "outils", OUTILS, null, "2026-11-11T16:00:00-05:00");
   ecrireFichier(join(d, "tags.json"), "tags", TAGS, null, "2026-11-11T16:00:00-05:00");
   ecrireFichier(join(d, "criteres.json"), "criteres", CRITERES, null, "2026-11-11T16:00:00-05:00");
+  ecrireFichier(join(d, "categories.json"), "categories", CATEGORIES, null, "2026-11-11T16:00:00-05:00");
   return d;
 };
 const fauxConvertir = (appels: string[]) => (_spec: unknown, svg: string, png: string) => {

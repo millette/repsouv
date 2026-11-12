@@ -126,8 +126,8 @@ function graphiqueStatut(s: Statistiques): Graphique {
 
 function graphiqueCategories(s: Statistiques): Graphique {
   const statuts = ORDRE_STATUTS.filter((c) => s.categoriesSources.some((r) => r.source === c));
-  const categories = s.categories.map((c) => c.categorie);
-  const valeurs = s.categoriesSources.map((r) => ({ categorie: r.categorie, statut: nomStatut(r.source), n: r.n, ordre: ORDRE_STATUTS.indexOf(r.source) }));
+  const categories = s.categories.map((c) => c.nom);
+  const valeurs = s.categoriesSources.map((r) => ({ categorie: r.nom, statut: nomStatut(r.source), n: r.n, ordre: ORDRE_STATUTS.indexOf(r.source) }));
   const description = `Diagramme à barres empilées : nombre d'outils par catégorie (${s.categories.length} catégories), réparti selon le statut du code source.`;
   return {
     id: "categories-statut",

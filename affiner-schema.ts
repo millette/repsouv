@@ -3,11 +3,15 @@
 // Précise un schéma JSON produit par RunTypes avec ce que les types TypeScript n'expriment pas:
 //   - les objets refusent les clés inconnues (additionalProperties: false), comme le fait fichiers.ts;
 //   - `score` est un entier de 0 à 3, `echecs_enrichissement` et `echecs_confirmation` des entiers d'au moins 1, `tags` compte de 1 à 5 identifiants distincts;
-//   - les dates sont des horodatages ISO 8601 avec décalage (même motif que fichiers.ts).
+//   - les dates sont des horodatages ISO 8601 avec décalage (même motif que fichiers.ts);
+//   - les identifiants (id, et categorie des outils) sont des slugs; outils[].categorie renvoie à categories[].id de categories.json
+//     (relation entre fichiers, que JSON Schema ne peut exprimer qu'en commentaire; le test schemas.test.ts la vérifie).
 // Les règles s'appliquent par nom de propriété. Les règles de croisement (licence SPDX, tags présents dans
 // tags.json, score égal au nombre de critères) restent dans les validateurs et les tests.
 export const HORODATAGE = "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}[+-]\\d{2}:\\d{2}$";
 const CHAMPS_HORODATAGE = new Set(["derniere_modification", "enrichi_le", "created_at", "updated_at"]);
+/** Identifiants: minuscules, chiffres et tirets (slug; voir categories.ts), pour les id des catégories, des critères et des tags. */
+export const SLUG = "^[a-z0-9]+(-[a-z0-9]+)*$";
 
 type Noeud = Record<string, unknown>;
 const estObjet = (x: unknown): x is Noeud => typeof x === "object" && x !== null && !Array.isArray(x);
@@ -15,6 +19,8 @@ const estObjet = (x: unknown): x is Noeud => typeof x === "object" && x !== null
 /** Règle propre à une propriété, selon son nom et la forme de son schéma; retourne ce qu'il faut ajouter. */
 function regle(nom: string, schema: Noeud): Noeud {
   if (nom === "score") return { type: "integer", minimum: 0, maximum: 3 };
+  if (nom === "categorie" && schema.type === "string") return { pattern: SLUG, $comment: "identifiant d'une catégorie: categories[].id de categories.json" };
+  if (nom === "id" && schema.type === "string") return { pattern: SLUG };
   if (nom === "echecs_enrichissement" || nom === "echecs_confirmation") return { type: "integer", minimum: 1 };
   if (CHAMPS_HORODATAGE.has(nom) && schema.type === "string") return { pattern: HORODATAGE };
   const elements = schema.items;

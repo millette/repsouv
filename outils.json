@@ -2,12 +2,11 @@
   "meta": {
     "data_license": "CC-BY-SA-4.0",
     "created_at": "2026-11-11T16:43:11-05:00",
-    "updated_at": "2026-11-12T11:03:47-05:00"
+    "updated_at": "2026-11-12T11:40:38-05:00"
   },
   "outils": [
     {
-      "categorie": "Analyse et mesure",
-      "icone": "📊",
+      "categorie": "analyse-et-mesure",
       "nom": "Matomo",
       "score": 2,
       "lien": "https://matomo.org/",
@@ -58,8 +57,7 @@
       }
     },
     {
-      "categorie": "Analyse et mesure",
-      "icone": "📊",
+      "categorie": "analyse-et-mesure",
       "nom": "Klipfolio",
       "score": 2,
       "lien": "https://www.klipfolio.com/v4",
@@ -101,8 +99,7 @@
       }
     },
     {
-      "categorie": "Bureautique et collaboration",
-      "icone": "📝",
+      "categorie": "bureautique-et-collaboration",
       "nom": "cDox",
       "score": 3,
       "lien": "https://cdox.studio/?lang=fr-CA",
@@ -155,8 +152,7 @@
       }
     },
     {
-      "categorie": "Bureautique et collaboration",
-      "icone": "📝",
+      "categorie": "bureautique-et-collaboration",
       "nom": "Antidote",
       "score": 3,
       "lien": "https://www.antidote.info/fr/",
@@ -209,8 +205,7 @@
       }
     },
     {
-      "categorie": "Bureautique et collaboration",
-      "icone": "📝",
+      "categorie": "bureautique-et-collaboration",
       "nom": "CryptPad",
       "score": 2,
       "lien": "https://cryptpad.org/",
@@ -261,8 +256,7 @@
       }
     },
     {
-      "categorie": "Bureautique et collaboration",
-      "icone": "📝",
+      "categorie": "bureautique-et-collaboration",
       "nom": "OnlyOffice",
       "score": 2,
       "lien": "https://www.onlyoffice.com/",
@@ -313,8 +307,7 @@
       }
     },
     {
-      "categorie": "Bureautique et collaboration",
-      "icone": "📝",
+      "categorie": "bureautique-et-collaboration",
       "nom": "Collabora Online",
       "score": 2,
       "lien": "https://www.collaboraonline.com/",
@@ -364,8 +357,7 @@
       }
     },
     {
-      "categorie": "Bureautique et collaboration",
-      "icone": "📝",
+      "categorie": "bureautique-et-collaboration",
       "nom": "La Digitale",
       "score": 2,
       "lien": "https://ladigitale.dev/",
@@ -414,8 +406,7 @@
       }
     },
     {
-      "categorie": "Bureautique et collaboration",
-      "icone": "📝",
+      "categorie": "bureautique-et-collaboration",
       "nom": "Euro-Office",
       "score": 2,
       "lien": "https://github.com/Euro-Office",
@@ -464,8 +455,7 @@
       }
     },
     {
-      "categorie": "Bureautique et collaboration",
-      "icone": "📝",
+      "categorie": "bureautique-et-collaboration",
       "nom": "Framapad",
       "score": 2,
       "lien": "https://framapad.org/abc/fr/",
@@ -516,8 +506,7 @@
       }
     },
     {
-      "categorie": "Communication et collaboration d’équipe",
-      "icone": "💬",
+      "categorie": "communication-et-collaboration-d-equipe",
       "nom": "Jami",
       "score": 3,
       "lien": "https://jami.net/",
@@ -570,8 +559,7 @@
       }
     },
     {
-      "categorie": "Communication et collaboration d’équipe",
-      "icone": "💬",
+      "categorie": "communication-et-collaboration-d-equipe",
       "nom": "Mattermost",
       "score": 2,
       "lien": "https://mattermost.com/",
@@ -622,8 +610,7 @@
       }
     },
     {
-      "categorie": "Communication et collaboration d’équipe",
-      "icone": "💬",
+      "categorie": "communication-et-collaboration-d-equipe",
       "nom": "Jitsi Meet",
       "score": 2,
       "lien": "https://jitsi.org/jitsi-meet/",
@@ -673,8 +660,7 @@
       }
     },
     {
-      "categorie": "Communautés, réseaux et partage des connaissances",
-      "icone": "🌐",
+      "categorie": "communautes-reseaux-et-partage-des-connaissances",
       "nom": "En commun",
       "score": 2,
       "lien": "https://encommun.io/",
@@ -685,11 +671,11 @@
         "donnees",
         "controle"
       ],
-      "confiance": "moyenne"
+      "confiance": "moyenne",
+      "echecs_enrichissement": 1
     },
     {
-      "categorie": "Communautés, réseaux et partage des connaissances",
-      "icone": "🌐",
+      "categorie": "communautes-reseaux-et-partage-des-connaissances",
       "nom": "Mastodon",
       "score": 2,
       "lien": "https://joinmastodon.org/fr",
@@ -738,8 +724,7 @@
       }
     },
     {
-      "categorie": "Communautés, réseaux et partage des connaissances",
-      "icone": "🌐",
+      "categorie": "communautes-reseaux-et-partage-des-connaissances",
       "nom": "Discourse",
       "score": 2,
       "lien": "https://www.discourse.org/",
@@ -789,8 +774,7 @@
       }
     },
     {
-      "categorie": "Comptabilité et finances",
-      "icone": "💰",
+      "categorie": "comptabilite-et-finances",
       "nom": "Kashoo",
       "score": 2,
       "lien": "https://kashoo.com/",
@@ -837,8 +821,7 @@
       }
     },
     {
-      "categorie": "Financement, subventions et dons",
-      "icone": "🤝",
+      "categorie": "financement-subventions-et-dons",
       "nom": "Elodia",
       "score": 2,
       "lien": "https://www.elodia.app/",
@@ -881,8 +864,7 @@
       }
     },
     {
-      "categorie": "Financement, subventions et dons",
-      "icone": "🤝",
+      "categorie": "financement-subventions-et-dons",
       "nom": "Zeffy",
       "score": 2,
       "lien": "https://www.zeffy.com/fr-ca",
@@ -928,8 +910,7 @@
       }
     },
     {
-      "categorie": "Financement, subventions et dons",
-      "icone": "🤝",
+      "categorie": "financement-subventions-et-dons",
       "nom": "CanaDon",
       "score": 2,
       "lien": "https://www.canadahelps.org/fr/",
@@ -973,8 +954,7 @@
       }
     },
     {
-      "categorie": "Création et gestion de contenus numériques",
-      "icone": "🎨",
+      "categorie": "creation-et-gestion-de-contenus-numeriques",
       "nom": "Webnames.ca",
       "score": 3,
       "lien": "https://www.webnames.ca/",
@@ -1023,8 +1003,7 @@
       }
     },
     {
-      "categorie": "Création et gestion de contenus numériques",
-      "icone": "🎨",
+      "categorie": "creation-et-gestion-de-contenus-numeriques",
       "nom": "Penpot",
       "score": 2,
       "lien": "https://penpot.app/",
@@ -1075,8 +1054,7 @@
       }
     },
     {
-      "categorie": "Gestion de collections et de contenus culturels",
-      "icone": "🏛️",
+      "categorie": "gestion-de-collections-et-de-contenus-culturels",
       "nom": "La Bibli",
       "score": 2,
       "lien": "https://labibli.com/",
@@ -1123,8 +1101,7 @@
       }
     },
     {
-      "categorie": "Gestion de collections et de contenus culturels",
-      "icone": "🏛️",
+      "categorie": "gestion-de-collections-et-de-contenus-culturels",
       "nom": "Omeka S",
       "score": 2,
       "lien": "https://omeka.org/",
@@ -1172,8 +1149,7 @@
       }
     },
     {
-      "categorie": "Gestion de projets et des tâches",
-      "icone": "📋",
+      "categorie": "gestion-de-projets-et-des-taches",
       "nom": "Leantime",
       "score": 2,
       "lien": "https://leantime.io/",
@@ -1224,8 +1200,7 @@
       }
     },
     {
-      "categorie": "Gestion de projets et des tâches",
-      "icone": "📋",
+      "categorie": "gestion-de-projets-et-des-taches",
       "nom": "OpenProject",
       "score": 2,
       "lien": "https://www.openproject.org/",
@@ -1276,8 +1251,7 @@
       }
     },
     {
-      "categorie": "Gestion de projets et des tâches",
-      "icone": "📋",
+      "categorie": "gestion-de-projets-et-des-taches",
       "nom": "Taiga",
       "score": 2,
       "lien": "https://taiga.io/",
@@ -1327,8 +1301,7 @@
       }
     },
     {
-      "categorie": "Gestion de projets et des tâches",
-      "icone": "📋",
+      "categorie": "gestion-de-projets-et-des-taches",
       "nom": "Vikunja",
       "score": 2,
       "lien": "https://vikunja.io/",
@@ -1377,8 +1350,7 @@
       }
     },
     {
-      "categorie": "Gestion de la relation, des membres et CRM",
-      "icone": "👥",
+      "categorie": "gestion-de-la-relation-des-membres-et-crm",
       "nom": "Member365",
       "score": 2,
       "lien": "https://member365.com/",
@@ -1423,8 +1395,7 @@
       }
     },
     {
-      "categorie": "Gestion de la relation, des membres et CRM",
-      "icone": "👥",
+      "categorie": "gestion-de-la-relation-des-membres-et-crm",
       "nom": "CiviCRM",
       "score": 2,
       "lien": "https://civicrm.org/",
@@ -1475,8 +1446,7 @@
       }
     },
     {
-      "categorie": "Gestion d’événements et billetterie",
-      "icone": "🎟️",
+      "categorie": "gestion-d-evenements-et-billetterie",
       "nom": "Le point de vente",
       "score": 2,
       "lien": "http://www.lepointdevente.com/",
@@ -1519,8 +1489,7 @@
       }
     },
     {
-      "categorie": "Gestion d’événements et billetterie",
-      "icone": "🎟️",
+      "categorie": "gestion-d-evenements-et-billetterie",
       "nom": "Mobilizon",
       "score": 2,
       "lien": "https://mobilizon.org/",
@@ -1568,8 +1537,7 @@
       }
     },
     {
-      "categorie": "Gestion documentaire et signature électronique",
-      "icone": "📁",
+      "categorie": "gestion-documentaire-et-signature-electronique",
       "nom": "eZsign",
       "score": 2,
       "lien": "https://www.ezsign.com/fr/",
@@ -1617,8 +1585,7 @@
       }
     },
     {
-      "categorie": "Gestion documentaire et signature électronique",
-      "icone": "📁",
+      "categorie": "gestion-documentaire-et-signature-electronique",
       "nom": "Paperless-ngx",
       "score": 2,
       "lien": "https://docs.paperless-ngx.com/",
@@ -1629,11 +1596,11 @@
         "donnees",
         "dependance"
       ],
-      "confiance": "élevée"
+      "confiance": "élevée",
+      "echecs_enrichissement": 1
     },
     {
-      "categorie": "Gestion documentaire et signature électronique",
-      "icone": "📁",
+      "categorie": "gestion-documentaire-et-signature-electronique",
       "nom": "DocuSeal",
       "score": 2,
       "lien": "https://www.docuseal.com/fr",
@@ -1682,8 +1649,7 @@
       }
     },
     {
-      "categorie": "Marketing par courriel",
-      "icone": "📣",
+      "categorie": "marketing-par-courriel",
       "nom": "Envoke",
       "score": 3,
       "lien": "https://envoke.com/",
@@ -1733,8 +1699,7 @@
       }
     },
     {
-      "categorie": "Marketing par courriel",
-      "icone": "📣",
+      "categorie": "marketing-par-courriel",
       "nom": "Cyberimpact",
       "score": 2,
       "lien": "http://www.cyberimpact.com/",
@@ -1783,8 +1748,7 @@
       }
     },
     {
-      "categorie": "Marketing par courriel",
-      "icone": "📣",
+      "categorie": "marketing-par-courriel",
       "nom": "Dialogue Insight",
       "score": 2,
       "lien": "https://www.dialoginsight.com/",
@@ -1831,8 +1795,7 @@
       }
     },
     {
-      "categorie": "Marketing par courriel",
-      "icone": "📣",
+      "categorie": "marketing-par-courriel",
       "nom": "Cakemail",
       "score": 2,
       "lien": "https://www.cakemail.ca/",
@@ -1881,8 +1844,7 @@
       }
     },
     {
-      "categorie": "Messagerie électronique",
-      "icone": "✉️",
+      "categorie": "messagerie-electronique",
       "nom": "Thunderbird",
       "score": 2,
       "lien": "https://www.thunderbird.net/fr",
@@ -1931,8 +1893,7 @@
       }
     },
     {
-      "categorie": "Navigation Web",
-      "icone": "🧭",
+      "categorie": "navigation-web",
       "nom": "Firefox",
       "score": 2,
       "lien": "https://www.firefox.com/fr",
@@ -1981,8 +1942,7 @@
       }
     },
     {
-      "categorie": "Ressources humaines et gestion du temps",
-      "icone": "⏱️",
+      "categorie": "ressources-humaines-et-gestion-du-temps",
       "nom": "Feuille de temps",
       "score": 2,
       "lien": "https://feuilledetemps.ca/",
@@ -2030,8 +1990,7 @@
       }
     },
     {
-      "categorie": "Ressources humaines et gestion du temps",
-      "icone": "⏱️",
+      "categorie": "ressources-humaines-et-gestion-du-temps",
       "nom": "Folks HR",
       "score": 2,
       "lien": "https://folksrh.com/",
@@ -2076,8 +2035,7 @@
       }
     },
     {
-      "categorie": "Sécurité et gestion des accès",
-      "icone": "🔐",
+      "categorie": "securite-et-gestion-des-acces",
       "nom": "CIRA Canadian Shield / Bouclier canadien",
       "score": 2,
       "lien": "https://www.cira.ca/fr/canadian-shield/",
@@ -2088,11 +2046,11 @@
         "donnees",
         "controle"
       ],
-      "confiance": "moyenne"
+      "confiance": "moyenne",
+      "echecs_enrichissement": 1
     },
     {
-      "categorie": "Sécurité et gestion des accès",
-      "icone": "🔐",
+      "categorie": "securite-et-gestion-des-acces",
       "nom": "1Password",
       "score": 2,
       "lien": "https://1password.com/fr/",
@@ -2138,8 +2096,7 @@
       }
     },
     {
-      "categorie": "Sécurité et gestion des accès",
-      "icone": "🔐",
+      "categorie": "securite-et-gestion-des-acces",
       "nom": "Bitwarden",
       "score": 2,
       "lien": "https://bitwarden.com/",
@@ -2188,8 +2145,7 @@
       }
     },
     {
-      "categorie": "Sécurité et gestion des accès",
-      "icone": "🔐",
+      "categorie": "securite-et-gestion-des-acces",
       "nom": "Vaultwarden",
       "score": 2,
       "lien": "https://github.com/dani-garcia/vaultwarden",
@@ -2239,8 +2195,7 @@
       }
     },
     {
-      "categorie": "Sécurité et gestion des accès",
-      "icone": "🔐",
+      "categorie": "securite-et-gestion-des-acces",
       "nom": "2FAS Auth",
       "score": 2,
       "lien": "https://2fas.com/auth/",
@@ -2291,8 +2246,7 @@
       }
     },
     {
-      "categorie": "Sécurité et gestion des accès",
-      "icone": "🔐",
+      "categorie": "securite-et-gestion-des-acces",
       "nom": "2FAS Pass",
       "score": 2,
       "lien": "https://2fas.com/pass/",
@@ -2343,8 +2297,7 @@
       }
     },
     {
-      "categorie": "Stockage, infonuagique et sauvegarde",
-      "icone": "☁️",
+      "categorie": "stockage-infonuagique-et-sauvegarde",
       "nom": "Micrologic",
       "score": 3,
       "lien": "http://www.micrologic.ca/",
@@ -2394,8 +2347,7 @@
       }
     },
     {
-      "categorie": "Stockage, infonuagique et sauvegarde",
-      "icone": "☁️",
+      "categorie": "stockage-infonuagique-et-sauvegarde",
       "nom": "TitanFile",
       "score": 3,
       "lien": "https://www.titanfile.com/",
@@ -2447,8 +2399,7 @@
       }
     },
     {
-      "categorie": "Stockage, infonuagique et sauvegarde",
-      "icone": "☁️",
+      "categorie": "stockage-infonuagique-et-sauvegarde",
       "nom": "La Réserve",
       "score": 2,
       "lien": "https://sylvea.ca/solutions-resilientes/",
@@ -2497,8 +2448,7 @@
       }
     },
     {
-      "categorie": "Stockage, infonuagique et sauvegarde",
-      "icone": "☁️",
+      "categorie": "stockage-infonuagique-et-sauvegarde",
       "nom": "Nextcloud",
       "score": 2,
       "lien": "https://nextcloud.com/",
@@ -2549,8 +2499,7 @@
       }
     },
     {
-      "categorie": "Stockage, infonuagique et sauvegarde",
-      "icone": "☁️",
+      "categorie": "stockage-infonuagique-et-sauvegarde",
       "nom": "Sync.com",
       "score": 2,
       "lien": "https://www.sync.com/",
@@ -2597,8 +2546,7 @@
       }
     },
     {
-      "categorie": "Transcription et assistance aux réunions",
-      "icone": "🎙️",
+      "categorie": "transcription-et-assistance-aux-reunions",
       "nom": "Manni",
       "score": 2,
       "lien": "https://www.manni.app/fr/home",
@@ -2647,8 +2595,7 @@
       }
     },
     {
-      "categorie": "Transcription et assistance aux réunions",
-      "icone": "🎙️",
+      "categorie": "transcription-et-assistance-aux-reunions",
       "nom": "Fellow",
       "score": 2,
       "lien": "https://fellow.ai/",
@@ -2695,8 +2642,7 @@
       }
     },
     {
-      "categorie": "Transcription et assistance aux réunions",
-      "icone": "🎙️",
+      "categorie": "transcription-et-assistance-aux-reunions",
       "nom": "Handy",
       "score": 2,
       "lien": "https://handy.computer/",
@@ -2747,8 +2693,7 @@
       }
     },
     {
-      "categorie": "Veille et gestion de l’information",
-      "icone": "🔎",
+      "categorie": "veille-et-gestion-de-l-information",
       "nom": "Obsidian",
       "score": 3,
       "lien": "https://obsidian.md/",
@@ -2801,8 +2746,7 @@
       }
     },
     {
-      "categorie": "Veille et gestion de l’information",
-      "icone": "🔎",
+      "categorie": "veille-et-gestion-de-l-information",
       "nom": "Miniflux",
       "score": 2,
       "lien": "https://miniflux.app/",
@@ -2852,8 +2796,7 @@
       }
     },
     {
-      "categorie": "Veille et gestion de l’information",
-      "icone": "🔎",
+      "categorie": "veille-et-gestion-de-l-information",
       "nom": "Wallabag",
       "score": 2,
       "lien": "https://wallabag.org/",

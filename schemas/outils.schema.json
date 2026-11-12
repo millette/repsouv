@@ -32,10 +32,9 @@
         "type": "object",
         "properties": {
           "categorie": {
-            "type": "string"
-          },
-          "icone": {
-            "type": "string"
+            "type": "string",
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+            "$comment": "identifiant d'une catégorie: categories[].id de categories.json"
           },
           "nom": {
             "type": "string"
@@ -261,7 +260,6 @@
         },
         "required": [
           "categorie",
-          "icone",
           "nom",
           "score",
           "lien",

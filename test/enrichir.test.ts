@@ -26,7 +26,7 @@ const valide = (extra: Record<string, unknown> = {}) => ({
   evaluation_enrichie: evaluation(), nouveaux_tags: [], ...extra,
 });
 const outil = (nom: string, extra: Partial<Outil> = {}): Outil => ({
-  categorie: "C", icone: "🧪", nom, score: 2, lien: `https://${nom}.example/`,
+  categorie: "c", nom, score: 2, lien: `https://${nom}.example/`,
   description: "d", derniere_modification: "2026-11-05T09:53", changement: null, ...extra,
 });
 const sansPage = async () => null;

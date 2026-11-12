@@ -1,0 +1,129 @@
+{
+  "meta": {
+    "data_license": "CC-BY-SA-4.0",
+    "created_at": "2026-11-12T11:39:32-05:00",
+    "updated_at": "2026-11-12T11:42:00-05:00"
+  },
+  "categories": [
+    {
+      "id": "analyse-et-mesure",
+      "nom": "Analyse et mesure",
+      "icone": "📊",
+      "description": "Ces outils permettent de mesurer la fréquentation et les usages d’un site web, de regrouper des données de différentes sources et de suivre des indicateurs de performance. Ils répondent aux besoins de suivi des activités, d’analyse des résultats et d’aide à la décision."
+    },
+    {
+      "id": "bureautique-et-collaboration",
+      "nom": "Bureautique et collaboration",
+      "icone": "📝",
+      "description": "Ces outils répondent aux besoins de rédaction, de correction linguistique et de création de documents, de feuilles de calcul ou de présentations. Ils permettent aussi le partage de contenus et le travail à plusieurs, notamment en temps réel, avec des options de confidentialité et de maîtrise des données selon les solutions."
+    },
+    {
+      "id": "communication-et-collaboration-d-equipe",
+      "nom": "Communication et collaboration d’équipe",
+      "icone": "💬",
+      "description": "Ces outils permettent aux équipes d’échanger par messagerie, de tenir des réunions audio ou vidéo et de partager des fichiers ou leur écran. Ils répondent aux besoins de collaboration à distance et offrent différentes options de confidentialité et d’hébergement des communications."
+    },
+    {
+      "id": "communautes-reseaux-et-partage-des-connaissances",
+      "nom": "Communautés, réseaux et partage des connaissances",
+      "icone": "🌐",
+      "description": "Ces outils permettent aux organismes de créer des communautés en ligne, d’animer des discussions et de tisser des liens avec leurs réseaux. Ils servent à partager des ressources, à diffuser des connaissances et à organiser les échanges autour de thèmes communs."
+    },
+    {
+      "id": "comptabilite-et-finances",
+      "nom": "Comptabilité et finances",
+      "icone": "💰",
+      "description": "Ces outils servent à suivre les revenus et les dépenses, à gérer la facturation et à enregistrer les paiements. Ils permettent aussi de rapprocher les comptes bancaires et de produire les principaux rapports financiers nécessaires au suivi comptable d’un organisme."
+    },
+    {
+      "id": "financement-subventions-et-dons",
+      "nom": "Financement, subventions et dons",
+      "icone": "🤝",
+      "description": "Ces outils aident les organismes artistiques et culturels à repérer des subventions, à préparer leurs demandes et à suivre les échéances. Ils permettent aussi de recueillir des dons, de gérer des campagnes de financement et les relations avec les donateurs, ainsi que de produire des reçus fiscaux."
+    },
+    {
+      "id": "creation-et-gestion-de-contenus-numeriques",
+      "nom": "Création et gestion de contenus numériques",
+      "icone": "🎨",
+      "description": "Ces outils répondent aux besoins de création et de gestion d’une présence en ligne : noms de domaine, hébergement de sites et courriel professionnel. Ils permettent aussi de concevoir en équipe des interfaces, des maquettes et des prototypes interactifs."
+    },
+    {
+      "id": "gestion-de-collections-et-de-contenus-culturels",
+      "nom": "Gestion de collections et de contenus culturels",
+      "icone": "🏛️",
+      "description": "Ces outils répondent aux besoins de catalogage, de documentation et de diffusion en ligne de collections culturelles. Ils permettent, selon les cas, de suivre les prêts et retours en bibliothèque, d’organiser les métadonnées ou de créer des expositions numériques et des sites patrimoniaux."
+    },
+    {
+      "id": "gestion-de-projets-et-des-taches",
+      "nom": "Gestion de projets et des tâches",
+      "icone": "📋",
+      "description": "Ces outils servent à planifier les projets, à organiser les tâches, à répartir les responsabilités et à suivre les échéances. Ils permettent de coordonner le travail individuel ou en équipe et de visualiser l’avancement des activités."
+    },
+    {
+      "id": "gestion-de-la-relation-des-membres-et-crm",
+      "nom": "Gestion de la relation, des membres et CRM",
+      "icone": "👥",
+      "description": "Ces outils centralisent les dossiers des membres, des donateurs et des contacts. Ils permettent de gérer les adhésions, les renouvellements et les paiements, de coordonner les événements et les communications, et de suivre les relations avec ces publics."
+    },
+    {
+      "id": "gestion-d-evenements-et-billetterie",
+      "nom": "Gestion d’événements et billetterie",
+      "icone": "🎟️",
+      "description": "Ces outils répondent aux besoins de publication d’activités, de gestion des inscriptions et de mobilisation des participants. Ils permettent aussi de vendre et de valider des billets, de suivre les ventes et d’analyser les données de clientèle."
+    },
+    {
+      "id": "gestion-documentaire-et-signature-electronique",
+      "nom": "Gestion documentaire et signature électronique",
+      "icone": "📁",
+      "description": "Ces outils répondent aux besoins de numérisation, de classement et de recherche de documents, ainsi que de signature électronique de contrats et d’ententes à distance. Ils permettent aussi de suivre les demandes de signature et de conserver une trace des étapes de validation."
+    },
+    {
+      "id": "marketing-par-courriel",
+      "nom": "Marketing par courriel",
+      "icone": "📣",
+      "description": "Ces outils permettent de créer et d’envoyer des infolettres pour informer les publics, les membres et les partenaires des activités de l’organisme. Ils servent aussi à gérer les contacts, les abonnements et les consentements, à automatiser les envois et à suivre les résultats des campagnes."
+    },
+    {
+      "id": "messagerie-electronique",
+      "nom": "Messagerie électronique",
+      "icone": "✉️",
+      "description": "Ces outils permettent de consulter, d’envoyer et d’organiser les courriels, ainsi que de gérer les calendriers et les contacts dans une même application. Ils répondent aux besoins de communication et de suivi des échanges de l’organisme."
+    },
+    {
+      "id": "navigation-web",
+      "nom": "Navigation Web",
+      "icone": "🧭",
+      "description": "Ces outils permettent de consulter des sites Web, de gérer les onglets, les favoris et les mots de passe, et de traduire des pages. Ils répondent aussi aux besoins de protection de la vie privée en limitant le pistage et en permettant de conserver les données de navigation sur l’appareil."
+    },
+    {
+      "id": "ressources-humaines-et-gestion-du-temps",
+      "nom": "Ressources humaines et gestion du temps",
+      "icone": "⏱️",
+      "description": "Ces outils répondent aux besoins de gestion des dossiers du personnel, des congés, des absences et du temps de travail par projet. Ils permettent aussi de suivre l’intégration et les évaluations du personnel, ainsi que de produire des rapports pour la paie et la reddition de comptes."
+    },
+    {
+      "id": "securite-et-gestion-des-acces",
+      "nom": "Sécurité et gestion des accès",
+      "icone": "🔐",
+      "description": "Ces outils aident les organismes à protéger leur navigation contre les sites malveillants, à conserver et à partager des identifiants dans des coffres chiffrés et à gérer les accès aux comptes. Ils permettent aussi de renforcer les connexions par l’authentification à deux facteurs."
+    },
+    {
+      "id": "stockage-infonuagique-et-sauvegarde",
+      "nom": "Stockage, infonuagique et sauvegarde",
+      "icone": "☁️",
+      "description": "Ces outils répondent aux besoins de stockage, d’hébergement, de partage et de sauvegarde des fichiers et des données. Ils permettent de gérer les accès, de collaborer avec des équipes et des partenaires et de récupérer des documents en cas de perte ou de suppression."
+    },
+    {
+      "id": "transcription-et-assistance-aux-reunions",
+      "nom": "Transcription et assistance aux réunions",
+      "icone": "🎙️",
+      "description": "Ces outils servent à transcrire la parole en texte, à documenter les échanges en réunion et à préparer des comptes rendus. Ils répondent aux besoins de dictée vocale, de recherche dans les transcriptions et de suivi des actions à réaliser."
+    },
+    {
+      "id": "veille-et-gestion-de-l-information",
+      "nom": "Veille et gestion de l’information",
+      "icone": "🔎",
+      "description": "Ces outils permettent de suivre l’actualité de plusieurs sources, de sauvegarder des articles pour les consulter plus tard et d’organiser des notes et des ressources. Ils répondent aux besoins de veille, de classement et de mise en relation des connaissances au sein des organismes."
+    }
+  ]
+}

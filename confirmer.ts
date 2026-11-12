@@ -13,6 +13,7 @@ import type { Critere, CriteresConfirmes, Outil } from "./extract.ts";
 import { CONTROLE, DEPENDANCE, DONNEES, type CritereId } from "./ids.ts";
 import { additionner, coutPour, USAGE_VIDE, type Usage } from "./prix.ts";
 import { horodatage } from "./temps.ts";
+import { nomCategorie, type Categorie } from "./categories.ts";
 
 export const IDS_CRITERES: readonly CritereId[] = [DONNEES, CONTROLE, DEPENDANCE];
 export type Statut = "confirme" | "infirme" | "indetermine";
@@ -131,11 +132,11 @@ Pour "confirme" et "infirme", « preuve » est une citation copiée mot pour mot
 /** Les textes de l'outil dans lesquels une citation doit se trouver. */
 export const textesSource = (outil: Outil, contenu: Contenu): string[] => [outil.description, contenu.titre, contenu.meta_description, contenu.extrait];
 
-export function requeteOutil(outil: Outil, contenu: Contenu, criteres: Critere[], rappel?: string): Requete {
+export function requeteOutil(outil: Outil, contenu: Contenu, criteres: Critere[], rappel?: string, categories?: readonly Categorie[]): Requete {
   const messages = [
     JSON.stringify({
       nom: outil.nom,
-      categorie: outil.categorie,
+      categorie: nomCategorie(categories, outil.categorie),
       lien: outil.lien,
       description: outil.description,
       page: { titre: contenu.titre, meta_description: contenu.meta_description, extrait: contenu.extrait },
@@ -162,6 +163,7 @@ export interface OptionsConfirmation {
   criteres: Critere[];
   /** Nom du modèle inscrit dans criteres_confirmes. */
   modele: string;
+  categories?: readonly Categorie[];
   /** Contenu de la page de l'outil; par défaut, téléchargé. */
   lire?: (url: string) => Promise<Contenu | null>;
   maxEchecs?: number;
@@ -200,7 +202,7 @@ export async function confirmerOutils(outils: OutilClasse[], options: OptionsCon
       let confirmation: Confirmation | undefined;
       for (let essai = 1; essai <= 2 && !confirmation; essai++) {
         try {
-          confirmation = validerConfirmation(await confirmer(requeteOutil(outil, contenu, criteres, rappel)), textesSource(outil, contenu));
+          confirmation = validerConfirmation(await confirmer(requeteOutil(outil, contenu, criteres, rappel, options.categories)), textesSource(outil, contenu));
         } catch (e) {
           rappel = (e as Error).message;
           if (essai === 2) throw e;
@@ -229,12 +231,12 @@ export async function confirmerOutils(outils: OutilClasse[], options: OptionsCon
 const SORTIE_VERDICT = 500;
 
 /** Borne haute des jetons et du coût pour vérifier `outils`: un appel par outil, avec les consignes et un extrait de page de 6 000 caractères. */
-export function estimerCoutConfirmation(outils: Outil[], criteres: Critere[], modele: string): { outils: number; usage: Usage; cout: number | null } {
+export function estimerCoutConfirmation(outils: Outil[], criteres: Critere[], modele: string, categories?: readonly Categorie[]): { outils: number; usage: Usage; cout: number | null } {
   const extraitMax = "x".repeat(6000);
   const consignes = Math.ceil(instructions(criteres).length / 3);
   let usage: Usage = { ...USAGE_VIDE };
   for (const outil of outils) {
-    const fiche = requeteOutil(outil, { titre: outil.nom, meta_description: outil.description, extrait: extraitMax, liens_depot: [] }, criteres).messages[0]!;
+    const fiche = requeteOutil(outil, { titre: outil.nom, meta_description: outil.description, extrait: extraitMax, liens_depot: [] }, criteres, undefined, categories).messages[0]!;
     usage = additionner(usage, { entree: consignes + Math.ceil(fiche.length / 3), sortie: SORTIE_VERDICT, cache_lecture: 0, cache_ecriture: 0 });
   }
   return { outils: outils.length, usage, cout: coutPour(usage, modele) };

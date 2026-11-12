@@ -3,6 +3,7 @@
 // Données fictives partagées par les tests du sommaire et des graphiques (jamais outils.json).
 import type { OutilClasse } from "../classify.ts";
 import type { Tag } from "../enrichir.ts";
+import type { Categorie } from "../categories.ts";
 import type { Critere, CriteresConfirmes } from "../extract.ts";
 import type { Entree } from "../statistiques.ts";
 
@@ -10,6 +11,10 @@ export const META = { data_license: "CC-BY-SA-4.0", created_at: "2026-11-11T16:4
 export const D0 = "2026-11-05T09:53:00-05:00";
 export const D1 = "2026-11-20T14:00:00-05:00";
 
+export const CATEGORIES: Categorie[] = [
+  { id: "cat1", nom: "Cat1", icone: "🧪", description: "Outils d'essai de la première catégorie, pour les tests." },
+  { id: "cat2", nom: "Cat2", icone: "🧫" },
+];
 export const CRITERES: Critere[] = [
   { id: "donnees", icon: "📍", titre: "Où peuvent rester les données ?", description: "d" },
   { id: "controle", icon: "🏢", titre: "Qui contrôle l'outil ?", description: "d" },
@@ -24,7 +29,7 @@ export const TAGS: Tag[] = [
 ];
 
 export const outil = (nom: string, extra: Partial<OutilClasse> = {}): OutilClasse => ({
-  categorie: "Cat1", icone: "🧪", nom, score: 2, lien: `https://${nom}.example/`, description: `Description de ${nom}.`,
+  categorie: "cat1", nom, score: 2, lien: `https://${nom}.example/`, description: `Description de ${nom}.`,
   derniere_modification: D0, changement: null, criteres: ["donnees", "dependance"], confiance: "moyenne", ...extra,
 });
 export const enrichi = (nom: string, extra: Partial<OutilClasse> = {}) =>
@@ -60,11 +65,11 @@ export const OUTILS: OutilClasse[] = [
     evaluation_enrichie: { score: 1, criteres: ["controle"], confiance: "faible", ecart: "Le répertoire suppose les données au Canada." },
     criteres_confirmes: confirmes("x", "c", "?"),
   }),
-  enrichi("C", { source: "proprietaire", licence: null, repo: null, score: 3, criteres: ["donnees", "controle", "dependance"], tags: ["gratuit"], categorie: "Cat2", enrichi_le: "2026-11-13T08:00:00-05:00",
+  enrichi("C", { source: "proprietaire", licence: null, repo: null, score: 3, criteres: ["donnees", "controle", "dependance"], tags: ["gratuit"], categorie: "cat2", enrichi_le: "2026-11-13T08:00:00-05:00",
     evaluation_enrichie: { score: 3, criteres: ["donnees", "controle", "dependance"], confiance: "élevée" }, criteres_confirmes: confirmes("c", "c", "c") }),
-  outil("D", { categorie: "Cat2", changement: "nouveau", derniere_modification: D1 }),
+  outil("D", { categorie: "cat2", changement: "nouveau", derniere_modification: D1 }),
   enrichi("Maison", { source: "source-disponible", criteres_confirmes: confirmes("?", "?", "?"), licence: null, custom_license: "Licence maison", custom_license_url: "https://maison.example/licence", repo: "https://git.exemple.org/x/Maison", tags: [] }),
-  sansDate(enrichi("G", { licence: "Apache-2.0 OR MIT", categorie: "Cat2" })),
+  sansDate(enrichi("G", { licence: "Apache-2.0 OR MIT", categorie: "cat2" })),
   outil("Retire", { removed: true, changement: "retrait", derniere_modification: D1 }),
 ];
-export const entree = (outils = OUTILS): Entree => ({ outils, tags: TAGS, criteres: CRITERES, meta: META });
+export const entree = (outils = OUTILS): Entree => ({ outils, categories: CATEGORIES, tags: TAGS, criteres: CRITERES, meta: META });

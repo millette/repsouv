@@ -10,6 +10,7 @@ import type { ConfianceEvaluation, Critere, EvaluationEnrichie, Outil } from "./
 import { ecrireFichier, lireFichier, lireSiExiste } from "./fichiers.ts";
 import { CONTROLE, DEPENDANCE, DONNEES } from "./ids.ts";
 import { additionner, coutPour, USAGE_VIDE, usageDepuisOpenAI, type Usage } from "./prix.ts";
+import { nomCategorie, type Categorie } from "./categories.ts";
 import { problemeLicenceSpdx } from "./spdx.ts";
 import { horodatage } from "./temps.ts";
 
@@ -61,7 +62,7 @@ export interface Contenu {
 export type Generateur = (
   outil: Outil,
   contenu: Contenu | null,
-  contexte: { tags: Tag[]; criteres: Critere[]; autoriserNouveauxTags: boolean; rappel?: string },
+  contexte: { tags: Tag[]; criteres: Critere[]; autoriserNouveauxTags: boolean; rappel?: string; categories?: readonly Categorie[] },
 ) => Promise<unknown>;
 
 export const chargerCriteres = (fichier: string): Critere[] => lireFichier<Critere>(fichier, "criteres").donnees;
@@ -350,9 +351,9 @@ export async function appelerOpenAI(
 
 const messageRappel = (rappel: string) => `Ta tentative précédente a été rejetée: ${rappel}. Corrige ce problème.`;
 
-const resumePage = (outil: Outil, contenu: Contenu | null) => ({
+const resumePage = (outil: Outil, contenu: Contenu | null, categories?: readonly Categorie[]) => ({
   nom: outil.nom,
-  categorie: outil.categorie,
+  categorie: nomCategorie(categories, outil.categorie),
   lien: outil.lien,
   description_actuelle: outil.description,
   page: contenu ?? "inaccessible",
@@ -360,12 +361,12 @@ const resumePage = (outil: Outil, contenu: Contenu | null) => ({
 });
 
 export function generateurOpenAI(cle: string, modele: string, compteur?: Compteur): Generateur {
-  return (outil, contenu, { tags, criteres, autoriserNouveauxTags, rappel }) =>
+  return (outil, contenu, { tags, criteres, autoriserNouveauxTags, rappel, categories }) =>
     appelerOpenAI(cle, modele, {
       nom: "fiche_outil",
       schema: schemaReponse(tags, autoriserNouveauxTags),
       instructions: instructions(tags, criteres, autoriserNouveauxTags),
-      messages: [JSON.stringify(resumePage(outil, contenu)), ...(rappel ? [messageRappel(rappel)] : [])],
+      messages: [JSON.stringify(resumePage(outil, contenu, categories)), ...(rappel ? [messageRappel(rappel)] : [])],
       maxTokens: 4000,
     }, compteur);
 }
@@ -449,6 +450,8 @@ export interface OptionsEnrichissement {
   tags: Tag[];
   /** Critères de souveraineté (criteres.json), décrits au modèle pour son évaluation. */
   criteres: Critere[];
+  /** Catégories (categories.json), pour donner au modèle le nom de la catégorie plutôt que son identifiant. */
+  categories?: readonly Categorie[];
   generer: Generateur;
   /** Explique l'écart quand l'évaluation enrichie diffère du répertoire (voir evaluation_enrichie.ecart). */
   expliquer: Expliqueur;
@@ -526,7 +529,7 @@ export async function enrichirOutils(outils: OutilARevoir[], options: OptionsEnr
         throw new Error(`${probleme}; outil non enrichi`);
       }
       const proposition = await obtenirValide(
-        (rappel) => generer(outil, contenu, { tags, criteres, autoriserNouveauxTags, ...(rappel && { rappel }) }),
+        (rappel) => generer(outil, contenu, { tags, criteres, autoriserNouveauxTags, ...(options.categories && { categories: options.categories }), ...(rappel && { rappel }) }),
         (brut) => validerProposition(brut, tags, autoriserNouveauxTags),
         (raison) => journal(`  ${outil.nom}: réponse rejetée (${raison}), nouvel essai`, "avertissement"),
       );
@@ -587,11 +590,11 @@ export interface Estimation {
  * Borne haute des jetons et du coût pour enrichir `outils`: pour chaque outil, un appel avec les consignes, la fiche et un
  * extrait de page de 6 000 caractères, plus un second appel (explication de l'écart) compté pour tous les outils.
  */
-export function estimerCoutEnrichissement(outils: Outil[], tags: Tag[], criteres: Critere[], modele: string): Estimation {
+export function estimerCoutEnrichissement(outils: Outil[], tags: Tag[], criteres: Critere[], modele: string, categories?: readonly Categorie[]): Estimation {
   const extraitMax = "x".repeat(6000);
   let usage: Usage = { ...USAGE_VIDE };
   for (const outil of outils) {
-    const fiche = JSON.stringify(resumePage(outil, { titre: outil.nom, meta_description: outil.description, extrait: extraitMax, liens_depot: [] }));
+    const fiche = JSON.stringify(resumePage(outil, { titre: outil.nom, meta_description: outil.description, extrait: extraitMax, liens_depot: [] }, categories));
     const consignes = instructions(tags, criteres, false);
     const appelFiche: Usage = { entree: estimerJetons(consignes) + estimerJetons(fiche), sortie: SORTIE_FICHE, cache_lecture: 0, cache_ecriture: 0 };
     const appelEcart: Usage = { entree: estimerJetons(instructionsEcart(criteres)) + estimerJetons(fiche) + 200, sortie: SORTIE_ECART, cache_lecture: 0, cache_ecriture: 0 };

@@ -10,7 +10,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { createJsonSchemaFn } from "@mionjs/run-types";
 import { affiner } from "./affiner-schema.ts";
-import type { FichierCriteres, FichierOutils, FichierTags } from "./schemas-types.ts";
+import type { FichierCategories, FichierCriteres, FichierOutils, FichierTags } from "./schemas-types.ts";
 
 const DOSSIER = "schemas";
 const DIALECTE = "https://json-schema.org/draft/2020-12/schema";
@@ -19,6 +19,7 @@ const LICENCE = "SPDX-License-Identifier: AGPL-3.0-or-later; SPDX-FileCopyrightT
 
 const generateurs = {
   outils: { titre: "outils.json: outils du répertoire", schema: createJsonSchemaFn<FichierOutils>() },
+  categories: { titre: "categories.json: catégories du répertoire", schema: createJsonSchemaFn<FichierCategories>() },
   criteres: { titre: "criteres.json: critères de souveraineté numérique", schema: createJsonSchemaFn<FichierCriteres>() },
   tags: { titre: "tags.json: vocabulaire des tags", schema: createJsonSchemaFn<FichierTags>() },
 };

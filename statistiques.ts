@@ -4,6 +4,7 @@
 // critères. Utilisé par le sommaire (sommaire.ts) et par les graphiques (graphiques.ts).
 import type { OutilClasse } from "./classify.ts";
 import { abandonne, type Tag } from "./enrichir.ts";
+import type { Categorie } from "./categories.ts";
 import type { Critere } from "./extract.ts";
 import type { Metadonnees } from "./fichiers.ts";
 
@@ -42,6 +43,8 @@ const AUTRE_FAMILLE = "Autre ou non classée";
 
 export interface Entree {
   outils: OutilClasse[];
+  /** categories.json: nom et icône des catégories; un identifiant inconnu est affiché tel quel, sans icône. */
+  categories: Categorie[];
   tags: Tag[];
   criteres: Critere[];
   meta: Metadonnees;
@@ -80,9 +83,9 @@ export interface Statistiques {
   meta: Metadonnees;
   total: number;
   retires: string[];
-  categories: { categorie: string; icone: string; outils: number; enrichis: number; libres: number; scoreMoyen: number }[];
+  categories: { id: string; nom: string; icone: string; description?: string; outils: number; enrichis: number; libres: number; scoreMoyen: number }[];
   /** Nombre d'outils par catégorie et par statut du code source (pour les graphiques). */
-  categoriesSources: { categorie: string; source: string; n: number }[];
+  categoriesSources: { categorie: string; nom: string; source: string; n: number }[];
   scores: { deux: number; trois: number; moyen: number };
   enrichissement: { enrichis: number; avecEcart: string[]; sansDate: number; /** Outils non enrichis abandonnés après des échecs consécutifs (voir enrichir.ts). */ abandonnes: string[] };
   changements: Compte[];
@@ -187,7 +190,8 @@ function lignesVerdicts(outils: OutilClasse[], ids: string[], sourceDe: (o: Outi
     .concat(outils.length ? [ligne("Ensemble", outils)] : []);
 }
 
-export function calculerStatistiques({ outils: tous, tags, criteres, meta }: Entree): Statistiques {
+export function calculerStatistiques({ outils: tous, categories: definitionsCategories, tags, criteres, meta }: Entree): Statistiques {
+  const categorieDe = (id: string): Categorie => definitionsCategories.find((c) => c.id === id) ?? { id, nom: id, icone: "" };
   const outils = tous.filter((o) => !o.removed);
   const enrichis = outils.filter((o) => o.description_longue);
   const ids = criteres.map((c) => c.id);
@@ -195,17 +199,20 @@ export function calculerStatistiques({ outils: tous, tags, criteres, meta }: Ent
   const libres = (o: OutilClasse) => o.source === "libre" || o.source === "partiel";
 
   // Catégories
-  const categories = [...compter(outils.map((o) => o.categorie))].map(([categorie]) => {
-    const os = outils.filter((o) => o.categorie === categorie);
+  const categories = [...compter(outils.map((o) => o.categorie))].map(([id]) => {
+    const os = outils.filter((o) => o.categorie === id);
+    const def = categorieDe(id);
     return {
-      categorie,
-      icone: os[0]!.icone,
+      id,
+      nom: def.nom,
+      icone: def.icone,
+      ...(def.description !== undefined && { description: def.description }),
       outils: os.length,
       enrichis: os.filter((o) => o.description_longue).length,
       libres: os.filter(libres).length,
       scoreMoyen: arrondi(moyenne(os.map((o) => o.score))),
     };
-  }).sort((a, b) => b.outils - a.outils || a.categorie.localeCompare(b.categorie, "fr"));
+  }).sort((a, b) => b.outils - a.outils || a.nom.localeCompare(b.nom, "fr"));
 
   // Licences
   const avecLicence = enrichis.filter((o) => o.licence);
@@ -258,7 +265,7 @@ export function calculerStatistiques({ outils: tous, tags, criteres, meta }: Ent
     categories,
     categoriesSources: [...compter(outils.map((o) => `${o.categorie}\u0000${sourceDe(o)}`))].map(([cle, n]) => {
       const [categorie, source] = cle.split("\u0000") as [string, string];
-      return { categorie, source, n };
+      return { categorie, nom: categorieDe(categorie).nom, source, n };
     }),
     scores: {
       deux: outils.filter((o) => o.score === 2).length,

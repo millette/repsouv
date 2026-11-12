@@ -93,3 +93,31 @@ test("un outil: echecs_enrichissement est un entier d'au moins 1", () => {
   assert.equal(outils(avec((o) => { o.echecs_confirmation = 1; })), true, JSON.stringify(outils.errors));
   assert.equal(outils(avec((o) => { o.echecs_confirmation = 0; })), false);
 });
+
+const categories = compiler("categories");
+const donneesCategories = lire("categories.json");
+
+test("categories.json est valide; un id qui n'est pas un slug, une clé inconnue ou un nom manquant sont refusés", () => {
+  assert.equal(categories(donneesCategories), true, JSON.stringify(categories.errors));
+  const c = copie(donneesCategories);
+  c.categories[0].id = "Analyse et mesure";
+  assert.equal(categories(c), false);
+  const d = copie(donneesCategories);
+  d.categories[0].extra = 1;
+  assert.equal(categories(d), false);
+  const e = copie(donneesCategories);
+  delete e.categories[0].nom;
+  assert.equal(categories(e), false);
+});
+
+test("relation entre les deux fichiers: outils[].categorie est un slug annoté comme renvoi à categories[].id, et chaque valeur existe dans categories.json", () => {
+  const schema = lire("schemas/outils.schema.json");
+  const champ = schema.properties.outils.items.properties.categorie;
+  assert.match(champ.$comment, /categories\[\]\.id de categories\.json/);
+  assert.equal(champ.pattern, lire("schemas/categories.schema.json").properties.categories.items.properties.id.pattern);
+  assert.equal(outils(avec((o) => { o.categorie = "Analyse et mesure"; })), false);
+  const ids = new Set(donneesCategories.categories.map((c: { id: string }) => c.id));
+  for (const o of donnees.outils.outils) assert.ok(ids.has(o.categorie), `${o.nom}: catégorie ${o.categorie} absente de categories.json`);
+  const utilisees = new Set(donnees.outils.outils.map((o: { categorie: string }) => o.categorie));
+  for (const id of ids) assert.ok(utilisees.has(id), `catégorie ${id} sans outil`);
+});

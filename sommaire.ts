@@ -17,6 +17,7 @@ import { dirname, join } from "node:path";
 import type { OutilClasse } from "./classify.ts";
 import { lancer } from "./cli.ts";
 import { construireGraphiques, ecrireGraphiques, verifierVlConvert, type Convertisseur, type GraphiqueEcrit } from "./graphiques.ts";
+import { chargerCategories } from "./categories.ts";
 import { appelerOpenAI, chargerCriteres, chargerTags, MAX_ECHECS_PAR_DEFAUT, MODELE_PAR_DEFAUT, obtenirValide, problemesMarkdown } from "./enrichir.ts";
 import { lireFichier } from "./fichiers.ts";
 import {
@@ -125,7 +126,7 @@ ${de.parJour.length ? `\n${image("enrichissement-jours")}${tableau(["Jour", "Out
 
 ${image("categories-statut")}${tableau(
     ["Catégorie", "Outils", "% du répertoire", "Enrichis", "Libres ou partiels", "Score moyen"],
-    s.categories.map((c) => [`${c.icone} ${c.categorie}`, c.outils, pourcent(c.outils, s.total), c.enrichis, c.libres, decimal(c.scoreMoyen)]),
+    s.categories.map((c) => [`${c.icone} ${c.nom}`.trim(), c.outils, pourcent(c.outils, s.total), c.enrichis, c.libres, decimal(c.scoreMoyen)]),
   )}
 `);
 
@@ -239,7 +240,7 @@ export function chargeResume(statistiques: Statistiques, tous: OutilClasse[]): C
     .filter((o) => !o.removed)
     .map((o) => ({
       nom: o.nom,
-      categorie: o.categorie,
+      categorie: statistiques.categories.find((c) => c.id === o.categorie)?.nom ?? o.categorie,
       score: o.score,
       criteres: o.criteres,
       source: o.source,
@@ -351,6 +352,7 @@ export async function genererSommaire(o: OptionsSommaire): Promise<ResultatSomma
   const lu = lireFichier<OutilClasse>(o.source, "outils");
   const statistiques = calculerStatistiques({
     outils: lu.donnees,
+    categories: chargerCategories(join(dossier, "categories.json")),
     tags: chargerTags(join(dossier, "tags.json")),
     criteres: chargerCriteres(join(dossier, "criteres.json")),
     meta: lu.meta,

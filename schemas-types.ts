@@ -7,6 +7,7 @@ import type { Critere } from "./extract.ts";
 import type { OutilClasse } from "./classify.ts";
 import type { Tag } from "./enrichir.ts";
 import type { Metadonnees } from "./fichiers.ts";
+import type { Categorie } from "./categories.ts";
 
 export interface FichierOutils {
   meta: Metadonnees;
@@ -16,6 +17,11 @@ export interface FichierOutils {
 export interface FichierCriteres {
   meta: Metadonnees;
   criteres: Critere[];
+}
+
+export interface FichierCategories {
+  meta: Metadonnees;
+  categories: Categorie[];
 }
 
 export interface FichierTags {

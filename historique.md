@@ -14,7 +14,7 @@ Les étapes du projet et les décisions prises, par date, d'après l'historique 
 | 2026-11-11 16:43 | Création des trois fichiers de données (`meta.created_at`), avec `meta` et les dates en heure de Toronto |
 | 2026-11-11 17:29 à 17:43 | Enrichissement par IA de 57 outils sur 60 ; les 3 autres (En commun, Paperless-ngx, CIRA Canadian Shield) ont une page inaccessible ou vide |
 | 2026-11-12 09:00 | Confirmation des critères par OpenAI et Claude sur les 57 outils enrichis, règle A, citation à l'appui (`confirmations/`, puis `criteres_confirmes`) |
-| 2026-11-12 11:06 | Dernière génération de `sommaire.md` |
+| 2026-11-12 11:42 | Dernière génération de `sommaire.md` |
 
 ## 2026-11-11
 
@@ -44,6 +44,7 @@ Les étapes du projet et les décisions prises, par date, d'après l'historique 
 - **Champ `page_lue` retiré** des données, du code, des schémas et des docs : plus rien ne pouvait produire `false`, et `true` était devenu implicite (un outil enrichi a toujours eu sa page lue).
 - **Démarrage rapide** dans le README (installation de nub, Node 26 épinglé dans `.node-version`, clé OpenAI et où la créer, coûts et `--dry-run`), instructions dans `.env.example`.
 - **Vérification des critères automatisée** : `update` remplit `criteres_confirmes` pour tout outil enrichi sans verdict, avec le modèle de l'enrichissement (OpenAI) et la règle A ; les 57 verdicts passent à `gpt-6-astra` (ceux obtenus le matin même, sans nouvel appel). `confirmer.ts` devient un module ; `appliquer-confirmations.ts`, `confirmations/`, les scripts npm correspondants, le fournisseur Claude, les autres règles et le champ `regle` disparaissent.
+- **`categories.json`** : les catégories deviennent un fichier de données (`id` en slug du nom, `nom`, `icone`, `description` rédigée par IA dans `update`), et `outils.json` ne garde que l'identifiant dans `categorie` (le champ `icone` disparaît). Les schémas annotent la relation et un test la vérifie.
 - **Documentation** scindée en trois fichiers : README (source, crédits, usage, données), `implementation.md` (scripts, classification, enrichissement, sommaire, tests, dépannage) et ce fichier.
 
 ## Décisions
@@ -64,4 +65,5 @@ Les étapes du projet et les décisions prises, par date, d'après l'historique 
 | `criteres` reste lié aux étoiles ; les critères vérifiés vont dans `criteres_confirmes` | Les étoiles sont une donnée de la source, les critères vérifiés dépendent de ce que la page de l'outil dit : aucune règle ne les fait coïncider sans sacrifier l'une des deux informations |
 | Variantes de `classify.ts` essayées puis retirées (confiance recalibrée, retrait de critères) | Règles choisies en regardant les 57 outils enrichis ; l'une contredisait les étoiles, et `criteres_confirmes` répond au besoin |
 | Critères vérifiés par le modèle de l'enrichissement (OpenAI), automatiquement dans `update`, plutôt que par un second modèle à la main | Une seule clé et un seul modèle, coût estimable par `--dry-run`, champ complet sans intervention ; l'indépendance du second modèle avait servi à l'analyse (accord sur 49 outils sur 57), et la citation vérifiable reste le garde-fou |
+| Les catégories dans `categories.json`, référencées par identifiant | L'icône était répétée 60 fois pour 20 catégories, et un changement d'icône sur la page faisait bouger tous les outils de la catégorie ; la description de la catégorie a sa place dans ce fichier |
 | Règle A pour « contrôle » : la nationalité mentionnée suffit | Les descriptions ne disent jamais qui possède l'entreprise ; sans convention, les IA divergent sur 21 outils. L'accord obtenu est une convention, pas une vérification de la propriété |

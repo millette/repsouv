@@ -27,10 +27,11 @@ Pour l'enrichissement et le résumé du sommaire, copier `.env.example` vers `.e
 ### Flux de travail
 
 ```
-Suivi courant    page en ligne ──▶ update.ts ──▶ outils.json + criteres.json   (nouveau, modification, retrait, comeback; import initial si outils.json manque)
+Suivi courant    page en ligne ──▶ update.ts ──▶ outils.json + categories.json + criteres.json   (nouveau, modification, retrait, comeback; import initial si outils.json manque)
 Reconstruction   page en ligne ──▶ extract.ts --force ──▶ classify.ts ──▶ outils.json   (volontaire: remplace tout, enrichissement compris)
 Enrichissement   update.ts (toujours, pour les outils non enrichis) ──▶ API OpenAI ──▶ outils.json (+ tags.json si de nouveaux tags)
-Vérification     update.ts (outils enrichis sans verdict) ──▶ API OpenAI ──▶ outils.json (criteres_confirmes) ──▶ sommaire (si quelque chose a changé)
+Vérification     update.ts (outils enrichis sans verdict) ──▶ API OpenAI ──▶ outils.json (criteres_confirmes)
+Catégories       update.ts (catégories sans description) ──▶ API OpenAI ──▶ categories.json (description) ──▶ sommaire (si quelque chose a changé)
 Sommaire         outils.json ──▶ sommaire.ts ──▶ sommaire.md + graphiques/   (vl-convert; résumé: API OpenAI)
 Schémas          schemas-types.ts ──▶ obuild + RunTypes ──▶ generer-schemas.ts ──▶ schemas/*.schema.json   (à relancer après un changement de type)
 ```
@@ -41,12 +42,12 @@ Schémas          schemas-types.ts ──▶ obuild + RunTypes ──▶ generer
 
 | Fichier | Rôle |
 |---|---|
-| `outils.json`, `criteres.json`, `tags.json` | Les données (voir [Fichiers JSON](README.md#fichiers-json)) |
+| `outils.json`, `categories.json`, `criteres.json`, `tags.json` | Les données (voir [Fichiers JSON](README.md#fichiers-json)) |
 | `update.ts` | Le script du suivi : synchronise `outils.json` et `criteres.json` avec la page en ligne (import initial compris), enrichit les outils qui ne le sont pas encore, vérifie leurs critères et met le sommaire à jour quand quelque chose a changé |
 | `extract.ts`, `classify.ts` | Les deux outils exceptionnels, sans script npm : reconstruction forcée depuis la page, et reclassement de tous les outils après un changement des règles |
 | `confirmer.ts` | Module de la vérification des critères (`criteres_confirmes`), appelé par `update.ts` après l'enrichissement |
 | `sommaire.ts`, `sommaire.md`, `graphiques/` | Le script du sommaire statistique, le sommaire qu'il a généré et les graphiques (SVG et PNG) qu'il contient (mis à jour automatiquement par `nub run update` quand quelque chose a changé; sinon à regénérer avec `nub run sommaire`) |
-| `enrichir.ts`, `prix.ts`, `statistiques.ts`, `graphiques.ts`, `fichiers.ts`, `temps.ts`, `spdx.ts`, `progress.ts`, `couleurs.ts`, `ids.ts`, `cli.ts` | Modules utilisés par les scripts |
+| `categories.ts`, `enrichir.ts`, `prix.ts`, `statistiques.ts`, `graphiques.ts`, `fichiers.ts`, `temps.ts`, `spdx.ts`, `progress.ts`, `couleurs.ts`, `ids.ts`, `cli.ts` | Modules utilisés par les scripts |
 | `schemas/`, `generer-schemas.ts`, `schemas-types.ts`, `affiner-schema.ts`, `build.config.ts`, `tsconfig.schemas.json` | Les schémas JSON des trois fichiers de données et ce qui les génère (voir [Schémas JSON](#schémas-json)) |
 | `test/` | Les tests |
 | `package.json`, `nub.lock`, `tsconfig.json` | Dépendances, scripts npm et configuration TypeScript |
@@ -59,11 +60,11 @@ Schémas          schemas-types.ts ──▶ obuild + RunTypes ──▶ generer
 
 ## Schémas JSON
 
-Le dossier `schemas/` contient un [JSON Schema](https://json-schema.org/) (draft 2020-12) par fichier de données : `schemas/outils.schema.json`, `schemas/criteres.schema.json` et `schemas/tags.schema.json`. Ils décrivent la structure complète (`meta` puis le tableau de données), les valeurs permises (`source`, `changement`, `confiance`, identifiants de critères), le type de chaque champ, et refusent les clés inconnues, comme le font les scripts. Chacun porte sa licence (`AGPL-3.0-or-later`) dans `$comment`, ce que les validateurs ignorent.
+Le dossier `schemas/` contient un [JSON Schema](https://json-schema.org/) (draft 2020-12) par fichier de données : `schemas/outils.schema.json`, `schemas/categories.schema.json`, `schemas/criteres.schema.json` et `schemas/tags.schema.json`. Ils décrivent la structure complète (`meta` puis le tableau de données), les valeurs permises (`source`, `changement`, `confiance`, identifiants de critères), le type de chaque champ, et refusent les clés inconnues, comme le font les scripts. Chacun porte sa licence (`AGPL-3.0-or-later`) dans `$comment`, ce que les validateurs ignorent.
 
 Ils sont générés, pas écrits à la main : les types TypeScript (`schemas-types.ts`, qui s'appuie sur `Outil`, `OutilClasse`, `Critere`, `Tag` et `Metadonnees`) sont convertis par [mion RunTypes](https://mion.io/runtypes) (`createJsonSchemaFn<T>()`), le générateur étant empaqueté par [obuild](https://github.com/unjs/obuild) avec le plugin RunTypes pour rolldown (`build.config.ts`). Après un changement de type, `nub run schemas` régénère les trois fichiers, et `nub run schemas:verifier` échoue si les fichiers commités sont périmés (il est aussi lancé par `nub run test`).
 
-Ce que les types ne disent pas est ajouté par `affiner-schema.ts`, par nom de champ : `score` entier de 0 à 3, `echecs_enrichissement` et `echecs_confirmation` entiers d'au moins 1, `tags` de 1 à 5 identifiants distincts, `criteres` d'au plus 3 identifiants distincts, dates `derniere_modification`, `enrichi_le`, `created_at` et `updated_at` au format ISO 8601 avec décalage. Les règles qui croisent plusieurs champs ou fichiers (licence SPDX valide, `custom_license` exclusif avec `licence`, tags présents dans `tags.json`, `score` égal au nombre de critères) ne sont pas dans les schémas : elles restent dans les scripts et les tests.
+Ce que les types ne disent pas est ajouté par `affiner-schema.ts`, par nom de champ : `score` entier de 0 à 3, `echecs_enrichissement` et `echecs_confirmation` entiers d'au moins 1, `tags` de 1 à 5 identifiants distincts, `criteres` d'au plus 3 identifiants distincts, dates `derniere_modification`, `enrichi_le`, `created_at` et `updated_at` au format ISO 8601 avec décalage, identifiants (`id`, et `categorie` des outils) en slug. La relation entre `outils[].categorie` et `categories[].id` de `categories.json` ne peut pas s'exprimer en JSON Schema : le schéma des outils l'annote (`$comment`) et impose le même motif, et `schemas.test.ts` vérifie que chaque valeur existe et que chaque catégorie est utilisée. Les règles qui croisent plusieurs champs ou fichiers (licence SPDX valide, `custom_license` exclusif avec `licence`, tags présents dans `tags.json`, `score` égal au nombre de critères) ne sont pas dans les schémas : elles restent dans les scripts et les tests.
 
 Les schémas valent pour du JSON ordinaire : les types du dépôt (chaînes, nombres, booléens, tableaux, `null`, valeurs littérales, objets) donnent le même JSON que celui du fichier. Si un champ devait un jour utiliser `Date`, `Map` ou une union contenant un `Date`, le schéma de RunTypes décrirait son propre encodage (tableaux étiquetés) et non le JSON naturel : à éviter dans les fichiers de données. Pour valider un fichier avec [Ajv](https://ajv.js.org/), utiliser `Ajv2020` (voir `test/schemas.test.ts`). Les versions de RunTypes (`@mionjs/*` 0.14.0) et d'obuild sont figées dans `package.json` : RunTypes n'a pas encore atteint la version 1.0.
 
@@ -77,7 +78,7 @@ Quatre scripts se lancent avec `nub` : `update.ts` et `sommaire.ts` (usage coura
 nub extract.ts [--force] <outils.json> [criteres.json] [url]
 ```
 
-Télécharge la page en ligne (`[url]`, par défaut celle du répertoire) et écrit les outils et, si demandé, les critères. Utilise [linkedom](https://github.com/WebReflection/linkedom) pour interroger le DOM. Lit la date de modification affichée sur la page (heure de l'Est) et lui ajoute le décalage de Toronto; refuse une page sans date ou contenant deux outils de même nom. Un échec de téléchargement (réseau, erreur HTTP) n'écrit rien.
+Télécharge la page en ligne (`[url]`, par défaut celle du répertoire) et écrit les outils, les catégories (`categories.json`, à côté de `outils.json` : id, nom et icône, en conservant les descriptions existantes) et, si demandé, les critères. Utilise [linkedom](https://github.com/WebReflection/linkedom) pour interroger le DOM. Lit la date de modification affichée sur la page (heure de l'Est) et lui ajoute le décalage de Toronto; refuse une page sans date ou contenant deux outils de même nom. Un échec de téléchargement (réseau, erreur HTTP) n'écrit rien.
 
 Si `criteres.json` est donné, il est réécrit lui aussi, sans protection : il ne dépend que de la page.
 
@@ -103,11 +104,11 @@ Résultats de la vérification des 57 outils enrichis (2026-11-12, `gpt-6-astra`
 nub update.ts [--dry-run] [--sans-couleur] [--nouveaux-tags] [--max-echecs=N] [--accepter-couts] [outils.json] [url]
 ```
 
-Télécharge la page en ligne (`[url]`, par défaut celle du répertoire; le même téléchargement qu'`extract.ts`), la compare à `outils.json` (par défaut `./outils.json`) et met le fichier à jour. **Si `outils.json` n'existe pas, c'est l'import initial** : tous les outils de la page sont écrits avec `changement: "nouveau"` et la date de la page, et une ligne « Import initial » le dit. `criteres.json`, dans le même dossier, est écrit lui aussi, à chaque exécution, et une ligne le signale quand son contenu change (ou s'il est créé). Un `outils.json` au mauvais format est refusé, pas remplacé. `--dry-run` affiche les changements sans écrire (et le rappelle par une ligne « Simulation »). Pour chaque outil :
+Télécharge la page en ligne (`[url]`, par défaut celle du répertoire; le même téléchargement qu'`extract.ts`), la compare à `outils.json` (par défaut `./outils.json`) et met le fichier à jour. **Si `outils.json` n'existe pas, c'est l'import initial** : tous les outils de la page sont écrits avec `changement: "nouveau"` et la date de la page, et une ligne « Import initial » le dit. `criteres.json` et `categories.json`, dans le même dossier, sont écrits eux aussi à chaque exécution (les catégories de la page, avec les descriptions déjà connues), et une ligne le signale quand leur contenu change (ou s'ils sont créés). Un `outils.json` au mauvais format est refusé, pas remplacé. `--dry-run` affiche les changements sans écrire (et le rappelle par une ligne « Simulation »). Pour chaque outil :
 
 - absent du fichier : `changement: "nouveau"`;
 - marqué `removed` et de retour sur la page : `"comeback"`, et `removed` disparaît;
-- catégorie, icône, score, lien ou description différents : `"modification"`;
+- catégorie (identifiant), score, lien ou description différents : `"modification"` (un changement d'icône seul est invisible);
 - absent de la page : `"retrait"` et `removed: true`, l'entrée est conservée;
 - identique : rien ne change, ni sa date ni son `changement`.
 
@@ -118,6 +119,8 @@ La synchronisation est suivie de l'[enrichissement](#enrichissement-par-ia) de t
 **Aperçu, estimation et confirmation.** Avant d'écrire quoi que ce soit, `update` calcule ce qu'il ferait et l'affiche : les changements, les outils à enrichir (et ceux abandonnés après trop d'échecs), puis une **estimation des jetons et du coût** (borne haute : 3 caractères par jeton, un extrait de page de 6 000 caractères et un second appel pour l'explication de l'écart pour chaque outil, plus un appel pour le résumé du sommaire), au prix du modèle (`prix.ts`). Avec `--dry-run`, il s'arrête là. Au **premier import** (pas de `outils.json`) avec des outils à enrichir, il demande confirmation dans le terminal : « 1. poursuivre en acceptant les coûts OpenAI », « 2. poursuivre en simulation », « 3. arrêter » (3 par défaut) ; hors terminal (script, CI), il s'arrête avec le code 1 et demande `--accepter-couts`, qui vaut la réponse 1. Les exécutions suivantes n'interrompent plus : les coûts ont été acceptés une fois, et `--dry-run` reste disponible pour les chiffrer. Sans clé `OPENAI_API_KEY`, la synchronisation est écrite et l'enrichissement et la vérification sont sautés avec un avertissement jaune (les outils restent à enrichir ou à vérifier).
 
 **Vérification des critères.** Après l'enrichissement, `update` vérifie les critères de chaque outil enrichi qui n'a pas encore de `criteres_confirmes` (voir [`confirmer.ts`](#confirmerts)) : un appel par outil, compté dans l'estimation de `--dry-run` (« vérification des critères de N outil(s) ») et dans le coût affiché à la fin, échecs comptés dans `echecs_confirmation`. Une vérification réussie compte comme un changement et déclenche le sommaire.
+
+**Descriptions des catégories.** Puis `update` rédige, avec le même modèle, la description de chaque catégorie de `categories.json` qui n'en a pas encore (voir [`categories.ts`](#categoriests)) : un appel par catégorie, compté dans l'estimation et le coût, redemandé une fois si la réponse est invalide, sans compteur d'échecs (retentée à chaque `update`). Une description ajoutée déclenche le sommaire.
 
 **Sommaire automatique.** Hors `--dry-run`, `update.ts` met à jour le [sommaire](#génération-du-sommaire-statistique) à la fin de l'exécution, **seulement si quelque chose a changé** : au moins un outil nouveau, modifié ou retiré, ou au moins un outil enrichi. Une page inchangée sans enrichissement ne fait rien.
 
@@ -146,6 +149,10 @@ nub sommaire.ts [--sans-resume] [--sans-graphiques] [outils.json] [sommaire.md]
 ```
 
 Écrit `sommaire.md` (par défaut dans le dossier de `outils.json`) et, à côté, le dossier `graphiques/` : voir [Sommaire statistique](#génération-du-sommaire-statistique). La fonction exportée `genererSommaire` fait ce travail; `update.ts` l'appelle après un enrichissement.
+
+### `categories.ts`
+
+Les catégories (`categories.json`) : `slug(nom)` donne l'identifiant (minuscules sans accents, mots séparés par un tiret), `categoriesDepuis` construit la liste depuis la page (ordre d'apparition, sans doublon, descriptions existantes conservées, erreur si deux noms donnent le même identifiant), `nomCategorie` retrouve le nom à partir de l'identifiant (pour les consignes envoyées au modèle), et `decrireCategories` rédige par IA les descriptions manquantes : une à trois phrases en français (40 à 400 caractères, texte continu, sans HTML ni tiret cadratin), à partir du nom, de l'icône et des outils de la catégorie, validées puis écrites en place. `estimerCoutDescriptions` chiffre les appels pour `--dry-run`.
 
 ### `enrichir.ts`
 
@@ -344,13 +351,15 @@ Si le `score` ou les `criteres` d'un outil déjà enrichi changent, après un `c
 | `nub run schemas` | `obuild && nub dist/generer-schemas.mjs` : régénère `schemas/*.schema.json` à partir des types (voir [Schémas JSON](#schémas-json)) |
 | `nub run schemas:verifier` | Comme `schemas`, mais sans rien écrire : échoue si les schémas commités sont périmés |
 | `nub run licences` | `uvx reuse lint` : vérifie que chaque fichier suivi déclare sa licence et son droit d'auteur ([REUSE](https://reuse.software/) 3.3). Demande [uv](https://docs.astral.sh/uv/) et un accès réseau la première fois ; non inclus dans `nub run test` |
-| `nub run test` | Lance les seize fichiers de tests, puis `schemas:verifier` |
+| `nub run test` | Lance les dix-huit fichiers de tests, puis `schemas:verifier` |
 | `nub run typecheck` | `tsrs -p .` : vérifie les types avec [tsrs](https://www.npmjs.com/package/tsrs), un portage en Rust de `tsc` |
 
 ## Tests
 
 Dans `test/`, avec `node:test` lancé par `nub` :
 
+- `categories.test.ts` : slug, liste des catégories depuis la page (ordre, doublons, descriptions conservées, identifiants en conflit), validation des descriptions, requête au modèle, boucle avec un faux modèle (nouvel essai, échec, sauvegarde) et estimation du coût.
+- `extract-categories.test.ts` : une catégorie par `h3` avec id, nom et icône, et les outils portent l'identifiant.
 - `classify.test.ts` : cas de classification connus, un nombre de critères égal au score pour les 60 outils, les options de la ligne de commande, le refus d'un fichier au mauvais format, et la couleur de « Erreur: ».
 - `confirmer.test.ts` : validation des verdicts (statuts, citation obligatoire, exacte et d'au plus 300 caractères), forme de `criteres_confirmes`, règle A dans les consignes, requête sans score ni critères du répertoire, et la boucle avec un faux modèle (verdict inscrit en place et sauvegardé, outil déjà vérifié jamais refait, nouvel essai, échecs et compteur, page illisible, abandon, estimation du coût).
 - `extract.test.ts` : conversion de la date de la page en heure de Toronto, cohérence de `criteres.json` et `outils.json`, rejet d'une page sans date, téléchargement (sur un serveur local, sans réseau), erreurs de téléchargement, le garde-fou contre l'écrasement (avec et sans `--force`, y compris pour un fichier au mauvais format), et la preuve qu'aucun fichier HTML local n'est lu.
@@ -364,7 +373,7 @@ Dans `test/`, avec `node:test` lancé par `nub` :
 - `fichiers.test.ts` : structure et `meta` des fichiers de données (création, contenu inchangé ou modifié, licence rétablie, refus des formats invalides), et conformité des trois fichiers du dépôt.
 - `sommaire.test.ts` : statistiques (statuts, licences, familles, tags, critères par statut, critères vérifiés par verdict et par statut, forges, dates), rendu Markdown (sections, images insérées dans leur section, cas sans outil enrichi), validation du résumé et nouvelle tentative, `genererSommaire` (écriture, options, conservation du sommaire existant en cas d'échec), avec des données fictives (jamais `outils.json`, jamais le réseau).
 - `graphiques.test.ts` : spécifications Vega-Lite (données incluses, champs existants, pourcentages, verdicts des critères vérifiés, graphiques omis sans données), écriture et nettoyage des fichiers, message si vl-convert est absent, et conversion réelle en SVG et PNG (ignorée si vl-convert n'est pas installé). Les données fictives des tests sont dans `donnees-fictives.ts`.
-- `schemas.test.ts` : les trois fichiers de données réels sont valides selon les schémas (avec Ajv, indépendant de RunTypes), et des variantes invalides sont refusées (clé inconnue, `score` hors de 0 à 3, `echecs_enrichissement` nul ou non entier, `source` ou `changement` inconnus, tags en trop ou en double, date non ISO, `meta` manquant).
+- `schemas.test.ts` : les quatre fichiers de données réels sont valides selon les schémas (avec Ajv, indépendant de RunTypes), et des variantes invalides sont refusées (clé inconnue, `score` hors de 0 à 3, `echecs_enrichissement` nul ou non entier, `source` ou `changement` inconnus, tags en trop ou en double, date non ISO, `meta` manquant).
 - `documentation.test.ts` : les cinq fichiers Markdown du dépôt (README, `implementation.md`, `historique.md`, `sommaire.md`, le spike) existent, leurs liens relatifs et leurs ancres existent (ancres calculées comme GitHub, liens dans le code ignorés), chacun commence par un titre et la ligne *Documentation*, sans tiret cadratin ni balise HTML (sauf l'image du README), et les fichiers générés disent par quel script et qu'ils ne se modifient pas à la main.
 - `en-tetes.test.ts` : chaque fichier `.ts` porte les en-têtes SPDX; la licence du code est la même dans `package.json`; les deux textes de licence sont présents, à la racine (`LICENSE*`) et dans `LICENSES/`; chaque schéma JSON déclare la licence du code dans `$comment`; et `REUSE.toml` annote `schemas/**` et le reste des fichiers sans en-tête (AGPL-3.0-or-later), ainsi que les données et leurs dérivés (CC-BY-SA-4.0). Ce test ne remplace pas `nub run licences`, qui contrôle tous les fichiers.
 
@@ -375,7 +384,7 @@ Dans `test/`, avec `node:test` lancé par `nub` :
 | `Refus d'écraser: …` | `extract.ts` a trouvé dans `outils.json` un enrichissement, un historique de changement, ou un format inattendu. Pour suivre la page sans rien perdre, utiliser `nub run update`; pour tout remplacer quand même, `nub extract.ts --force outils.json criteres.json` |
 | `… format invalide …` ou `« meta » invalide …` | Un fichier de données n'a pas la structure décrite dans [Fichiers JSON](README.md#fichiers-json). Le restaurer depuis Git (`git checkout outils.json`) ou, pour `outils.json`, le recréer avec `nub extract.ts --force outils.json criteres.json` puis `nub classify.ts outils.json` |
 | `Téléchargement impossible (url): …` | Réseau, délai de 30 secondes dépassé ou erreur HTTP en téléchargeant le répertoire. Rien n'a été écrit : réessayer |
-| `OPENAI_API_KEY absente` | Pour `nub run sommaire`, il y a un résumé à rédiger mais `.env` n'a pas la clé (`--sans-resume` l'évite). Pour `update`, c'est un avertissement : la synchronisation est écrite, l'enrichissement et la vérification des critères sont sautés, et les outils restent à enrichir ou à vérifier |
+| `OPENAI_API_KEY absente` | Pour `nub run sommaire`, il y a un résumé à rédiger mais `.env` n'a pas la clé (`--sans-resume` l'évite). Pour `update`, c'est un avertissement : la synchronisation est écrite, l'enrichissement, la vérification des critères et les descriptions de catégories sont sautés, et il restera à les faire |
 | `page inaccessible …` ou `page presque vide …`, `outil non enrichi` ou `critères non vérifiés` | La page de l'outil n'a pas pu être lue : l'outil n'est pas enrichi (ou vérifié) et sera retenté à la prochaine exécution. Après 3 échecs consécutifs, il est abandonné (`abandonnés après 3 échecs consécutifs`) : `--max-echecs=N` plus élevé pour le retenter. Voir [Pages inaccessibles](#pages-inaccessibles-ou-presque-vides) |
 | Des séquences comme `^[[32m` ou `[32m` apparaissent dans la sortie | Les couleurs sont forcées (`FORCE_COLOR`). Les désactiver avec `--sans-couleur` (ou retirer `FORCE_COLOR`) |
 | `Sommaire non mis à jour: …` | Après des changements ou un enrichissement, le sommaire n'a pas pu être mis à jour : clé ou vl-convert manquant (avertissement, rien n'est modifié) ou résumé impossible à rédiger (le sommaire existant est conservé, code de sortie 1). Régler le problème, puis lancer `nub run sommaire`  |

@@ -70,7 +70,7 @@ test("instructions: toujours la règle A pour « controle » (la nationalité me
 });
 
 const outil = (nom: string, extra: Partial<OutilClasse> = {}): OutilClasse =>
-  ({ categorie: "c", icone: "i", nom, score: 2, lien: `https://${nom}`, description: DESCRIPTION, derniere_modification: "2026-11-05T09:53:00-05:00", changement: null, criteres: ["donnees", "dependance"], confiance: "élevée", description_longue: "Longue.", ...extra }) as OutilClasse;
+  ({ categorie: "c", nom, score: 2, lien: `https://${nom}`, description: DESCRIPTION, derniere_modification: "2026-11-05T09:53:00-05:00", changement: null, criteres: ["donnees", "dependance"], confiance: "élevée", description_longue: "Longue.", ...extra }) as OutilClasse;
 
 const nonEnrichi = (nom: string): OutilClasse => { const { description_longue: _d, ...o } = outil(nom); return o as OutilClasse; };
 

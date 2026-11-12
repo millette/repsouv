@@ -8,7 +8,7 @@ import { interpreterChoix, ligneJournal, lignesResume, mettreAJour, raisonDeSaut
 
 const base = (nom: string, extra: Partial<OutilClasse> = {}): OutilClasse => {
   const o = {
-    categorie: "Test", icone: "🧪", nom, score: 2, lien: `https://${nom}.example/`,
+    categorie: "test", nom, score: 2, lien: `https://${nom}.example/`,
     description: "Outil canadien.", derniere_modification: "2026-11-05T09:53", changement: null,
     ...extra,
   };
@@ -185,7 +185,7 @@ const CRITERES: Critere[] = [
   { id: "controle", icon: "🏢", titre: "Qui contrôle l'outil ?", description: "Canadien ?" },
   { id: "dependance", icon: "🔗", titre: "De qui dépend-il ?", description: "Étranger ?" },
 ];
-const brut = (nom: string): Outil => ({ categorie: "c", icone: "i", nom, score: 2, lien: `https://${nom}`, description: "Outil libre et auto-hébergé", derniere_modification: "", changement: null });
+const brut = (nom: string): Outil => ({ categorie: "c", nom, score: 2, lien: `https://${nom}`, description: "Outil libre et auto-hébergé", derniere_modification: "", changement: null });
 const dossier = () => mkdtempSync(join(tmpdir(), "sync-"));
 
 test("synchroniser: sans outils.json, import initial: tous les outils sont « nouveau », classés, et criteres.json est créé", () => {

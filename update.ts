@@ -57,9 +57,10 @@ import { verifierVlConvert } from "./graphiques.ts";
 import { createProgress } from "./progress.ts";
 import { genererSommaire } from "./sommaire.ts";
 import { abandonneConfirmation, aConfirmer, confirmateurOpenAI, confirmerOutils, estimerCoutConfirmation } from "./confirmer.ts";
+import { aDecrire, categoriesDepuis, decrireCategories, estimerCoutDescriptions, generateurDescriptionOpenAI, sauverCategories, type Categorie } from "./categories.ts";
 import { additionner, dollars, formaterCout, USAGE_VIDE, type Usage } from "./prix.ts";
 
-const CHAMPS_COMPARES = ["categorie", "icone", "score", "lien", "description"] as const;
+const CHAMPS_COMPARES = ["categorie", "score", "lien", "description"] as const;
 /** Les champs à reporter sur la version à jour d'un outil: l'enrichissement et le compteur d'échecs. */
 const CHAMPS_REPORTES = [...CHAMPS_ENRICHIS, "echecs_enrichissement", "echecs_confirmation"] as const;
 
@@ -130,6 +131,10 @@ export interface Synchronisation {
   ecrit: boolean;
   /** true si criteres.json a été créé ou si son contenu a changé (jamais en simulation). */
   criteresEcrits: boolean;
+  /** Les catégories (categories.json): celles de la page, avec les descriptions déjà connues. */
+  categories: Categorie[];
+  /** true si categories.json a été créé ou si son contenu a changé (jamais en simulation). */
+  categoriesEcrites: boolean;
   /** Dernier état écrit de outils.json (null en simulation d'un import initial), à passer aux écritures suivantes. */
   courant: Lu<OutilClasse> | null;
 }
@@ -139,7 +144,7 @@ export interface Synchronisation {
  * Un outils.json absent est un import initial; un outils.json au mauvais format est refusé (lireFichier).
  * En simulation (`dryRun`), rien n'est écrit.
  */
-export function synchroniser(fichier: string, page: Outil[], criteres: Critere[], modification: string, dryRun: boolean): Synchronisation {
+export function synchroniser(fichier: string, page: Outil[], criteres: Critere[], modification: string, dryRun: boolean, categoriesPage: Categorie[] = []): Synchronisation {
   const importInitial = !existsSync(fichier);
   let courant: Lu<OutilClasse> | null = importInitial ? null : lireFichier<OutilClasse>(fichier, "outils");
   const { outils, resume } = mettreAJour(courant?.donnees ?? [], page, modification);
@@ -153,7 +158,15 @@ export function synchroniser(fichier: string, page: Outil[], criteres: Critere[]
     const apres = ecrireFichier(chemin, "criteres", criteres, avant);
     criteresEcrits = avant === null || JSON.stringify(avant.donnees) !== JSON.stringify(apres.donnees);
   }
-  return { outils, resume, importInitial, ecrit, criteresEcrits, courant };
+  const cheminCategories = join(dirname(fichier), "categories.json");
+  const connues = lireSiExiste<Categorie>(cheminCategories, "categories");
+  const categories = categoriesDepuis(categoriesPage, connues?.donnees ?? []);
+  let categoriesEcrites = false;
+  if (!dryRun && categoriesPage.length) {
+    const apres = ecrireFichier(cheminCategories, "categories", categories, connues);
+    categoriesEcrites = connues === null || JSON.stringify(connues.donnees) !== JSON.stringify(apres.donnees);
+  }
+  return { outils, resume, importInitial, ecrit, criteresEcrits, categories, categoriesEcrites, courant };
 }
 
 // ---------- sommaire automatique ----------
@@ -185,13 +198,14 @@ export function texteConfirmation(nbOutils: number, coutEstime: string): string 
 }
 
 /** Les lignes d'estimation du coût pour `--dry-run` et la confirmation du premier import. */
-export function lignesEstimation(estimation: Estimation, verification: { outils: number; usage: Usage }, modele: string, nbOutilsRepertoire: number, c: Couleurs): string[] {
+export function lignesEstimation(estimation: Estimation, verification: { outils: number; usage: Usage }, descriptions: { categories: number; usage: Usage }, modele: string, nbOutilsRepertoire: number, c: Couleurs): string[] {
   const sommaire: Usage = { entree: 2000 + 120 * nbOutilsRepertoire, sortie: 1500, cache_lecture: 0, cache_ecriture: 0 };
   const lignes = [`${c.gras("Coût estimé")} (${estimation.hypotheses}):`];
   lignes.push(`  enrichissement de ${estimation.outils} outil(s): ${formaterCout(estimation.usage, modele)}`);
   lignes.push(`  vérification des critères de ${verification.outils} outil(s): ${formaterCout(verification.usage, modele)}`);
+  lignes.push(`  descriptions de ${descriptions.categories} catégorie(s): ${formaterCout(descriptions.usage, modele)}`);
   lignes.push(`  sommaire (un appel pour le résumé): ${formaterCout(sommaire, modele)}`);
-  const total = additionner(additionner(estimation.usage, verification.usage), sommaire);
+  const total = additionner(additionner(additionner(estimation.usage, verification.usage), descriptions.usage), sommaire);
   lignes.push(`  total: ${c.jaune(formaterCout(total, modele))}`);
   return lignes;
 }
@@ -259,23 +273,25 @@ if (import.meta.main) {
     const sortie = creerCouleurs(couleursActives(process.stdout, process.env, sansCouleur));
     const suivi = creerCouleurs(couleursActives(process.stderr, process.env, sansCouleur));
 
-    const { outils: page, criteres: criteresPage, modification } = await telechargerRepertoire(url);
+    const { outils: page, categories: categoriesPage, criteres: criteresPage, modification } = await telechargerRepertoire(url);
     const modele = process.env.OPENAI_MODEL || MODELE_PAR_DEFAUT;
     const fichierTags = join(dirname(fichier), "tags.json");
 
     // Aperçu sans rien écrire: ce que la synchronisation ferait, et ce qu'il resterait à enrichir.
-    const apercu = synchroniser(fichier, page, criteresPage, modification, true);
+    const apercu = synchroniser(fichier, page, criteresPage, modification, true, categoriesPage);
     const resume = apercu.resume;
     const total = Object.values(resume).reduce((n, noms) => n + noms.length, 0);
     const aFaire = apercu.outils.filter(aEnrichir);
     const abandonnes = aFaire.filter((o) => abandonne(o, maxEchecs));
     const tagsPresents = existsSync(fichierTags);
     const prevus = tagsPresents ? aFaire.filter((o) => !abandonne(o, maxEchecs)) : [];
-    const estimation = estimerCoutEnrichissement(prevus, tagsPresents ? chargerTags(fichierTags) : [], criteresPage, modele);
+    const estimation = estimerCoutEnrichissement(prevus, tagsPresents ? chargerTags(fichierTags) : [], criteresPage, modele, apercu.categories);
     // À vérifier: les outils déjà enrichis sans verdict (hors abandonnés), plus ceux qui seront enrichis maintenant.
     const aVerifier = [...apercu.outils.filter((o) => aConfirmer(o) && !abandonneConfirmation(o, maxEchecs)), ...prevus];
     const abandonnesVerif = apercu.outils.filter((o) => aConfirmer(o) && abandonneConfirmation(o, maxEchecs));
-    const verification = estimerCoutConfirmation(aVerifier, criteresPage, modele);
+    const verification = estimerCoutConfirmation(aVerifier, criteresPage, modele, apercu.categories);
+    const aDecrireListe = apercu.categories.filter(aDecrire);
+    const descriptions = estimerCoutDescriptions(apercu.categories, apercu.outils.filter((o) => !o.removed), modele);
 
     if (apercu.importInitial) console.log(sortie.attenue(`Import initial: ${fichier} n'existe pas, tous les outils de la page sont nouveaux`));
     for (const ligne of lignesResume(resume, modification, sortie)) console.log(ligne);
@@ -284,7 +300,8 @@ if (import.meta.main) {
     if (abandonnes.length) console.log(`  ${sortie.jaune(`abandonnés après ${maxEchecs} échecs consécutifs`)} (${abandonnes.length}): ${sortie.cyan(abandonnes.map((o) => `${o.nom} (${o.echecs_enrichissement})`).join(", "))}; relancer avec --max-echecs plus élevé pour les retenter`);
     console.log(`${sortie.gras("Vérification des critères")}: ${aVerifier.length ? sortie.jaune(String(aVerifier.length)) : sortie.vert("0")} outil(s) à vérifier${aVerifier.length ? ` (${sortie.cyan(aVerifier.map((o) => o.nom).join(", "))})` : ""}`);
     if (abandonnesVerif.length) console.log(`  ${sortie.jaune(`abandonnés après ${maxEchecs} échecs consécutifs`)} (${abandonnesVerif.length}): ${sortie.cyan(abandonnesVerif.map((o) => `${o.nom} (${o.echecs_confirmation})`).join(", "))}; relancer avec --max-echecs plus élevé pour les retenter`);
-    if (prevus.length || aVerifier.length || total) for (const ligne of lignesEstimation(estimation, verification, modele, apercu.outils.filter((o) => !o.removed).length, sortie)) console.log(ligne);
+    console.log(`${sortie.gras("Descriptions de catégories")}: ${aDecrireListe.length ? sortie.jaune(String(aDecrireListe.length)) : sortie.vert("0")} catégorie(s) à décrire${aDecrireListe.length ? ` (${sortie.cyan(aDecrireListe.map((c) => c.nom).join(", "))})` : ""}`);
+    if (prevus.length || aVerifier.length || aDecrireListe.length || total) for (const ligne of lignesEstimation(estimation, verification, descriptions, modele, apercu.outils.filter((o) => !o.removed).length, sortie)) console.log(ligne);
     if (dryRun) {
       console.log(sortie.attenue("Simulation (--dry-run): rien n'est écrit"));
       return;
@@ -292,7 +309,7 @@ if (import.meta.main) {
 
     // Premier import: on demande avant de dépenser et d'écrire.
     if (apercu.importInitial && prevus.length && !accepterCouts) {
-      const cout = estimation.cout === null || verification.cout === null ? `inconnu pour ${modele}` : `≈ ${dollars(estimation.cout + verification.cout)}`;
+      const cout = estimation.cout === null || verification.cout === null || descriptions.cout === null ? `inconnu pour ${modele}` : `≈ ${dollars(estimation.cout + verification.cout + descriptions.cout)}`;
       if (!process.stdin.isTTY) {
         console.error(suivi.jaune(`Premier import hors terminal: ${prevus.length} outil(s) à enrichir (coût estimé ${cout}). Relancer avec --accepter-couts pour poursuivre, ou --dry-run pour l'estimation détaillée. Rien n'est écrit.`));
         process.exitCode = 1;
@@ -312,7 +329,7 @@ if (import.meta.main) {
     }
 
     // Dernier état écrit de outils.json: les métadonnées (updated_at) sont maintenues par ecrireFichier.
-    const sync = synchroniser(fichier, page, criteresPage, modification, false);
+    const sync = synchroniser(fichier, page, criteresPage, modification, false, categoriesPage);
     let courant = sync.courant;
     const { outils } = sync;
     let nbEnrichis = 0;
@@ -321,6 +338,9 @@ if (import.meta.main) {
     const compteur = (u: Usage) => { usage = additionner(usage, u); };
     if (sync.ecrit) console.log(`${sortie.vert(fichier)} mis à jour`);
     if (sync.criteresEcrits) console.log(`${sortie.vert(join(dirname(fichier), "criteres.json"))} mis à jour`);
+    if (sync.categoriesEcrites) console.log(`${sortie.vert(join(dirname(fichier), "categories.json"))} mis à jour`);
+    const categories = sync.categories;
+    let nbDecrites = 0;
 
     if (prevus.length) {
       const cle = process.env.OPENAI_API_KEY;
@@ -341,6 +361,7 @@ if (import.meta.main) {
           generer: generateurOpenAI(cle, modele, compteur),
           expliquer: expliqueurOpenAI(cle, modele, compteur),
           autoriserNouveauxTags: nouveauxTags,
+          categories,
           maxEchecs,
           apresChaque: (os, ts) => {
             courant = ecrireFichier(fichier, "outils", os as OutilClasse[], courant);
@@ -378,6 +399,7 @@ if (import.meta.main) {
           confirmer: confirmateurOpenAI(cle, modele, compteur),
           criteres,
           modele,
+          categories,
           maxEchecs,
           apresChaque: (os) => { courant = ecrireFichier(fichier, "outils", os, courant); },
           debut: (nom) => (process.stderr.isTTY ? progression.update(traites, nom) : progression.message(suivi.attenue(`Vérification de ${nom}...`))),
@@ -393,7 +415,29 @@ if (import.meta.main) {
       }
     }
 
-    if (sommaireNecessaire({ dryRun, changements: total, enrichis: nbEnrichis + nbConfirmes })) {
+    // Descriptions des catégories qui n'en ont pas encore (categories.json), avec le même modèle.
+    const aDecrireMaintenant = categories.filter(aDecrire);
+    if (aDecrireMaintenant.length) {
+      const cle = process.env.OPENAI_API_KEY;
+      if (!cle) {
+        console.error(suivi.jaune(`Descriptions de catégories sautées: OPENAI_API_KEY absente; ${aDecrireMaintenant.length} catégorie(s) restent à décrire`));
+      } else {
+        const avant = usage;
+        const cheminCategories = join(dirname(fichier), "categories.json");
+        const resultat = await decrireCategories(categories, outils.filter((o) => !o.removed), {
+          generer: generateurDescriptionOpenAI(cle, modele, compteur),
+          apresChaque: (cs) => { sauverCategories(cheminCategories, cs); },
+          journal: (message, niveau = "info") => console.error(ligneJournal(message, niveau, suivi)),
+        });
+        nbDecrites = resultat.decrites.length;
+        const decrites = nbDecrites ? sortie.gras(sortie.vert(String(nbDecrites))) : "0";
+        const echecs = resultat.erreurs.length ? sortie.gras(sortie.rouge(String(resultat.erreurs.length))) : sortie.vert("0");
+        console.log(`Catégories décrites: ${decrites}; échecs: ${echecs}; ${formaterCout({ entree: usage.entree - avant.entree, sortie: usage.sortie - avant.sortie, cache_lecture: usage.cache_lecture - avant.cache_lecture, cache_ecriture: usage.cache_ecriture - avant.cache_ecriture }, modele)}`);
+        if (resultat.erreurs.length) process.exitCode = 1;
+      }
+    }
+
+    if (sommaireNecessaire({ dryRun, changements: total + nbDecrites, enrichis: nbEnrichis + nbConfirmes })) {
       const raison = raisonDeSauterSommaire(process.env.OPENAI_API_KEY, verifierVlConvert);
       if (raison) {
         console.error(suivi.jaune(`Sommaire non mis à jour: ${raison}. Le sommaire existant est conservé; relancer \`nub run sommaire\` ensuite.`));
