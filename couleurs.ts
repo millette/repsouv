@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Couleurs ANSI pour les messages en ligne de commande, sans dépendance.
 // Elles ne sont actives que si la sortie est un terminal (voir couleursActives); sinon, chaque

@@ -1,0 +1,8 @@
+# Licences des fichiers qui ne peuvent pas porter d'en-tête SPDX (spécification REUSE, https://reuse.software/).
+# Les fichiers .ts portent leurs propres en-têtes; chaque schéma déclare aussi sa licence dans « $comment ».
+version = 1
+
+[[annotations]]
+path = "schemas/**"
+SPDX-FileCopyrightText = "2026 Robin Millette <https://robin.millette.info/>"
+SPDX-License-Identifier = "AGPL-3.0-or-later"

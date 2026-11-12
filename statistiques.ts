@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Statistiques du répertoire: calcul pur, sans entrée-sortie, à partir des outils, des tags et des
 // critères. Utilisé par le sommaire (sommaire.ts) et par les graphiques (graphiques.ts).

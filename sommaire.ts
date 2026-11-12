@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Sommaire statistique du répertoire, écrit dans sommaire.md.
 // Usage: nub sommaire.ts [--sans-resume] [--sans-graphiques] [outils.json] [sommaire.md]

@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Met à jour outils.json depuis le répertoire en ligne.
 // Usage: nub update.ts [--dry-run] [--sans-couleur] [--sommaire] [--enrichir [--nouveaux-tags] [--sans-page] [--sans-sommaire] [--limite=N]] [outils.json] [url]

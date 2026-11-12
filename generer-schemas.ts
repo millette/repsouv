@@ -1,8 +1,8 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Génère schemas/{outils,criteres,tags}.schema.json (JSON Schema 2020-12) à partir des types de
 // schemas-types.ts, avec mion RunTypes. Les appels createJsonSchemaFn<T>() ne fonctionnent qu'après la
-// transformation faite par le plugin RunTypes: ce fichier est donc empaqueté par tsdown (tsdown.config.ts)
+// transformation faite par le plugin RunTypes: ce fichier est donc empaqueté par obuild (build.config.ts)
 // avant d'être exécuté, voir les scripts `schemas` et `schemas:verifier` de package.json.
 //
 // Usage: nub dist/generer-schemas.mjs [--verifier]
@@ -14,6 +14,8 @@ import type { FichierCriteres, FichierOutils, FichierTags } from "./schemas-type
 
 const DOSSIER = "schemas";
 const DIALECTE = "https://json-schema.org/draft/2020-12/schema";
+/** Licence déclarée dans chaque schéma (JSON n'admet pas d'en-tête); la même que dans REUSE.toml et package.json. */
+const LICENCE = "SPDX-License-Identifier: AGPL-3.0-or-later; SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>";
 
 const generateurs = {
   outils: { titre: "outils.json: outils du répertoire", schema: createJsonSchemaFn<FichierOutils>() },
@@ -25,7 +27,7 @@ const generateurs = {
 function texte(nom: keyof typeof generateurs): string {
   const { titre, schema } = generateurs[nom];
   const doc = affiner(schema({ libraryOptions: { portable: true } }));
-  return `${JSON.stringify({ $schema: DIALECTE, title: titre, ...doc }, null, 2)}\n`;
+  return `${JSON.stringify({ $schema: DIALECTE, $comment: LICENCE, title: titre, ...doc }, null, 2)}\n`;
 }
 
 const verifier = process.argv.includes("--verifier");

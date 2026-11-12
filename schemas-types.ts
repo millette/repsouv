@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Forme des trois fichiers de données, telle qu'elle est écrite sur le disque (voir fichiers.ts):
 // un objet « meta » puis le tableau de données. Ces types sont la source des schémas JSON

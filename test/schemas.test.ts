@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Les schémas JSON (schemas/*.schema.json, générés par `nub run schemas`) décrivent bien les fichiers de
 // données du dépôt, et refusent les variantes invalides. Validation avec Ajv, indépendant de RunTypes.

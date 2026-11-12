@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Dates et heures du projet: toujours locales, en heure de Toronto (America/Toronto, heure d'été
 // comprise), au format ISO 8601 avec le décalage: 2026-11-11T16:42:07-05:00 (hiver), -04:00 (été).

@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Données fictives partagées par les tests du sommaire et des graphiques (jamais outils.json).
 import type { OutilClasse } from "../classify.ts";

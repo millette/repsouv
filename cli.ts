@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Exécution des scripts en ligne de commande: une erreur s'affiche en un message clair (« Erreur: »
 // en rouge dans un terminal), sans trace de pile, et donne le code de sortie 1.

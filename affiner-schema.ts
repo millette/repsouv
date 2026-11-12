@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Précise un schéma JSON produit par RunTypes avec ce que les types TypeScript n'expriment pas:
 //   - les objets refusent les clés inconnues (additionalProperties: false), comme le fait fichiers.ts;

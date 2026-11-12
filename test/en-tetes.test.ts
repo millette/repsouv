@@ -1,11 +1,11 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 import assert from "node:assert/strict";
 import { readdirSync, readFileSync } from "node:fs";
 import { test } from "node:test";
 import { problemeLicenceSpdx } from "../spdx.ts";
 
-const LICENCE_CODE = "AGPL-3.0-only";
+const LICENCE_CODE = "AGPL-3.0-or-later";
 const sources = [...readdirSync(".").filter((f) => f.endsWith(".ts")), ...readdirSync("test").map((f) => `test/${f}`).filter((f) => f.endsWith(".ts"))];
 
 test("la licence du code est un identifiant SPDX valide, le même dans package.json", () => {
@@ -23,4 +23,17 @@ test("chaque fichier source commence par les en-têtes SPDX (licence et droit d'
 test("les textes des licences sont présents: AGPL-3.0 pour le code, CC BY-SA 4.0 pour les données", () => {
   assert.match(readFileSync("LICENSE", "utf8"), /GNU AFFERO GENERAL PUBLIC LICENSE\s+Version 3, 19 November 2007/);
   assert.match(readFileSync("LICENSE-CC-BY-SA-4.0", "utf8"), /^Attribution-ShareAlike 4\.0 International/);
+});
+test("chaque schéma JSON déclare la licence du code dans $comment, et REUSE.toml la déclare pour schemas/**", () => {
+  const schemas = readdirSync("schemas").filter((f) => f.endsWith(".schema.json"));
+  assert.equal(schemas.length, 3, `schémas trouvés: ${schemas.join(", ")}`);
+  for (const f of schemas) {
+    const { $comment } = JSON.parse(readFileSync(`schemas/${f}`, "utf8")) as { $comment?: string };
+    assert.match($comment ?? "", new RegExp(`^SPDX-License-Identifier: ${LICENCE_CODE}; SPDX-FileCopyrightText: \\d{4} Robin Millette <`), f);
+  }
+  const reuse = readFileSync("REUSE.toml", "utf8");
+  assert.match(reuse, /^version = 1$/m);
+  assert.match(reuse, /path = "schemas\/\*\*"/);
+  assert.match(reuse, new RegExp(`SPDX-License-Identifier = "${LICENCE_CODE}"`));
+  assert.match(reuse, /SPDX-FileCopyrightText = "\d{4} Robin Millette </);
 });

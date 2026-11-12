@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Enrichissement des outils avec l'API OpenAI: description longue en français, tags
 // (vocabulaire restreint de tags.json) et, pour les logiciels libres, source/licence/repo

@@ -1,7 +1,7 @@
 {
   "name": "outils-souverainete-numerique",
   "private": true,
-  "license": "AGPL-3.0-only",
+  "license": "AGPL-3.0-or-later",
   "author": {
     "name": "Robin Millette",
     "url": "https://robin.millette.info/"
@@ -17,8 +17,8 @@
     "typecheck": "tsrs -p .",
     "enrichir": "nub update.ts --enrichir",
     "sommaire": "nub sommaire.ts",
-    "schemas": "tsdown && nub dist/generer-schemas.mjs",
-    "schemas:verifier": "tsdown && nub dist/generer-schemas.mjs --verifier"
+    "schemas": "obuild && nub dist/generer-schemas.mjs",
+    "schemas:verifier": "obuild && nub dist/generer-schemas.mjs --verifier"
   },
   "dependencies": {
     "linkedom": "^0.18.15",
@@ -36,7 +36,7 @@
     "@types/spdx-expression-parse": "^4.0.0",
     "ajv": "8.20.0",
     "ajv-formats": "3.0.1",
-    "tsdown": "0.23.7",
+    "obuild": "0.4.45",
     "tsrs": "^0.24.0-ts7.1.0-beta"
   }
 }

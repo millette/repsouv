@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Ces tests n'utilisent que des données fictives: ni outils.json, ni réseau, ni ligne de commande.
 import assert from "node:assert/strict";

@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Extrait les outils et les critères du répertoire de souveraineté numérique vers du JSON,
 // à partir de la page en ligne (téléchargée à chaque exécution).
