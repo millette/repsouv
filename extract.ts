@@ -225,7 +225,7 @@ export function travailAPerdre(outils: Partial<Outil>[]): string[] {
 function refuser(raison: string): never {
   console.error(
     `Refus d'écraser: ${raison}\n` +
-      `Pour synchroniser sans rien perdre, utiliser update.ts. Pour tout remplacer quand même: nub run extract --force (ou nub run build:force).`,
+      `Pour synchroniser sans rien perdre, utiliser update.ts. Pour tout remplacer quand même: node extract.ts --force outils.json criteres.json.`,
   );
   process.exit(1);
 }

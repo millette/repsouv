@@ -62,7 +62,7 @@ export interface OptionsRendu {
 function sectionResume(resume: ResumeIA | undefined): string {
   if (!resume) return "";
   if ("erreur" in resume) {
-    return `## Résumé\n\n*Le résumé n'a pas pu être rédigé (${resume.erreur}). Relancer \`nub run sommaire\` pour le produire.*\n\n`;
+    return `## Résumé\n\n*Le résumé n'a pas pu être rédigé (${resume.erreur}). Relancer \`node sommaire.ts\` pour le produire.*\n\n`;
   }
   return `## Résumé\n\n${resume.paragraphes.join("\n\n")}\n\n*Résumé rédigé par un modèle d'IA (${resume.modele}) le ${resume.date}, à partir des statistiques ci-dessous et de la liste des outils. À relire avant de le diffuser.*\n\n`;
 }
@@ -81,7 +81,7 @@ export function rendreMarkdown(s: Statistiques, { genereLe, resume, graphiques =
 
 *Documentation : [README](README.md) · [Implémentation](implementation.md) · [Historique](historique.md) · [Sommaire statistique](sommaire.md)*
 
-Généré le ${genereLe} par \`sommaire.ts\` d'après \`outils.json\` (données sous licence ${s.meta.data_license}, créées le ${s.meta.created_at} et modifiées pour la dernière fois le ${s.meta.updated_at}). Ne pas modifier ce fichier à la main : relancer \`nub run sommaire\`.
+Généré le ${genereLe} par \`sommaire.ts\` d'après \`outils.json\` (données sous licence ${s.meta.data_license}, créées le ${s.meta.created_at} et modifiées pour la dernière fois le ${s.meta.updated_at}). Ne pas modifier ce fichier à la main : relancer \`node sommaire.ts\`.
 
 Sauf indication contraire, les pourcentages sont calculés sur les ${s.total} outils du répertoire. Les statistiques sur le statut du code source, les licences, les forges et les tags ne portent que sur les ${ens} outils déjà enrichis.
 

@@ -442,7 +442,7 @@ if (import.meta.main) {
     if (sommaireNecessaire({ dryRun, changements: total + nbDecrites, enrichis: nbEnrichis + nbConfirmes })) {
       const raison = raisonDeSauterSommaire(process.env.OPENAI_API_KEY, verifierVlConvert);
       if (raison) {
-        console.error(suivi.jaune(`Sommaire non mis à jour: ${raison}. Le sommaire existant est conservé; relancer \`nub run sommaire\` ensuite.`));
+        console.error(suivi.jaune(`Sommaire non mis à jour: ${raison}. Le sommaire existant est conservé; relancer \`node sommaire.ts\` ensuite.`));
       } else {
         console.error(suivi.attenue("Mise à jour du sommaire..."));
         try {
