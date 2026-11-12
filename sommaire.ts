@@ -74,6 +74,8 @@ export function rendreMarkdown(s: Statistiques, { genereLe, resume, graphiques =
 
   parts.push(`# Sommaire du répertoire d'outils favorisant la souveraineté numérique
 
+*Documentation : [README](README.md) · [Implémentation](implementation.md) · [Historique](historique.md) · [Sommaire statistique](sommaire.md) · [Analyse de la classification](analyses/classification/README.md)*
+
 Généré le ${genereLe} par \`sommaire.ts\` d'après \`outils.json\` (données sous licence ${s.meta.data_license}, créées le ${s.meta.created_at} et modifiées pour la dernière fois le ${s.meta.updated_at}). Ne pas modifier ce fichier à la main : relancer \`nub run sommaire\`.
 
 Sauf indication contraire, les pourcentages sont calculés sur les ${s.total} outils du répertoire. Les statistiques sur le statut du code source, les licences, les forges et les tags ne portent que sur les ${ens} outils déjà enrichis.

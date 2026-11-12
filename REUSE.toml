@@ -5,7 +5,7 @@ version = 1
 
 # Code, schémas JSON, configuration et documentation du dépôt.
 [[annotations]]
-path = ["schemas/**", "analyses/**/*.md", "README.md", "package.json", "nub.lock", "tsconfig.json", "tsconfig.schemas.json", ".gitignore", ".env.example", "spike-mion/**"]
+path = ["schemas/**", "analyses/**/*.md", "README.md", "implementation.md", "historique.md", "package.json", "nub.lock", "tsconfig.json", "tsconfig.schemas.json", ".gitignore", ".env.example", "spike-mion/**"]
 SPDX-FileCopyrightText = "2026 Robin Millette <https://robin.millette.info/>"
 SPDX-License-Identifier = "AGPL-3.0-or-later"
 

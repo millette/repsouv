@@ -25,6 +25,7 @@ const pct = (a: number, b: number) => `${a}/${b} (${b ? Math.round((100 * a) / b
 const fmt = (n: number) => n.toLocaleString("fr-CA");
 const confirmations = (f: Fichier) => new Map(f.resultats.filter((r) => r.confirmation).map((r) => [r.nom, r.confirmation as Confirmation]));
 
+console.log(`# Résultats des confirmations de critères par IA\n\n*Documentation : [README](../../README.md) · [Implémentation](../../implementation.md) · [Historique](../../historique.md) · [Sommaire statistique](../../sommaire.md) · [Analyse de la classification](../../analyses/classification/README.md)*\n\n*Généré le ${new Date().toISOString().slice(0, 10)} par \`analyses/classification/analyser-confirmations.ts\` à partir des fichiers \`confirmations-*.json\`. Ne pas modifier à la main.*\n`);
 console.log("## Jetons et coût\n");
 console.log("| Fournisseur | Modèle | Outils | Appels | Jetons en entrée (cache lu) | Jetons en sortie | Coût ($) | Échecs |\n|---|---|---|---|---|---|---|---|");
 for (const f of lus) {

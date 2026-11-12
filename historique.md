@@ -1,0 +1,59 @@
+# Historique du projet
+
+*Documentation : [README](README.md) · [Implémentation](implementation.md) · [Historique](historique.md) · [Sommaire statistique](sommaire.md) · [Analyse de la classification](analyses/classification/README.md)*
+
+Les étapes du projet et les décisions prises, par date, d'après l'historique Git (`git log`) et les notes qui accompagnaient les changements. Les dates sont en heure de Toronto. Pour l'état actuel, voir le [README](README.md) et [implementation.md](implementation.md).
+
+**Sommaire :** [Repères](#repères) · [2026-11-11](#2026-11-11) · [2026-11-12](#2026-11-12) · [Décisions](#décisions)
+
+## Repères
+
+| Date | Repère |
+|---|---|
+| 2026-11-05 09:53 | Date de modification affichée par la page du répertoire au moment de l'import initial : tous les outils portent cette `derniere_modification` |
+| 2026-11-11 16:43 | Création des trois fichiers de données (`meta.created_at`), avec `meta` et les dates en heure de Toronto |
+| 2026-11-11 17:29 à 17:43 | Enrichissement par IA de 57 outils sur 60 ; les 3 autres (En commun, Paperless-ngx, CIRA Canadian Shield) ont une page inaccessible ou vide |
+| 2026-11-12 07:41 | Confirmation des critères par Claude, citation à l'appui (`criteres_confirmes`) |
+| 2026-11-12 08:30 | Dernière génération de `sommaire.md` |
+
+## 2026-11-11
+
+- **Extraction et classification.** `extract.ts` lit la page de Praxis et écrit les outils et les critères en JSON ; `classify.ts` déduit des descriptions à quel critère chaque étoile correspond. Les premières versions en Python et les JSON intermédiaires sont retirés le même jour, de même que le champ `evidences`.
+- **README et vérification des types** avec `tsrs` (portage de `tsc` en Rust), sans dépendance à `typescript`.
+- **Enrichissement par IA** (`update.ts --enrichir`) : description longue en Markdown, tags d'un vocabulaire fermé (`tags.json`), statut du code source, licence SPDX ou licence maison (`custom_license`), dépôt de code, puis évaluation enrichie (second avis sur score et critères) et explication des écarts ; barre de progression et journal.
+- **Protection de `outils.json`** : `extract` refuse d'écraser un enrichissement ou un historique sans `--force` ; la copie HTML locale disparaît, la page est toujours téléchargée.
+- **Pages inaccessibles ou presque vides** : avertissement, refus par défaut, option `--sans-page` et marque `page_lue`.
+- **Licences et métadonnées** : AGPL-3.0 pour le code, CC BY-SA 4.0 pour les données ; en-têtes SPDX dans chaque fichier ; champ `meta` (`data_license`, `created_at`, `updated_at`) et dates en heure de Toronto ; format strict des fichiers de données.
+- **Sommaire statistique** (`sommaire.ts`) avec résumé rédigé par IA, puis date d'enrichissement par outil (`enrichi_le`). Les 41 outils enrichis avant ce champ reçoivent la date de substitution `2026-11-11T17:29:24-05:00`, celle du premier enrichissement daté ; 42 outils portent donc cette valeur.
+- **Couleurs** dans `update.ts` et pour le mot « Erreur: » de tous les scripts.
+- **Enrichissement terminé** : 57 outils sur 60.
+- **Graphiques Vega-Lite** dans le sommaire, convertis par vl-convert en SVG et PNG ; le graphique du statut du code source est affiché en tête du README.
+- **Sommaire automatique** avec `--enrichir` quand quelque chose a changé, options `--sans-sommaire` puis `--sommaire` pour `update`, et avertissement quand le sommaire n'est pas mis à jour malgré des changements. Décision : `update` seul ne touche pas au sommaire.
+
+## 2026-11-12
+
+- **Schémas JSON.** Analyse de l'adoption de schema.org (non retenue : le JSON-LD serait une couche d'export séparée) puis des générateurs de JSON Schema. Expérience `spike-mion` (branches `mion-smoke`, `mion-smoke-tsdown`) : les schémas de mion RunTypes décrivent le JSON échangé pour les types simples, mais encodent à leur façon les unions avec `Date`, les `Map` et autres types propres à JavaScript ; tsdown et esbuild donnent la même sortie. Adoption de RunTypes pour générer `schemas/*.schema.json` (draft 2020-12), d'abord avec tsdown puis avec obuild (branche `mion-smoke-obuild`, schémas identiques octet pour octet), avec `affiner-schema.ts` pour les contraintes que les types ne disent pas.
+- **Licence du code** : passage de `AGPL-3.0-only` à `AGPL-3.0-or-later` ; les schémas déclarent leur licence dans `$comment` ; conformité à la spécification REUSE 3.3 (`LICENSES/`, `REUSE.toml`, `nub run licences`).
+- **Analyse de la classification** (voir [analyses/classification/README.md](analyses/classification/README.md)) :
+  - `classify2.ts` : mêmes critères que `classify.ts`, `confiance` recalibrée d'après l'évaluation enrichie (non adopté) ;
+  - `confirmer.ts` : confirmation de chaque critère par une IA, citation vérifiable à l'appui, avec OpenAI (`gpt-6-astra`, 1,43 $ pour 57 outils) et Claude (`claude-fable-5-2`, 3,13 $) ; désaccord sur « contrôle » pour 21 outils, levé par la règle A (la nationalité mentionnée suffit), relancée sur ces 21 outils (0,52 $ et 1,12 $) ;
+  - `classify4.ts` : retrait des critères que l'enrichissement et les confirmations contredisent, 47 outils sur 57 d'accord avec l'évaluation enrichie contre 39 (non adopté : il rompt « une étoile = un critère ») ;
+  - **décision** : `criteres` reste lié aux étoiles de la source, et les critères vérifiés sont exposés à part dans `criteres_confirmes`, avec la citation, inscrits par `appliquer-confirmations.ts` à partir des confirmations de Claude.
+- **Sommaire** : sous-section et graphique des critères vérifiés (confirmés, infirmés, indéterminés par statut du code source) ; `sommaire.md` régénéré.
+- **Documentation** scindée en trois fichiers : README (source, crédits, usage, données), `implementation.md` (scripts, classification, enrichissement, sommaire, tests, dépannage) et ce fichier.
+
+## Décisions
+
+| Décision | Raison |
+|---|---|
+| `update` seul ne met pas le sommaire à jour ; `--enrichir` ou `--sommaire` le font, seulement si quelque chose a changé | Le sommaire coûte un appel à l'API et environ 30 secondes ; un avertissement signale un sommaire en retard |
+| `extract` ne lit jamais de fichier HTML local et refuse d'écraser du travail sans `--force` | Un réimport détruit l'enrichissement et l'historique ; la page doit être l'unique source |
+| Un outil enrichi n'est jamais régénéré | L'enrichissement coûte des appels à l'API ; pour le refaire, supprimer ses champs puis relancer |
+| Les dates sont en heure de Toronto, avec le décalage | La page du répertoire donne l'heure de l'Est ; un horodatage avec décalage reste sans ambiguïté |
+| Format strict des fichiers de données, sans reconnaissance de l'ancien format à plat | Un fichier au mauvais format est refusé avec un message clair plutôt que mal interprété |
+| Schémas JSON générés par mion RunTypes et obuild, versions figées | RunTypes n'a pas atteint la version 1.0 ; les schémas commités sont vérifiés par `schemas:verifier` à chaque `nub run test` |
+| Les types des fichiers de données évitent `Date`, `Map` et les unions avec `Date` | RunTypes décrirait alors son propre encodage, pas le JSON naturel |
+| `AGPL-3.0-or-later` pour le code et les schémas, CC BY-SA 4.0 pour les données et leurs dérivés | Les données adaptent le répertoire d'origine, publié sous CC BY-SA 4.0 ; conformité REUSE pour que chaque fichier déclare sa licence |
+| `criteres` reste lié aux étoiles ; les critères vérifiés vont dans `criteres_confirmes` | Les étoiles sont une donnée de la source, les critères vérifiés dépendent de ce que la page de l'outil dit : aucune règle ne les fait coïncider sans sacrifier l'une des deux informations |
+| `classify2.ts` et `classify4.ts` restent des variantes non adoptées | Leurs règles ont été choisies en regardant les 57 outils enrichis ; `classify4.ts` contredit les étoiles |
+| Règle A pour « contrôle » : la nationalité mentionnée suffit | Les descriptions ne disent jamais qui possède l'entreprise ; sans convention, les IA divergent sur 21 outils. L'accord obtenu est une convention, pas une vérification de la propriété |

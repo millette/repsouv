@@ -1,5 +1,7 @@
 # Analyse de la classification des étoiles
 
+*Documentation : [README](../../README.md) · [Implémentation](../../implementation.md) · [Historique](../../historique.md) · [Sommaire statistique](../../sommaire.md) · [Analyse de la classification](../../analyses/classification/README.md)*
+
 Question : peut-on mieux deviner **quel critère chaque étoile représente** (`criteres` dans `outils.json`), en prenant l'évaluation de l'enrichissement (`evaluation_enrichie.criteres`) comme second avis ? Cette analyse a tourné sur une copie de `outils.json` (57 outils enrichis, 3 non enrichis). `outils.json` n'a pas été modifié.
 
 ## Conclusion

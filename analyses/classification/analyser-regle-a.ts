@@ -30,7 +30,7 @@ const regleA = Object.fromEntries(fournisseurs.map((p) => [p, confirmations(fich
 const pct = (a: number, b: number) => `${a}/${b} (${b ? Math.round((100 * a) / b) : 0} %)`;
 const sur = noms.filter((n) => fournisseurs.every((p) => regleA[p]!.has(n)));
 
-console.log(`## Règle A, ${sur.length} outils sur ${noms.length} (divergence de départ sur « controle »)\n`);
+console.log(`# Résultats de la règle A pour « contrôle »\n\n*Documentation : [README](../../README.md) · [Implémentation](../../implementation.md) · [Historique](../../historique.md) · [Sommaire statistique](../../sommaire.md) · [Analyse de la classification](../../analyses/classification/README.md)*\n\n*Généré le ${new Date().toISOString().slice(0, 10)} par \`analyses/classification/analyser-regle-a.ts\` à partir des fichiers \`confirmations-*.json\`. Ne pas modifier à la main.*\n\n## Règle A, ${sur.length} outils sur ${noms.length} (divergence de départ sur « controle »)\n`);
 console.log("### Jetons et coût\n\n| Fournisseur | Modèle | Appels | Jetons en entrée (cache lu) | Jetons en sortie | Coût ($) | Échecs |\n|---|---|---|---|---|---|---|");
 for (const p of fournisseurs) {
   const f = fichiersA[p]!, t = f.totaux;

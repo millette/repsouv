@@ -1,3 +1,9 @@
+# Résultats de la règle A pour « contrôle »
+
+*Documentation : [README](../../README.md) · [Implémentation](../../implementation.md) · [Historique](../../historique.md) · [Sommaire statistique](../../sommaire.md) · [Analyse de la classification](../../analyses/classification/README.md)*
+
+*Généré le 2026-11-12 par `analyses/classification/analyser-regle-a.ts` à partir des fichiers `confirmations-*.json`. Ne pas modifier à la main.*
+
 ## Règle A, 21 outils sur 21 (divergence de départ sur « controle »)
 
 ### Jetons et coût

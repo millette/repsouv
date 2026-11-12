@@ -1,3 +1,9 @@
+# Résultats des confirmations de critères par IA
+
+*Documentation : [README](../../README.md) · [Implémentation](../../implementation.md) · [Historique](../../historique.md) · [Sommaire statistique](../../sommaire.md) · [Analyse de la classification](../../analyses/classification/README.md)*
+
+*Généré le 2026-11-12 par `analyses/classification/analyser-confirmations.ts` à partir des fichiers `confirmations-*.json`. Ne pas modifier à la main.*
+
 ## Jetons et coût
 
 | Fournisseur | Modèle | Outils | Appels | Jetons en entrée (cache lu) | Jetons en sortie | Coût ($) | Échecs |
