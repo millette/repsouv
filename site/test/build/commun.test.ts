@@ -3,7 +3,10 @@
 // Ce que toute page du site bâti doit porter (contracts/pages.md, « Toutes les pages »): langue, structure,
 // attribution CC BY-SA 4.0 aux auteur·trices de Praxis et lien vers le répertoire d'origine.
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
+import { readFileSync } from "node:fs";
 import { test } from "node:test";
+import { adresseDepot } from "../../src/lib/depot.ts";
 import { batirAuBesoin, donneesReelles, lirePage, pages, texte } from "./outils.ts";
 
 batirAuBesoin();
@@ -65,4 +68,28 @@ test("chaque page porte dans son pied l'attribution à Praxis, la licence CC BY-
     assert.ok(t.includes("CC BY-SA 4.0"), chemin);
     assert.ok(liens.includes(praxis.url), chemin);
   }
+});
+
+test("chaque page lie le dépôt et dit de quelle version et quand le site a été bâti", () => {
+  const depot = adresseDepot(JSON.parse(readFileSync("../package.json", "utf8")));
+  assert.equal(depot, "https://github.com/millette/repsouv");
+  const hashes = new Set<string>();
+  for (const chemin of toutes) {
+    const pied = lirePage(chemin).querySelector("footer")!;
+    const liens = [...pied.querySelectorAll("a")];
+    assert.equal(liens.find((a) => texte(a) === "Code source et données")?.getAttribute("href"), depot, chemin);
+    const version = liens.find((a) => /^[0-9a-f]{7}$/.test(texte(a)));
+    assert.ok(version, `${chemin}: hash du build absent`);
+    const cible = version.getAttribute("href") ?? "";
+    assert.match(cible, new RegExp(`^${depot}/commit/[0-9a-f]{40}$`), chemin);
+    assert.ok(cible.endsWith("/" + texte(version)) || cible.split("/").at(-1)!.startsWith(texte(version)), chemin);
+    hashes.add(cible.split("/").at(-1)!);
+    const date = pied.querySelector("time")?.getAttribute("datetime") ?? "";
+    const age = Date.now() - new Date(date).getTime();
+    assert.ok(age >= 0 && age < 24 * 3600 * 1000, `${chemin}: date du build « ${date} »`);
+    assert.ok(texte(pied.querySelector("time")).length > 0, chemin);
+  }
+  // Un seul build, donc un seul hash; et c'est un commit qui existe dans le dépôt.
+  assert.equal(hashes.size, 1);
+  assert.equal(spawnSync("git", ["cat-file", "-e", `${[...hashes][0]}^{commit}`], { cwd: ".." }).status, 0);
 });

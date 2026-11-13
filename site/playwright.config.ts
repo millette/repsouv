@@ -21,12 +21,13 @@ export default defineConfig({
       reuseExistingServer: true,
     },
     {
-      // Le site tel que GitHub Pages le publie: bâti puis servi sous le chemin du dépôt (test/e2e/base.spec.ts).
-      command: `nub exec astro build --outDir dist-base && nub exec astro preview --outDir dist-base --port ${portBase} --ignore-lock`,
+      // Le site tel que GitHub Pages le publie, servi sous le chemin du dépôt (test/e2e/base.spec.ts). Il est bâti
+      // avant les tests par « nub run build:base » (voir test:e2e dans package.json), pas ici: un build pendant que
+      // les autres tests tournent les ralentit jusqu'à les faire échouer.
+      command: `nub exec astro preview --outDir dist-base --port ${portBase} --ignore-lock`,
       url: `http://localhost:${portBase}/repsouv/`,
       reuseExistingServer: true,
       env: { SITE_URL: "https://millette.github.io", SITE_BASE: "/repsouv/" },
-      timeout: 120_000,
     },
   ],
 });

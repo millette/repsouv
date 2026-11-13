@@ -15,7 +15,7 @@ nub run build        # lit les JSON de la racine et écrit site/dist/ (159 pages
 nub run preview      # sert site/dist/ en local
 nub run check        # vérifie les types (astro check)
 nub run test         # tests unitaires sur fixtures, puis tests du site bâti sur les vraies données
-nub run test:e2e     # tests dans Chromium : filtres, adresse, clavier, sans JavaScript, accessibilité, téléphone
+nub run test:e2e     # bâtit le site (à la racine, puis sous /repsouv/) et lance les tests dans Chromium
 ```
 
 Les tests dans un navigateur demandent Chromium (`nub x playwright install chromium`, une fois). Le build ne fait aucun appel réseau et ne demande aucune clé d'API.
@@ -45,6 +45,7 @@ Pour essayer sur le poste le site tel qu'il sera publié : `SITE_BASE=/repsouv/ 
 
 - **Données** : le site lit `outils.json`, `categories.json`, `criteres.json`, `tags.json` et `sources.json` ; un fichier manquant ou invalide, ou deux outils qui donneraient la même adresse de fiche, arrêtent le build avec un message qui nomme le fautif.
 - **Provenance** : chaque champ affiché dit d'où il vient (source, déduction du dépôt, IA, Open Hub). La table est dans `src/lib/provenance.ts`, et les tests du site bâti refusent un champ produit par IA sans son signalement « à vérifier ».
+- **Pied de page** : attribution et licence des données, crédit des autres sources, date des données, lien vers le dépôt (champ `repository` du `package.json` de la racine), version du dépôt dont le site est bâti (hash Git) et date du build (`src/lib/depot.ts`).
 - **Lecture sans JavaScript** : toutes les pages sont du HTML complet. Seuls l'explorateur, l'interrupteur de thème et l'interaction des graphiques en demandent ; ce sont des îles [SolidJS](https://www.solidjs.com/) (`src/components/Explorateur.tsx`, `src/components/Theme.tsx`, `src/components/Graphique.tsx`). Sans JavaScript, la page « Explorer » le dit et renvoie à la page « Outils ».
 - **Explorateur** : il lit dans le navigateur `explorateur.json`, écrit au build à partir des mêmes données ; c'est le seul appel réseau du site, vers son propre fichier. Tout son état (tri, filtres, vue, outils comparés, outil dont les détails sont ouverts) vit dans l'adresse de la page, pour qu'un lien copié le restaure. Un bouton « Détails » ouvre dans une boîte modale tous les détails d'un outil, ceux de sa fiche, lue telle quelle (`src/components/explorateur/Details.tsx`) ; la fiche reste la page de l'outil. Sa logique est en fonctions pures dans `src/lib/` (`etat.ts`, `selection.ts`, `tri.ts`, `comparaison.ts`).
 - **Statistiques** : les chiffres et les neuf graphiques viennent des fonctions de la racine qui produisent `sommaire.md` (`calculerStatistiques`, `construireGraphiques`), pour ne jamais le contredire. Les graphiques sont rendus en SVG au build par vega, sans `vl-convert`, en thème clair et sombre ; avec JavaScript, une île (`src/components/Graphique.tsx`) les rend interactifs quand ils deviennent visibles.

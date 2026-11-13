@@ -3,6 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "license": "AGPL-3.0-or-later",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/millette/repsouv.git",
+    "directory": "site"
+  },
+  "homepage": "https://millette.github.io/repsouv/",
   "type": "module",
   "scripts": {
     "dev": "astro dev",
@@ -12,7 +18,8 @@
     "test": "nub run test:unit && nub run test:build",
     "test:unit": "nub --test \"test/*.test.ts\"",
     "test:build": "nub --test --test-concurrency=1 \"test/build/*.test.ts\"",
-    "test:e2e": "playwright test"
+    "test:e2e": "nub run build && nub run build:base && playwright test",
+    "build:base": "SITE_URL=https://millette.github.io SITE_BASE=/repsouv/ astro build --outDir dist-base"
   },
   "engines": {
     "node": ">=26 <27"

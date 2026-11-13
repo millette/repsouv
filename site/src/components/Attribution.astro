@@ -5,12 +5,14 @@
 // sur les champs produits par IA (principe II) et date des données.
 import { formaterDate } from "../lib/libelles.ts";
 import { LIBELLES_PROVENANCE } from "../lib/provenance.ts";
-import { AUTEURS_PRAXIS, ID_PRAXIS, LICENCE_DONNEES, site } from "../lib/site.ts";
+import { formaterDateHeure } from "../lib/depot.ts";
+import { AUTEURS_PRAXIS, build, ID_PRAXIS, LICENCE_DONNEES, site } from "../lib/site.ts";
 
 const { sources, meta } = site();
 const praxis = sources.find((s) => s.id === ID_PRAXIS);
 if (!praxis) throw new Error(`sources.json: source « ${ID_PRAXIS} » manquante, nécessaire à l'attribution`);
 const autres = sources.filter((s) => s.id !== ID_PRAXIS);
+const { depot, hashCourt, commit, date } = build();
 ---
 <div class="attribution">
   <p>
@@ -26,4 +28,9 @@ const autres = sources.filter((s) => s.id !== ID_PRAXIS);
   )}
   <p>Les champs marqués « {LIBELLES_PROVENANCE.ia} » résument des pages tierces : ils sont à contrôler avant de s'y fier.</p>
   <p>Données du {formaterDate(meta.updated_at)}.</p>
+  <p class="pied-build">
+    {depot && <><a class="link" href={depot}>Code source et données</a>{" · "}</>}
+    {hashCourt && <>version {commit ? <a class="link" href={commit}>{hashCourt}</a> : hashCourt}{" · "}</>}
+    site bâti le <time datetime={date}>{formaterDateHeure(date)}</time>
+  </p>
 </div>

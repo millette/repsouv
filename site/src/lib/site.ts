@@ -2,6 +2,7 @@
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Données du site, chargées une fois par build et partagées par toutes les pages, et constantes du site.
 import { verifierUnicite } from "./adresses.ts";
+import { infosBuild, type InfosBuild } from "./depot.ts";
 import { chargerDonnees, type Donnees, type OutilClasse } from "./donnees.ts";
 import { preparer } from "./interaction.ts";
 import { compilerVega, rendreSvg } from "./rendu.ts";
@@ -68,4 +69,11 @@ export function rendus(): Promise<Rendu[]> {
     ),
     ),
   ));
+}
+
+let cacheBuild: InfosBuild | undefined;
+
+/** Dépôt, version et date du build, lus une fois: toutes les pages d'un build disent la même chose. */
+export function build(): InfosBuild {
+  return (cacheBuild ??= infosBuild());
 }
