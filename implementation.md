@@ -56,7 +56,7 @@ Schémas          schemas-types.ts ──▶ obuild + RunTypes ──▶ generer
 | `sources.ts`, `openhub.ts` | Les sources des outils (validation, écriture de `sources.json`) et la lecture des données publiques d'Open Hub |
 | `logiciel.ts` | Le logiciel derrière un outil : page d'enrichissement et nom de logiciel (service instance d'un logiciel), renvois `voir_aussi` |
 | `sommaire.ts`, `sommaire.md`, `graphiques/` | Le script du sommaire statistique, le sommaire qu'il a généré et les graphiques (SVG) qu'il contient (mis à jour automatiquement par `nub run update` quand quelque chose a changé; sinon à regénérer avec `nub run sommaire`) |
-| `categories.ts`, `enrichir.ts`, `prix.ts`, `statistiques.ts`, `graphiques.ts`, `fichiers.ts`, `temps.ts`, `spdx.ts`, `progress.ts`, `duree.ts`, `couleurs.ts`, `ids.ts`, `cli.ts`, `env.ts` | Modules utilisés par les scripts |
+| `categories.ts`, `enrichir.ts`, `prix.ts`, `statistiques.ts`, `graphiques.ts`, `fichiers.ts`, `temps.ts`, `spdx.ts`, `progress.ts`, `duree.ts`, `couleurs.ts`, `ids.ts`, `cli.ts`, `env.ts`, `agent.ts` | Modules utilisés par les scripts |
 | `schemas/`, `generer-schemas.ts`, `schemas-types.ts`, `affiner-schema.ts`, `build.config.ts`, `tsconfig.schemas.json` | Les schémas JSON des cinq fichiers de données et ce qui les génère (voir [Schémas JSON](#schémas-json)) |
 | `test/`, `test/donnees/` | Les tests unitaires (fixtures et dossiers temporaires, sans données) et les tests des fichiers de données réels |
 | `package.json`, `nub.lock`, `tsconfig.json` | Dépendances (`dependencies` pour l'exécution, `devDependencies` pour le développement, dont `vega` et `vega-lite` qui ne servent qu'aux types), scripts npm, les deux environnements (`engines.node` pour l'exécution, `devEngines.runtime` et `devEngines.packageManager` pour le développement) et configuration TypeScript. `nub.lock` n'est lu que par nub ; `npm install` résout les versions d'après les plages de `package.json` |
@@ -209,6 +209,10 @@ Couleurs ANSI sans dépendance : `couleursActives(flux, env, sansCouleur)` déci
 ### `cli.ts`
 
 `lancer(principal)` exécute le corps d'un script en ligne de commande : toute erreur (option invalide, fichier manquant, réseau, erreur HTTP) s'affiche en un message clair (`Erreur: …`, en rouge dans un terminal), sans trace de pile, et donne le code de sortie 1. Utilisé par tous les scripts en ligne de commande.
+
+### `agent.ts`
+
+L'en-tête `User-Agent` de toutes les requêtes HTTP du projet (page de Praxis, page des Services FACiLes, pages des outils lues par `enrichir` et `confirmer`, API d'Open Hub, API d'OpenAI) : un navigateur courant (`Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36`), car certains sites refusent les clients sans en-tête de navigateur, puis `nom/version` et le contact `Nom <courriel>` lus dans `package.json` (`name`, `version`, `author`), pour qu'un administrateur sache qui lit ses pages et puisse écrire. `USER_AGENT` est calculé au chargement ; `enTetes(autres)` le place devant les en-têtes propres à chaque requête (`accept`, `authorization`).
 
 ### `env.ts`
 
@@ -439,6 +443,7 @@ Avec `node:test`, lancé par `nub --test` (le développement et les tests passen
 - `extract-facil.test.ts` : extraction d'une page fictive (champs, instance_de, alternatives connues et inconnues, catégorie par logiciel, score estimé), erreurs (aucun service, logiciel sans catégorie, doublons), tables valides, synchronisation (nouveaux, inchangé, retrait, score aligné conservé), téléchargement avec en-tête de navigateur, CLI.
 - `ajouter.test.ts` : source demandée (connue, nouvelle, manquante), outil demandé (validation, score estimé ou donné, alternatives), écriture dans les fichiers, options de la ligne de commande, CLI.
 - `logiciel.test.ts` : nom de logiciel, racine du dépôt par forge (pages de version, de tag et de commit ; forges auto-hébergées ; hors forge), page d'enrichissement, renvois `voir_aussi` (symétrie, outils retirés, renvoi périmé, identité conservée).
+- `agent.test.ts` : forme du User-Agent (navigateur, nom/version, contact ; sans auteur), valeur lue dans `package.json`, `enTetes` ; chaque test de téléchargement vérifie l'en-tête envoyé (Praxis par un serveur local, FACiL, Open Hub, OpenAI).
 - `openhub.test.ts` : lecture du XML (collection, projet avec analyse, dépôts, erreur de statut), concordance directe et par les dépôts, champs écrits, outils à compléter, boucle avec un faux client (concordance, candidats journalisés, compteur et abandon, erreur réseau), client HTTP.
 - `en-tetes.test.ts` : chaque fichier `.ts` porte les en-têtes SPDX; la licence du code est la même dans `package.json`; les textes de licence sont présents, à la racine (`LICENSE*`) et dans `LICENSES/` (AGPL, CC BY-SA, MIT); chaque schéma JSON déclare la licence du code dans `$comment`; et `REUSE.toml` annote `schemas/**` et le reste des fichiers sans en-tête (AGPL-3.0-or-later), les données et leurs dérivés (CC-BY-SA-4.0) et le skill `.claude/**` (MIT). Ce test ne remplace pas `nub run licences`, qui contrôle tous les fichiers.
 

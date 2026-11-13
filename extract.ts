@@ -13,6 +13,7 @@
 import { existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { parseHTML } from "linkedom";
+import { enTetes } from "./agent.ts";
 import { lancer } from "./cli.ts";
 import { ecrireFichier, lireFichier, lireSiExiste, type Lu } from "./fichiers.ts";
 import { ID_PRAXIS } from "./ids.ts";
@@ -177,7 +178,7 @@ export const estUrl = (s: string) => /^https?:\/\//.test(s);
 export async function telechargerRepertoire(url: string = URL_REPERTOIRE): Promise<Repertoire> {
   let reponse: Response;
   try {
-    reponse = await fetch(url, { signal: AbortSignal.timeout(30_000) });
+    reponse = await fetch(url, { headers: enTetes({ accept: "text/html" }), signal: AbortSignal.timeout(30_000) });
   } catch (e) {
     const cause = (e as { cause?: { message?: string } }).cause?.message ?? (e as Error).message;
     throw new Error(`Téléchargement impossible (${url}): ${cause}`);

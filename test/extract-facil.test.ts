@@ -8,6 +8,7 @@ import { join, resolve } from "node:path";
 import { test } from "node:test";
 import type { OutilClasse } from "../classify.ts";
 import { ALTERNATIVES, CATEGORIE_PAR_LOGICIEL, extraireFacil, SOURCE_FACIL, synchroniserFacil, telechargerFacil } from "../extract-facil.ts";
+import { USER_AGENT } from "../agent.ts";
 import { ecrireFichier, lireFichier } from "../fichiers.ts";
 import { problemesSource, type Source } from "../sources.ts";
 import { CATEGORIES, META, OUTILS, outil, SOURCES, TAGS } from "./donnees-fictives.ts";
@@ -134,7 +135,7 @@ test("telechargerFacil: en-tête de navigateur, erreur HTTP refusée", async () 
   const telecharger = (async (url: string, init: { headers: Record<string, string> }) => { requetes.push({ url, ua: init.headers["user-agent"]! }); return { ok: true, status: 200, text: async () => PAGE }; }) as unknown as typeof fetch;
   assert.equal(await telechargerFacil(undefined, telecharger), PAGE);
   assert.equal(requetes[0]!.url, "https://facil.services/");
-  assert.match(requetes[0]!.ua, /^Mozilla\/5\.0/);
+  assert.equal(requetes[0]!.ua, USER_AGENT);
   await assert.rejects(telechargerFacil("https://x.example/", (async () => ({ ok: false, status: 403 })) as unknown as typeof fetch), /HTTP 403/);
 });
 

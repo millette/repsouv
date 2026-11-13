@@ -14,6 +14,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { parseHTML } from "linkedom";
+import { enTetes } from "./agent.ts";
 import { classer, type OutilClasse } from "./classify.ts";
 import { lancer } from "./cli.ts";
 import { couleursActives, creerCouleurs } from "./couleurs.ts";
@@ -159,9 +160,9 @@ export function extraireFacil(html: string): ExtractionFacil {
   return { outils, source: { ...SOURCE_FACIL }, avertissements };
 }
 
-/** Télécharge la page avec un en-tête de navigateur (facil.services refuse les autres clients). */
+/** Télécharge la page avec le User-Agent du projet (agent.ts; facil.services refuse les clients sans en-tête de navigateur). */
 export async function telechargerFacil(url: string = URL_FACIL, telecharger: typeof fetch = fetch): Promise<string> {
-  const reponse = await telecharger(url, { headers: { "user-agent": "Mozilla/5.0 (X11; Linux x86_64) outils-souverainete-numerique", accept: "text/html" }, signal: AbortSignal.timeout(30_000) });
+  const reponse = await telecharger(url, { headers: enTetes({ accept: "text/html" }), signal: AbortSignal.timeout(30_000) });
   if (!reponse.ok) throw new Error(`Téléchargement impossible (${url}): HTTP ${reponse.status}`);
   return reponse.text();
 }

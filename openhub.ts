@@ -12,6 +12,7 @@ import { MAX_ECHECS_PAR_DEFAUT } from "./enrichir.ts";
 import type { OpenHub } from "./extract.ts";
 import { horodatage } from "./temps.ts";
 import { estDepot, nomLogiciel, pageEnrichissement } from "./logiciel.ts";
+import { enTetes } from "./agent.ts";
 
 const API = "https://www.openhub.net";
 
@@ -101,7 +102,7 @@ export function clientOpenHub(cle: string, telecharger: typeof fetch = fetch): C
   const lire = async (chemin: string, params: Record<string, string>) => {
     const url = new URL(chemin, API);
     url.search = new URLSearchParams({ api_key: cle, ...params }).toString();
-    const reponse = await telecharger(url, { signal: AbortSignal.timeout(30_000) });
+    const reponse = await telecharger(url, { headers: enTetes({ accept: "application/xml" }), signal: AbortSignal.timeout(30_000) });
     if (!reponse.ok) throw new Error(`Open Hub HTTP ${reponse.status}`);
     return reponse.text();
   };

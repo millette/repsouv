@@ -13,6 +13,7 @@ import {
 import type { Usage } from "../prix.ts";
 import type { Outil } from "../extract.ts";
 import type { OutilClasse } from "../classify.ts";
+import { USER_AGENT } from "../agent.ts";
 import { CRITERES } from "./donnees-fictives.ts";
 
 const VOCAB: Tag[] = [
@@ -676,11 +677,13 @@ test("effort de raisonnement: « low » par défaut, OPENAI_REASONING_EFFORT le 
   const vrai = globalThis.fetch;
   const corps = { status: "completed", usage: { input_tokens: 1, output_tokens: 1 }, output: [{ type: "message", content: [{ type: "output_text", text: "{}" }] }] };
   const envois: string[] = [];
-  globalThis.fetch = (async (_url: unknown, init: { body: string }) => (envois.push(init.body), { ok: true, status: 200, json: async () => corps })) as unknown as typeof fetch;
+  const agents: string[] = [];
+  globalThis.fetch = (async (_url: unknown, init: { body: string; headers: Record<string, string> }) => (envois.push(init.body), agents.push(init.headers["user-agent"]!), { ok: true, status: 200, json: async () => corps })) as unknown as typeof fetch;
   try {
     const requete = { nom: "x", schema: {}, instructions: "i", messages: ["m"], maxTokens: 10 };
     await appelerOpenAI("k", "m", requete, undefined, { effort: "low" });
     assert.deepEqual(JSON.parse(envois[0]!).reasoning, { effort: "low" });
+    assert.equal(agents[0], USER_AGENT, "User-Agent du projet, même vers OpenAI");
     await appelerOpenAI("k", "m", requete, undefined, { effort: null });
     assert.equal("reasoning" in JSON.parse(envois[1]!), false);
     await appelerOpenAI("k", "m", requete, undefined, { effort: effortDepuisEnv({}) });

@@ -5,6 +5,7 @@
   "license": "AGPL-3.0-or-later",
   "author": {
     "name": "Robin Millette",
+    "email": "robin@millette.info",
     "url": "https://robin.millette.info/"
   },
   "type": "module",

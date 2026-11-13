@@ -4,6 +4,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import type { OutilClasse } from "../classify.ts";
 import { aCompleterOpenHub, abandonneOpenHub, analyserDepots, analyserProjets, champOpenHub, clientOpenHub, completerOpenHub, concordance, requetesOpenHub, trouverConcordance, type ProjetOpenHub } from "../openhub.ts";
+import { USER_AGENT } from "../agent.ts";
 import { enrichi, outil } from "./donnees-fictives.ts";
 
 const projet = (extra = "") => `<project><id>42</id><name>Jami</name><vanity_name>jami</vanity_name><html_url>https://openhub.net/p/jami</html_url><homepage_url>https://jami.net/</homepage_url>
@@ -138,9 +139,11 @@ test("completerOpenHub: sans concordance, les meilleurs candidats sont journalis
 
 test("clientOpenHub: recherche et projet passent la clé et les paramètres, et lisent le XML; HTTP en erreur refusé", async () => {
   const urls: string[] = [];
-  const telecharger = (async (url: URL) => { urls.push(url.toString()); return { ok: true, status: 200, text: async () => (url.pathname === "/p.xml" ? COLLECTION : url.pathname.endsWith("/enlistments.xml") ? ENLISTMENTS : SEUL) }; }) as unknown as typeof fetch;
+  const agents: string[] = [];
+  const telecharger = (async (url: URL, init: { headers: Record<string, string> }) => { urls.push(url.toString()); agents.push(init.headers["user-agent"]!); return { ok: true, status: 200, text: async () => (url.pathname === "/p.xml" ? COLLECTION : url.pathname.endsWith("/enlistments.xml") ? ENLISTMENTS : SEUL) }; }) as unknown as typeof fetch;
   const c = clientOpenHub("CLE", telecharger);
   assert.equal((await c.rechercher("Jami"))[0]!.nom, "Jami");
+  assert.equal(agents[0], USER_AGENT, "User-Agent du projet");
   assert.match(urls[0]!, /^https:\/\/www\.openhub\.net\/p\.xml\?api_key=CLE&query=Jami&sort=relevance$/);
   assert.equal((await c.projet("jami")).analyse!.lignes_de_code, 412345);
   assert.match(urls[1]!, /^https:\/\/www\.openhub\.net\/p\/jami\.xml\?api_key=CLE$/);

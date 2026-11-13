@@ -8,6 +8,7 @@ import type { AddressInfo } from "node:net";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { test } from "node:test";
+import { USER_AGENT } from "../agent.ts";
 import { dateIso, estUrl, extraire, telechargerRepertoire, travailAPerdre } from "../extract.ts";
 import { ecrireFichier, lireFichier } from "../fichiers.ts";
 
@@ -42,8 +43,10 @@ const PAGE = `<html><body>
 </body></html>`;
 
 /** Sert `reponses` (statut, corps) sur un port local libre pendant `f`, sans toucher au réseau. */
+const agentsRecus: string[] = [];
 async function avecServeur<T>(statut: number, corps: string, f: (url: string) => Promise<T>): Promise<T> {
-  const serveur = createServer((_q, r) => {
+  const serveur = createServer((q, r) => {
+    agentsRecus.push(q.headers["user-agent"] ?? "");
     r.writeHead(statut, { "content-type": "text/html; charset=utf-8" });
     r.end(corps);
   });
@@ -68,8 +71,10 @@ const lancer = (...args: string[]) =>
   });
 const dossierTemporaire = () => mkdtempSync(join(tmpdir(), "extract-"));
 
-test("telechargerRepertoire: télécharge la page et en extrait les outils", async () => {
+test("telechargerRepertoire: télécharge la page (avec le User-Agent du projet) et en extrait les outils", async () => {
+  agentsRecus.length = 0;
   const r = await avecServeur(200, PAGE, (url) => telechargerRepertoire(url));
+  assert.deepEqual(agentsRecus, [USER_AGENT]);
   assert.equal(r.outils.length, 1);
   assert.equal(r.outils[0]!.nom, "X");
   assert.equal(r.modification, "2026-11-05T09:53:00-05:00");

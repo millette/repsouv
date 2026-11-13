@@ -14,6 +14,7 @@ import { nomCategorie, type Categorie } from "./categories.ts";
 import { problemeLicenceSpdx } from "./spdx.ts";
 import { horodatage } from "./temps.ts";
 import { pageEnrichissement } from "./logiciel.ts";
+import { enTetes } from "./agent.ts";
 
 export const MAX_TAGS = 5;
 export const SOURCES = ["libre", "partiel", "source-disponible", "proprietaire"] as const;
@@ -244,7 +245,7 @@ export async function lireContenu(url: string): Promise<Contenu> {
   try {
     r = await fetch(url, {
       signal: AbortSignal.timeout(20_000),
-      headers: { "user-agent": "outils-souverainete-numerique", accept: "text/html" },
+      headers: enTetes({ accept: "text/html" }),
     });
   } catch (e) {
     const cause = (e as { cause?: { message?: string } }).cause?.message ?? (e as Error).message;
@@ -356,7 +357,7 @@ export async function appelerOpenAI(
 ): Promise<unknown> {
   const reponse = await fetch("https://api.openai.com/v1/responses", {
     method: "POST",
-    headers: { authorization: `Bearer ${cle}`, "content-type": "application/json" },
+    headers: enTetes({ authorization: `Bearer ${cle}`, "content-type": "application/json" }),
     signal: AbortSignal.timeout(180_000),
     body: JSON.stringify({
       model: modele,
