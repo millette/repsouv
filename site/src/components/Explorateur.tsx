@@ -15,6 +15,7 @@ import { retenu } from "../lib/selection.ts";
 import { trier } from "../lib/tri.ts";
 import Commandes from "./explorateur/Commandes.tsx";
 import Comparaison from "./explorateur/Comparaison.tsx";
+import Details from "./explorateur/Details.tsx";
 import Resultats from "./explorateur/Resultats.tsx";
 
 interface Props {
@@ -102,6 +103,7 @@ function Explore(props: { donnees: DonneesExplorateur; base: string }) {
       <Commandes tableau={tableau} effacer={() => modifier((e) => ({ ...etatParDefaut(), tri: e.tri, sens: e.sens, vue: e.vue, comparer: e.comparer }))} />
       <Comparaison tableau={tableau} avis={avis()} />
       <Resultats tableau={tableau} resultats={resultats()} effacer={() => modifier((e) => ({ ...etatParDefaut(), tri: e.tri, sens: e.sens, vue: e.vue, comparer: e.comparer }))} />
+      <Details tableau={tableau} />
     </div>
   );
 }

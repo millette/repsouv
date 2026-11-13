@@ -7,7 +7,7 @@ import { ecrireEtat, etatParDefaut, filtresActifs, lireEtat } from "../src/lib/e
 import { connues, etat } from "./explorateur-fixtures.ts";
 
 test("l'état par défaut: aucun filtre, tri par catégorie croissant, vue en cartes, rien à comparer", () => {
-  assert.deepEqual(etatParDefaut(), { categories: [], tags: [], statuts: [], pays: [], sources: [], q: "", scoreMin: 0, verdicts: {}, enrichi: "", tri: "categorie", sens: "asc", vue: "cartes", comparer: [] });
+  assert.deepEqual(etatParDefaut(), { categories: [], tags: [], statuts: [], pays: [], sources: [], q: "", scoreMin: 0, verdicts: {}, enrichi: "", tri: "categorie", sens: "asc", vue: "cartes", comparer: [], fiche: "" });
 });
 
 test("les valeurs connues viennent du fichier de données", () => {
@@ -22,7 +22,7 @@ test("lireEtat lit chaque paramètre", () => {
   const lu = lireEtat("categorie=automatisation&tag=chiffrement&statut=libre&statut=partiel&pays=DE&source=facil&q=nuage&score=2&donnees=confirme&dependance=indetermine&enrichi=oui&tri=score&sens=desc&vue=tableau&comparer=automate&comparer=nuage-complet", connues);
   assert.deepEqual(lu, {
     categories: ["automatisation"], tags: ["chiffrement"], statuts: ["libre", "partiel"], pays: ["DE"], sources: ["facil"], q: "nuage", scoreMin: 2,
-    verdicts: { donnees: "confirme", dependance: "indetermine" }, enrichi: "oui", tri: "score", sens: "desc", vue: "tableau", comparer: ["automate", "nuage-complet"],
+    verdicts: { donnees: "confirme", dependance: "indetermine" }, enrichi: "oui", tri: "score", sens: "desc", vue: "tableau", comparer: ["automate", "nuage-complet"], fiche: "",
   });
 });
 
@@ -49,6 +49,15 @@ test("ecrireEtat conserve les paramètres qui ne sont pas les siens", () => {
 test("lire ce qu'on a écrit rend le même état", () => {
   const e = etat({ categories: ["bureautique"], pays: ["DE", "EU"], q: "élo d", scoreMin: 3, verdicts: { controle: "infirme" }, enrichi: "oui", tri: "nom", sens: "desc", vue: "tableau", comparer: ["automate", "mystere", "nuage-complet"] });
   assert.deepEqual(lireEtat(ecrireEtat(e, connues), connues), e);
+});
+
+test("fiche: l'outil dont la boîte de détails est ouverte, écrit en dernier; un outil inconnu est ignoré", () => {
+  assert.equal(lireEtat("fiche=automate", connues).fiche, "automate");
+  assert.equal(lireEtat("fiche=inconnu", connues).fiche, "");
+  assert.equal(ecrireEtat(etat({ fiche: "automate", comparer: ["mystere"], tri: "nom" }), connues), "tri=nom&comparer=mystere&fiche=automate");
+  assert.equal(ecrireEtat(etat({ fiche: "" }), connues), "");
+  assert.deepEqual(lireEtat(ecrireEtat(etat({ fiche: "mystere", vue: "tableau" }), connues), connues), etat({ fiche: "mystere", vue: "tableau" }));
+  assert.equal(filtresActifs(etat({ fiche: "automate" })), false);
 });
 
 test("filtresActifs: le tri, la vue et la comparaison ne sont pas des filtres", () => {

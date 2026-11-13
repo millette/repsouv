@@ -47,6 +47,9 @@ export default function Comparaison(props: Props) {
                       <button class="btn btn-xs" type="button" onClick={() => t().comparer(o.id)}>
                         Retirer<span class="sr-seul"> {o.nom}</span>
                       </button>
+                      <button class="btn btn-xs" type="button" data-details-de={o.id} onClick={() => t().modifier((e) => ({ ...e, fiche: o.id }))}>
+                        Détails<span class="sr-seul"> de {o.nom}</span>
+                      </button>
                     </th>
                   )}
                 </For>

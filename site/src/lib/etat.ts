@@ -48,6 +48,8 @@ export interface Etat {
   vue: Vue;
   /** Identifiants des outils à comparer, dans l'ordre du choix. */
   comparer: string[];
+  /** Identifiant de l'outil dont la boîte « Détails » est ouverte; vide si elle est fermée. */
+  fiche: string;
 }
 
 /** Valeurs que les données connaissent, dans leur ordre: une valeur inconnue dans une adresse est ignorée. */
@@ -74,7 +76,7 @@ export function connuesDe(donnees: DonneesExplorateur): EtatConnu {
 }
 
 export function etatParDefaut(): Etat {
-  return { categories: [], tags: [], statuts: [], pays: [], sources: [], q: "", scoreMin: 0, verdicts: {}, enrichi: "", tri: "categorie", sens: "asc", vue: "cartes", comparer: [] };
+  return { categories: [], tags: [], statuts: [], pays: [], sources: [], q: "", scoreMin: 0, verdicts: {}, enrichi: "", tri: "categorie", sens: "asc", vue: "cartes", comparer: [], fiche: "" };
 }
 
 const parmi = <T extends string>(valeurs: readonly T[], valeur: string | null, defaut: T): T => (valeurs.includes(valeur as T) ? (valeur as T) : defaut);
@@ -100,6 +102,8 @@ export function lireEtat(parametres: string | URLSearchParams, connues: EtatConn
   etat.vue = parmi(VUES, p.get("vue"), "cartes");
   const outils = new Set(connues.outils);
   etat.comparer = [...new Set(p.getAll("comparer"))].filter((id) => outils.has(id)).slice(0, MAX_COMPARES);
+  const fiche = p.get("fiche");
+  etat.fiche = fiche !== null && outils.has(fiche) ? fiche : "";
   return etat;
 }
 
@@ -108,7 +112,7 @@ export function lireEtat(parametres: string | URLSearchParams, connues: EtatConn
  * état donne toujours la même adresse. Les paramètres de `actuels` qui ne sont pas ceux de l'explorateur sont conservés devant.
  */
 export function ecrireEtat(etat: Etat, connues: EtatConnu, actuels: string | URLSearchParams = ""): string {
-  const siens = new Set<string>([...MULTIPLES.map(([, nom]) => nom), "q", "score", ...connues.criteres, "enrichi", "tri", "sens", "vue", "comparer"]);
+  const siens = new Set<string>([...MULTIPLES.map(([, nom]) => nom), "q", "score", ...connues.criteres, "enrichi", "tri", "sens", "vue", "comparer", "fiche"]);
   const p = new URLSearchParams();
   for (const [cle, valeur] of new URLSearchParams(actuels)) if (!siens.has(cle)) p.append(cle, valeur);
   for (const [champ, nom] of MULTIPLES) {
@@ -127,6 +131,7 @@ export function ecrireEtat(etat: Etat, connues: EtatConnu, actuels: string | URL
   if (etat.sens !== "asc") p.append("sens", etat.sens);
   if (etat.vue !== "cartes") p.append("vue", etat.vue);
   for (const id of etat.comparer) p.append("comparer", id);
+  if (etat.fiche) p.append("fiche", etat.fiche);
   return p.toString();
 }
 

@@ -54,3 +54,12 @@ test("la page « Statistiques » ne déborde pas, vues montées et tableaux ouve
   }
   expect(await deborde(page)).toBeLessThanOrEqual(0);
 });
+
+test("la boîte « Détails » de l'explorateur ne fait pas déborder la page", async ({ page }) => {
+  const outil = donnees.outils.find((o) => o.verdicts && o.licence && o.tags.length > 0)!;
+  await page.goto(`/explorer/?fiche=${outil.id}`);
+  await expect(page.locator("dialog [data-details-contenu]")).toBeVisible();
+  expect(await deborde(page)).toBeLessThanOrEqual(0);
+  const boite = await page.locator("dialog .modal-box").boundingBox();
+  expect(boite!.width).toBeLessThanOrEqual(360);
+});

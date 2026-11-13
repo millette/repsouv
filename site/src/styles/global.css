@@ -570,3 +570,30 @@ blockquote {
   outline-offset: 1px;
   font-weight: 700;
 }
+
+/* Boîte « Détails d'un outil » de l'explorateur (dialog natif, composant « modal » de daisyUI). */
+.details-boite {
+  width: min(56rem, calc(100vw - 2rem));
+  max-width: none;
+}
+.details-entete {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: start;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+}
+.details-entete h2 {
+  margin: 0;
+}
+.details-contenu h2 {
+  font-size: 1.2rem;
+  margin-block: 1.5rem 0.5rem;
+}
+.carte-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  flex-grow: 0;
+}

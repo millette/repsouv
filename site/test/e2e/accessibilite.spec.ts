@@ -25,6 +25,7 @@ const EXPLORATEUR: [string, string][] = [
   ["explorateur avec une comparaison de quatre outils", `/explorer/?${quatre}`],
   ["explorateur sans résultat", "/explorer/?q=zzzzzz"],
 ];
+const detaille = donnees.outils.find((o) => o.verdicts && o.licence && o.tags.length > 0)!.id;
 
 export async function violations(page: Page): Promise<string[]> {
   const resultat = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();
@@ -77,6 +78,11 @@ for (const theme of ["light", "dark"] as const) {
         await f.locator("summary").click();
       }
       await page.locator('figure[data-graphique="categories-statut"]').getByRole("button", { name: "Libre", exact: true }).click();
+      expect(await violations(page)).toEqual([]);
+    });
+    test("aucune violation axe A ou AA: explorateur, boîte « Détails » ouverte", async ({ page }) => {
+      await page.goto(`/explorer/?fiche=${detaille}`);
+      await expect(page.locator("dialog [data-details-contenu]")).toBeVisible();
       expect(await violations(page)).toEqual([]);
     });
     test("aucune violation axe A ou AA: explorateur en erreur de chargement", async ({ page }) => {

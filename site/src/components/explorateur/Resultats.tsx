@@ -58,6 +58,13 @@ export default function Resultats(props: Props) {
     </label>
   );
 
+  /** Ouvre la boîte « Détails » de l'outil, sans quitter la page. */
+  const Details = (c: { outil: OutilExplorateur }) => (
+    <button class="btn btn-xs" type="button" data-details-de={c.outil.id} onClick={() => t().modifier((e) => ({ ...e, fiche: c.outil.id }))}>
+      Détails<span class="sr-seul"> de {c.outil.nom}</span>
+    </button>
+  );
+
   return (
     <section class="resultats" aria-label="Résultats">
       <p class="compteur" data-compteur aria-live="polite">
@@ -102,7 +109,10 @@ export default function Resultats(props: Props) {
                         </Show>
                       </p>
                       <p class="carte-description">{o.description}</p>
-                      <Comparer outil={o} />
+                      <p class="carte-actions">
+                        <Comparer outil={o} />
+                        <Details outil={o} />
+                      </p>
                     </div>
                   </li>
                 )}
@@ -140,6 +150,7 @@ export default function Resultats(props: Props) {
                     <tr data-outil={o.id}>
                       <td>
                         <Comparer outil={o} />
+                        <Details outil={o} />
                       </td>
                       <th scope="row">
                         <a class="link" href={adresseFiche(o.id, t().base)}>
