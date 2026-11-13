@@ -55,7 +55,7 @@ Conséquences:
 
 | Élément | Exigence |
 |---|---|
-| Formulaire | `hidden` dans le HTML servi; révélé par le script. Sans JavaScript, il n'apparaît pas (FR-027) |
+| Formulaire | Rendu par l'île Solid `Filtres.tsx`, `hidden` dans le HTML servi; révélé après l'hydratation. Sans JavaScript, il n'apparaît pas (FR-027) |
 | Groupes | Trois `<fieldset>` avec `<legend>`: « Catégorie », « Tag », « Statut du code source »; une case à cocher avec `<label>` par valeur |
 | Recherche | Un champ de type recherche avec `<label>` « Chercher un outil par son nom » |
 | Compteur | « N outils affichés sur M », dans une région `aria-live="polite"`, mis à jour à chaque changement (FR-015) |

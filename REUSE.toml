@@ -57,3 +57,9 @@ SPDX-License-Identifier = "MIT"
 path = [".claude/skills/speckit-*/**", ".specify/**"]
 SPDX-FileCopyrightText = "2026 GitHub, Inc. <https://github.com/github/spec-kit>"
 SPDX-License-Identifier = "MIT"
+
+# Skill solidjs: copie de projet du skill personnel de l'auteur, adaptée aux conventions du dépôt (nub, îles Astro statiques).
+[[annotations]]
+path = [".claude/skills/solidjs/**"]
+SPDX-FileCopyrightText = "2026 Robin Millette <https://robin.millette.info/>"
+SPDX-License-Identifier = "AGPL-3.0-or-later"

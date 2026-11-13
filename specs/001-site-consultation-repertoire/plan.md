@@ -14,17 +14,19 @@ par nom, et la provenance de chaque champ.
 
 Approche: un projet Astro en génération statique dans `site/`, avec son propre `package.json` géré
 par nub. Au build, il lit les cinq fichiers JSON de la racine tels quels, les valide au minimum et
-produit `site/dist/`. Les pages sont du HTML complet, lisible sans JavaScript; un seul script, sans
-cadriciel, ajoute les filtres, la recherche et leur état dans l'adresse. Rien ne change à la
+produit `site/dist/`. Les pages sont du HTML complet, lisible sans JavaScript; une seule île, sans
+cadriciel d'application, ajoute les filtres, la recherche et leur état dans l'adresse: c'est une
+île SolidJS, seule couche d'interactivité du site. Rien ne change à la
 racine, sauf trois fichiers de configuration (`tsconfig.json`, `REUSE.toml`, documentation).
 
 ## Technical Context
 
 **Language/Version**: TypeScript, exécuté par Node.js 26 (`>=26 <27`, comme la racine)
 
-**Primary Dependencies**: Astro 7 (sortie statique), Tailwind CSS 4 avec `@tailwindcss/vite`,
-daisyUI 5, `marked` 18 (rendu de `description_longue`). Toutes dans `site/package.json`; aucune
-n'entre dans le `package.json` de la racine.
+**Primary Dependencies**: Astro 7 (sortie statique), SolidJS 1.9 par `@astrojs/solid-js` (île des
+filtres), daisyUI 5 importé directement en CSS (sans Tailwind ni classes utilitaires), `marked` 18
+(rendu de `description_longue`). Toutes dans `site/package.json`; aucune n'entre dans le
+`package.json` de la racine.
 
 **Storage**: aucun. Lecture seule des fichiers `outils.json`, `categories.json`, `criteres.json`,
 `tags.json` et `sources.json` de la racine, au moment du build.
@@ -58,7 +60,7 @@ fiche par outil), plus une page 404.
 | II. Provenance et honnêteté | Conforme | Chaque champ affiché porte sa provenance (source, heuristique du dépôt, IA, Open Hub), fixée dans une table unique ([data-model.md](data-model.md)). Les champs d'IA portent « à vérifier »; les verdicts s'affichent avec leur citation, reproduite telle quelle. Un test du HTML produit le vérifie sur toutes les fiches. |
 | III. Licences REUSE | Conforme | Code du site en `AGPL-3.0-or-later` (en-têtes SPDX dans les `.ts`, `.astro`, `.css`, `.mjs`; annotation `site/**` dans `REUSE.toml` pour `package.json`, `nub.lock`, `tsconfig.json`). Chaque page porte l'attribution CC BY-SA 4.0 à Praxis et le crédit des autres sources. `nub run licences` doit passer. |
 | IV. Les coûts sont explicites | Conforme | Le build ne fait aucun appel réseau ni API payante: il ne lit que des fichiers locaux. Rien à chiffrer. |
-| V. Tests d'abord, simplicité | Conforme | Test rouge puis code pour chaque fonction de `site/src/lib/`. Tests sans données (fixtures) séparés des tests du site bâti sur les vraies données. Un seul script client, sans cadriciel d'interface. Dépendances d'exécution justifiées par écrit dans [research.md](research.md). |
+| V. Tests d'abord, simplicité | Conforme | Test rouge puis code pour chaque fonction de `site/src/lib/`. Tests sans données (fixtures) séparés des tests du site bâti sur les vraies données. Une seule île Solid, limitée au formulaire de filtres; le reste est du balisage statique. Dépendances d'exécution justifiées par écrit dans [research.md](research.md). |
 | VI. Tout en français | Conforme | Interface, artefacts Spec Kit, identifiants de code, messages de commit et documentation en français; `lang="fr-CA"` sur chaque page. |
 | Contraintes techniques | Conforme | Node.js 26, nub pour installer, bâtir et tester (`nub install`, `nub run build`, `nub run test`); jamais npm, npx, tsc ni ts-node. Les scripts d'utilisation de la racine (`node update.ts`, `node sommaire.ts`) ne dépendent pas du site. |
 | Flux de travail | Conforme | Travail sur la branche `001-site-consultation-repertoire`; `nub run test`, `nub run typecheck` et `nub run licences` à la racine avant chaque commit, plus `nub run test` dans `site/`; contenu durable reporté dans `implementation.md` et `historique.md` à la fin, puis `specs/` supprimé. |
@@ -95,7 +97,7 @@ specs/001-site-consultation-repertoire/
 site/
 ├── package.json             # Dépendances et scripts du site (build, dev, test, test:e2e, check)
 ├── nub.lock
-├── astro.config.mjs         # Sortie statique, adresse et chemin de base par variables d'environnement
+├── astro.config.mjs         # Sortie statique, intégration Solid, adresse et chemin de base par variables d'environnement
 ├── tsconfig.json
 ├── playwright.config.ts
 ├── .gitignore               # dist/, .astro/, résultats de tests
@@ -115,7 +117,7 @@ site/
 │   │   ├── CarteOutil.astro
 │   │   ├── Criteres.astro
 │   │   ├── OpenHub.astro
-│   │   ├── Filtres.astro
+│   │   ├── Filtres.tsx      # Seule île Solid: formulaire, compteur, état dans l'adresse
 │   │   └── Attribution.astro
 │   ├── layouts/
 │   │   └── Page.astro       # Langue, titre, lien d'évitement, régions nommées, pied d'attribution
@@ -123,10 +125,11 @@ site/
 │   │   ├── index.astro      # Accueil: catégories, outils, filtres
 │   │   ├── outils/[id].astro  # Une fiche par outil actif
 │   │   └── 404.astro
-│   ├── scripts/
-│   │   └── filtres.ts       # Seul script client: branche filtres.ts de lib sur la page
 │   └── styles/
-│       └── global.css       # Tailwind, daisyUI, thème
+│       └── global.css       # daisyUI importé en CSS, thème, mise en page propre au site
+├── postcss.config.mjs       # Charge le greffon ci-dessous
+├── postcss/
+│   └── sans-variantes.mjs   # Retire du CSS les variantes réactives de daisyUI (sm:, md:, lg:, xl:)
 └── test/
     ├── *.test.ts            # Unitaires, sur fixtures: lib/
     ├── fixtures/            # Petits fichiers de données fictifs, dont des cas limites
@@ -142,7 +145,8 @@ README.md, implementation.md, historique.md   # À la fin de la fonctionnalité
 **Structure Decision**: un sous-projet autonome `site/`, avec ses dépendances, son verrou et ses
 tests, pour que les scripts de la racine restent utilisables avec Node.js seul et sans rien
 installer de plus. La logique vit dans `site/src/lib/` en fonctions pures, que les composants
-Astro, le script client et les tests appellent; les composants ne font que présenter.
+Astro, l'île Solid et les tests appellent; les composants ne font que présenter. Le skill `solidjs`
+du dépôt fixe les règles de l'île et des styles.
 
 ## Complexity Tracking
 

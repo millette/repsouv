@@ -17,13 +17,21 @@ Décisions techniques prises pour le plan. Versions relevées le 2026-11-13 avec
 
 ## 2. Styles et composants
 
-- **Décision**: Tailwind CSS 4 (4.3.x) par `@tailwindcss/vite`, et daisyUI 5 (5.8.x) en greffon
-  CSS (`@plugin "daisyui"`).
-- **Pourquoi**: demandé. daisyUI fournit des composants en classes CSS, sans JavaScript, ce qui
-  convient à un site lisible sans script. Le skill `daisyui` du dépôt en documente l'installation
-  et les composants.
-- **Solutions écartées**: CSS écrit à la main (pas de dépendance, mais plus long et moins cohérent
+- **Décision**: daisyUI 5 (5.8.x) importé directement comme feuille de style
+  (`daisyui/daisyui.css`, le fichier que le paquet publie pour un usage sans Tailwind), sans
+  Tailwind ni classe utilitaire dans le balisage. La mise en page et le comportement réactif sont
+  écrits dans `site/src/styles/global.css` (requêtes média ou de conteneur). Un greffon PostCSS du
+  site (`site/postcss/sans-variantes.mjs`) retire du CSS produit les variantes réactives de daisyUI
+  (préfixes `sm:`, `md:`, `lg:`, `xl:`), et un test unitaire échoue si le balisage en emploie une.
+- **Pourquoi**: règle du skill `solidjs` du dépôt, confirmée le 2026-11-13 et préférée à la note
+  initiale « daisyUI sur Tailwind ». daisyUI fournit des composants en classes CSS, sans
+  JavaScript, ce qui convient à un site lisible sans script; sans Tailwind, il n'y a ni étape de
+  génération de classes ni dépendance de plus.
+- **Solutions écartées**: Tailwind CSS 4 avec daisyUI en greffon (classes utilitaires dans le
+  balisage, contraire à la règle); CSS entièrement écrit à la main (plus long et moins cohérent
   pour les états de focus et les thèmes).
+- **À vérifier à l'implémentation**: le nom exact du fichier CSS dans le paquet installé et la
+  façon dont Astro 7 charge `postcss.config.mjs`.
 - **Vigilance**: contraste des couleurs du thème (WCAG AA) et focus visible, contrôlés par axe;
   l'information ne passe jamais par la couleur seule (FR-017).
 
@@ -85,23 +93,39 @@ Décisions techniques prises pour le plan. Versions relevées le 2026-11-13 avec
 
 ## 7. Filtres, recherche et état dans l'adresse
 
-- **Décision**: la liste complète est dans le HTML. Un seul script client (`src/scripts/filtres.ts`,
-  TypeScript sans cadriciel, regroupé par Astro) révèle le formulaire de filtres, masque les
-  outils et les catégories qui ne répondent pas aux choix, met à jour le compteur dans une région
-  `aria-live`, et synchronise l'adresse. Chaque carte d'outil porte ses valeurs en attributs
-  `data-*` (catégorie, tags, statut, nom normalisé). La logique (état, lecture et écriture de
-  l'adresse, sélection) est dans `site/src/lib/filtres.ts`, sans accès au DOM.
+- **Décision**: la liste complète est du balisage statique dans `index.astro`. Une seule île
+  SolidJS (`src/components/Filtres.tsx`, par `@astrojs/solid-js`, hydratée avec `client:load`
+  parce qu'elle est en haut de page) porte le formulaire de filtres, le compteur dans une région
+  `aria-live` et le message « aucun résultat ». Son état est un store Solid; un effet applique la
+  sélection aux cartes statiques par leurs attributs `data-*` (catégorie, tags, statut, nom
+  normalisé) en posant l'attribut `hidden` sur les cartes et sur les sections de catégorie vides,
+  et synchronise l'adresse. L'île reçoit en propriétés de la configuration seulement (valeurs et
+  libellés des filtres, total, chemin de base), jamais les données des outils. La logique (état,
+  lecture et écriture de l'adresse, sélection) est dans `site/src/lib/filtres.ts`, sans Solid, sans
+  Astro et sans accès au DOM.
+- **Règles du skill `solidjs` appliquées**: SolidJS est la seule couche d'interactivité; le
+  balisage statique reste dans les `.astro` et seule la partie interactive est une île; les
+  propriétés ne sont pas déstructurées; `<For>` et `<Show>` plutôt que `.map` et les ternaires;
+  accès au DOM dans `onMount`; contrôles de formulaire natifs stylés par daisyUI.
 - **Paramètres**: `categorie`, `tag` et `statut` répétables, et `q` pour la recherche (voir
   [contracts/filtres.md](contracts/filtres.md)). Un changement de case pousse une entrée
   d'historique (`history.pushState`); la frappe dans la recherche remplace l'entrée courante
   (`replaceState`), pour que le bouton précédent ne recule pas d'une lettre à la fois.
-- **Sans JavaScript**: le formulaire porte l'attribut `hidden` dans le HTML, retiré par le script;
-  il ne s'affiche donc pas comme utilisable (FR-027), et la liste complète reste lisible.
-- **Pourquoi**: 154 outils tiennent dans une page; filtrer le DOM existant ne demande ni index, ni
-  requête, ni cadriciel. La logique pure se teste sans navigateur.
-- **Solutions écartées**: un îlot React ou Svelte (du JavaScript et une dépendance pour quelques
-  cases à cocher); un moteur de recherche statique comme Pagefind (fait pour le plein texte sur de
-  gros sites); une page par combinaison de filtres (explosion du nombre de pages).
+- **Sans JavaScript**: l'île est aussi rendue au build, avec le formulaire portant l'attribut
+  `hidden`; un signal mis à vrai dans `onMount` le révèle après l'hydratation. Sans JavaScript, il
+  ne s'affiche donc pas comme utilisable (FR-027), et la liste complète reste lisible.
+- **Pourquoi**: règle du skill `solidjs`, confirmée le 2026-11-13. 154 outils tiennent dans une
+  page; filtrer le balisage existant ne demande ni index ni requête, et garde l'île petite. La
+  logique pure se teste sans navigateur.
+- **Justification écrite des dépendances d'exécution** (principe V): `solid-js` et
+  `@astrojs/solid-js` sont la couche d'interactivité retenue pour le dépôt; elles ne servent que
+  l'île des filtres, et le site reste lisible sans elles.
+- **Solutions écartées**: un script TypeScript sans cadriciel (première version de ce plan,
+  écartée parce que le dépôt réserve l'interactivité à SolidJS); une île qui rendrait toute la
+  liste (les données des 154 outils seraient sérialisées deux fois dans la page, et du balisage
+  statique passerait dans l'île); un moteur de recherche statique comme Pagefind (fait pour le
+  plein texte sur de gros sites); une page par combinaison de filtres (explosion du nombre de
+  pages).
 
 ## 8. Provenance des champs
 
