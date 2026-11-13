@@ -72,7 +72,7 @@ for (const theme of ["light", "dark"] as const) {
     test("aucune violation axe A ou AA: page « Statistiques », vues montées et tableaux ouverts", async ({ page }) => {
       await page.goto("/statistiques/");
       for (const f of await page.locator("figure[data-graphique]").all()) {
-        await f.scrollIntoViewIfNeeded();
+        await f.locator(".graphique-interactif").scrollIntoViewIfNeeded();
         await expect(f.locator("[data-vue-prete]")).toBeVisible();
         await f.locator("summary").click();
       }
@@ -189,7 +189,7 @@ test("explorateur au clavier seul: chercher, filtrer, trier, choisir deux outils
 test("statistiques au clavier seul: atteindre un graphique, lire une valeur aux flèches, mettre une série en évidence", async ({ page }) => {
   await page.goto("/statistiques/");
   const f = page.locator('figure[data-graphique="categories-statut"]');
-  await f.scrollIntoViewIfNeeded();
+  await f.locator(".graphique-interactif").scrollIntoViewIfNeeded();
   await expect(f.locator("[data-vue-prete]")).toBeVisible();
   const parcours = f.locator(".graphique-parcours");
   await parcours.focus();

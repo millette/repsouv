@@ -30,6 +30,8 @@ const { graphique, tableau, provenance, baseChiffres, dimensions, base } = Astro
     {provenance.note} <span class="graphique-base">{baseChiffres}</span>
   </p>
   <div class="graphique-zone">
+    {/* L'île précède les images: elle est observée dès que le haut du graphique entre dans la fenêtre, même s'il est plus haut qu'elle. */}
+    <GraphiqueInteractif client:visible id={graphique.id} titre={graphique.titre} description={graphique.description} series={seriesDe(graphique.spec)?.noms ?? []} base={base} />
     {THEMES_GRAPHIQUES.map((theme) => (
       <img
         class={`graphique-image graphique-${theme}`}
@@ -41,7 +43,6 @@ const { graphique, tableau, provenance, baseChiffres, dimensions, base } = Astro
         decoding="async"
       />
     ))}
-    <GraphiqueInteractif client:visible id={graphique.id} titre={graphique.titre} description={graphique.description} series={seriesDe(graphique.spec)?.noms ?? []} base={base} />
   </div>
   <details class="graphique-chiffres">
     <summary>Voir les chiffres</summary>

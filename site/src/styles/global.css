@@ -532,6 +532,8 @@ blockquote {
 }
 .graphique-interactif {
   position: relative;
+  /* Jamais vide: une île sans hauteur, au bord de la fenêtre, n'est pas tenue pour visible et ne se monterait pas. */
+  min-height: 1px;
 }
 .graphique-parcours {
   display: inline-block;

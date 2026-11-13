@@ -10,7 +10,7 @@ const figure = (page: Page, id: string) => page.locator(`figure[data-graphique="
 /** Fait défiler jusqu'au graphique et attend que sa vue interactive ait remplacé l'image. */
 async function vue(page: Page, id: string): Promise<Locator> {
   const f = figure(page, id);
-  await f.scrollIntoViewIfNeeded();
+  await f.locator(".graphique-interactif").scrollIntoViewIfNeeded();
   await expect(f.locator("[data-vue-prete]")).toBeVisible();
   return f;
 }
@@ -68,6 +68,16 @@ test.describe("avec JavaScript", () => {
     await expect(f.locator("[data-vue] svg")).toBeVisible();
     await expect(f.locator("[data-vue] svg")).toHaveAttribute("role", "img");
     expect((await f.locator("[data-vue] svg").getAttribute("aria-label"))!.length).toBeGreaterThan(20);
+  });
+
+  test("un graphique plus haut que la fenêtre devient interactif dès que son haut est visible", async ({ page }) => {
+    // L'île est observée là où le graphique commence: placée après l'image, elle restait hors de la fenêtre
+    // tant qu'on n'avait pas défilé jusqu'au bas d'un grand graphique, qui gardait alors son image.
+    await page.setViewportSize({ width: 1280, height: 500 });
+    await page.goto("/statistiques/");
+    const f = figure(page, "categories-statut");
+    await f.locator(".graphique-zone").evaluate((zone) => zone.scrollIntoView({ block: "start" }));
+    await expect(f.locator("[data-vue-prete]")).toBeVisible();
   });
 
   test("survoler une barre affiche sa valeur exacte dans une infobulle, sans attribut title", async ({ page }) => {
@@ -152,7 +162,7 @@ test.describe("avec JavaScript", () => {
     await page.route("**/graphiques/forges-*.json", (route) => route.fulfill({ status: 500, body: "panne" }));
     await page.goto("/statistiques/");
     const f = figure(page, "forges");
-    await f.scrollIntoViewIfNeeded();
+    await f.locator(".graphique-interactif").scrollIntoViewIfNeeded();
     await vue(page, "tags");
     await expect(f.locator("img.graphique-clair")).toBeVisible();
     await expect(f.locator("[data-vue-prete]")).toHaveCount(0);
