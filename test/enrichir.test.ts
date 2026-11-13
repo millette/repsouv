@@ -419,6 +419,12 @@ test("instance_de: la page lue est le dépôt du logiciel (normalisé), la fiche
   assert.equal("instance_de" in resumePage(outil("A"), null), false);
   assert.match(instructions(VOCAB, CRITERES, false), /instance_de.*service hébergé.*logiciel/);
 });
+test("voir_aussi: la fiche nomme les autres outils du répertoire qui reposent sur le même logiciel, et les instructions disent quoi en faire", () => {
+  const fiche = resumePage(outil("Jasette FACiLe", { voir_aussi: ["Mastodon"] }), null);
+  assert.deepEqual(fiche.voir_aussi, ["Mastodon"]);
+  assert.equal("voir_aussi" in resumePage(outil("A"), null), false);
+  assert.match(instructions(VOCAB, CRITERES, false), /voir_aussi.*même logiciel/);
+});
 test("page: une page normale: enrichi, sans avertissement", async () => {
   const g = unOutilAvecGenerateur();
   const journal: string[] = [];
