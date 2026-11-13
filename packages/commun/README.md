@@ -1,6 +1,6 @@
 # Code commun aux scripts et au site
 
-*Documentation du dépôt : [README](../../README.md) · [Implémentation](../../implementation.md) · [Historique](../../historique.md) · [Sommaire statistique](../../donnees/sommaire.md)*
+*Documentation : [README](../../README.md) · [Implémentation](../../implementation.md) · [Historique](../../historique.md) · [Sommaire statistique](../../donnees/sommaire.md)*
 
 Le paquet `@repsouv/commun` contient ce que les [scripts](../scripts/README.md) et le [site](../site/README.md) partagent, pour qu'une même règle ne soit écrite qu'une fois : les types des données, quelques identifiants et prédicats, le calcul des statistiques et la construction des graphiques. Ce sont des modules purs : ni disque, ni réseau, ni dépendance d'exécution. Le paquet n'importe rien des deux autres, qui l'importent par chemin relatif (`../commun/modele.ts`).
 

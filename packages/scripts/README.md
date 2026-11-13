@@ -1,6 +1,6 @@
 # Scripts du répertoire
 
-*Documentation du dépôt : [README](../../README.md) · [Implémentation](../../implementation.md) · [Historique](../../historique.md) · [Sommaire statistique](../../donnees/sommaire.md)*
+*Documentation : [README](../../README.md) · [Implémentation](../../implementation.md) · [Historique](../../historique.md) · [Sommaire statistique](../../donnees/sommaire.md)*
 
 Le paquet `@repsouv/scripts` produit et maintient les fichiers de `donnees/` : il suit le répertoire en ligne, importe les autres sources, enrichit les outils par IA, vérifie leurs critères, génère le sommaire, ses graphiques et les schémas JSON. Les scripts sont en TypeScript, que Node.js 26 exécute tel quel. Ce fichier donne la vue d'ensemble ; le détail de chaque script et de chaque module est dans [implementation.md](../../implementation.md), et la marche à suivre dans le [README](../../README.md#démarrage-rapide).
 

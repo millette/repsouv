@@ -1,6 +1,6 @@
 # Site de consultation du répertoire
 
-*Documentation du dépôt : [README](../../README.md) · [Implémentation](../../implementation.md) · [Historique](../../historique.md) · [Sommaire statistique](../../donnees/sommaire.md)*
+*Documentation : [README](../../README.md) · [Implémentation](../../implementation.md) · [Historique](../../historique.md) · [Sommaire statistique](../../donnees/sommaire.md)*
 
 Un site statique, en lecture seule, pour consulter le répertoire d'outils favorisant la souveraineté numérique : un accueil qui présente le projet (`/`), la liste des outils par catégorie, à trier, filtrer et comparer (`/explorer/`), une fiche par outil (`/outils/<id>/`) et une page de statistiques (`/statistiques/`). Il est en ligne à <https://millette.github.io/repsouv/>. Il lit les fichiers JSON de `donnees/`, à la racine du dépôt, tels quels, au moment du build, et ne les modifie jamais. Sa conception est décrite dans [implementation.md](../../implementation.md#site-de-consultation-packagessite).
 
