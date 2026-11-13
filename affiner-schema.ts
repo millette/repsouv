@@ -5,6 +5,7 @@
 //   - `score` est un entier de 0 à 3, `echecs_enrichissement`, `echecs_confirmation` et `echecs_openhub` des entiers d'au moins 1, `tags` compte de 1 à 5 identifiants distincts;
 //   - les dates sont des horodatages ISO 8601 avec décalage (même motif que fichiers.ts);
 //   - les URL (lien, url, pdc, donnees, alternative_a) sont en http(s), les courriels (soumis_par.email) ont la forme usuelle;
+//   - le pays (outils[].pays) est un code de deux lettres majuscules;
 //   - les identifiants (id, categorie et source_repertoire_id des outils) sont des slugs; outils[].categorie renvoie à categories[].id de categories.json
 //     (relation entre fichiers, que JSON Schema ne peut exprimer qu'en commentaire; le test schemas.test.ts la vérifie).
 // Les règles s'appliquent par nom de propriété. Les règles de croisement (licence SPDX, tags présents dans
@@ -17,6 +18,8 @@ export const SLUG = "^[a-z0-9]+(-[a-z0-9]+)*$";
 export const URL_HTTP = "^https?://\\S+$";
 /** Adresse de courriel (addr-spec usuel de la RFC 5322), même motif que sources.ts. */
 export const COURRIEL = "^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?(\\.[A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?)+$";
+/** Pays (outils[].pays): deux lettres majuscules (ISO 3166-1 alpha-2, « EU », « UK »). */
+export const PAYS = "^[A-Z]{2}$";
 const CHAMPS_URL = new Set(["lien", "url", "pdc"]);
 
 type Noeud = Record<string, unknown>;
@@ -30,6 +33,7 @@ function regle(nom: string, schema: Noeud, freres: Set<string>): Noeud {
   if (nom === "source_repertoire_id" && schema.type === "string") return { pattern: SLUG, $comment: "identifiant d'une source: sources[].id de sources.json" };
   if ((CHAMPS_URL.has(nom) || (nom === "donnees" && freres.has("extracteur"))) && schema.type === "string") return { pattern: URL_HTTP };
   if (nom === "email" && schema.type === "string") return { pattern: COURRIEL };
+  if (nom === "pays" && schema.type === "string") return { pattern: PAYS, $comment: "code ISO 3166-1 alpha-2 de l'éditeur, ou EU, tel que la source le donne" };
   if (nom === "echecs_enrichissement" || nom === "echecs_confirmation" || nom === "echecs_openhub") return { type: "integer", minimum: 1 };
   if (CHAMPS_HORODATAGE.has(nom) && schema.type === "string") return { pattern: HORODATAGE };
   const elements = schema.items;

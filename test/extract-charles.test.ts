@@ -88,6 +88,7 @@ test("extraireCharles: un outil par alternative avec catégorie (table, exceptio
   assert.equal(qwant.confiance, "indéterminée");
   assert.equal(qwant.changement, null);
   assert.equal(qwant.derniere_modification, "");
+  assert.equal(qwant.pays, "FR", "le pays de la source");
   const nextcloud = outils[1]!;
   assert.deepEqual(nextcloud.alternative_a, ["https://dropbox.com/", "https://drive.google.com/", "https://photos.google.com/"]);
   assert.match(nextcloud.description, /d'origine allemande, gratuite avec des options payantes\. Caractéristiques : auto-hébergeable, open source, hébergé dans l'Union européenne\. Proposée en remplacement de Dropbox, Google Drive et Google Photos\./);

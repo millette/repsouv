@@ -117,6 +117,7 @@ export function instructions(criteres: Critere[] = []): string {
   }).join("\n");
   return `Tu vérifies, pour un outil numérique, si chacun des trois critères de souveraineté numérique est satisfait, d'après les seuls textes fournis (description du répertoire, titre, méta-description et extrait de la page de l'outil).
 Quand « instance_de » est présent, l'outil est un service hébergé par un tiers, instance du logiciel libre nommé, et la page fournie (« page_lue ») est celle de ce logiciel: juge le service d'après ce que les textes disent du logiciel et de son hébergement.
+Quand « pays » est présent, c'est le pays de l'éditeur selon la source du répertoire (code ISO, ou « EU »): une affirmation à confronter aux textes, pas une preuve.
 
 Les trois critères:
 ${definitions}
@@ -141,6 +142,7 @@ export function requeteOutil(outil: Outil, contenu: Contenu, criteres: Critere[]
       categorie: nomCategorie(categories, outil.categorie),
       lien: outil.lien,
       ...(outil.instance_de && { instance_de: outil.instance_de, page_lue: pageEnrichissement(outil) }),
+      ...(outil.pays && { pays: outil.pays }),
       description: outil.description,
       page: { titre: contenu.titre, meta_description: contenu.meta_description, extrait: contenu.extrait },
     }),

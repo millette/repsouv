@@ -2,7 +2,7 @@
   "meta": {
     "data_license": "CC-BY-SA-4.0",
     "created_at": "2026-11-12T12:35:52-05:00",
-    "updated_at": "2026-11-13T09:44:12-05:00"
+    "updated_at": "2026-11-13T09:52:56-05:00"
   },
   "outils": [
     {
@@ -4672,6 +4672,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "FR",
       "alternative_a": [
         "https://google.com/"
       ],
@@ -4688,6 +4689,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "DE",
       "alternative_a": [
         "https://google.com/"
       ],
@@ -4704,6 +4706,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "CH",
       "alternative_a": [
         "https://dropbox.com/",
         "https://onedrive.live.com/",
@@ -4724,6 +4727,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "CH",
       "alternative_a": [
         "https://dropbox.com/",
         "https://drive.google.com/"
@@ -4741,6 +4745,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "EU",
       "alternative_a": [
         "https://instagram.com/"
       ],
@@ -4759,6 +4764,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "DE",
       "alternative_a": [
         "https://linkedin.com/"
       ],
@@ -4775,6 +4781,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "CH",
       "alternative_a": [
         "https://notion.so/",
         "https://keep.google.com/",
@@ -4797,6 +4804,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "UK",
       "alternative_a": [
         "https://slack.com/"
       ],
@@ -4815,6 +4823,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "NO",
       "alternative_a": [
         "https://zoom.us/",
         "https://meet.google.com/"
@@ -4832,6 +4841,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "FR",
       "alternative_a": [
         "https://teams.microsoft.com/",
         "https://zoom.us/"
@@ -4849,6 +4859,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "FR",
       "alternative_a": [
         "https://amazon.com/"
       ],
@@ -4865,6 +4876,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "FR",
       "alternative_a": [
         "https://amazon.com/"
       ],
@@ -4881,6 +4893,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "FR",
       "alternative_a": [
         "https://amazon.com/"
       ],
@@ -4897,6 +4910,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "NL",
       "alternative_a": [
         "https://github.com/"
       ],
@@ -4916,6 +4930,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "DE",
       "alternative_a": [
         "https://github.com/"
       ],
@@ -4932,6 +4947,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "FR",
       "alternative_a": [
         "https://aws.amazon.com/",
         "https://cloud.google.com/"
@@ -4949,6 +4965,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "FR",
       "alternative_a": [
         "https://aws.amazon.com/",
         "https://cloud.google.com/"
@@ -4966,6 +4983,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "DE",
       "alternative_a": [
         "https://aws.amazon.com/"
       ],
@@ -4982,6 +5000,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "EE",
       "criteres": [],
       "confiance": "indéterminée"
     },
@@ -4995,6 +5014,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "FR",
       "alternative_a": [
         "https://chat.openai.com/",
         "https://claude.ai/"
@@ -5012,6 +5032,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "DE",
       "alternative_a": [
         "https://chat.openai.com/",
         "https://claude.ai/"
@@ -5029,6 +5050,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "CH",
       "alternative_a": [
         "https://mail.google.com/",
         "https://workspace.google.com/"
@@ -5046,6 +5068,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "CH",
       "alternative_a": [
         "https://office.com/",
         "https://contacts.google.com/"
@@ -5063,6 +5086,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "NO",
       "alternative_a": [
         "https://chrome.google.com/"
       ],
@@ -5079,6 +5103,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "FR",
       "alternative_a": [
         "https://maps.google.com/"
       ],
@@ -5095,6 +5120,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "FR",
       "alternative_a": [
         "https://docs.google.com/",
         "https://typeform.com/",
@@ -5113,6 +5139,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "CH",
       "alternative_a": [
         "https://wetransfer.com/"
       ],
@@ -5129,6 +5156,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "FR",
       "alternative_a": [
         "https://salesforce.com/",
         "https://hubspot.com/",
@@ -5148,6 +5176,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "FR",
       "alternative_a": [
         "https://salesforce.com/",
         "https://hubspot.com/",
@@ -5167,6 +5196,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "FR",
       "alternative_a": [
         "https://sharepoint.com/",
         "https://opentext.com/",
@@ -5186,6 +5216,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "DE",
       "alternative_a": [
         "https://notion.so/",
         "https://airtable.com/"
@@ -5203,6 +5234,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "CH",
       "alternative_a": [
         "https://whatsapp.com/"
       ],
@@ -5221,6 +5253,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "FR",
       "alternative_a": [
         "https://whatsapp.com/"
       ],
@@ -5237,6 +5270,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "FR",
       "alternative_a": [
         "https://slack.com/",
         "https://teams.microsoft.com/"
@@ -5254,6 +5288,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "FR",
       "alternative_a": [
         "https://slack.com/",
         "https://teams.microsoft.com/"
@@ -5271,6 +5306,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "DE",
       "alternative_a": [
         "https://calendar.google.com/",
         "https://calendly.com/"
@@ -5288,6 +5324,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "FR",
       "alternative_a": [
         "https://calendar.google.com/",
         "https://calendly.com/"
@@ -5305,6 +5342,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "CH",
       "alternative_a": [
         "https://calendar.google.com/"
       ],
@@ -5321,6 +5359,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "CH",
       "alternative_a": [
         "https://drive.google.com/",
         "https://photos.google.com/",
@@ -5339,6 +5378,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "FR",
       "alternative_a": [
         "https://drive.google.com/"
       ],
@@ -5355,6 +5395,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "DE",
       "alternative_a": [
         "https://translate.google.com/"
       ],
@@ -5371,6 +5412,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "EU",
       "alternative_a": [
         "https://translate.google.com/"
       ],
@@ -5387,6 +5429,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "EU",
       "alternative_a": [
         "https://classroom.google.com/"
       ],
@@ -5406,6 +5449,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "FR",
       "alternative_a": [
         "https://anthropic.com/"
       ],
@@ -5422,6 +5466,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "EU",
       "alternative_a": [
         "https://anthropic.com/"
       ],
@@ -5441,6 +5486,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "FR",
       "alternative_a": [
         "https://patchmypc.com/"
       ],
@@ -5457,6 +5503,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "FR",
       "alternative_a": [
         "https://copilot.microsoft.com/"
       ],
@@ -5473,6 +5520,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "FR",
       "alternative_a": [
         "https://intercom.com/",
         "https://drift.com/",
@@ -5493,6 +5541,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "FR",
       "alternative_a": [
         "https://heroku.com/"
       ],
@@ -5509,6 +5558,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "FR",
       "alternative_a": [
         "https://netflix.com/",
         "https://primevideo.com/",
@@ -5532,6 +5582,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "FR",
       "alternative_a": [
         "https://netflix.com/",
         "https://primevideo.com/",
@@ -5555,6 +5606,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "DE",
       "alternative_a": [
         "https://netflix.com/",
         "https://primevideo.com/",
@@ -5578,6 +5630,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "NL",
       "alternative_a": [
         "https://stripe.com/",
         "https://paypal.com/"
@@ -5595,6 +5648,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "NL",
       "alternative_a": [
         "https://stripe.com/",
         "https://paypal.com/"
@@ -5612,6 +5666,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "UK",
       "alternative_a": [
         "https://stripe.com/",
         "https://paypal.com/"
@@ -5629,6 +5684,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "FR",
       "alternative_a": [
         "https://stripe.com/"
       ],
@@ -5645,6 +5701,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "FR",
       "alternative_a": [
         "https://docusign.com/"
       ],
@@ -5661,6 +5718,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "SE",
       "alternative_a": [
         "https://docusign.com/"
       ],
@@ -5677,6 +5735,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "DK",
       "alternative_a": [
         "https://docusign.com/"
       ],
@@ -5693,6 +5752,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "CH",
       "alternative_a": [
         "https://docusign.com/"
       ],
@@ -5709,6 +5769,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "DE",
       "alternative_a": [
         "https://asana.com/",
         "https://trello.com/",
@@ -5727,6 +5788,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "FR",
       "alternative_a": [
         "https://asana.com/"
       ],
@@ -5743,6 +5805,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "DE",
       "alternative_a": [
         "https://asana.com/",
         "https://trello.com/",
@@ -5761,6 +5824,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "NL",
       "alternative_a": [
         "https://figma.com/"
       ],
@@ -5777,6 +5841,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "AT",
       "alternative_a": [
         "https://typeform.com/",
         "https://surveymonkey.com/"
@@ -5794,6 +5859,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "DE",
       "alternative_a": [
         "https://zapier.com/",
         "https://make.com/"
@@ -5814,6 +5880,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "CH",
       "alternative_a": [
         "https://expressvpn.com/"
       ],
@@ -5830,6 +5897,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "SE",
       "alternative_a": [
         "https://expressvpn.com/"
       ],
@@ -5846,6 +5914,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "CH",
       "alternative_a": [
         "https://lastpass.com/"
       ],
@@ -5864,6 +5933,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "LT",
       "alternative_a": [
         "https://lastpass.com/"
       ],
@@ -5880,6 +5950,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "FR",
       "alternative_a": [
         "https://asana.com/",
         "https://trello.com/",
@@ -5901,6 +5972,7 @@
       "derniere_modification": "2026-09-08T17:47:04-04:00",
       "changement": "nouveau",
       "source_repertoire_id": "charles",
+      "pays": "FR",
       "alternative_a": [
         "https://docusign.com/"
       ],

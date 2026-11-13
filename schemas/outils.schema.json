@@ -87,6 +87,11 @@
             "uniqueItems": true,
             "$comment": "noms d'autres outils (outils[].nom) qui reposent sur le même logiciel"
           },
+          "pays": {
+            "type": "string",
+            "pattern": "^[A-Z]{2}$",
+            "$comment": "code ISO 3166-1 alpha-2 de l'éditeur, ou EU, tel que la source le donne"
+          },
           "lien": {
             "type": "string",
             "pattern": "^https?://\\S+$"

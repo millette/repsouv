@@ -122,6 +122,8 @@ export interface Statistiques {
   provenance: { id: string; nom: string; outils: number; enrichis: number }[];
   /** Outils dont le score est estimé (source sans étoiles), par nom. */
   scoresEstimes: string[];
+  /** Outils par pays de l'éditeur (outils[].pays, quand la source le donne), dans l'ordre décroissant puis alphabétique; vide sans pays. */
+  pays: { pays: string; n: number }[];
   /** Outils qui déclarent des alternatives (alternative_a). */
   alternatives: { nom: string; alternatives: string[] }[];
   /** Données Open Hub des outils libres enrichis. */
@@ -360,6 +362,7 @@ export function calculerStatistiques({ outils: tous, categories: definitionsCate
       enrichis: outils.filter((o) => o.source_repertoire_id === id && o.description_longue).length,
     })).sort((a, b) => b.outils - a.outils || a.id.localeCompare(b.id, "fr")),
     scoresEstimes: outils.filter((o) => o.score_estime).map((o) => o.nom),
+    pays: [...compter(outils.flatMap((o) => (o.pays ? [o.pays] : [])))].map(([pays, n]) => ({ pays, n })).sort((a, b) => b.n - a.n || a.pays.localeCompare(b.pays)),
     alternatives: outils.filter((o) => o.alternative_a?.length).map((o) => ({ nom: o.nom, alternatives: o.alternative_a! })),
     openhub: {
       completes: enrichis.filter((o) => o.openhub).map((o) => ({ nom: o.nom, id: o.openhub_id ?? "", activite: o.openhub!.activite, contributeurs12: o.openhub!.contributeurs_12_mois, commits12: o.openhub!.commits_12_mois, licences: o.openhub!.licences }))

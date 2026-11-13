@@ -177,3 +177,9 @@ test("confirmerOutils: avec confirmerRepli et modeleRepli, une réponse rejetée
   assert.deepEqual(s.confirmes, []);
   assert.equal(deux[0]!.echecs_confirmation, 1);
 });
+
+test("pays: la requête le transmet quand l'outil en a un, et les instructions le présentent comme une affirmation à confronter", () => {
+  assert.match(requeteOutil(outil("P", { pays: "CH" }), PAGE, CRITERES).messages[0]!, /"pays":"CH"/);
+  assert.doesNotMatch(requeteOutil(outil("A"), PAGE, CRITERES).messages[0]!, /"pays"/);
+  assert.match(instructions(CRITERES), /« pays » est présent/);
+});

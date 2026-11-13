@@ -9,7 +9,7 @@
 //   - le score est estimé (score_estime, voir ajouter.ts) et la catégorie vient de CATEGORIE_PAR_CATEGORIE (par catégorie
 //     Charles) et de CATEGORIE_PAR_ID (exceptions par alternative; null = exclue), à réviser à la main; cinq catégories
 //     que le répertoire n'avait pas (CATEGORIES_CHARLES) sont ajoutées à categories.json avec leur source;
-//   - alternative_a vient de sites-us.json inversé: l'URL de chaque site qui liste l'alternative;
+//   - alternative_a vient de sites-us.json inversé: l'URL de chaque site qui liste l'alternative; `pays` reprend country;
 //   - les outils sont datés du dernier commit touchant data/ (API GitLab), sinon de l'heure de lecture.
 // Une alternative qui porte le nom d'un outil actif d'une autre source (doublon, clé de logiciel.ts) n'est pas importée:
 // `nom` est la clé unique de outils.json; les doublons sont listés dans le résumé.
@@ -320,7 +320,7 @@ export function extraireCharles(donnees: DonneesCharles): ExtractionCharles {
     categoriesUtilisees.add(categorie!);
     outils.push({
       categorie: categorie!, nom: a.name.trim(), score: classement.criteres.length, score_estime: true, lien: a.url, description,
-      derniere_modification: "", changement: null, source_repertoire_id: ID_CHARLES,
+      derniere_modification: "", changement: null, source_repertoire_id: ID_CHARLES, pays: a.country,
       ...(alternative_a.length && { alternative_a }),
       ...classement,
     });

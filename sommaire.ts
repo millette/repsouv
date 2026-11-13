@@ -97,7 +97,8 @@ Sauf indication contraire, les pourcentages sont calculés sur les ${s.total} ou
 - **${pluriel(s.scores.trois, "outil")} à 3 étoiles** et **${s.scores.deux} à 2 étoiles** (moyenne : ${decimal(s.scores.moyen)} étoiles).
 - **${pluriel(ens, "outil enrichi", "outils enrichis")}** sur ${s.total} (${pourcent(ens, s.total)}).
 - **Provenance** : ${s.provenance.map((p) => `${p.nom} (${pluriel(p.outils, "outil")})`).join(", ")}${s.scoresEstimes.length ? ` ; ${pluriel(s.scoresEstimes.length, "outil")} au score estimé faute d'étoiles dans la source (${liste(s.scoresEstimes, 6)})` : ""}.
-${ens ? `- **${pluriel(libres, "logiciel libre ou partiellement libre", "logiciels libres ou partiellement libres")}** parmi les outils enrichis (${pourcent(libres, ens)}).
+${s.pays.length ? `- **Pays de l'éditeur** (quand la source le donne, ${pluriel(s.pays.reduce((n, p) => n + p.n, 0), "outil")}) : ${s.pays.map((p) => `${p.pays} (${p.n})`).join(", ")}.
+` : ""}${ens ? `- **${pluriel(libres, "logiciel libre ou partiellement libre", "logiciels libres ou partiellement libres")}** parmi les outils enrichis (${pourcent(libres, ens)}).
 - **${pluriel(s.licences.spdx.length, "licence SPDX distincte", "licences SPDX distinctes")}**, **${pluriel(s.forges.length, "forge de code", "forges de code")}** et **${pluriel(s.tags.utilisation.filter((t) => t.n).length, "tag")}** utilisés sur ${s.tags.utilisation.length} du vocabulaire.
 ` : ""}
 `);

@@ -126,3 +126,11 @@ test("relation entre les deux fichiers: outils[].categorie est un slug annoté c
   assert.equal(champ.pattern, lire("schemas/categories.schema.json").properties.categories.items.properties.id.pattern);
   assert.equal(outils(avec((o) => { o.categorie = "Analyse et mesure"; })), false);
 });
+
+test("un outil: pays est un code de deux lettres majuscules, facultatif", () => {
+  assert.equal(outils(avec((o) => { o.pays = "FR"; })), true);
+  assert.equal(outils(avec((o) => { o.pays = "EU"; })), true);
+  assert.equal(outils(avec((o) => { o.pays = "fr"; })), false);
+  assert.equal(outils(avec((o) => { o.pays = "FRA"; })), false);
+  assert.match(lire("schemas/outils.schema.json").properties.outils.items.properties.pays.$comment, /ISO 3166-1/);
+});

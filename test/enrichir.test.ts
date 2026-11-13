@@ -706,3 +706,10 @@ test("enrichir: un outil au score estimé (sans étoiles dans sa source) prend l
   assert.equal(outils[0]!.score_estime, true);
   assert.equal(outils[0]!.evaluation_enrichie!.ecart, undefined);
 });
+
+test("pays: la fiche le transmet quand l'outil en a un, et les instructions disent que c'est une affirmation de la source", () => {
+  const avec = resumePage(outil("P", { pays: "FR" }), { titre: "T", meta_description: "M", extrait: "E", liens_depot: [] });
+  assert.equal(avec.pays, "FR");
+  assert.equal("pays" in resumePage(outil("Q"), null), false);
+  assert.match(instructions([], [], false), /« pays » est présent/);
+});

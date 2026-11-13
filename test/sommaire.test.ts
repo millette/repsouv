@@ -443,3 +443,12 @@ test("rendu: section Open Hub avec le tableau, les restants et les alternatives;
   assert.match(md, /\*\*Provenance\*\* : Praxis \(7 outils\), FACiL \(1 outil\) ; 1 outil au score estimé/);
   assert.match(rendreMarkdown(calculerStatistiques(entree()), { genereLe: GENERE_LE }), /Aucun outil n'a encore de données Open Hub/);
 });
+
+test("statistiques et rendu: outils par pays de l'éditeur (décroissant puis alphabétique), seulement quand la source le donne", () => {
+  const outils = [...OUTILS, enrichi("P1", { pays: "FR" }), enrichi("P2", { pays: "DE" }), enrichi("P3", { pays: "FR" }), enrichi("P4", { pays: "CH" })];
+  const s = calculerStatistiques(entree(outils, SOURCES));
+  assert.deepEqual(s.pays, [{ pays: "FR", n: 2 }, { pays: "CH", n: 1 }, { pays: "DE", n: 1 }]);
+  assert.match(rendreMarkdown(s, { genereLe: GENERE_LE }), /- \*\*Pays de l'éditeur\*\* \(quand la source le donne, 4 outils\) : FR \(2\), CH \(1\), DE \(1\)\./);
+  assert.deepEqual(calculerStatistiques(entree()).pays, []);
+  assert.doesNotMatch(rendreMarkdown(calculerStatistiques(entree()), { genereLe: GENERE_LE }), /Pays de l'éditeur/);
+});

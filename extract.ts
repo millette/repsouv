@@ -89,6 +89,8 @@ export interface Outil {
   instance_de?: { nom: string; url: string };
   /** Noms des autres outils (outils[].nom) qui reposent sur le même logiciel (nom, ou instance_de.nom): posé par logiciel.ts à chaque écriture; absent sinon. */
   voir_aussi?: string[];
+  /** Pays de l'éditeur, tel que la source le donne (code ISO 3166-1 alpha-2, ou « EU », « UK »), quand la source le dit (Charles); absent sinon. */
+  pays?: string;
   lien: string;
   description: string;
   /** Dernière date de modification connue: ISO 8601 en heure de Toronto, avec décalage (2026-11-05T09:53:00-05:00). */

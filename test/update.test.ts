@@ -328,3 +328,14 @@ test("synchroniser: sources.json est créé à côté de outils.json avec la sou
   assert.equal(sim.sourcesEcrites, false);
   assert.equal(existsSync(join(d, "ailleurs", "sources.json")), false);
 });
+
+test("mettreAJour: un changement de pays est une modification, et le pays d'une source sans ce champ reste absent", () => {
+  const base: OutilClasse = { categorie: "c", nom: "P", score: 1, score_estime: true, lien: "https://p.example/", description: "Desc.", derniere_modification: "2026-01-01T00:00:00-05:00", changement: null, source_repertoire_id: "charles", pays: "FR", ...classer("Desc.") };
+  const r = mettreAJour([base], [{ ...base, pays: "DE" }], "2026-02-01T00:00:00-05:00", "charles");
+  assert.deepEqual(r.resume.modification, ["P"]);
+  assert.equal(r.outils[0]!.pays, "DE");
+  const meme = mettreAJour([base], [{ ...base }], "2026-02-01T00:00:00-05:00", "charles");
+  assert.deepEqual(meme.resume.modification, []);
+  const { pays: _p, ...sansPays } = base;
+  assert.equal(mettreAJour([sansPays], [{ ...sansPays }], "2026-02-01T00:00:00-05:00", "charles").outils[0]!.pays, undefined);
+});

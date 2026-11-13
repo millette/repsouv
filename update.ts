@@ -65,7 +65,7 @@ import { abandonneConfirmation, aConfirmer, confirmateurOpenAI, confirmerOutils,
 import { aDecrire, categoriesDepuis, decrireCategories, estimerCoutDescriptions, generateurDescriptionOpenAI, sauverCategories, type Categorie } from "./categories.ts";
 import { additionner, ajouterUsage, coutTotal, dollars, formaterCout, formaterCouts, soustraireUsages, type Usage, type UsagesParModele } from "./prix.ts";
 
-const CHAMPS_COMPARES = ["categorie", "score", "lien", "description"] as const;
+const CHAMPS_COMPARES = ["categorie", "score", "lien", "description", "pays"] as const;
 /** Les champs à reporter sur la version à jour d'un outil: l'enrichissement et le compteur d'échecs. */
 const CHAMPS_REPORTES = [...CHAMPS_ENRICHIS, "echecs_enrichissement", "echecs_confirmation", "openhub_id", "openhub", "echecs_openhub"] as const;
 
