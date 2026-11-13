@@ -8,6 +8,14 @@
 
 **Input**: User description: "Une page « Statistiques » sur le site de consultation, qui présente le portrait chiffré du répertoire en graphiques, pour les personnes qui veulent une vue d'ensemble avant de lire les fiches. Troisième tranche, après le site en lecture seule (001); elle ne dépend pas de l'explorateur. Elle reprend le contenu de sommaire.md, calculé par statistiques.ts et dessiné par graphiques.ts: chiffres clés, neuf graphiques, tableau des mêmes chiffres sous chaque graphique, valeur exacte au survol et au clavier, mise en évidence d'une série par la légende, liens vers les outils comptés, dénominateurs et date des données."
 
+## Clarifications
+
+### Session 2026-11-13
+
+- Q: Que font les graphiques, dessinés sur fond blanc dans le sommaire, quand le site est en thème sombre ? → A: Ils s'adaptent au thème: fond, axes et étiquettes sombres; les couleurs des statuts restent.
+- Q: Comment une personne au clavier obtient-elle la valeur exacte d'une barre ? → A: Un seul arrêt de tabulation par graphique, puis les flèches d'une barre à l'autre; la valeur en cours s'affiche et est annoncée.
+- Q: Comment le tableau des mêmes chiffres s'affiche-t-il sous chaque graphique ? → A: Dans un bloc repliable « Voir les chiffres », fermé au départ, qui s'ouvre sans JavaScript.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Voir le portrait chiffré du répertoire (Priority: P1)
@@ -35,8 +43,9 @@ les données donnent.
    famille, critères selon le répertoire et selon l'évaluation enrichie, critères par statut du code
    source, verdicts des critères vérifiés, forges de code, tags les plus fréquents, enrichissement
    par jour.
-3. **Given** un graphique, **When** la personne regarde dessous, **Then** un tableau donne les mêmes
-   chiffres, avec une légende et des en-têtes.
+3. **Given** un graphique, **When** la personne ouvre le bloc « Voir les chiffres » placé dessous,
+   **Then** un tableau donne les mêmes chiffres, avec une légende et des en-têtes; le bloc est
+   fermé au départ et s'ouvre sans JavaScript.
 4. **Given** un navigateur sans JavaScript, **When** la personne ouvre la page, **Then** chaque
    graphique est visible comme une image, avec son texte de remplacement et son tableau.
 5. **Given** un pourcentage sur la page, **When** la personne le lit, **Then** la page dit sur
@@ -63,8 +72,9 @@ exacte s'affiche; choisir une série dans la légende: elle se détache des autr
 
 1. **Given** un graphique, **When** la personne survole une barre ou une case, **Then** sa valeur
    exacte s'affiche, avec ce qu'elle mesure.
-2. **Given** un graphique, **When** la personne l'atteint au clavier et se déplace d'une barre à
-   l'autre, **Then** la valeur exacte de la barre en cours s'affiche et est annoncée.
+2. **Given** un graphique, **When** la personne l'atteint par une tabulation, puis passe d'une
+   barre à l'autre avec les flèches, **Then** la valeur exacte de la barre en cours s'affiche et est
+   annoncée; la tabulation suivante quitte le graphique.
 3. **Given** un graphique à plusieurs séries, **When** la personne choisit une série dans la
    légende, à la souris ou au clavier, **Then** cette série se détache des autres, et un second
    choix rétablit l'affichage.
@@ -139,7 +149,10 @@ statut du code source et des licences: la provenance y est nommée en texte.
   la page; son tableau reste lisible.
 - Un tableau long (25 catégories, 58 lignes par catégorie et statut): il reste lisible, replié par
   défaut si besoin, et se lit sans JavaScript.
-- Le thème sombre: les graphiques restent lisibles et gardent leurs couleurs de statut.
+- Le thème sombre: les graphiques passent sur fond sombre, avec des axes et des étiquettes
+  lisibles, et gardent leurs couleurs de statut; changer de thème avec l'interrupteur de
+  l'en-tête change aussi les graphiques, sans recharger la page.
+- Sans JavaScript en thème sombre: l'image du graphique est celle du thème que le système demande.
 - JavaScript activé mais le graphique interactif ne se charge pas: l'image produite au build reste
   affichée.
 - Un tag, une catégorie ou un statut qui n'a plus d'outil: sa ligne n'apparaît pas, donc aucun lien
@@ -166,13 +179,18 @@ statut du code source et des licences: la provenance y est nommée en texte.
   le répertoire et selon l'évaluation enrichie, critères par statut du code source, verdicts des
   critères vérifiés, forges de code, tags les plus fréquents, enrichissement par jour.
 - **FR-006**: Chaque graphique DOIT avoir un titre, un texte de remplacement qui dit ce qu'il
-  montre, et, dessous, un tableau des mêmes chiffres avec légende et en-têtes.
+  montre, et, dessous, un tableau des mêmes chiffres avec légende et en-têtes, dans un bloc
+  repliable « Voir les chiffres », fermé au départ, qui s'ouvre sans JavaScript.
 - **FR-007**: Les chiffres d'un tableau DOIVENT être exactement ceux que son graphique dessine.
 - **FR-008**: Un graphique sans données NE DOIT PAS s'afficher, ni son titre, ni son tableau.
 - **FR-009**: La page et le sommaire statistique du dépôt NE DOIVENT jamais se contredire: mêmes
   calculs et mêmes graphiques pour les mêmes données.
 - **FR-010**: Un statut du code source DOIT garder la même couleur dans tous les graphiques, celle
-  du sommaire.
+  du sommaire, en thème clair comme en thème sombre.
+- **FR-031**: Les graphiques DOIVENT s'adapter au thème du site: en thème sombre, un fond sombre et
+  des axes, des titres et des étiquettes lisibles (contraste suffisant); un changement de thème
+  s'applique aux graphiques sans recharger la page, et sans JavaScript l'image suit le thème du
+  système.
 
 **Lecture sans JavaScript**
 
@@ -184,8 +202,9 @@ statut du code source et des licences: la provenance y est nommée en texte.
 **Interaction**
 
 - **FR-013**: Au survol, chaque barre ou case DOIT donner sa valeur exacte et ce qu'elle mesure.
-- **FR-014**: Au clavier, la personne DOIT pouvoir atteindre chaque graphique, se déplacer d'une
-  barre ou d'une case à l'autre, et obtenir sa valeur exacte, annoncée aux lecteurs d'écran.
+- **FR-014**: Au clavier, chaque graphique DOIT être un seul arrêt de tabulation; les flèches
+  passent d'une barre ou d'une case à l'autre, et la valeur exacte de l'élément en cours s'affiche
+  et est annoncée aux lecteurs d'écran.
 - **FR-015**: Dans un graphique à plusieurs séries, la légende DOIT permettre de mettre une série
   en évidence, à la souris et au clavier, et de rétablir l'affichage.
 - **FR-016**: La mise en évidence NE DOIT PAS reposer sur la couleur seule.
@@ -279,10 +298,10 @@ statut du code source et des licences: la provenance y est nommée en texte.
   dates, la fiabilité de la classification, les échecs d'enrichissement et Open Hub sont hors de
   cette tranche.
 - **Tags les plus fréquents**: les mêmes que dans le sommaire (les plus fréquents, pas tous).
-- **Graphiques en thème sombre**: par défaut, ils gardent le fond clair du sommaire, pour rester
-  identiques à ses images; à confirmer à la clarification.
-- **Parcours au clavier d'un graphique**: par défaut, un seul arrêt de tabulation par graphique,
-  puis les flèches d'une barre à l'autre; à confirmer à la clarification.
+- **Graphiques en thème sombre**: seuls le fond et les couleurs du texte, des axes et des grilles
+  changent; les données, les formes et les couleurs des séries sont celles du sommaire, dont les
+  images, elles, restent sur fond clair.
+- **Ordre de parcours au clavier**: les flèches suivent l'ordre des lignes du tableau du graphique.
 - **Hors de cette tranche**: résumé par IA, statistiques Open Hub détaillées, dates et tableaux de
   suivi (fiabilité, échecs d'enrichissement), graphiques au choix de la personne, export des images
   ou des chiffres, évolution dans le temps, version anglaise.

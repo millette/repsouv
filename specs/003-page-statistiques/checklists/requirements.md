@@ -34,5 +34,3 @@
 - « JavaScript » apparaît dans les exigences parce que la demande en fait une limite. Les noms `statistiques.ts`,
   `graphiques.ts`, vega et vega-lite sont des contraintes imposées par la demande: ils sont rangés dans la section
   Assumptions, hors des exigences.
-- Deux hypothèses sont à confirmer à `/speckit-clarify`: les graphiques en thème sombre, et le parcours au clavier
-  d'un graphique.
