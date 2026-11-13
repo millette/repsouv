@@ -153,3 +153,31 @@ skill `solidjs` du dépôt.
   « Ouvrir la fiche »; la boîte n'est jamais vide (FR-050).
 - **Liens dans la boîte**: ceux de la fiche. La catégorie et les tags mènent à l'explorateur
   filtré, donc ferment la boîte en changeant de page; « Voir aussi » mène à d'autres fiches.
+
+## 11. Liste sans JavaScript, formulaire replié, retrait de la page « Outils » (second amendement du 2026-11-13)
+
+- **Décision**: `site/src/pages/explorer.astro` rend la liste complète par catégorie en balisage
+  statique (`site/src/components/ListeOutils.astro`, tiré de l'ancienne page « Outils »), dans un
+  bloc que l'île masque quand ses données sont prêtes. L'île `Explorateur.tsx` est montée par
+  `client:load`.
+- **Rendu de l'île au build**: l'état est celui par défaut (l'adresse n'est lue qu'au montage, dans
+  le navigateur), la ressource n'a pas de source tant que l'île n'est pas montée, donc aucune
+  lecture n'est tentée au build. Le rendu du build et le premier rendu du navigateur sont
+  identiques: le formulaire, replié et masqué.
+- **Formulaire replié**: un `<details>` avec `<summary>` « Trier et filtrer », fermé par défaut.
+  Il s'ouvre de lui-même quand l'adresse porte déjà un tri ou un filtre, pour que la personne voie
+  ce qui est appliqué. Sans JavaScript, il porte `hidden`: des commandes inutilisables ne
+  s'affichent pas (règle de la tranche 001).
+- **États**: après le montage, « Chargement des outils… » s'affiche au-dessus de la liste
+  statique, qui reste lisible; à l'échec, un message et « Réessayer », la liste restant affichée.
+  Il n'y a plus de renvoi vers une autre page.
+- **Propriétés de l'île**: les référentiels du formulaire et les identifiants des outils, quelques
+  kilo-octets de configuration; pas les outils.
+- **Retrait de la page « Outils »**: `site/src/pages/outils/index.astro` est supprimée; les fiches
+  restent sous `/outils/<id>/`. La navigation passe à trois liens, une fiche y indique
+  « Explorer ». Une ancienne adresse `/outils/` sert la page introuvable, qui ramène à l'accueil.
+- **Solutions écartées**: passer les outils en propriétés pour que l'île rende la liste au build
+  (données deux fois dans la page); lancer la lecture de la ressource au build (une adresse
+  relative n'a pas d'origine dans Node, et le résultat devrait être sérialisé dans la page pour
+  l'hydratation).
+

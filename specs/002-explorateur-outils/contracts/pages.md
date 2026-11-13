@@ -1,5 +1,7 @@
 # Contrat: pages de la tranche 002
 
+> **Second amendement du 2026-11-13.** La page « Outils » est retirée: sa liste par catégorie est désormais sur la page « Explorer », lisible sans JavaScript, et la navigation porte « Accueil », « Explorer », « Statistiques ». Sur la page « Explorer », le formulaire est replié dans un `<details>` « Trier et filtrer » (masqué sans JavaScript), et l'état d'attente n'est plus un renvoi: la liste complète reste affichée pendant le chargement et en cas d'échec. Les sections « Outils » et « Attente et absence de JavaScript » ci-dessous sont remplacées par cette note.
+
 > **Complété par la tranche 003** (2026-11-13). La navigation compte un quatrième lien, « Statistiques » (`<base>/statistiques/`), après « Explorer ». Voir [specs/003-page-statistiques/contracts/page.md](../../003-page-statistiques/contracts/page.md).
 
 Ce contrat complète celui de la tranche 001

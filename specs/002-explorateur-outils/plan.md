@@ -166,3 +166,33 @@ site/test/etat.test.ts, site/test/chargement.test.ts, site/test/e2e/details.spec
 
 Décisions détaillées: [research.md](research.md), section 10. Contrats: [contracts/pages.md](contracts/pages.md)
 (« Détails d'un outil ») et [contracts/adresse.md](contracts/adresse.md) (paramètre `fiche`).
+
+## Second amendement du 2026-11-13: liste sans JavaScript, formulaire replié, retrait de la page « Outils »
+
+Ajout après la livraison (FR-052 à FR-055). Il revient sur deux décisions du plan d'origine: l'île
+montée par `client:only`, et la page « Outils » créée pour porter la liste sans JavaScript.
+
+**Approche**:
+
+- La page « Explorer » porte la liste complète en balisage statique, par catégorie (le composant
+  qui servait la page « Outils »), donc lisible sans JavaScript.
+- L'île est montée par `client:load`: elle est aussi rendue au build, où elle ne produit que son
+  formulaire, replié dans un `<details>` et masqué tant que les données ne sont pas chargées. Elle
+  reçoit en propriétés les référentiels du formulaire (catégories, tags, sources, critères, pays,
+  identifiants des outils), qui sont de la configuration; les outils eux-mêmes restent lus dans
+  `explorateur.json` par `createResource`, une fois l'île montée dans le navigateur.
+- Quand les données sont prêtes, l'île masque la liste statique et affiche ses résultats; pendant
+  le chargement, ou en cas d'échec, la liste statique reste affichée.
+- La page « Outils » est supprimée, avec son lien de navigation; les liens qui y menaient vont à
+  la page « Explorer ».
+
+**Pourquoi pas les données en propriétés de l'île**: rendre la liste par l'île au build demanderait
+de lui passer les 154 outils, que la page porterait alors deux fois (balisage et propriétés), sans
+plus rien lire dans `explorateur.json`. Le balisage statique donne la même page sans JavaScript, et
+garde les règles du skill `solidjs` (propriétés de configuration, lecture dans l'île).
+
+**Constitution**: conforme. Aucune dépendance; provenance inchangée (les cartes sont celles de la
+tranche 001); tests adaptés avant le code.
+
+Décisions détaillées: [research.md](research.md), section 11. Contrat: [contracts/pages.md](contracts/pages.md).
+

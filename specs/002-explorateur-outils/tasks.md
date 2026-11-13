@@ -257,3 +257,26 @@ sections de sa fiche; la fermer rend l'explorateur dans le même état.
 Validation du 2026-11-13: les sept scénarios de US7 passent, par `site/test/e2e/details.spec.ts` (10 tests),
 `site/test/etat.test.ts`, `site/test/chargement.test.ts`, et les ajouts à `accessibilite.spec.ts` et
 `telephone.spec.ts`. Totaux du site: 126 tests unitaires, 56 tests du site bâti, 107 tests dans Chromium.
+
+---
+
+## Phase 11: Liste sans JavaScript, formulaire replié, retrait de la page « Outils » (second amendement du 2026-11-13)
+
+**Goal**: la page « Explorer » montre la liste complète même sans JavaScript; l'île est montée par
+`client:load`, son formulaire replié par défaut; la page « Outils » est retirée (FR-052 à FR-055).
+
+**Independent Test**: sans JavaScript, `/explorer/` liste les 154 outils par catégorie, sans
+formulaire; avec JavaScript, le formulaire replié apparaît, les résultats remplacent la liste, et
+`/outils/` n'existe plus.
+
+### Tests ⚠️ (à adapter d'abord, ils doivent échouer)
+
+- [ ] T044 [P] Adapter les tests du site bâti: `site/test/build/outils.test.ts` devient `site/test/build/liste.test.ts` et vérifie la liste statique de `explorer/index.html` (bloc `data-liste-statique`: une section par catégorie, une carte par outil actif, provenance, aucun élément vide), que le formulaire de l'île est dans un `<details>` fermé portant `hidden`, et que `outils/index.html` n'existe pas; `site/test/build/commun.test.ts`: trois liens de navigation (« Accueil », « Explorer », « Statistiques »), « Explorer » en cours sur la page « Explorer » et sur chaque fiche; `site/test/build/accueil.test.ts` et `site/test/build/fiches.test.ts`: plus aucun lien vers `/outils/` (hors fiches), le retour d'une fiche mène à `/explorer/`; `site/test/adresses.test.ts`: `adresseOutils` retirée
+- [ ] T045 [P] Adapter les tests dans un navigateur: l'aide `ouvrir` de `site/test/e2e/explorateur.ts` attend le bloc « Trier et filtrer » et l'ouvre; `site/test/e2e/etats.spec.ts`: pendant le chargement et en cas d'échec, la liste statique reste visible avec le message et « Réessayer », et sans JavaScript la page montre toutes les cartes sans formulaire; nouveau cas: le bloc « Trier et filtrer » est fermé au départ, ouvert quand l'adresse porte un filtre, et la liste statique est masquée dès que les résultats s'affichent (aucune carte en double); `site/test/e2e/sans-javascript.spec.ts`, `accessibilite.spec.ts`, `telephone.spec.ts`, `base.spec.ts`: la page « Outils » n'existe plus, ses cas passent sur « Explorer »
+
+### Implementation
+
+- [ ] T046 Créer `site/src/components/ListeOutils.astro` (la liste par catégorie de l'ancienne page « Outils »), supprimer `site/src/pages/outils/index.astro`, retirer « Outils » de `site/src/components/Navigation.astro` et `adresseOutils` de `site/src/lib/adresses.ts`, et faire mener à la page « Explorer » les liens de `site/src/pages/index.astro`, `site/src/pages/outils/[id].astro` (retour, `courante`) et `site/src/pages/404.astro`
+- [ ] T047 Refondre `site/src/components/Explorateur.tsx` pour `client:load`: propriétés de configuration (référentiels, identifiants des outils), état par défaut au build et lecture de l'adresse au montage, ressource sans source avant le montage, formulaire dans un `<details>` « Trier et filtrer » fermé et masqué tant que les données ne sont pas prêtes, résultats sous `<Suspense>` et `<ErrorBoundary>`, liste statique masquée quand les résultats s'affichent; `site/src/pages/explorer.astro` rend `ListeOutils` et monte l'île par `client:load`; adapter `Commandes.tsx`, `Resultats.tsx`, `Comparaison.tsx`, `Details.tsx` et les styles; jusqu'à ce que T044 et T045 passent
+- [ ] T048 Reporter dans `implementation.md`, `README.md`, `site/README.md` et `historique.md`; noter dans `specs/001-site-consultation-repertoire/contracts/pages.md` que la liste est sur la page « Explorer »; vérifier que tous les contrôles passent
+

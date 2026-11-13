@@ -18,6 +18,7 @@
 - Q: Que deviennent les filtres de l'accueil ? → A: L'accueil devient une page de présentation: le projet, sa genèse, les crédits et les logiciels utilisés pour le réaliser.
 - Q: Où va alors la liste des outils par catégorie, lisible sans JavaScript ? → A: Sur une page statique « Outils », sans filtres; tout filtrage passe par l'explorateur, et les filtres de la tranche 001 sont retirés.
 - Q: (amendement, après la livraison) Comment consulter tous les détails d'un outil depuis l'explorateur ? → A: Chaque outil garde sa propre page avec tous les détails disponibles (sa fiche); en plus, l'explorateur permet de consulter tous les détails d'un outil dans une boîte modale, sans quitter la page.
+- Q: (second amendement, après la livraison) Que montre la page « Explorer » sans JavaScript, et que devient la page « Outils » ? → A: La page « Explorer » montre la liste complète des outils même sans JavaScript; l'explorateur y est monté dès le chargement de la page, son formulaire de tri et de filtres replié par défaut; la page « Outils », devenue redondante, est retirée. Cette réponse remplace celles du 2026-11-13 sur la page « Outils » et sur le renvoi sans JavaScript.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -411,6 +412,22 @@ enrichi: la boîte montre ce que montre la fiche; la fermer rend l'explorateur d
 - **FR-051**: La boîte DOIT être une boîte de dialogue accessible: nommée par l'outil, focus
   retenu à l'intérieur tant qu'elle est ouverte, utilisable au clavier et lisible sur un téléphone.
 
+**Liste sans JavaScript et retrait de la page « Outils » (second amendement)**
+
+- **FR-052**: La page « Explorer » DOIT montrer la liste complète des outils actifs, par catégorie,
+  même sans JavaScript, avec pour chacun son nom lié à sa fiche, son score, le statut de son code
+  source et sa description courte, et la même provenance que les fiches. Cette exigence remplace
+  FR-029 pour ce qui est du renvoi vers une autre page, et FR-042.
+- **FR-053**: Le formulaire de tri et de filtres DOIT être replié par défaut; la personne l'ouvre
+  quand elle veut trier ou filtrer. Sans JavaScript, il ne s'affiche pas, puisqu'il ne pourrait pas
+  fonctionner.
+- **FR-054**: Avec JavaScript, tant que les données de l'explorateur se chargent, ou si elles ne
+  peuvent pas être chargées, la liste complète DOIT rester affichée; un message dit ce qui se passe
+  et, en cas d'échec, propose de réessayer.
+- **FR-055**: La page « Outils » est retirée: la navigation porte « Accueil », « Explorer » et
+  « Statistiques »; les liens qui y menaient (accueil, fiches, page introuvable) mènent à la page
+  « Explorer ». Cette exigence remplace FR-042 et modifie FR-044.
+
 **Langue et accessibilité**
 
 - **FR-037**: Tout le texte DOIT être en français.
@@ -463,6 +480,8 @@ enrichi: la boîte montre ce que montre la fiche; la fermer rend l'explorateur d
   catégorie, avec un lien vers leur fiche.
 - **SC-012**: Pour 100 % des outils essayés, la boîte modale montre les mêmes sections que la
   fiche de l'outil, et fermer la boîte rend l'explorateur dans l'état d'avant.
+- **SC-013**: Sans JavaScript, 100 % des outils actifs figurent une fois sur la page « Explorer »,
+  sous leur catégorie, avec un lien vers leur fiche; aucune commande inutilisable n'y est affichée.
 - **SC-011**: Depuis l'accueil, une personne atteint la liste des outils ou l'explorateur en un
   seul clic.
 
