@@ -25,11 +25,12 @@ packages/
 │                     reste propre à chaque côté, voir l'étape 3)
 ├── scripts/          update, sommaire, extracteurs, enrichissement, vérification, schémas ; leurs tests
 └── site/             le site de consultation (l'ancien site/)
-package.json          racine des espaces de travail (workspaces: packages/*), commandes d'ensemble
+package.json          racine des espaces de travail (workspaces.packages: packages/*), commandes d'ensemble
 ```
 
-Les paquets s'importent par chemin relatif (`../commun/…`), sans dépendance `workspace:` : `npm install`
-doit suffire à qui n'a pas nub, et npm ne comprend pas ce protocole.
+Les paquets s'importent par chemin relatif (`../commun/…`), sans dépendance `workspace:`. Le plan visait
+d'abord que `npm install` suffise à qui n'a pas nub ; le catalogue des versions partagées (voir « Hors plan »)
+y a renoncé : l'installation passe par nub, l'exécution reste possible avec Node.js.
 
 ## Étapes
 
@@ -58,6 +59,12 @@ Les modules des scripts réexportent ce qui en vient. Le site importe ces module
 plus besoin des dépendances des scripts pour se bâtir. La lecture des fichiers reste propre à chaque côté (les scripts
 valident les dates de « meta » et écrivent, le site refuse un tableau vide et nomme le fichier fautif).
 
+### Hors plan : catalogue des versions partagées
+Les six dépendances déclarées par plus d'un paquet prennent leur plage dans `workspaces.catalog` du
+`package.json` de la racine, et les paquets y renvoient par `catalog:` (commit `c1f9ebd`). npm ne comprend pas
+ce protocole : décision de Robin Millette (2026-11-13), garder le catalogue et installer avec nub.
+**État** : fait
+
 ### Étape 4 : documentation, constitution, licences
 **But** : README, `implementation.md`, `historique.md`, `packages/site/README.md`, constitution (chemins et
 commandes), `REUSE.toml`.
@@ -69,4 +76,4 @@ et le site calculent (`FICHIER_OUTILS`, `DOSSIER_DONNEES`, le `.env` de la racin
 l'installation unique et les commandes `site:*` ; `analyse-effort/analyse.md`, `.env.example` et les commentaires
 « Usage » des scripts suivent les nouveaux chemins. `historique.md` garde les chemins d'époque de ses entrées passées
 et reçoit la publication du site et le monorepo. La constitution passe à la version 1.2.1, amendement de forme : seuls
-ses chemins et ses commandes changent. `REUSE.toml` disait déjà vrai depuis les étapes 1 à 3.
+ses chemins et ses commandes changent. `REUSE.toml` était déjà exact depuis les étapes 1 à 3.

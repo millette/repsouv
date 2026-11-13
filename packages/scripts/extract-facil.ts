@@ -178,7 +178,7 @@ export interface SynchronisationFacil {
 /** Synchronise les outils de la source « facil » dans `fichier` (outils.json) et la source dans sources.json. */
 export function synchroniserFacil(fichier: string, html: string, maintenant: string = horodatage()): SynchronisationFacil {
   const lu = lireSiExiste<OutilClasse>(fichier, "outils");
-  if (!lu) throw new Error(`${fichier} absent: lancer « node update.ts » d'abord (import initial de Praxis)`);
+  if (!lu) throw new Error(`${fichier} absent: lancer « node packages/scripts/update.ts » d'abord (import initial de Praxis)`);
   const { outils: page, source, avertissements } = extraireFacil(html);
   const { outils, resume, relies } = mettreAJour(lu.donnees, page as Outil[], maintenant, ID_FACIL);
   const total = Object.values(resume).reduce((n, noms) => n + noms.length, 0);
@@ -211,6 +211,6 @@ if (import.meta.main) {
     for (const a of r.avertissements) console.error(sortie.jaune(`Avertissement: ${a}`));
     if (r.ecrit) console.log(`${sortie.vert(fichier)} mis à jour`);
     if (r.sourcesEcrites) console.log(`${sortie.vert(join(dirname(fichier), "sources.json"))} mis à jour`);
-    if (r.resume.nouveau.length) console.log(sortie.attenue(`Lancer « node update.ts » pour enrichir les ${r.resume.nouveau.length} outil(s) nouveau(x).`));
+    if (r.resume.nouveau.length) console.log(sortie.attenue(`Lancer « node packages/scripts/update.ts » pour enrichir les ${r.resume.nouveau.length} outil(s) nouveau(x).`));
   });
 }

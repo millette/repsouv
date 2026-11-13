@@ -101,7 +101,7 @@ test("CLI: ajoute un outil et dit comment l'enrichir; une erreur donne le code 1
   const f = join(d, "outils.json");
   const ok = spawnSync("nub", [resolve("ajouter.ts"), "https://planete.facil.example/", "--nom=Planète FACiLe", "--categorie=cat1", "--description=Agrégateur de flux libre.", "--source=facil", "--source-nom=FACiL", "--source-url=https://facil.example/", f], { encoding: "utf8" });
   assert.equal(ok.status, 0, ok.stderr);
-  assert.match(ok.stdout, /Planète FACiLe ajouté .*source facil, créée.*score estimé .*node update\.ts/);
+  assert.match(ok.stdout, /Planète FACiLe ajouté .*source facil, créée.*score estimé .*node packages\/scripts\/update\.ts/);
   const non = spawnSync("nub", [resolve("ajouter.ts"), "https://x.example/", "--nom=X", "--categorie=zzz", "--description=d", "--source=facil", f], { encoding: "utf8" });
   assert.equal(non.status, 1);
   assert.match(non.stderr, /^Erreur: catégorie « zzz »/);

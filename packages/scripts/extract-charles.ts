@@ -414,10 +414,10 @@ export interface SynchronisationCharles {
 /** Synchronise les outils de la source « charles » dans `fichier` (outils.json), la source dans sources.json et ses catégories dans categories.json. */
 export function synchroniserCharles(fichier: string, donnees: DonneesCharles): SynchronisationCharles {
   const lu = lireSiExiste<OutilClasse>(fichier, "outils");
-  if (!lu) throw new Error(`${fichier} absent: lancer « node update.ts » d'abord (import initial de Praxis)`);
+  if (!lu) throw new Error(`${fichier} absent: lancer « node packages/scripts/update.ts » d'abord (import initial de Praxis)`);
   const cheminCategories = join(dirname(fichier), "categories.json");
   const categoriesLues = lireSiExiste<Categorie>(cheminCategories, "categories");
-  if (!categoriesLues) throw new Error(`${cheminCategories} absent: lancer « node update.ts » d'abord`);
+  if (!categoriesLues) throw new Error(`${cheminCategories} absent: lancer « node packages/scripts/update.ts » d'abord`);
   const { outils: page, source, categories, exclus, avertissements } = extraireCharles(donnees);
   const pris = new Map(lu.donnees.filter((o) => !o.removed && o.source_repertoire_id !== ID_CHARLES).map((o) => [cleNom(o.nom), o.source_repertoire_id]));
   const doublons = page.filter((o) => pris.has(cleNom(o.nom))).map((o) => `${o.nom} (${pris.get(cleNom(o.nom))})`);
@@ -460,6 +460,6 @@ if (import.meta.main) {
     if (r.ecrit) console.log(`${sortie.vert(fichier)} mis à jour`);
     if (r.sourcesEcrites) console.log(`${sortie.vert(join(dirname(fichier), "sources.json"))} mis à jour`);
     if (r.categoriesEcrites) console.log(`${sortie.vert(join(dirname(fichier), "categories.json"))} mis à jour`);
-    if (r.resume.nouveau.length) console.log(sortie.attenue(`Lancer « node update.ts » pour enrichir les ${r.resume.nouveau.length} outil(s) nouveau(x).`));
+    if (r.resume.nouveau.length) console.log(sortie.attenue(`Lancer « node packages/scripts/update.ts » pour enrichir les ${r.resume.nouveau.length} outil(s) nouveau(x).`));
   });
 }

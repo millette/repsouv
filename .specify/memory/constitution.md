@@ -11,8 +11,8 @@ Rapport d'impact
 - Principes modifiés (forme seulement):
   - I. Les données d'abord: les cinq fichiers sont situés dans `donnees/`; `schemas/*.schema.json` devient
     `donnees/schemas/*.schema.json`.
-  - V. Tests d'abord, simplicité: `test/*.test.ts` et `test/donnees/` sont situés dans `packages/commun` et
-    `packages/scripts`.
+  - V. Tests d'abord, simplicité: `test/*.test.ts` est situé dans `packages/commun` et `packages/scripts`;
+    `test/donnees/` dans `packages/scripts`.
 - Sections modifiées (forme seulement): Contraintes techniques (`node update.ts` et `node sommaire.ts` deviennent
   `node packages/scripts/update.ts` et `node packages/scripts/sommaire.ts`).
 - Sections ajoutées: aucune. Sections retirées: aucune.
@@ -28,7 +28,7 @@ Rapport d'impact
 
 ### I. Les données d'abord
 
-Les fichiers de `donnees/` (`outils.json`, `categories.json`, `criteres.json`, `tags.json` et
+Les cinq fichiers JSON de `donnees/` (`outils.json`, `categories.json`, `criteres.json`, `tags.json` et
 `sources.json`) sont le produit; les scripts existent pour les produire et les maintenir.
 
 - Tout changement de forme des données DOIT passer par les types TypeScript, puis par

@@ -5,7 +5,7 @@ version = 1
 
 # Code, schémas JSON, configuration et documentation du dépôt, dont les artefacts Spec Kit de chaque fonctionnalité (specs/), conservés après elle.
 [[annotations]]
-path = ["donnees/schemas/**", "README.md", "implementation.md", "historique.md", "tickets/**", "specs/**","package.json", "nub.lock", "skills-lock.json", "packages/commun/package.json", "packages/commun/tsconfig.json", "packages/scripts/package.json", "packages/scripts/tsconfig.json", "packages/scripts/tsconfig.schemas.json", ".gitignore", ".env.example", ".node-version", ".mcp.json"]
+path = ["donnees/schemas/**", "README.md", "implementation.md", "historique.md", "tickets/**", "specs/**","package.json", "nub.lock", "skills-lock.json", "packages/commun/package.json", "packages/commun/README.md", "packages/scripts/README.md", "packages/commun/tsconfig.json", "packages/scripts/package.json", "packages/scripts/tsconfig.json", "packages/scripts/tsconfig.schemas.json", ".gitignore", ".env.example", ".node-version", ".mcp.json"]
 SPDX-FileCopyrightText = "2026 Robin Millette <https://robin.millette.info/>"
 SPDX-License-Identifier = "AGPL-3.0-or-later"
 

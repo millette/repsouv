@@ -81,7 +81,7 @@ export function outilDemande(p: ParametresAjout, existants: readonly OutilClasse
 export function ajouterOutil(fichier: string, p: ParametresAjout, maintenant: string = horodatage()): { outil: OutilClasse; source: Source; nouvelleSource: boolean } {
   const dossier = dirname(fichier);
   const lu = lireSiExiste<OutilClasse>(fichier, "outils");
-  if (!lu) throw new Error(`${fichier} absent: lancer « node update.ts » d'abord (import initial), puis ajouter`);
+  if (!lu) throw new Error(`${fichier} absent: lancer « node packages/scripts/update.ts » d'abord (import initial), puis ajouter`);
   const categories = chargerCategories(join(dossier, "categories.json"));
   const cheminSources = join(dossier, "sources.json");
   const sourcesLues = lireSiExiste<Source>(cheminSources, "sources");
@@ -127,6 +127,6 @@ if (import.meta.main) {
   await lancer(async () => {
     const { parametres, fichier } = parametresDepuisArgs(process.argv.slice(2));
     const r = ajouterOutil(fichier, parametres);
-    console.log(`${r.outil.nom} ajouté à ${fichier} (source ${r.source.id}${r.nouvelleSource ? ", créée dans sources.json" : ""}; ${r.outil.score_estime ? `score estimé ${r.outil.score}` : `score ${r.outil.score}`}: ${r.outil.criteres.join(", ") || "aucun critère"}). Lancer « node update.ts » pour l'enrichir.`);
+    console.log(`${r.outil.nom} ajouté à ${fichier} (source ${r.source.id}${r.nouvelleSource ? ", créée dans sources.json" : ""}; ${r.outil.score_estime ? `score estimé ${r.outil.score}` : `score ${r.outil.score}`}: ${r.outil.criteres.join(", ") || "aucun critère"}). Lancer « node packages/scripts/update.ts » pour l'enrichir.`);
   });
 }

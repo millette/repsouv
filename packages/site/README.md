@@ -10,7 +10,7 @@ Les dépendances s'installent une seule fois, à la racine du dépôt, pour les 
 
 ```sh
 nub run dev          # serveur de développement                                                      (racine : nub run site:dev)
-nub run build        # lit les JSON de donnees/ et écrit packages/site/dist/ (158 pages, explorateur.json et graphiques/)   (racine : nub run site:build)
+nub run build        # lit les JSON de donnees/ et écrit dist/ (158 pages, explorateur.json et graphiques/)   (racine : nub run site:build)
 nub run preview      # sert packages/site/dist/ en local
 nub run check        # vérifie les types (astro check)                                               (racine : nub run site:check)
 nub run test         # tests unitaires sur fixtures (test:unit), puis tests du site bâti sur les vraies données (test:build)   (racine : nub run site:test)

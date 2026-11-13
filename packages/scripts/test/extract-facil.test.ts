@@ -147,7 +147,7 @@ test("CLI: --fichier lit une copie locale, synchronise et dit d'enrichir; une op
   assert.equal(ok.status, 0, ok.stderr);
   assert.match(ok.stdout, /Source facil \(.*page\.html\)/);
   assert.match(ok.stdout, /nouveau/i);
-  assert.match(ok.stdout, /node update\.ts/);
+  assert.match(ok.stdout, /node packages\/scripts\/update\.ts/);
   assert.match(ok.stderr, /Avertissement: Dates FACiLes: service remplacé inconnu « Calendly »/);
   const non = spawnSync("nub", [resolve("extract-facil.ts"), "--bogus", join(d, "outils.json")], { encoding: "utf8" });
   assert.equal(non.status, 1);
