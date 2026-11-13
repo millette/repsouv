@@ -8,19 +8,30 @@
 
 **Input**: User description: "Un explorateur interactif pour parcourir les outils du répertoire, sur le site de consultation, destiné aux personnes qui comparent plusieurs outils avant d'en choisir un. Deuxième tranche, après le site en lecture seule (001): page « Explorer » mise à jour sans rechargement, tri, filtres supplémentaires, vues en cartes et en tableau, comparaison côte à côte de deux à quatre outils, nombre de résultats annoncé, état dans l'adresse."
 
+## Clarifications
+
+### Session 2026-11-13
+
+- Q: Quels critères de souveraineté servent au filtre de verdict et à la comparaison ? → A: Le filtre porte sur les verdicts vérifiés; la comparaison montre les verdicts vérifiés et, sur une ligne à part, les critères déduits des étoiles, signalés comme une déduction du dépôt.
+- Q: Dans quel ordre l'explorateur affiche-t-il les outils quand rien n'est choisi ? → A: Par catégorie, puis par nom.
+- Q: Où la comparaison côte à côte s'affiche-t-elle ? → A: Sur la page « Explorer », au-dessus des résultats.
+- Q: Que deviennent les filtres de l'accueil ? → A: L'accueil devient une page de présentation: le projet, sa genèse, les crédits et les logiciels utilisés pour le réaliser.
+- Q: Où va alors la liste des outils par catégorie, lisible sans JavaScript ? → A: Sur une page statique « Outils », sans filtres; tout filtrage passe par l'explorateur, et les filtres de la tranche 001 sont retirés.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Explorer, trier et filtrer tous les outils (Priority: P1)
 
 Une personne qui cherche un outil ouvre la page « Explorer ». Elle y voit tous les outils actifs du
 répertoire, les trie par nom, par score ou par catégorie, et réduit la liste par les filtres de
-l'accueil et par des filtres de plus: score minimal, verdict de chaque critère de souveraineté,
+la première tranche (catégorie, tag, statut du code source, nom) et par des filtres de plus: score
+minimal, verdict de chaque critère de souveraineté,
 pays de l'éditeur, source du répertoire, outil enrichi ou non. La liste se met à jour à chaque
 choix, sans recharger la page, et elle sait toujours combien d'outils restent.
 
-**Why this priority**: c'est le cœur de l'explorateur. Sans tri ni filtres supplémentaires, la page
-n'apporte rien de plus que l'accueil; avec eux seuls, elle sert déjà à repérer les outils qui
-répondent à des exigences précises.
+**Why this priority**: c'est le cœur de l'explorateur, et le seul endroit du site où l'on filtre
+les outils. Avec le tri et les filtres seuls, la page sert déjà à repérer les outils qui répondent
+à des exigences précises.
 
 **Independent Test**: ouvrir « Explorer », appliquer un tri et un filtre de chaque type, et vérifier
 que les outils affichés et leur ordre sont exactement ceux que les données donnent.
@@ -54,11 +65,12 @@ que les outils affichés et leur ordre sont exactement ceux que les données don
 ### User Story 2 - Comparer deux à quatre outils côte à côte (Priority: P1)
 
 La personne a repéré quelques candidats. Elle les choisit dans la liste et ouvre une comparaison
-côte à côte: pour chacun, le score, les critères de souveraineté, le statut du code source, la
-licence, le pays et les services remplacés, alignés ligne par ligne.
+côte à côte, au-dessus des résultats: pour chacun, le score, les critères de souveraineté
+(vérifiés, puis déduits des étoiles), le statut du code source, la licence, le pays et les
+services remplacés, alignés ligne par ligne.
 
 **Why this priority**: l'explorateur s'adresse aux personnes qui comparent plusieurs outils avant
-d'en choisir un. La comparaison est ce que ni l'accueil ni les fiches n'offrent.
+d'en choisir un. La comparaison est ce que ni la liste ni les fiches n'offrent.
 
 **Independent Test**: choisir deux, puis quatre outils, et vérifier que la comparaison montre pour
 chacun les six informations prévues, tirées des données, avec leur provenance.
@@ -68,9 +80,9 @@ chacun les six informations prévues, tirées des données, avec leur provenance
 1. **Given** la liste affichée, **When** la personne choisit un seul outil à comparer, **Then** la
    comparaison n'est pas encore offerte et la page dit qu'il en faut au moins deux.
 2. **Given** deux à quatre outils choisis, **When** la personne ouvre la comparaison, **Then** elle
-   voit, pour chaque outil, son nom lié à sa fiche, son score, ses critères de souveraineté, le
-   statut de son code source, sa licence, son pays et les services qu'il remplace, alignés par
-   ligne.
+   voit, pour chaque outil, son nom lié à sa fiche, son score, le verdict vérifié de chacun des
+   trois critères, ses critères déduits des étoiles sur une ligne à part, le statut de son code
+   source, sa licence, son pays et les services qu'il remplace, alignés par ligne.
 3. **Given** quatre outils choisis, **When** la personne tente d'en choisir un cinquième, **Then**
    le choix est refusé et la page dit que la comparaison est limitée à quatre outils.
 4. **Given** une comparaison affichée, **When** la personne retire un outil, **Then** la
@@ -81,7 +93,8 @@ chacun les six informations prévues, tirées des données, avec leur provenance
 6. **Given** un outil comparé que les filtres en cours ne retiennent plus, **When** la liste se met
    à jour, **Then** il reste dans la comparaison tant que la personne ne l'en retire pas.
 7. **Given** une comparaison affichée, **When** un champ vient d'un modèle d'IA, **Then** il est
-   signalé « à vérifier », et un score estimé se distingue d'un score de la source.
+   signalé « à vérifier », un score estimé se distingue d'un score de la source, et les critères
+   déduits des étoiles sont signalés comme une déduction du dépôt.
 
 ---
 
@@ -154,11 +167,44 @@ JavaScript, et vérifier le message de chaque cas.
    état de chargement est visible et annoncé.
 2. **Given** un chargement qui échoue, **When** la personne regarde la page, **Then** un message
    d'erreur clair dit que les outils n'ont pas pu être chargés, propose de réessayer et renvoie à
-   l'accueil, où la liste est lisible.
+   la page « Outils », où la liste est lisible.
 3. **Given** un navigateur sans JavaScript, **When** la personne ouvre « Explorer », **Then** la
-   page explique que l'explorateur demande JavaScript et renvoie à l'accueil; elle n'est pas vide.
+   page explique que l'explorateur demande JavaScript et renvoie à la page « Outils »; elle n'est
+   pas vide.
 4. **Given** n'importe quelle page du site, **When** la personne cherche l'explorateur, **Then** un
-   lien « Explorer » l'y mène, et l'accueil et les fiches restent lisibles sans JavaScript.
+   lien « Explorer » l'y mène.
+
+---
+
+### User Story 6 - Comprendre le projet et lire la liste sans JavaScript (Priority: P2)
+
+La personne arrive sur l'accueil. Elle y lit ce qu'est le répertoire, d'où il vient, à qui revient
+son contenu et avec quels logiciels le dépôt et le site sont faits. De là, elle va à la page
+« Outils », qui liste tous les outils par catégorie et se lit sans JavaScript, ou à l'explorateur.
+
+**Why this priority**: l'accueil de la première tranche mêlait la présentation, la liste et des
+filtres que l'explorateur reprend. Les séparer évite deux endroits qui filtrent, et garde une liste
+complète pour qui n'a pas JavaScript.
+
+**Independent Test**: ouvrir l'accueil, puis la page « Outils », sans JavaScript: la première
+présente le projet, la seconde liste tous les outils actifs par catégorie avec un lien vers chaque
+fiche.
+
+**Acceptance Scenarios**:
+
+1. **Given** l'accueil, **When** la personne le lit, **Then** elle y trouve ce qu'est le
+   répertoire et à qui il s'adresse, sa genèse, les crédits (auteur·trices du répertoire
+   d'origine, autres sources, auteur du dépôt) et les logiciels utilisés pour réaliser le dépôt
+   et le site, avec un lien vers la page « Outils » et un vers l'explorateur.
+2. **Given** la page « Outils », **When** la personne l'ouvre sans JavaScript, **Then** elle voit
+   tous les outils actifs par catégorie, comme sur l'accueil de la première tranche (nom, score,
+   statut du code source, description courte, lien vers la fiche), sans aucun filtre.
+3. **Given** une fiche, **When** la personne active le lien de sa catégorie ou d'un de ses tags,
+   **Then** elle arrive sur l'explorateur filtré sur cette catégorie ou ce tag.
+4. **Given** n'importe quelle page, **When** la personne regarde l'en-tête, **Then** elle y trouve
+   les liens « Accueil », « Outils » et « Explorer », et la page en cours est indiquée.
+5. **Given** une ancienne adresse de l'accueil qui portait des filtres, **When** elle est ouverte,
+   **Then** l'accueil s'affiche normalement, sans erreur.
 
 ---
 
@@ -211,8 +257,8 @@ JavaScript, et vérifier le message de chaque cas.
 
 **Filtres**
 
-- **FR-008**: L'explorateur DOIT offrir les filtres de l'accueil: catégorie, tag, statut du code
-  source (dont « pas encore enrichi ») et recherche par nom, avec les mêmes règles.
+- **FR-008**: L'explorateur DOIT offrir les filtres de la première tranche: catégorie, tag, statut
+  du code source (dont « pas encore enrichi ») et recherche par nom, avec les mêmes règles.
 - **FR-009**: L'explorateur DOIT offrir un filtre de score minimal (de 0 à 3).
 - **FR-010**: L'explorateur DOIT offrir, pour chacun des trois critères de souveraineté, un filtre
   sur son verdict vérifié (confirmé, infirmé, indéterminé); un outil sans critères vérifiés n'est
@@ -241,9 +287,10 @@ JavaScript, et vérifier le message de chaque cas.
   choix est conservé en changeant de vue, de tri ou de filtres.
 - **FR-019**: La comparaison DOIT s'ouvrir pour deux à quatre outils; avec un seul, la page dit
   qu'il en faut deux; un cinquième est refusé avec un message.
-- **FR-020**: La comparaison DOIT montrer côte à côte, pour chaque outil et alignés par ligne: le
-  nom lié à la fiche, le score, les critères de souveraineté, le statut du code source, la licence,
-  le pays et les services remplacés.
+- **FR-020**: La comparaison DOIT s'afficher sur la page « Explorer », au-dessus des résultats, et
+  montrer côte à côte, pour chaque outil et alignés par ligne: le nom lié à la fiche, le score, le
+  verdict vérifié de chacun des trois critères, les critères déduits des étoiles sur une ligne à
+  part, le statut du code source, la licence, le pays et les services remplacés.
 - **FR-021**: Dans la comparaison, une information absente DOIT être dite en clair (« non
   connu », « pas encore enrichi ») plutôt que de laisser une case vide, pour que les colonnes
   restent comparables.
@@ -256,23 +303,25 @@ JavaScript, et vérifier le message de chaque cas.
 - **FR-024**: Le bouton précédent du navigateur DOIT ramener à l'état d'avant le dernier choix.
 - **FR-025**: Une valeur inconnue dans l'adresse DOIT être ignorée sans erreur; sans aucun choix,
   l'adresse est celle de la page, sans paramètre.
-- **FR-026**: Les paramètres d'adresse communs avec l'accueil (catégorie, tag, statut, recherche)
-  DOIVENT porter les mêmes noms et les mêmes valeurs.
+- **FR-026**: Les paramètres d'adresse de la catégorie, du tag, du statut et de la recherche
+  DOIVENT garder les noms et les valeurs fixés par la première tranche.
 
 **Chargement, erreurs et lecture sans JavaScript**
 
 - **FR-027**: Pendant le chargement des données, un état de chargement DOIT être visible et
   annoncé; la page n'affiche jamais une zone vide.
 - **FR-028**: Si les données ne peuvent pas être chargées ou lues, un message d'erreur clair DOIT
-  le dire, proposer de réessayer et renvoyer à l'accueil.
+  le dire, proposer de réessayer et renvoyer à la page « Outils ».
 - **FR-029**: Sans JavaScript, la page « Explorer » DOIT expliquer qu'elle en demande et renvoyer à
-  l'accueil; l'accueil et les fiches DOIVENT rester lisibles sans JavaScript.
+  la page « Outils »; l'accueil, la page « Outils » et les fiches DOIVENT rester lisibles sans
+  JavaScript.
 
 **Provenance et honnêteté**
 
 - **FR-030**: Chaque champ produit par un modèle d'IA affiché dans l'explorateur (statut du code
   source, licence, tags, verdicts des critères) DOIT être signalé comme tel, avec l'avertissement
-  « à vérifier », dans les cartes, le tableau, les filtres et la comparaison.
+  « à vérifier », dans les cartes, le tableau, les filtres et la comparaison; les critères déduits
+  des étoiles DOIVENT être signalés comme une déduction du dépôt.
 - **FR-031**: Un score estimé DOIT se distinguer d'un score donné par la source, partout où un
   score s'affiche.
 - **FR-032**: Aucun de ces signalements NE DOIT reposer sur la couleur seule ni sur le survol.
@@ -286,6 +335,22 @@ JavaScript, et vérifier le message de chaque cas.
   schémas, ni les scripts qui les produisent.
 - **FR-036**: Le site DOIT rester fait de fichiers statiques: aucun serveur, aucune API, aucun
   appel payant, ni à la génération ni à la consultation.
+
+**Accueil, page « Outils » et navigation**
+
+- **FR-041**: L'accueil DOIT présenter le projet: ce qu'est le répertoire et à qui il s'adresse, sa
+  genèse, les crédits (auteur·trices du répertoire d'origine, autres sources, auteur du dépôt) et
+  les logiciels utilisés pour réaliser le dépôt et le site. Il ne liste plus les outils et ne porte
+  plus de filtres.
+- **FR-042**: Une page « Outils » DOIT lister tous les outils actifs par catégorie, avec pour
+  chacun ce que montrait l'accueil de la première tranche (nom, score, statut du code source,
+  description courte, lien vers la fiche), sans filtre, et se lire sans JavaScript.
+- **FR-043**: Sur une fiche, le lien de la catégorie et ceux des tags DOIVENT mener à l'explorateur
+  filtré sur cette valeur.
+- **FR-044**: Chaque page DOIT porter dans son en-tête les liens « Accueil », « Outils » et
+  « Explorer », la page en cours étant indiquée autrement que par la couleur seule.
+- **FR-045**: Ce que l'accueil affirme (genèse, crédits, logiciels) DOIT venir de la documentation
+  et des fichiers du dépôt, sans rien inventer.
 
 **Langue et accessibilité**
 
@@ -333,30 +398,39 @@ JavaScript, et vérifier le message de chaque cas.
   (WCAG 2.1) sur la page, dans ses deux vues et avec une comparaison ouverte, et un parcours au
   clavier seul réussit (filtrer, trier, choisir deux outils, comparer, ouvrir une fiche).
 - **SC-009**: Après la fonctionnalité, les fichiers de données, leurs schémas et les scripts qui
-  les produisent sont identiques, l'accueil et les fiches se lisent toujours sans JavaScript, et
-  tous les contrôles existants passent.
+  les produisent sont identiques, et l'accueil, la page « Outils » et les fiches se lisent sans
+  JavaScript.
+- **SC-010**: 100 % des outils actifs figurent une fois sur la page « Outils », sous leur
+  catégorie, avec un lien vers leur fiche.
+- **SC-011**: Depuis l'accueil, une personne atteint la liste des outils ou l'explorateur en un
+  seul clic.
 
 ## Assumptions
 
 - **Contraintes imposées par la demande**: l'explorateur est une île SolidJS dans le site statique
   (skill `solidjs` du dépôt), et ses données sont chargées dans le navigateur depuis un fichier
   produit à la génération du site. Ces choix sont fixés; le plan les détaille.
-- **Critères dans le filtre et dans la comparaison**: ce sont les critères vérifiés d'après la page
-  de l'outil (confirmé, infirmé, indéterminé), les seuls qui portent un verdict. La comparaison ne
-  montre pas les citations: elles restent sur la fiche, à un clic.
+- **Critères dans la comparaison**: la comparaison ne montre ni les citations des critères
+  vérifiés ni le second avis du modèle: ils restent sur la fiche, à un clic.
 - **Tri par défaut**: par catégorie, dans l'ordre des catégories des données, puis par nom; c'est
-  l'ordre de l'accueil.
+  l'ordre de la page « Outils ».
 - **Tri par catégorie**: selon l'ordre des catégories dans les données (croissant) ou l'ordre
   inverse (décroissant), les outils d'une même catégorie étant classés par nom.
 - **Vue par défaut**: en cartes.
 - **Filtre de verdict**: un verdict au plus par critère; les trois critères se combinent entre eux
   comme les autres filtres.
 - **Filtres à choix multiple**: catégorie, tag, statut du code source, pays et source acceptent
-  plusieurs valeurs, comme sur l'accueil.
-- **Choix des outils à comparer**: une case à cocher sur chaque carte et chaque ligne; la
-  comparaison s'affiche sur la même page, au-dessus des résultats.
-- **Lien avec l'accueil**: l'accueil garde sa liste et ses filtres, lisibles sans JavaScript;
-  l'explorateur s'y ajoute et ne les remplace pas.
+  plusieurs valeurs, comme dans la première tranche.
+- **Choix des outils à comparer**: une case à cocher sur chaque carte et chaque ligne.
+- **Changements à la première tranche**: l'accueil devient une page de présentation, la liste par
+  catégorie passe sur la page « Outils » et l'île de filtres de l'accueil est retirée. Les tests
+  et la documentation de la première tranche sont mis à jour en conséquence; ses exigences sur la
+  liste (lecture sans JavaScript, provenance, absence de champ vide) valent pour la page
+  « Outils ».
+- **Anciennes adresses**: une adresse de l'accueil qui portait des filtres affiche désormais
+  l'accueil de présentation; elle n'est pas redirigée vers l'explorateur, le site étant statique.
+- **Contenu de l'accueil**: tiré du README et de l'historique du dépôt (source et crédits, étapes
+  du projet, outils à installer) et des dépendances du site.
 - **Données de l'explorateur**: le fichier ne contient que les champs que l'explorateur affiche ou
   filtre, sans les descriptions longues, pour rester léger sur un téléphone.
 - **Hors de cette tranche**: soumission d'outils, comptes, favoris enregistrés, commentaires,
