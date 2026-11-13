@@ -4,9 +4,9 @@
 
 ## En bref
 
-Ce dépôt est une extraction en JSON du [répertoire d'outils favorisant la souveraineté numérique](https://praxis.encommun.io/n/voRYZbuBYZKLejs8JyNkc5C4o7s/), une note publiée sur Praxis par La bande numérique (FCCF) pour les OSBL des arts et de la culture du Canada français. Le répertoire évalue 60 outils numériques, répartis en 20 catégories, selon trois critères (où restent les données, qui contrôle l'outil, de qui il dépend), et attribue à chacun 2 ou 3 étoiles. Le dépôt publie ces données sous une forme structurée et documentée (`outils.json`, `categories.json`, `criteres.json`, `tags.json`, avec leurs schémas JSON), les tient à jour depuis la page en ligne, et y ajoute ce que la page ne dit pas : à quel critère chaque étoile correspond (déduit des descriptions), et, pour 57 outils sur 60, un enrichissement par IA (description longue, tags, statut du code source, licence, dépôt de code, second avis sur la souveraineté) ainsi que les critères vérifiés d'après la page de l'outil, citation à l'appui. Il accueille aussi d'autres sources : les 22 [Services FACiLes](https://facil.services/) (logiciels libres hébergés au Québec par FACiL, avec le logiciel sous-jacent et les services qu'ils remplacent) et des outils ajoutés à la main, chacun rattaché à sa source (`sources.json`).
+Ce dépôt est une extraction en JSON du [répertoire d'outils favorisant la souveraineté numérique](https://praxis.encommun.io/n/voRYZbuBYZKLejs8JyNkc5C4o7s/), une note publiée sur Praxis par La bande numérique (FCCF) pour les OSBL des arts et de la culture du Canada français. Le répertoire évalue 60 outils numériques, répartis en 20 catégories, selon trois critères (où restent les données, qui contrôle l'outil, de qui il dépend), et attribue à chacun 2 ou 3 étoiles. Le dépôt publie ces données sous une forme structurée et documentée (`outils.json`, `categories.json`, `criteres.json`, `tags.json`, avec leurs schémas JSON), les tient à jour depuis la page en ligne, et y ajoute ce que la page ne dit pas : à quel critère chaque étoile correspond (déduit des descriptions), et, pour 79 outils sur 82 (57 des 60 outils de Praxis, et les 22 services FACiL), un enrichissement par IA (description longue, tags, statut du code source, licence, dépôt de code, second avis sur la souveraineté) ainsi que les critères vérifiés d'après la page de l'outil, citation à l'appui. Il accueille aussi d'autres sources : les 22 [Services FACiLes](https://facil.services/) (logiciels libres hébergés au Québec par FACiL, avec le logiciel sous-jacent et les services qu'ils remplacent) et des outils ajoutés à la main, chacun rattaché à sa source (`sources.json`).
 
-Le [sommaire statistique](sommaire.md) qui en résulte distingue 24 logiciels libres, 6 partiellement libres, 1 à code source disponible et 26 propriétaires parmi les outils enrichis, avec les licences, les forges de code, les tags et les critères de souveraineté par statut du code source. Les données sont sous licence CC BY-SA 4.0 (comme la source, dont elles sont une adaptation), le code sous AGPL-3.0-or-later. Les champs produits par IA sont des résumés de pages tierces, à vérifier avant de s'y fier ; la démarche, ses limites et ses mesures sont documentées dans [implementation.md](implementation.md) et [historique.md](historique.md).
+Le [sommaire statistique](sommaire.md) qui en résulte distingue 45 logiciels libres, 7 partiellement libres, 1 à code source disponible et 26 propriétaires parmi les 79 outils enrichis, avec les licences, les forges de code, les tags et les critères de souveraineté par statut du code source. Les données sont sous licence CC BY-SA 4.0 (comme la source, dont elles sont une adaptation), le code sous AGPL-3.0-or-later. Les champs produits par IA sont des résumés de pages tierces, à vérifier avant de s'y fier ; la démarche, ses limites et ses mesures sont documentées dans [implementation.md](implementation.md) et [historique.md](historique.md).
 
 <img src="graphiques/statut-code-source.svg" alt="Répartition des outils du répertoire par statut du code source : libre, partiellement libre, code source disponible, propriétaire, pas encore enrichi" width="720">
 
@@ -68,7 +68,7 @@ Les champs d'enrichissement résument des pages tierces (voir [D'où viennent le
 - **D'Open Hub** (données publiques, [openhub.net](https://www.openhub.net/)) : `openhub_id` et `openhub` des logiciels au code public (activité, contributeurs, commits, licences déclarées, langage, taille), relevés par `update` avec `OPENHUB_API_KEY`.
 - **Rédigé pour ce dépôt :** le vocabulaire de `tags.json` (identifiants et descriptions des 37 tags de départ).
 - **Calculé et généré par les scripts :** `sommaire.md` et `graphiques/` (statistiques calculées à partir des données, plus un résumé rédigé par un modèle d'IA).
-- **Calculé par les scripts :** `meta` (licence et dates des fichiers), `derniere_modification`, `changement`, `removed` et `enrichi_le` (voir `update.ts`, `enrichir.ts` et `fichiers.ts`).
+- **Calculé par les scripts :** `meta` (licence et dates des fichiers), `derniere_modification`, `changement`, `removed`, `enrichi_le` et `voir_aussi` (voir `update.ts`, `enrichir.ts`, `logiciel.ts` et `fichiers.ts`).
 - **Déduit par heuristique dans ce dépôt :** `criteres` et `confiance` (voir [Classification](implementation.md#classification)).
 - **Vérifié par un modèle d'IA, citation à l'appui :** `criteres_confirmes` (voir [`confirmer.ts`](implementation.md#confirmerts)). La citation permet de contrôler chaque verdict ; le verdict lui-même reste celui d'un modèle.
 - **Généré par un modèle d'IA :** la description de chaque catégorie (`categories.json`), et les champs d'enrichissement (voir [Enrichissement](implementation.md#enrichissement-par-ia)). Ils résument des pages tierces et sont à vérifier avant de s'y fier ou de les diffuser, surtout la licence et le dépôt.
@@ -94,7 +94,7 @@ Développement, avec nub (commandes définies dans `package.json`) :
 ```sh
 nub run test                     # lance les tests unitaires, puis ceux des données réelles, puis vérifie que les schémas JSON sont à jour
 nub run test:unit                # tests unitaires seulement (sans données: fonctionne avant le premier update)
-nub run test:data                # tests des fichiers de données réels (outils.json, categories.json, criteres.json, tags.json, sommaire.md)
+nub run test:data                # tests des fichiers de données réels (outils.json, categories.json, criteres.json, tags.json, sources.json, sommaire.md)
 nub run typecheck                # vérifie les types
 nub run schemas                  # régénère schemas/*.schema.json à partir des types
 nub run licences                 # vérifie la conformité REUSE des licences (uvx reuse lint; demande uv)
@@ -190,10 +190,10 @@ Fichier unifié : le tableau `outils` contient 82 outils, 60 du répertoire Prax
 | Champ | Description |
 |---|---|
 | `categorie` | Identifiant de la catégorie : `categories[].id` de [`categories.json`](#categoriesjson) (le schéma impose un slug et annote le renvoi ; un test vérifie que chaque valeur existe) |
-| `nom` | Nom de l'outil. Sert de clé d'identification |
+| `nom` | Nom de l'outil. Sert de clé d'identification : unique dans le fichier, et c'est par lui que `update` et `extract-facil` apparient les outils d'une source avec sa page |
 | `source_repertoire_id` | Identifiant de la source de l'outil : `sources[].id` de [`sources.json`](#sourcesjson) (`praxis` pour le répertoire Praxis ; une autre valeur pour un outil ajouté à la main ou extrait d'une autre collection). `update` ne retire que les outils de la source qu'il synchronise |
 | `score` | Nombre d'étoiles ★ sur 3, donné par la source |
-| `score_estime` | Présent (`true`) quand la source ne donne pas d'étoiles (outil ajouté à la main sans `--score`) : `score`, `criteres` et `confiance` viennent de l'évaluation enrichie, ou, avant l'enrichissement, de la classification par seuil de la description |
+| `score_estime` | Présent (`true`) quand la source ne donne pas d'étoiles (services FACiL, outil ajouté à la main sans `--score`) : `score`, `criteres` et `confiance` viennent de l'évaluation enrichie, ou, avant l'enrichissement, de la classification par seuil de la description |
 | `alternative_a` | Services, souvent propriétaires, auxquels l'outil se substitue (liste d'URL), quand la source le dit (FACiL : « Remplace : … », converti en URL par `extract-facil.ts` ; ou `--alternative-a` de `ajouter.ts`) ; absent sinon |
 | `instance_de` | Logiciel libre dont l'outil est une instance hébergée : `{ nom, url }` (nom et lien vers le dépôt ou la version, tels que la source les donne ; FACiL : « Est une instance de : … ») ; absent sinon. L'enrichissement, la vérification des critères et la recherche Open Hub portent alors sur ce logiciel (son dépôt, ramené à sa racine) plutôt que sur la page du service |
 | `voir_aussi` | Noms des autres outils qui reposent sur le même logiciel (leur `nom`, ou leur `instance_de.nom` pour un service), par exemple « Mastodon » et « Jasette FACiLe », qui en est une instance ; recalculé à chaque écriture, absent sinon. Transmis au modèle dans la fiche d'enrichissement, qui peut les mentionner dans `description_longue` |
@@ -202,7 +202,7 @@ Fichier unifié : le tableau `outils` contient 82 outils, 60 du répertoire Prax
 | `derniere_modification` | Dernière date de modification connue : ISO 8601 en heure de Toronto, avec le décalage (ex. `2026-11-05T09:53:00-05:00`) |
 | `changement` | Dernier changement détecté par `update.ts` : `"nouveau"`, `"modification"`, `"retrait"` ou `"comeback"`; `null` si jamais modifié depuis l'import |
 | `removed` | Présent (`true`) seulement pour un outil disparu de la page; l'entrée est conservée, à la fin du tableau |
-| `echecs_enrichissement`, `echecs_confirmation`, `echecs_openhub` | Nombre d'échecs consécutifs d'enrichissement, de vérification des critères, et de recherche Open Hub (page inaccessible ou presque vide, réponses invalides). Présent seulement sur un outil pas encore enrichi qui a échoué au moins une fois ; retiré dès que l'enrichissement réussit. À 3 (`--max-echecs=N` pour changer), `update` ne tente plus l'outil |
+| `echecs_enrichissement`, `echecs_confirmation`, `echecs_openhub` | Nombre d'échecs consécutifs d'enrichissement, de vérification des critères, et de recherche Open Hub (page inaccessible ou presque vide, réponses invalides). Présent seulement tant que l'étape a échoué au moins une fois sans réussir depuis (pour Open Hub, sur un outil déjà enrichi) ; retiré dès qu'elle réussit. À 3 (`--max-echecs=N` pour changer), `update` ne tente plus l'outil |
 | `criteres` | Identifiants (voir `criteres.json`) des critères que les étoiles représentent. Déduits, voir [Classification](implementation.md#classification) |
 | `confiance` | Fiabilité de cette déduction : `"élevée"`, `"moyenne"` ou `"faible"` |
 
@@ -210,18 +210,18 @@ Champs ajoutés par l'[enrichissement](implementation.md#enrichissement-par-ia),
 
 | Champ | Description |
 |---|---|
-| `description_longue` | Description détaillée en français (150 à 350 mots), en Markdown (plusieurs paragraphes, titres, gras, italique, listes), sans image, sans HTML, sans tiret cadratin et sans émoji ni émoticône |
+| `description_longue` | Description détaillée en français (150 à 350 mots), en Markdown (plusieurs paragraphes, titres, gras, italique, listes), sans image, sans HTML, sans tiret cadratin et sans émoji ni émoticône. Pour un service, elle décrit le service et son logiciel, et peut nommer les outils de `voir_aussi` |
 | `tags` | De 1 à 5 identifiants de `tags.json` |
 | `source` | Statut du code source : `"libre"` (licence libre, code public), `"partiel"` (édition communautaire libre mais édition complète ou services propriétaires, « open core »), `"source-disponible"` (code visible, licence non libre) ou `"proprietaire"` |
 | `licence` | Expression de licence [SPDX](https://spdx.org/licenses/) valide (ex. `AGPL-3.0-or-later`, `MIT OR Apache-2.0`); `null` pour un logiciel propriétaire, si elle est inconnue ou si aucun identifiant SPDX ne convient |
 | `custom_license` | Nom ou identifiant d'une licence absente de la liste SPDX (licence maison ou propre à l'éditeur), tel que l'éditeur l'écrit. Exclusif avec `licence`; `null` si la licence est SPDX, si le logiciel est propriétaire ou si elle est inconnue |
 | `custom_license_url` | URL du texte de la licence maison, quand elle est disponible; `null` sinon. Exige `custom_license` |
 | `repo` | URL du dépôt de code source, sur n'importe quelle forge (GitHub, GitLab, Codeberg, Framagit…); `null` si aucun ou inconnu |
-| `enrichi_le` | Date et heure de l'enrichissement de l'outil (ISO 8601, heure de Toronto), exacte pour chaque outil : les 57 enrichissements de `outils.json` datent du réimport du 2026-11-12 (de 12:36 à 12:55) |
+| `enrichi_le` | Date et heure de l'enrichissement de l'outil (ISO 8601, heure de Toronto), exacte pour chaque outil : les 57 outils de Praxis datent du réimport du 2026-11-12 (de 12:36 à 12:55), les 22 services FACiL du 2026-11-13 (de 07:24 à 07:51) |
 | `evaluation_enrichie` | Second avis du modèle sur la souveraineté de l'outil : `score` (nombre de critères satisfaits, de 0 à 3, égal à `criteres.length`), `criteres` (identifiants de `criteres.json`) et `confiance` (`"élevée"`, `"moyenne"` ou `"faible"`). S'y ajoute `ecart`, une explication en français de la différence, seulement quand cette évaluation diffère du `score` et des `criteres` du répertoire |
-| `criteres_confirmes` | Critères **vérifiés** par une IA d'après la page de l'outil, citation à l'appui (`confirmer.ts`, appelé par `update`) : `criteres` (ceux qui sont confirmés, dans l'ordre de `criteres.json`), `preuves` (une citation copiée mot pour mot de la description ou de la page, pour chaque critère confirmé), `infirmes` (une citation pour chaque critère que la page contredit ; un critère absent des deux est indéterminé), `modele` et `date` (heure de Toronto). Indépendant de `criteres`, qui reste lié aux étoiles : il peut en compter moins, jamais plus. Rempli par `update` pour tout outil enrichi qui ne l'a pas encore, avec le modèle de l'enrichissement (`gpt-6.1-sol` par défaut) ou, si celui-ci a dû prendre la relève, le modèle de repli : `modele` nomme celui qui a produit le verdict ; règle de lecture « la nationalité mentionnée suffit » pour « contrôle ». Présent pour les 57 outils enrichis, tous vérifiés par `gpt-6-astra` (le modèle par défaut d'alors) |
+| `criteres_confirmes` | Critères **vérifiés** par une IA d'après la page de l'outil, citation à l'appui (`confirmer.ts`, appelé par `update`) : `criteres` (ceux qui sont confirmés, dans l'ordre de `criteres.json`), `preuves` (une citation copiée mot pour mot de la description ou de la page, pour chaque critère confirmé), `infirmes` (une citation pour chaque critère que la page contredit ; un critère absent des deux est indéterminé), `modele` et `date` (heure de Toronto). Indépendant de `criteres`, qui reste lié aux étoiles : il peut en compter moins, jamais plus. Rempli par `update` pour tout outil enrichi qui ne l'a pas encore, avec le modèle de l'enrichissement (`gpt-6.1-sol` par défaut) ou, si celui-ci a dû prendre la relève, le modèle de repli : `modele` nomme celui qui a produit le verdict ; règle de lecture « la nationalité mentionnée suffit » pour « contrôle ». Présent pour les 79 outils enrichis : les 57 de Praxis vérifiés par `gpt-6-astra` (le modèle par défaut d'alors), les 22 services FACiL par `gpt-6.1-sol`, d'après la page de leur logiciel |
 
-Champs relevés sur [Open Hub](https://www.openhub.net/) par `update` (`openhub.ts`, clé `OPENHUB_API_KEY`), seulement pour les logiciels au code public (`source` libre, partiel ou source-disponible) dont un projet Open Hub concorde avec `lien` ou `repo` :
+Champs relevés sur [Open Hub](https://www.openhub.net/) par `update` (`openhub.ts`, clé `OPENHUB_API_KEY`), seulement pour les logiciels au code public (`source` libre, partiel ou source-disponible) dont un projet Open Hub concorde avec la page de l'outil (`lien`, ou le dépôt de son logiciel pour un service, voir `instance_de`) ou avec `repo` :
 
 | Champ | Description |
 |---|---|
@@ -258,14 +258,15 @@ Les sources des outils, dans le tableau `sources` : `{ id, nom, url, extracteur,
 
 ## Sommaire statistique
 
-[`sommaire.md`](sommaire.md) est généré par `node sommaire.ts` à partir des données (voir [Génération du sommaire statistique](implementation.md#génération-du-sommaire-statistique)) ; sa première ligne donne la date de génération, et son résumé est rédigé par un modèle d'IA, à relire. Au 2026-11-12 :
+[`sommaire.md`](sommaire.md) est généré par `node sommaire.ts` à partir des données (voir [Génération du sommaire statistique](implementation.md#génération-du-sommaire-statistique)) ; sa première ligne donne la date de génération, et son résumé est rédigé par un modèle d'IA, à relire. Au 2026-11-13 :
 
-- **82 outils** répartis en **20 catégories** : 60 du répertoire Praxis (**8 à 3 étoiles** et **52 à 2 étoiles**) et 22 des Services FACiLes, au score estimé (0 par la classification par seuil de leurs courtes descriptions, en attendant leur enrichissement).
-- **57 outils enrichis** sur 82 (les 22 outils FACiL restent à enrichir), dont **30 logiciels libres ou partiellement libres** (52,6 %) : 24 libres, 6 partiellement libres, 1 à code source disponible, 26 propriétaires ; 3 outils ne sont pas encore enrichis.
-- **8 licences SPDX distinctes**, **4 forges de code** et **36 tags** utilisés sur 37.
-- Critères déduits des descriptions (`criteres`) : « données » pour 60 outils, « contrôle » pour 29, « dépendance » pour 39 (les 60 outils de Praxis ; les outils FACiL, sans étoiles, n'en ont pas encore). Critères **vérifiés** d'après la page de l'outil (`criteres_confirmes`, 57 outils) : « données » confirmé pour 45 et indéterminé pour 12 ; « contrôle » confirmé pour 26, infirmé pour 30, indéterminé pour 1 ; « dépendance » confirmé pour 25, infirmé pour 2, indéterminé pour 30.
+- **82 outils** répartis en **20 catégories** : 60 du répertoire Praxis (**8 à 3 étoiles** et **52 à 2 étoiles**) et 22 des Services FACiLes, au score estimé d'après leur évaluation enrichie (8 à 2 étoiles, 11 à 1, 3 à 0).
+- **79 outils enrichis** sur 82 (les 3 outils de Praxis dont la page est illisible restent à enrichir), dont **52 logiciels libres ou partiellement libres** (65,8 %) : 45 libres (les 21 services FACiL libres et le logiciel de Praxis qu'ils font tourner comptent chacun), 7 partiellement libres, 1 à code source disponible, 26 propriétaires.
+- **11 licences SPDX distinctes**, **8 forges de code** et les **37 tags** du vocabulaire utilisés.
+- Critères déduits des descriptions (`criteres`) : « données » pour 60 outils, « contrôle » pour 48, « dépendance » pour 47 (les 60 outils de Praxis, un critère par étoile, et les services FACiL, alignés sur leur évaluation enrichie). Critères **vérifiés** d'après la page de l'outil ou de son logiciel (`criteres_confirmes`, 79 outils) : « données » confirmé pour 57 et indéterminé pour 22 ; « contrôle » confirmé pour 26, infirmé pour 30, indéterminé pour 23 ; « dépendance » confirmé pour 33, infirmé pour 2, indéterminé pour 44.
+- **36 outils** avec des données Open Hub ; **16 outils** reliés par `voir_aussi` (les 8 logiciels communs à Praxis et aux Services FACiLes).
 
-Le sommaire détaille chaque point par catégorie et par statut du code source, avec neuf graphiques possibles (huit dans l'état actuel), les licences, les forges, les données Open Hub (21 logiciels libres), les tags et les écarts entre les critères déduits, l'évaluation enrichie et les critères vérifiés.
+Le sommaire détaille chaque point par catégorie et par statut du code source, avec neuf graphiques, les licences, les forges, les données Open Hub, les tags et les écarts entre les critères déduits, l'évaluation enrichie et les critères vérifiés.
 
 ## Utiliser les données
 
@@ -289,6 +290,9 @@ jaq '.outils[] | select(.enrichi_le != null and .enrichi_le >= "2026-11-12") | .
 
 # outils portant un tag
 jaq '.outils[] | select((.tags // []) | index("chiffrement")) | .nom' outils.json
+
+# services FACiL : le logiciel qu'ils font tourner, et les outils du répertoire qui reposent sur le même logiciel
+jaq '.outils[] | select(.instance_de) | {nom, logiciel: .instance_de.nom, voir_aussi}' outils.json
 
 # critères vérifiés par IA, avec la citation, quand ils diffèrent des étoiles
 jaq '.outils[] | select(.criteres_confirmes and (.criteres_confirmes.criteres | length) < .score) | {nom, score, criteres, confirmes: .criteres_confirmes.criteres, preuves: .criteres_confirmes.preuves}' outils.json

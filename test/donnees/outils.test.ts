@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
-// Les vrais fichiers de données du dépôt (outils.json, categories.json, criteres.json, tags.json) sont cohérents
+// Les vrais fichiers de données du dépôt (outils.json, categories.json, criteres.json, tags.json, sources.json) sont cohérents
 // entre eux, conformes aux règles de classification et aux schémas JSON. Exige un `nub run update` terminé.
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -80,7 +80,7 @@ test("tags.json: ids uniques, en kebab-case, avec description française non vid
   }
 });
 
-test("les quatre fichiers portent la licence des données et des dates valides", () => {
+test("les cinq fichiers portent la licence des données et des dates valides", () => {
   for (const [f, cle] of [["outils.json", "outils"], ["categories.json", "categories"], ["criteres.json", "criteres"], ["tags.json", "tags"], ["sources.json", "sources"]] as const) {
     const lu = lireFichier(f, cle);
     assert.equal(lu.meta.data_license, "CC-BY-SA-4.0", f);
@@ -88,7 +88,7 @@ test("les quatre fichiers portent la licence des données et des dates valides",
   }
 });
 
-test("les quatre fichiers sont valides selon leurs schémas JSON (Ajv)", () => {
+test("les cinq fichiers sont valides selon leurs schémas JSON (Ajv)", () => {
   const lire = (chemin: string) => JSON.parse(readFileSync(chemin, "utf8"));
   for (const nom of ["outils", "categories", "criteres", "tags", "sources"]) {
     const valider = formats.default(new Ajv2020({ strict: true, allErrors: true })).compile(lire(`schemas/${nom}.schema.json`));

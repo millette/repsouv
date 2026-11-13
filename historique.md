@@ -4,7 +4,7 @@
 
 Les étapes du projet et les décisions prises, par date, d'après l'historique Git (`git log`) et les notes qui accompagnaient les changements. Les dates sont en heure de Toronto. Pour l'état actuel, voir le [README](README.md) et [implementation.md](implementation.md).
 
-**Sommaire :** [Repères](#repères) · [2026-11-11](#2026-11-11) · [2026-11-12](#2026-11-12) · [Décisions](#décisions)
+**Sommaire :** [Repères](#repères) · [2026-11-11](#2026-11-11) · [2026-11-12](#2026-11-12) · [2026-11-13](#2026-11-13) · [Décisions](#décisions)
 
 ## Repères
 
@@ -17,7 +17,11 @@ Les étapes du projet et les décisions prises, par date, d'après l'historique 
 | 2026-11-12 11:39 | Création de `categories.json` (20 catégories, descriptions rédigées par IA à 11:42) |
 | 2026-11-12 12:35 à 13:03 | Réimport complet dans un dossier vide (`update`, import initial) : `outils.json`, `categories.json` et `criteres.json` sont recréés (`meta.created_at` 12:35), 57 outils enrichis (12:36 à 12:55) puis vérifiés (jusqu'à 13:01), 20 catégories décrites (13:02) |
 | 2026-11-12 15:06 | `update` sans changement sur la page : les 3 outils non enrichis sont retentés sans succès (`echecs_enrichissement` à 2 ; abandon à 3) |
-| 2026-11-12 15:08 | Dernière génération de `sommaire.md` |
+| 2026-11-12 15:08 | `sommaire.md` régénéré après cet `update` |
+| 2026-11-12 17:41 | Les 22 Services FACiLes entrent dans `outils.json` par `extract-facil.ts` (leur `derniere_modification` est la date de lecture de la page, qui n'en affiche pas) et `sources.json` reçoit la source `facil` |
+| 2026-11-13 07:01 à 07:04 | Premier enrichissement de 12 services FACiL d'après la page du service (fiches fausses : Discourse et BilboPlanet classés propriétaires), 10 échecs ; remplacé le matin même |
+| 2026-11-13 07:24 à 07:51 | Les 22 services FACiL enrichis d'après la page de leur logiciel (`gpt-6.1-sol`, 0,17 $), vérifiés (07:28 à 07:30, 0,10 $), 15 projets Open Hub trouvés (07:30) ; puis les 8 services reliés par `voir_aussi` ré-enrichis pour nommer leur pendant (07:51, 0,07 $) |
+| 2026-11-13 07:52 | Dernière génération de `sommaire.md` |
 
 ## 2026-11-11
 
@@ -54,8 +58,6 @@ Les étapes du projet et les décisions prises, par date, d'après l'historique 
 - **Skill `charting-vega-lite` versionné** (`.claude/skills/`, MIT, oaustegard/claude-skills) avec son texte de licence dans `LICENSES/MIT.txt` et son annotation REUSE ; `.gitignore` n'ignore plus `.claude`.
 - **Sources multiples et outils ajoutés à la main** (branche `autres-repertoires`) : `sources.json` (Praxis, collections à venir comme FACiL avec leur extracteur, sources manuelles avec `soumis_par`), `source_repertoire_id` sur chaque outil (`update` ne retire que les outils de la source qu'il synchronise), `ajouter.ts` (outil saisi à la main, score estimé puis aligné sur l'évaluation enrichie), champs `alternative_a` et `score_estime`, cinquième schéma JSON.
 - **Source FACiL** (`extract-facil.ts`) : les 22 Services FACiLes (<https://facil.services/>) entrent dans `outils.json` avec leur logiciel sous-jacent (`instance_de`), les services qu'ils remplacent (`alternative_a`, noms convertis en URL par une table) et une catégorie attribuée par logiciel (table à réviser) ; score estimé faute d'étoiles. Synchronisation par source, comme Praxis.
-- **User-Agent du projet** (`agent.ts`) sur toutes les requêtes : navigateur Chrome sur Linux, puis `outils-souverainete-numerique/version (Robin Millette <courriel>)` d'après `package.json`, pour lire les pages statiques que les sites refusent aux clients anonymes, en restant joignable.
-- **Logiciel derrière un service** (`logiciel.ts`) : l'enrichissement, la vérification et la recherche Open Hub d'un service FACiL portent sur le logiciel dont il est une instance (`instance_de.url` ramené à la racine du dépôt), non sur la page du service, qui n'en disait presque rien (le premier passage avait classé Discourse et BilboPlanet propriétaires) ; champ `voir_aussi` reliant les outils d'un même logiciel, toutes sources confondues (huit logiciels communs à Praxis et FACiL, doublons acceptés).
 - **Open Hub** (`openhub.ts`, `OPENHUB_API_KEY`) : les logiciels libres enrichis reçoivent `openhub_id` et `openhub` (organisation, activité, licences déclarées, langage, taille, contributeurs et commits sur 12 mois) quand un projet concorde par la page d'accueil, un lien ou un dépôt (même organisation de forge admise) ; 21 outils sur 31 au premier passage, les candidats des autres dans le journal. Section « Open Hub » et provenance des outils dans le sommaire.
 - **`OPENAI_REASONING_EFFORT`** (effort de raisonnement par appel) et jetons de raisonnement comptés à part, pour mesurer l'effort qui convient à chaque tâche.
 - **Banc d'essai des modèles** ([`analyse-effort/`](analyse-effort/analyse.md), 1,08 $) : cinq variantes (Terra `medium`, `low`, `none` ; Sol `medium`, `low`) enrichissent et vérifient 20 outils, comparés aux résultats d'Astra. Sol `low` reproduit Astra champ par champ pour un cinquième du prix ; Terra est plus prudent (licences et dépôts à `null`, moins de critères retenus) ; l'effort change peu l'accord. Nouvelles valeurs par défaut : `gpt-6.1-sol`, effort `low`, repli `gpt-6-astra`.
@@ -67,6 +69,12 @@ Les étapes du projet et les décisions prises, par date, d'après l'historique 
 - **Deux environnements dans `package.json`** : `engines.node` (`>=26 <27`) pour qui exécute les scripts avec Node.js, `devEngines.runtime` (même plage, `onFail: warn`, lu par nub avant `.node-version`) et `devEngines.packageManager` (nub) pour qui développe ; `.node-version` reste pour les autres gestionnaires de versions.
 - **Exécution avec Node.js seul** : `node update.ts` et `node sommaire.ts` suffisent à utiliser le projet (`env.ts` charge `.env`, `engines.node` `>=26 <27`, `vega` et `vega-lite` en `devDependencies` car ils ne servent qu'aux types) ; le développement (tests, types, schémas, licences) reste sous nub, qui fournit le Node.js de `.node-version`, `nub.lock` et les commandes `nub run`.
 - **Graphiques en SVG seulement** : les PNG (1,7 Mo pour 8 images, un second appel à vl-convert chacun) ne sont plus produits ; `sommaire.md` et le README insèrent les SVG, que GitHub affiche. `ecrireFichier` retourne une copie des données, pour que `updated_at` avance à chaque écriture d'un enrichissement (il restait figé après la première écriture d'une exécution).
+
+## 2026-11-13
+
+- **Logiciel derrière un service** (`logiciel.ts`) : l'enrichissement, la vérification et la recherche Open Hub d'un service FACiL portent sur le logiciel dont il est une instance (`instance_de.url` ramené à la racine du dépôt, `instance_de.nom` pour la recherche), non sur la page du service, qui n'en disait presque rien (le premier passage, le matin même, avait classé Discourse et BilboPlanet propriétaires et laissé dix pages de connexion illisibles) ; la fiche envoyée au modèle reçoit `instance_de`, la page lue et `voir_aussi`, avec une consigne qui distingue le service de son logiciel. Champ `voir_aussi` reliant les outils d'un même logiciel, toutes sources confondues (huit logiciels communs à Praxis et FACiL, doublons acceptés), recalculé à chaque écriture ; les 8 services reliés ont été ré-enrichis pour que leur fiche nomme le logiciel du répertoire.
+- **Enrichissement des services FACiL** : 22 sur 22 d'après leur logiciel (21 libres, Mattermost partiel), vérifiés par `gpt-6.1-sol` (« contrôle » indéterminé pour tous, la page d'un logiciel ne disant pas qui héberge le service), 15 projets Open Hub trouvés ; 7 restent sans concordance sûre (Mastodon, FreshRSS, Mobilizon, LiberaForms, Lstu, Lufi, dont la fiche Open Hub ne cite pas le dépôt, et Agenda du libre, sans analyse). Le sommaire passe à 79 outils enrichis sur 82, 45 libres, 36 outils avec des données Open Hub, et reçoit son neuvième graphique (enrichissements par jour).
+- **User-Agent du projet** (`agent.ts`) sur toutes les requêtes : navigateur Chrome sur Linux, puis `outils-souverainete-numerique/version (Robin Millette <courriel>)` d'après `package.json` (`author.email`), pour lire les pages statiques que les sites refusent aux clients anonymes (facil.services répondait 403), en restant joignable.
 
 ## Décisions
 
@@ -94,4 +102,6 @@ Les étapes du projet et les décisions prises, par date, d'après l'historique 
 | Une source par outil (`source_repertoire_id`, `sources.json`), `update` ne synchronise que la sienne | Des outils venus d'ailleurs (FACiL, saisie manuelle) doivent survivre au suivi de Praxis, et chaque collection garde son extracteur et sa provenance (qui l'a soumise) |
 | Concordance Open Hub par URL (page d'accueil, liens, dépôts), jamais par le seul nom | Un nom est ambigu (« Firefox », « Matomo » rendent des dizaines de projets) ; sans concordance sûre, mieux vaut lister les candidats que se tromper de projet |
 | `gpt-6.1-sol` à effort `low` par défaut, `gpt-6-astra` en repli, une seule reprise par appel | Mesuré sur 20 outils (`analyse-effort/`) : Sol `low` donne les mêmes résultats qu'Astra pour un cinquième du prix, Terra en donne de plus prudents (champs à `null`, moins de critères) ; le repli, plus capable, ne paie que les réponses rejetées, et le coût reste prévisible (au plus deux appels) |
+| Un service hébergé (FACiL) est une entrée distincte, décrite d'après son logiciel (`instance_de`) ; les doublons avec Praxis sont acceptés et reliés par `voir_aussi` | La page d'un service est souvent une page de connexion qui ne dit rien du logiciel ; le service garde son lien, ses alternatives et son hébergement au Québec, et le renvoi dit qu'il s'agit du même logiciel que l'outil de Praxis |
+| User-Agent de navigateur, suivi du nom du projet et d'un contact | Certains sites refusent les clients sans en-tête de navigateur ; le nom et le courriel laissent un administrateur joindre l'auteur du dépôt |
 | Règle A pour « contrôle » : la nationalité mentionnée suffit | Les descriptions ne disent jamais qui possède l'entreprise ; sans convention, les IA divergent sur 21 outils. L'accord obtenu est une convention, pas une vérification de la propriété |
