@@ -17,6 +17,7 @@
 - Q: Où la comparaison côte à côte s'affiche-t-elle ? → A: Sur la page « Explorer », au-dessus des résultats.
 - Q: Que deviennent les filtres de l'accueil ? → A: L'accueil devient une page de présentation: le projet, sa genèse, les crédits et les logiciels utilisés pour le réaliser.
 - Q: Où va alors la liste des outils par catégorie, lisible sans JavaScript ? → A: Sur une page statique « Outils », sans filtres; tout filtrage passe par l'explorateur, et les filtres de la tranche 001 sont retirés.
+- Q: (amendement, après la livraison) Comment consulter tous les détails d'un outil depuis l'explorateur ? → A: Chaque outil garde sa propre page avec tous les détails disponibles (sa fiche); en plus, l'explorateur permet de consulter tous les détails d'un outil dans une boîte modale, sans quitter la page.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -208,6 +209,47 @@ fiche.
 
 ---
 
+---
+
+### User Story 7 - Consulter tous les détails d'un outil sans quitter l'explorateur (Priority: P2)
+
+La personne compare des outils dans l'explorateur et veut lire tout ce que le répertoire sait de
+l'un d'eux, sans perdre ses filtres, son tri ni sa comparaison. Depuis une carte, une ligne du
+tableau ou une colonne de la comparaison, elle ouvre une boîte modale qui montre tous les détails
+de l'outil, les mêmes que sur sa fiche; elle la ferme et retrouve l'explorateur comme elle l'avait
+laissé. La fiche de l'outil reste sa page de référence, à un clic.
+
+**Why this priority**: sans la boîte modale, lire les détails d'un candidat oblige à quitter
+l'explorateur puis à y revenir; avec elle, la comparaison se fait d'une traite.
+
+**Independent Test**: dans l'explorateur, ouvrir les détails d'un outil enrichi et d'un outil non
+enrichi: la boîte montre ce que montre la fiche; la fermer rend l'explorateur dans le même état.
+
+**Acceptance Scenarios**:
+
+1. **Given** des résultats en cartes ou en tableau, **When** la personne active « Détails » d'un
+   outil, **Then** une boîte modale s'ouvre avec le nom de l'outil en titre et tous les détails
+   que montre sa fiche, avec la même provenance (IA « à vérifier », déduction du dépôt, score
+   estimé, citations).
+2. **Given** la boîte ouverte, **When** la personne la ferme par son bouton, par la touche Échap ou
+   en cliquant hors d'elle, **Then** l'explorateur réapparaît avec le même tri, les mêmes filtres,
+   la même vue et la même comparaison, et le focus revient sur la commande qui a ouvert la boîte.
+3. **Given** la boîte ouverte, **When** la personne veut la page de l'outil, **Then** un lien
+   « Ouvrir la fiche » l'y mène.
+4. **Given** la boîte ouverte, **When** la personne copie l'adresse et l'ouvre ailleurs, **Then**
+   l'explorateur s'ouvre dans le même état, la boîte ouverte sur le même outil; le bouton précédent
+   du navigateur ferme la boîte.
+5. **Given** les détails en cours de chargement, ou qui ne peuvent pas être chargés, **When** la
+   boîte est ouverte, **Then** elle affiche un message de chargement, ou un message d'erreur avec
+   le lien vers la fiche; jamais une boîte vide.
+6. **Given** un outil non enrichi, **When** la personne ouvre ses détails, **Then** la boîte montre
+   les champs de sa source et ses critères déduits, sans section vide, comme sa fiche.
+7. **Given** la boîte ouverte, **When** la personne utilise le clavier, **Then** le focus reste
+   dans la boîte, tout y est atteignable, et un lecteur d'écran annonce une boîte de dialogue
+   nommée par l'outil.
+
+---
+
 ### Edge Cases
 
 - Un outil sans critères vérifiés et un filtre sur un verdict: l'outil n'est pas retenu, quel que
@@ -352,6 +394,23 @@ fiche.
 - **FR-045**: Ce que l'accueil affirme (genèse, crédits, logiciels) DOIT venir de la documentation
   et des fichiers du dépôt, sans rien inventer.
 
+**Détails d'un outil dans l'explorateur**
+
+- **FR-046**: Chaque outil DOIT garder sa propre page (sa fiche) avec tous les détails disponibles;
+  la boîte modale ne la remplace pas et y renvoie par un lien « Ouvrir la fiche ».
+- **FR-047**: Chaque carte, chaque ligne du tableau et chaque colonne de la comparaison DOIT offrir
+  une commande « Détails » qui ouvre, sans quitter la page, une boîte modale montrant tous les
+  détails de l'outil que montre sa fiche, avec la même provenance.
+- **FR-048**: La boîte DOIT se fermer par son bouton, par la touche Échap et par un clic hors
+  d'elle; l'explorateur retrouve alors son état, et le focus la commande qui l'a ouverte.
+- **FR-049**: L'outil dont les détails sont ouverts DOIT figurer dans l'adresse de la page: un lien
+  copié rouvre la boîte sur le même outil, et le bouton précédent la ferme; un outil inconnu dans
+  l'adresse est ignoré.
+- **FR-050**: La boîte DOIT afficher un état de chargement, puis les détails, ou un message
+  d'erreur avec le lien vers la fiche; elle n'est jamais vide.
+- **FR-051**: La boîte DOIT être une boîte de dialogue accessible: nommée par l'outil, focus
+  retenu à l'intérieur tant qu'elle est ouverte, utilisable au clavier et lisible sur un téléphone.
+
 **Langue et accessibilité**
 
 - **FR-037**: Tout le texte DOIT être en français.
@@ -402,6 +461,8 @@ fiche.
   JavaScript.
 - **SC-010**: 100 % des outils actifs figurent une fois sur la page « Outils », sous leur
   catégorie, avec un lien vers leur fiche.
+- **SC-012**: Pour 100 % des outils essayés, la boîte modale montre les mêmes sections que la
+  fiche de l'outil, et fermer la boîte rend l'explorateur dans l'état d'avant.
 - **SC-011**: Depuis l'accueil, une personne atteint la liste des outils ou l'explorateur en un
   seul clic.
 
@@ -410,6 +471,9 @@ fiche.
 - **Contraintes imposées par la demande**: l'explorateur est une île SolidJS dans le site statique
   (skill `solidjs` du dépôt), et ses données sont chargées dans le navigateur depuis un fichier
   produit à la génération du site. Ces choix sont fixés; le plan les détaille.
+- **Contenu de la boîte modale**: c'est le contenu de la fiche de l'outil, repris tel quel, pour
+  que la boîte et la fiche ne puissent pas se contredire. Sans JavaScript, l'explorateur n'est pas
+  disponible et la fiche reste le seul accès aux détails.
 - **Critères dans la comparaison**: la comparaison ne montre ni les citations des critères
   vérifiés ni le second avis du modèle: ils restent sur la fiche, à un clic.
 - **Tri par défaut**: par catégorie, dans l'ordre des catégories des données, puis par nom; c'est
