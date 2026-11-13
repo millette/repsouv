@@ -66,7 +66,7 @@ Les trois paquets (`@repsouv/commun`, `@repsouv/scripts`, `@repsouv/site`) s'imp
 | Fichier | Rôle |
 |---|---|
 | `donnees/` : `outils.json`, `categories.json`, `criteres.json`, `tags.json`, `sources.json` | Les données (voir [Fichiers JSON](README.md#fichiers-json)) |
-| `donnees/sommaire.md`, `donnees/graphiques/` | Le sommaire statistique généré et les graphiques (SVG) qu'il contient (mis à jour automatiquement par `nub run update` quand quelque chose a changé; sinon à régénérer avec `nub run sommaire`) |
+| `donnees/sommaire.md`, `donnees/graphiques/` | Le sommaire statistique généré et les graphiques (SVG) qu'il contient (mis à jour automatiquement par `nub run update` quand quelque chose a changé ; sinon à régénérer avec `nub run sommaire`) |
 | `donnees/schemas/` | Les schémas JSON des cinq fichiers de données, générés (voir [Schémas JSON](#schémas-json)) |
 | `package.json`, `nub.lock` | La racine des espaces de travail : `workspaces`, les commandes d'ensemble (voir [Scripts npm](#scripts-npm-packagejson)), les deux environnements (`engines.node` pour l'exécution, `devEngines.runtime` et `devEngines.packageManager` pour le développement), et le nom, la version et l'auteur que cite le User-Agent. Elle ne déclare aucune dépendance : chaque paquet déclare les siennes. `nub.lock`, unique, fixe les versions résolues, catalogue compris |
 | `packages/commun/` | Le code que les scripts et le site partagent, en modules purs sans dépendance d'exécution : `modele.ts`, `ids.ts`, `abandon.ts`, `slug.ts`, `statistiques.ts`, `graphiques.ts`, et leurs tests dans `test/` (voir [Code commun](#code-commun-packagescommun)) |
@@ -112,7 +112,7 @@ Les schémas valent pour du JSON ordinaire : les types du dépôt (chaînes, nom
 
 ## Scripts
 
-Les scripts sont dans `packages/scripts/` ; les commandes de cette section s'écrivent depuis la racine du dépôt, et fonctionnent de n'importe quel dossier en adaptant le chemin du script. Sept scripts se lancent avec `node` (ou `nub`) : `update.ts` et `sommaire.ts` (usage courant), `extract-facil.ts` (source FACiL), `extract-charles.ts` (source Charles) et `ajouter.ts` (ajout manuel), `extract.ts` et `classify.ts` (opérations exceptionnelles); `generer-schemas.ts` est un huitième programme, qui ne se lance que par `nub run schemas` (il doit d'abord être empaqueté, voir plus bas); les autres fichiers sont des modules, utilisés par les scripts et par les tests ; ce que le site emploie aussi est dans [`packages/commun/`](#code-commun-packagescommun). Tout est en TypeScript. Les fonctions principales sont exportées pour être réutilisables; le code de ligne de commande ne s'exécute que lorsque le script est lancé directement.
+Les scripts sont dans `packages/scripts/` ; les commandes de cette section s'écrivent depuis la racine du dépôt, et fonctionnent de n'importe quel dossier en adaptant le chemin du script. Sept scripts se lancent avec `node` (ou `nub`) : `update.ts` et `sommaire.ts` (usage courant), `extract-facil.ts` (source FACiL), `extract-charles.ts` (source Charles) et `ajouter.ts` (ajout manuel), `extract.ts` et `classify.ts` (opérations exceptionnelles) ; `generer-schemas.ts` est un huitième programme, qui ne se lance que par `nub run schemas` (il doit d'abord être empaqueté, voir plus bas) ; les autres fichiers sont des modules, utilisés par les scripts et par les tests ; ce que le site emploie aussi est dans [`packages/commun/`](#code-commun-packagescommun). Tout est en TypeScript. Les fonctions principales sont exportées pour être réutilisables ; le code de ligne de commande ne s'exécute que lorsque le script est lancé directement.
 
 ### `extract.ts`
 
@@ -120,7 +120,7 @@ Les scripts sont dans `packages/scripts/` ; les commandes de cette section s'éc
 node packages/scripts/extract.ts [--force] <outils.json> [criteres.json] [url]
 ```
 
-Télécharge la page en ligne (`[url]`, par défaut celle du répertoire) et écrit les outils, les catégories (`categories.json`, à côté de `outils.json` : id, nom et icône, en conservant les descriptions existantes) et, si demandé, les critères. Utilise [linkedom](https://github.com/WebReflection/linkedom) pour interroger le DOM. Lit la date de modification affichée sur la page (heure de l'Est) et lui ajoute le décalage de Toronto; refuse une page sans date ou contenant deux outils de même nom. Un échec de téléchargement (réseau, erreur HTTP) n'écrit rien.
+Télécharge la page en ligne (`[url]`, par défaut celle du répertoire) et écrit les outils, les catégories (`categories.json`, à côté de `outils.json` : id, nom et icône, en conservant les descriptions existantes) et, si demandé, les critères. Utilise [linkedom](https://github.com/WebReflection/linkedom) pour interroger le DOM. Lit la date de modification affichée sur la page (heure de l'Est) et lui ajoute le décalage de Toronto ; refuse une page sans date ou contenant deux outils de même nom. Un échec de téléchargement (réseau, erreur HTTP) n'écrit rien.
 
 Si `criteres.json` est donné, il est réécrit lui aussi, sans protection : il ne dépend que de la page.
 
@@ -146,23 +146,23 @@ Résultats de la vérification des 57 outils enrichis (réimport du 2026-11-12, 
 node packages/scripts/update.ts [--dry-run] [--sans-couleur] [--nouveaux-tags] [--max-echecs=N] [--accepter-couts] [outils.json] [url]
 ```
 
-Télécharge la page en ligne (`[url]`, par défaut celle du répertoire; le même téléchargement qu'`extract.ts`), la compare à `outils.json` (par défaut `donnees/outils.json` à la racine du dépôt, `FICHIER_OUTILS` de [`fichiers.ts`](#fichiersts), quel que soit le dossier courant) et met le fichier à jour. **Si `outils.json` n'existe pas, c'est l'import initial** : tous les outils de la page sont écrits avec `changement: "nouveau"` et la date de la page, et une ligne « Import initial » le dit. `criteres.json` et `categories.json`, dans le même dossier, sont écrits eux aussi à chaque exécution (les catégories de la page, avec les descriptions déjà connues, puis celles qu'un autre extracteur a déclarées avec `source_repertoire_id`, conservées telles quelles), et une ligne le signale quand leur contenu change (ou s'ils sont créés). Un `outils.json` au mauvais format est refusé, pas remplacé. `--dry-run` affiche les changements sans écrire (et le rappelle par une ligne « Simulation »). Pour chaque outil :
+Télécharge la page en ligne (`[url]`, par défaut celle du répertoire ; le même téléchargement qu'`extract.ts`), la compare à `outils.json` (par défaut `donnees/outils.json` à la racine du dépôt, `FICHIER_OUTILS` de [`fichiers.ts`](#fichiersts), quel que soit le dossier courant) et met le fichier à jour. **Si `outils.json` n'existe pas, c'est l'import initial** : tous les outils de la page sont écrits avec `changement: "nouveau"` et la date de la page, et une ligne « Import initial » le dit. `criteres.json` et `categories.json`, dans le même dossier, sont écrits eux aussi à chaque exécution (les catégories de la page, avec les descriptions déjà connues, puis celles qu'un autre extracteur a déclarées avec `source_repertoire_id`, conservées telles quelles), et une ligne le signale quand leur contenu change (ou s'ils sont créés). Un `outils.json` au mauvais format est refusé, pas remplacé. `--dry-run` affiche les changements sans écrire (et le rappelle par une ligne « Simulation »). Pour chaque outil :
 
 - absent du fichier : `changement: "nouveau"`;
-- marqué `removed` et de retour sur la page : `"comeback"`, et `removed` disparaît;
-- catégorie (identifiant), score, lien, description ou pays différents : `"modification"` (un changement d'icône seul est invisible ; le score d'un outil au score estimé n'est pas comparé, puisqu'il ne vient pas de la page);
-- absent de la page : `"retrait"` et `removed: true`, l'entrée est conservée;
+- marqué `removed` et de retour sur la page : `"comeback"`, et `removed` disparaît ;
+- catégorie (identifiant), score, lien, description ou pays différents : `"modification"` (un changement d'icône seul est invisible ; le score d'un outil au score estimé n'est pas comparé, puisqu'il ne vient pas de la page) ;
+- absent de la page : `"retrait"` et `removed: true`, l'entrée est conservée ;
 - identique : rien ne change, ni sa date ni son `changement`.
 
-Les outils nouveaux, modifiés, retirés ou de retour reçoivent la date de modification de la page; les nouveaux, modifiés et de retour sont reclassés. Les champs d'enrichissement d'un outil survivent à une modification ou à un retour, mais ils ne sont pas recalculés (voir la dernière remarque de [Importer ou réimporter](#importer-ou-réimporter-depuis-le-web)). Le fichier n'est réécrit que s'il y a au moins un changement, un outil sans source à rattacher à Praxis ou un renvoi `voir_aussi` à mettre à jour (voir [`logiciel.ts`](#logicielts)); `meta.updated_at` est alors mis à jour, et `tags.json` aussi quand de nouveaux tags s'ajoutent.
+Les outils nouveaux, modifiés, retirés ou de retour reçoivent la date de modification de la page ; les nouveaux, modifiés et de retour sont reclassés. Les champs d'enrichissement d'un outil survivent à une modification ou à un retour, mais ils ne sont pas recalculés (voir la dernière remarque de [Importer ou réimporter](#importer-ou-réimporter-depuis-le-web)). Le fichier n'est réécrit que s'il y a au moins un changement, un outil sans source à rattacher à Praxis ou un renvoi `voir_aussi` à mettre à jour (voir [`logiciel.ts`](#logicielts)) ; `meta.updated_at` est alors mis à jour, et `tags.json` aussi quand de nouveaux tags s'ajoutent.
 
 La synchronisation est suivie de l'[enrichissement](#enrichissement-par-ia) de tous les outils qui ne le sont pas encore (sans option : dès qu'il y a de nouvelles données), qui lit `tags.json` et `criteres.json` dans le même dossier que `outils.json`. Une option inconnue est refusée.
 
-**Aperçu, estimation et confirmation.** Avant d'écrire quoi que ce soit, `update` calcule ce qu'il ferait et l'affiche : les changements, les outils à enrichir (et ceux abandonnés après trop d'échecs), puis une **estimation des jetons et du coût** (borne haute : 3 caractères par jeton, un extrait de page de 6 000 caractères et un second appel pour l'explication de l'écart pour chaque outil, plus un appel pour le résumé du sommaire), au prix du modèle principal (`prix.ts`), suivie du scénario extrême du repli (« si chaque appel devait être repris par … : jusqu'à … de plus », les mêmes jetons au prix du repli). Le modèle et le repli sont affichés en tête (« Modèle OpenAI : … ; repli : … »). Avec `--dry-run`, il s'arrête là. Au **premier import** (pas de `outils.json`) avec des outils à enrichir, il demande confirmation dans le terminal : « 1. poursuivre en acceptant les coûts OpenAI », « 2. arrêter » (2 par défaut ; l'aperçu et l'estimation étant déjà affichés, une réponse « simulation » n'ajouterait rien) ; hors terminal (script, CI), il s'arrête avec le code 1 et demande `--accepter-couts`, qui vaut la réponse 1. Les exécutions suivantes n'interrompent plus : les coûts ont été acceptés une fois, et `--dry-run` reste disponible pour les chiffrer. Sans clé `OPENAI_API_KEY`, la synchronisation est écrite et l'enrichissement et la vérification sont sautés avec un avertissement jaune (les outils restent à enrichir ou à vérifier).
+**Aperçu, estimation et confirmation.** Avant d'écrire quoi que ce soit, `update` calcule ce qu'il ferait et l'affiche : les changements, les outils à enrichir (et ceux abandonnés après trop d'échecs), puis une **estimation des jetons et du coût** (borne haute : 3 caractères par jeton, un extrait de page de 6 000 caractères et un second appel pour l'explication de l'écart pour chaque outil, plus un appel pour le résumé du sommaire), au prix du modèle principal (`prix.ts`), suivie du scénario extrême du repli (« si chaque appel devait être repris par … : jusqu'à … de plus », les mêmes jetons au prix du repli). Le modèle et le repli sont affichés en tête (`Modèle OpenAI: <modèle>; repli: <modèle>`). Avec `--dry-run`, il s'arrête là. Au **premier import** (pas de `outils.json`) avec des outils à enrichir, il demande confirmation dans le terminal : « 1. poursuivre en acceptant les coûts OpenAI », « 2. arrêter » (2 par défaut ; l'aperçu et l'estimation étant déjà affichés, une réponse « simulation » n'ajouterait rien) ; hors terminal (script, CI), il s'arrête avec le code 1 et demande `--accepter-couts`, qui vaut la réponse 1. Les exécutions suivantes n'interrompent plus : les coûts ont été acceptés une fois, et `--dry-run` reste disponible pour les chiffrer. Sans clé `OPENAI_API_KEY`, la synchronisation est écrite et l'enrichissement et la vérification sont sautés avec un avertissement jaune (les outils restent à enrichir ou à vérifier).
 
 **Vérification des critères.** Après l'enrichissement, `update` vérifie les critères de chaque outil enrichi qui n'a pas encore de `criteres_confirmes` (voir [`confirmer.ts`](#confirmerts)) : un appel par outil, compté dans l'estimation de `--dry-run` (« vérification des critères de N outil(s) ») et dans le coût affiché à la fin, échecs comptés dans `echecs_confirmation`. Une vérification réussie compte comme un changement et déclenche le sommaire.
 
-**Open Hub.** Ensuite, `update` cherche sur Open Hub chaque outil enrichi au code public qui n'a pas encore de champ `openhub` (voir [`openhub.ts`](#openhubts)) : l'aperçu l'annonce (« Open Hub : N outil(s) libre(s) à chercher »), l'étape est gratuite et a sa barre de progression. Sans `OPENHUB_API_KEY`, un avertissement jaune dit « Open Hub sauté » et le reste se poursuit. Un outil complété déclenche le sommaire.
+**Open Hub.** Ensuite, `update` cherche sur Open Hub chaque outil enrichi au code public qui n'a pas encore de champ `openhub` (voir [`openhub.ts`](#openhubts)) : l'aperçu l'annonce (`Open Hub: N outil(s) libre(s) à chercher`), l'étape est gratuite et a sa barre de progression. Sans `OPENHUB_API_KEY`, un avertissement jaune dit « Open Hub sauté » et le reste se poursuit. Un outil complété déclenche le sommaire.
 
 **Descriptions des catégories.** Puis `update` rédige, avec le même modèle, la description de chaque catégorie de `categories.json` qui n'en a pas encore (voir [`categories.ts`](#categoriests)) : un appel par catégorie, compté dans l'estimation et le coût, redemandé une fois (au repli) si la réponse est invalide, sans compteur d'échecs (retentée à chaque `update`). Une description ajoutée déclenche le sommaire.
 
@@ -170,7 +170,7 @@ La synchronisation est suivie de l'[enrichissement](#enrichissement-par-ia) de t
 
 La mise à jour demande la clé `OPENAI_API_KEY` (pour le résumé) et `vl-convert` (pour les graphiques), et prend de 10 à 30 secondes (un appel pour le résumé, neuf conversions). Deux garde-fous évitent d'abîmer un bon sommaire :
 
-- si la clé ou `vl-convert` manque, un avertissement jaune le dit, le sommaire n'est pas touché et le code de sortie n'est pas modifié; il reste à lancer `nub run sommaire` après avoir réglé le problème;
+- si la clé ou `vl-convert` manque, un avertissement jaune le dit, le sommaire n'est pas touché et le code de sortie n'est pas modifié ; il reste à lancer `nub run sommaire` après avoir réglé le problème ;
 - si le résumé ne peut pas être rédigé (erreur de l'API, réponses invalides), le sommaire existant et ses graphiques sont conservés tels quels, un message rouge l'explique et le code de sortie est 1. (Lancé directement, `nub run sommaire` écrit au contraire un sommaire avec une note à la place du résumé.)
 
 **Couleurs.** Dans un terminal, `update.ts` colore ses messages pour les rendre plus lisibles :
@@ -222,9 +222,9 @@ Les dates et heures, toujours en heure de Toronto : `horodatage()` donne le mome
 
 `problemeLicenceSpdx(texte)` vérifie qu'une licence est une expression SPDX valide (avec [spdx-expression-parse](https://www.npmjs.com/package/spdx-expression-parse)) et retourne le problème, ou `null`. Sont refusés :
 
-- les noms en toutes lettres (« GNU Affero General Public License v3.0 ») et une casse incorrecte;
-- les identifiants inexistants (`BSL-1.1`; le bon est `BUSL-1.1`);
-- les identifiants dépréciés ou ambigus (`GPL-3.0`, `GPL-2.0+` : écrire `-only` ou `-or-later`);
+- les noms en toutes lettres (« GNU Affero General Public License v3.0 ») et une casse incorrecte ;
+- les identifiants inexistants (`BSL-1.1`; le bon est `BUSL-1.1`) ;
+- les identifiants dépréciés ou ambigus (`GPL-3.0`, `GPL-2.0+` : écrire `-only` ou `-or-later`) ;
 - les `LicenseRef-` maison, absents de la liste SPDX. Une telle licence se décrit plutôt dans `custom_license` (nom ou identifiant) et `custom_license_url` (URL du texte, si disponible), avec `licence` à `null`.
 
 ### `progress.ts`
@@ -321,7 +321,7 @@ Le paquet a ses propres commandes (`nub run test` et `nub run typecheck` dans `p
 La page ne dit pas quelle étoile correspond à quel critère. `classify.ts` le déduit des descriptions :
 
 1. Des règles (expressions régulières) mesurent, pour chaque critère, la force des indices dans la description : « auto-hébergé » ou « au Canada » pour les données, « canadien » ou « québécois » (contre « non canadien », « international ») pour le contrôle, « pair-à-pair », « hors ligne », « libre » pour la dépendance.
-2. Le `score` connu fixe le nombre de critères satisfaits : 3 étoiles = les trois critères; 2 = on écarte celui dont l'indice est le plus faible.
+2. Le `score` connu fixe le nombre de critères satisfaits : 3 étoiles = les trois critères ; 2 = on écarte celui dont l'indice est le plus faible.
 3. `confiance` reflète l'écart entre le dernier critère retenu et le premier écarté.
 
 Pour une description sans score connu, la fonction exportée `classer(description)` retient les critères dont l'indice atteint un seuil (2), et la confiance est `"indéterminée"` : c'est la valeur des outils au score estimé qui ne sont pas encore enrichis (9 alternatives de Charles au 2026-11-13).
@@ -342,7 +342,7 @@ Sur les 57 outils enrichis de Praxis (les seuls dont les étoiles viennent de la
 
 | Option | Effet |
 |---|---|
-| `--nouveaux-tags` | Autorise le modèle à proposer de nouveaux tags, au plus 2 par outil selon sa consigne (justification obligatoire, validée par le script); ils sont ajoutés à `tags.json` |
+| `--nouveaux-tags` | Autorise le modèle à proposer de nouveaux tags, au plus 2 par outil selon sa consigne (justification obligatoire, validée par le script) ; ils sont ajoutés à `tags.json` |
 | `--max-echecs=N` | Nombre d'échecs consécutifs à partir duquel un outil n'est plus tenté (3 par défaut, voir `echecs_enrichissement`). Pour retenter les outils abandonnés, relancer avec une valeur plus élevée |
 | `--dry-run` | Liste les outils concernés et estime les jetons et le coût, sans appeler l'API ni rien écrire |
 | `--accepter-couts` | Au premier import, tient lieu de la réponse « 1 » à la confirmation (nécessaire hors terminal) |
@@ -357,14 +357,14 @@ Sur les 57 outils enrichis de Praxis (les seuls dont les étoiles viennent de la
 
 **Validation :** chaque réponse est vérifiée avant d'être écrite :
 
-- de 1 à 5 tags connus, sans doublon;
-- URL de dépôt valide, licence SPDX valide (voir `spdx.ts`);
-- licence maison cohérente : exclusive avec `licence`, URL seulement avec un nom, et un nom qui n'est pas lui-même un identifiant SPDX;
-- ni dépôt, ni licence, ni licence maison pour un logiciel propriétaire;
-- description longue sans image Markdown, sans HTML (balises, entités, liens entre chevrons), sans tiret cadratin et sans émoji ni émoticône;
+- de 1 à 5 tags connus, sans doublon ;
+- URL de dépôt valide, licence SPDX valide (voir `spdx.ts`) ;
+- licence maison cohérente : exclusive avec `licence`, URL seulement avec un nom, et un nom qui n'est pas lui-même un identifiant SPDX ;
+- ni dépôt, ni licence, ni licence maison pour un logiciel propriétaire ;
+- description longue sans image Markdown, sans HTML (balises, entités, liens entre chevrons), sans tiret cadratin et sans émoji ni émoticône ;
 - évaluation cohérente (score égal au nombre de critères).
 
-Une réponse invalide est redemandée une fois, avec la raison du rejet, au modèle de repli s'il y en a un (voir [Modèle de repli](#modèle-de-repli)), puis consignée comme échec. Un outil n'est modifié que si tout son enrichissement a réussi; sinon il sera retenté à la prochaine exécution.
+Une réponse invalide est redemandée une fois, avec la raison du rejet, au modèle de repli s'il y en a un (voir [Modèle de repli](#modèle-de-repli)), puis consignée comme échec. Un outil n'est modifié que si tout son enrichissement a réussi ; sinon il sera retenté à la prochaine exécution.
 
 ### Modèle de repli
 
@@ -374,7 +374,7 @@ Choix des valeurs par défaut, mesuré par le [banc d'essai](analyse-effort/anal
 
 **Évaluation indépendante :** le modèle reçoit la description des trois critères, mais pas le score ni les critères du répertoire, pour ne pas simplement les confirmer. Quand son évaluation diffère (score ou critères), un second appel explique l'écart en 2 à 4 phrases, sans prétendre savoir laquelle des deux est correcte et en rappelant que les critères du répertoire sont eux-mêmes déduits. Cette explication, soumise aux mêmes interdits typographiques que la description longue, est inscrite dans `evaluation_enrichie.ecart`. Le `score` et les `criteres` du répertoire ne sont jamais modifiés, et les écarts sont résumés à la fin de l'exécution.
 
-**Progression :** la barre de progression et le journal vont sur stderr; les résumés (changements, nombre d'outils enrichis, écarts, nouveaux tags) restent sur stdout. Le nom de l'outil en cours s'affiche à droite de la barre (en terminal) ou sur une ligne `Enrichissement de <outil>...` (hors terminal, où une ligne de pourcentage est aussi écrite par tranche de 10 %). Dans un terminal, la barre et le journal sont colorés (voir [Couleurs](#updatets)) : succès en vert, avertissements en jaune, échecs en rouge.
+**Progression :** la barre de progression et le journal vont sur stderr ; les résumés (changements, nombre d'outils enrichis, écarts, nouveaux tags) restent sur stdout. Le nom de l'outil en cours s'affiche à droite de la barre (en terminal) ou sur une ligne `Enrichissement de <outil>...` (hors terminal, où une ligne de pourcentage est aussi écrite par tranche de 10 %). Dans un terminal, la barre et le journal sont colorés (voir [Couleurs](#updatets)) : succès en vert, avertissements en jaune, échecs en rouge.
 
 **Reprise et échecs répétés :** `outils.json` est écrit après chaque outil, enrichi, vérifié ou en échec, donc une interruption ne perd rien et une relance reprend où on s'est arrêté. Chaque échec (page inaccessible ou presque vide, deux réponses invalides) incrémente `echecs_enrichissement` sur l'outil ; à 3 échecs consécutifs (`--max-echecs=N` pour changer), l'outil est **abandonné** : `update` ne le tente plus, le dit en tête de l'enrichissement (avec le compteur), et le sommaire le compte parmi les outils restant à enrichir. Un succès retire le compteur. Le code de sortie est 1 si au moins un outil a échoué pendant l'exécution (un outil abandonné, non tenté, ne compte pas).
 
@@ -382,7 +382,7 @@ Choix des valeurs par défaut, mesuré par le [banc d'essai](analyse-effort/anal
 
 La page de chaque outil est lue avant tout appel à l'API. Elle est jugée inutilisable si elle est inaccessible (erreur réseau, délai de 20 secondes dépassé, réponse HTTP non réussie comme un 403 de blocage anti-robot) ou presque vide (moins de 200 caractères de texte, par exemple un site rendu par JavaScript). Dans ce cas (exemples rencontrés : En commun, dont la page est vide parce qu'elle est générée par JavaScript, ainsi que Paperless-ngx et CIRA Canadian Shield, qui répondent par une erreur HTTP 403) :
 
-- un **avertissement** est affiché dans le journal, avec la raison;
+- un **avertissement** est affiché dans le journal, avec la raison ;
 - l'outil n'est **pas enrichi** : aucun appel à l'API n'est fait, l'échec est consigné (code de sortie 1, `echecs_enrichissement` incrémenté) et l'outil sera retenté à la prochaine exécution, jusqu'à 3 échecs consécutifs. Un résultat bâti sur la seule description serait moins fiable (licence et dépôt tirés de la mémoire du modèle, description générique), et comme un outil enrichi n'est jamais régénéré, il serait figé.
 
 Un outil dont la page est illisible n'est donc jamais enrichi, pour ne pas figer un résumé tiré de la mémoire du modèle. Pour refaire plus tard l'enrichissement d'un outil (page corrigée, changement de stratégie), supprimer ses champs d'enrichissement, puis relancer `nub run update` :
@@ -396,24 +396,24 @@ jaq '.outils |= map(if .nom == "Nom de l'\''outil" then del(.description_longue,
 
 Le sommaire est mis à jour **automatiquement** par `update.ts` quand quelque chose a changé (voir [`update.ts`](#updatets)), et se lance aussi à la main avec `nub run sommaire`. Il analyse `donnees/outils.json` (et `tags.json`, `criteres.json`, `categories.json` et, s'il existe, `sources.json`, lus dans le même dossier) et écrit `donnees/sommaire.md`, un document en Markdown qui regroupe :
 
-- **un résumé de 3 ou 4 paragraphes** sur le répertoire et son utilité, rédigé par l'API OpenAI;
-- les **chiffres clés** (outils, catégories, scores, outils enrichis, provenance par source et scores estimés, pays de l'éditeur, libres ou partiels, nombre de licences SPDX, de forges et de tags utilisés);
-- les **dates** : les outils les plus anciens et les plus récents du répertoire (`derniere_modification`), les changements détectés, et les dates d'enrichissement (premier, dernier, nombre d'outils par jour, outils enrichis sans date);
-- les **catégories** (outils, enrichis, libres ou partiels, score moyen);
-- le **statut du code source** (libre, partiellement libre, code source disponible, propriétaire, pas encore enrichi);
-- les **licences** : par licence SPDX, par famille (copyleft fort ou faible, permissive; classement indicatif d'après l'identifiant), licences maison, et outils sans licence connue;
-- les **critères de souveraineté** : nombre d'outils par critère, et critères satisfaits par statut du code source, d'abord pour le répertoire (déduits) puis pour l'évaluation enrichie, avec les écarts entre les deux, et enfin les **critères vérifiés** d'après la page de l'outil (`criteres_confirmes`) : part des critères confirmés, infirmés et indéterminés par statut du code source, modèle, outils sans verdict, outils ayant autant de critères confirmés que d'étoiles, outils ayant exactement les critères de l'évaluation enrichie;
-- les **forges de code** : nombre d'outils par forge (GitHub, GitLab, Codeberg…) et logiciels libres sans dépôt connu;
-- les **données Open Hub** : un tableau par outil (projet, activité, contributeurs et commits sur 12 mois, licences déclarées), les outils restant à chercher ou abandonnés, et les alternatives déclarées par la source (`alternative_a`);
-- les **tags** : utilisation de chacun, tags inutilisés, moyenne par outil, paires les plus fréquentes, tags ajoutés;
-- la **fiabilité** : confiance de la classification, outils restant à enrichir et outils abandonnés après des échecs répétés;
+- **un résumé de 3 ou 4 paragraphes** sur le répertoire et son utilité, rédigé par l'API OpenAI ;
+- les **chiffres clés** (outils, catégories, scores, outils enrichis, provenance par source et scores estimés, pays de l'éditeur, libres ou partiels, nombre de licences SPDX, de forges et de tags utilisés) ;
+- les **dates** : les outils les plus anciens et les plus récents du répertoire (`derniere_modification`), les changements détectés, et les dates d'enrichissement (premier, dernier, nombre d'outils par jour, outils enrichis sans date) ;
+- les **catégories** (outils, enrichis, libres ou partiels, score moyen) ;
+- le **statut du code source** (libre, partiellement libre, code source disponible, propriétaire, pas encore enrichi) ;
+- les **licences** : par licence SPDX, par famille (copyleft fort ou faible, permissive ; classement indicatif d'après l'identifiant), licences maison, et outils sans licence connue ;
+- les **critères de souveraineté** : nombre d'outils par critère, et critères satisfaits par statut du code source, d'abord pour le répertoire (déduits) puis pour l'évaluation enrichie, avec les écarts entre les deux, et enfin les **critères vérifiés** d'après la page de l'outil (`criteres_confirmes`) : part des critères confirmés, infirmés et indéterminés par statut du code source, modèle, outils sans verdict, outils ayant autant de critères confirmés que d'étoiles, outils ayant exactement les critères de l'évaluation enrichie ;
+- les **forges de code** : nombre d'outils par forge (GitHub, GitLab, Codeberg…) et logiciels libres sans dépôt connu ;
+- les **données Open Hub** : un tableau par outil (projet, activité, contributeurs et commits sur 12 mois, licences déclarées), les outils restant à chercher ou abandonnés, et les alternatives déclarées par la source (`alternative_a`) ;
+- les **tags** : utilisation de chacun, tags inutilisés, moyenne par outil, paires les plus fréquentes, tags ajoutés ;
+- la **fiabilité** : confiance de la classification, outils restant à enrichir et outils abandonnés après des échecs répétés ;
 - des **graphiques**, insérés dans la section qu'ils illustrent (voir plus bas).
 
 Tant que tous les outils ont la même date (aucune modification détectée depuis l'import), les lignes « outils les plus anciens » et « outils les plus récents » sont identiques.
 
 Les retirés (`removed`) sont comptés à part. Les statistiques sur le statut du code source, les licences, les forges et les tags ne portent que sur les outils déjà enrichis : le sommaire dit combien il y en a, et reste valide à n'importe quel stade de l'enrichissement. Il reflète l'état du fichier au moment de l'exécution. `update` le met à jour tout seul quand quelque chose a changé. Il reste à le relancer à la main quand la mise à jour automatique a été sautée (clé ou vl-convert manquant) ou a échoué.
 
-Le calcul est local; seul le résumé passe par le réseau. Pour le rédiger, le script envoie à l'API OpenAI toutes les statistiques et, pour chaque outil du répertoire, son nom, sa catégorie, son score, ses critères, son statut, sa licence, sa forge, ses tags et sa description courte. Le résumé est validé (3 ou 4 paragraphes de texte continu, sans liste, sans gras, sans HTML, sans tiret cadratin ni émoji; redemandé une fois avec la raison du rejet, au modèle de repli s'il y en a un), puis inscrit dans le sommaire avec le nom du modèle qui l'a rédigé et la date, et la mention qu'il est à relire. Si la rédaction échoue, le sommaire, lancé directement, est tout de même écrit avec une note à la place du résumé, et le code de sortie est 1 (la mise à jour automatique, elle, conserve l'ancien sommaire).
+Le calcul est local ; seul le résumé passe par le réseau. Pour le rédiger, le script envoie à l'API OpenAI toutes les statistiques et, pour chaque outil du répertoire, son nom, sa catégorie, son score, ses critères, son statut, sa licence, sa forge, ses tags et sa description courte. Le résumé est validé (3 ou 4 paragraphes de texte continu, sans liste, sans gras, sans HTML, sans tiret cadratin ni émoji ; redemandé une fois avec la raison du rejet, au modèle de repli s'il y en a un), puis inscrit dans le sommaire avec le nom du modèle qui l'a rédigé et la date, et la mention qu'il est à relire. Si la rédaction échoue, le sommaire, lancé directement, est tout de même écrit avec une note à la place du résumé, et le code de sortie est 1 (la mise à jour automatique, elle, conserve l'ancien sommaire).
 
 | Option | Effet |
 |---|---|
@@ -436,11 +436,11 @@ Les graphiques sont des spécifications Vega-Lite construites à partir des stat
 | `tags` | Les 15 tags les plus fréquents | Tags |
 | `enrichissement-jours` | Outils enrichis par jour, seulement à partir de deux jours distincts (absent tant que tous les enrichissements datent du même jour ; présent depuis l'enrichissement des services FACiL le 2026-11-13) | Dates |
 
-Un graphique sans données est omis (par exemple, sans outil enrichi, ni licences, ni forges, ni tags), et les fichiers d'un graphique qui n'est plus produit sont supprimés du dossier (les autres fichiers y restent). Chaque image du sommaire a un texte alternatif qui résume son contenu. L'image en tête du README pointe vers `donnees/graphiques/statut-code-source.svg` (par une balise `<img>`, la seule balise HTML du README, pour en fixer la largeur) : elle se met à jour quand ce fichier est régénéré et commité. Les graphiques ne contiennent que des statistiques déjà publiées dans le sommaire; aucune donnée ne quitte l'ordinateur pour les produire.
+Un graphique sans données est omis (par exemple, sans outil enrichi, ni licences, ni forges, ni tags), et les fichiers d'un graphique qui n'est plus produit sont supprimés du dossier (les autres fichiers y restent). Chaque image du sommaire a un texte alternatif qui résume son contenu. L'image en tête du README pointe vers `donnees/graphiques/statut-code-source.svg` (par une balise `<img>`, la seule balise HTML du README, pour en fixer la largeur) : elle se met à jour quand ce fichier est régénéré et commité. Les graphiques ne contiennent que des statistiques déjà publiées dans le sommaire ; aucune donnée ne quitte l'ordinateur pour les produire.
 
 **Installer vl-convert** : `cargo install vl-convert`, ou télécharger un binaire sur la [page des versions](https://github.com/vega/vl-convert/releases). Le programme doit être dans le `PATH`. Le script vérifie sa présence au début, avant tout appel à l'API, et propose `--sans-graphiques` s'il est absent. Les spécifications visent Vega-Lite 6.1, la version la plus récente que gère `vl-convert` 1.9.
 
-Le dépôt contient un `sommaire.md` déjà généré ([le consulter](donnees/sommaire.md)); il reflète l'état des données au moment où il a été produit, et son introduction donne la date de génération. Le résumé rédigé par l'IA est différent à chaque exécution : régénérer le sommaire en change le texte, même si les données n'ont pas bougé.
+Le dépôt contient un `sommaire.md` déjà généré ([le consulter](donnees/sommaire.md)) ; il reflète l'état des données au moment où il a été produit, et son introduction donne la date de génération. Le résumé rédigé par l'IA est différent à chaque exécution : régénérer le sommaire en change le texte, même si les données n'ont pas bougé.
 
 Configuration : `OPENAI_API_KEY` dans `.env` et, facultativement, `OPENAI_MODEL` et `OPENAI_MODEL_FALLBACK`, comme pour l'enrichissement. Un seul appel est fait par exécution, deux si la première réponse est rejetée (le second par le repli). Le résumé est obtenu avant l'écriture des graphiques, de sorte qu'un échec du résumé, dans la mise à jour automatique, ne laisse rien de modifié.
 
@@ -520,7 +520,7 @@ Avec `node:test`, lancé par `nub --test` (le développement et les tests passen
 - `logiciel.test.ts` : nom de logiciel, racine du dépôt par forge (pages de version, de tag et de commit ; forges auto-hébergées ; hors forge), page d'enrichissement, renvois `voir_aussi` (symétrie, outils retirés, renvoi périmé, identité conservée).
 - `agent.test.ts` : forme du User-Agent (navigateur, nom/version, contact ; sans auteur), valeur lue dans `package.json`, `enTetes` ; chaque test de téléchargement vérifie l'en-tête envoyé (Praxis par un serveur local, FACiL, Charles, Open Hub, OpenAI).
 - `openhub.test.ts` : lecture du XML (collection, projet avec analyse, dépôts, erreur de statut), concordance directe (un lien sur une forge comparé comme dépôt, jamais par hôte) et par les dépôts, champs écrits, outils à compléter, boucle avec un faux client (concordance, service instance d'un logiciel cherché par le nom du logiciel, candidats journalisés, compteur et abandon, erreur réseau), client HTTP.
-- `en-tetes.test.ts` : chaque fichier `.ts` de `packages/commun/`, de `packages/scripts/`, de leurs dossiers `test/` et de `analyse-effort/` porte les en-têtes SPDX; la licence du code est la même dans `package.json`; les textes de licence sont présents, à la racine (`LICENSE*`) et dans `LICENSES/` (AGPL, CC BY-SA, MIT); chaque schéma JSON déclare la licence du code dans `$comment`; et `REUSE.toml` annote `donnees/schemas/**` et le reste des fichiers sans en-tête (AGPL-3.0-or-later), les données et leurs dérivés (CC-BY-SA-4.0) et les skills et outils d'agents installés (`.claude/skills/*`, `.agents/skills/*`, `.specify/**`, MIT) ; `skills-lock.json` déclare sa licence dans `meta.$comment` et celle de chaque skill dans `skills.<nom>.meta`, en accord avec `REUSE.toml`. Ce test ne remplace pas `nub run licences`, qui contrôle tous les fichiers.
+- `en-tetes.test.ts` : chaque fichier `.ts` de `packages/commun/`, de `packages/scripts/`, de leurs dossiers `test/` et de `analyse-effort/` porte les en-têtes SPDX ; la licence du code est la même dans `package.json`; les textes de licence sont présents, à la racine (`LICENSE*`) et dans `LICENSES/` (AGPL, CC BY-SA, MIT) ; chaque schéma JSON déclare la licence du code dans `$comment`; et `REUSE.toml` annote `donnees/schemas/**` et le reste des fichiers sans en-tête (AGPL-3.0-or-later), les données et leurs dérivés (CC-BY-SA-4.0) et les skills et outils d'agents installés (`.claude/skills/*`, `.agents/skills/*`, `.specify/**`, MIT) ; `skills-lock.json` déclare sa licence dans `meta.$comment` et celle de chaque skill dans `skills.<nom>.meta`, en accord avec `REUSE.toml`. Ce test ne remplace pas `nub run licences`, qui contrôle tous les fichiers.
 
 **`packages/scripts/test/donnees/*.test.ts`, données réelles** (`nub run test:data`), après un `nub run update` terminé ; chaque fichier commence par `exigerFichiers` (`garde.ts`), qui échoue avec un message clair si un fichier manque :
 
@@ -587,7 +587,7 @@ Un site statique qui rend le répertoire consultable sans ouvrir de fichier JSON
 
 ## Fonctionnalités menées avec Spec Kit
 
-Une fonctionnalité peut être menée avec [Spec Kit](https://github.com/github/spec-kit) (commandes `speckit-*` de `.claude/skills/`, gabarits et scripts de `.specify/`). La [constitution](.specify/memory/constitution.md) du projet (version 1.2.1) fixe ce que chaque spécification, plan et liste de tâches doit respecter : six principes (les données d'abord, provenance et honnêteté, licences REUSE, coûts explicites, tests d'abord et simplicité, tout en français), les contraintes techniques, le flux de travail et la gouvernance. Elle prime sur les gabarits, et toute modification est versionnée et notée dans [historique.md](historique.md).
+Une fonctionnalité peut être menée avec [Spec Kit](https://github.com/github/spec-kit) (commandes `speckit-*` de `.claude/skills/`, gabarits et scripts de `.specify/`). La [constitution](.specify/memory/constitution.md) du projet (version 1.3.0) fixe ce que chaque spécification, plan et liste de tâches doit respecter : six principes (les données d'abord, provenance et honnêteté, licences REUSE, coûts explicites, tests d'abord et simplicité, tout en français), les contraintes techniques, le flux de travail et la gouvernance. Elle prime sur les gabarits, et toute modification est versionnée et notée dans [historique.md](historique.md).
 
 | Commande | Ce qu'elle produit |
 |---|---|

@@ -5,20 +5,17 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <!--
 Rapport d'impact
-- Version: 1.2.0 → 1.2.1 (CORRECTIF: chemins et commandes mis à jour, sans changement de sens).
-- Raison: le dépôt est devenu un monorepo (branche 005-monorepo): les données sont dans `donnees/`, les scripts
-  dans `packages/scripts/`, le code commun dans `packages/commun/`, le site dans `packages/site/`.
-- Principes modifiés (forme seulement):
-  - I. Les données d'abord: les cinq fichiers sont situés dans `donnees/`; `schemas/*.schema.json` devient
-    `donnees/schemas/*.schema.json`.
-  - V. Tests d'abord, simplicité: `test/*.test.ts` est situé dans `packages/commun` et `packages/scripts`;
-    `test/donnees/` dans `packages/scripts`.
-- Sections modifiées (forme seulement): Contraintes techniques (`node update.ts` et `node sommaire.ts` deviennent
-  `node packages/scripts/update.ts` et `node packages/scripts/sommaire.ts`).
-- Sections ajoutées: aucune. Sections retirées: aucune.
-- Gabarits (`.specify/templates/`): aucun ne cite ces chemins ni ces commandes; rien à aligner.
-- Documentation alignée: `README.md`, `implementation.md` (version citée), `historique.md` (amendement noté),
-  `packages/site/README.md`.
+- Version: 1.2.1 → 1.3.0 (MINEUR: une règle des contraintes techniques change de portée).
+- Raison: depuis le monorepo, les versions des dépendances partagées viennent d'un catalogue
+  (`workspaces.catalog`, renvois `catalog:`) que npm ne lit pas; installer les dépendances demande donc nub.
+  Décision de Robin Millette (2026-11-13): garder le catalogue.
+- Règle modifiée: Contraintes techniques, « Utilisation »: les scripts d'utilisation DOIVENT toujours s'exécuter
+  avec Node.js seul, sans nub; leurs dépendances s'installent avec nub (`nub install`). Avant: « fonctionner avec
+  Node.js seul, sans nub », installation comprise.
+- Principes modifiés: aucun. Sections ajoutées: aucune. Sections retirées: aucune.
+- Gabarits (`.specify/templates/`): aucun ne cite cette règle; rien à aligner.
+- Documentation alignée: `README.md` et `implementation.md` (installation par nub, version citée),
+  `historique.md` (amendement noté).
 - À faire plus tard: rien.
 -->
 
@@ -101,7 +98,8 @@ données, le code et la documentation cohérents.
 - **Exécution**: Node.js 26 (`engines.node`: `>=26 <27`), qui exécute le TypeScript tel quel.
 - **Développement**: nub (`nub`, `nub run`, `nub x`); jamais npm, npx, tsc ni ts-node.
 - **Utilisation**: les scripts d'utilisation (`node packages/scripts/update.ts`,
-  `node packages/scripts/sommaire.ts`) DOIVENT fonctionner avec Node.js seul, sans nub.
+  `node packages/scripts/sommaire.ts`) DOIVENT s'exécuter avec Node.js seul, sans nub; leurs dépendances
+  s'installent avec nub (`nub install`), npm ne lisant pas le catalogue des versions partagées (`catalog:`).
 - **Ligne de commande**: rg, fd, jaq et wget2 plutôt que grep, find, jq et wget.
 
 ## Flux de travail
@@ -134,4 +132,4 @@ données, le code et la documentation cohérents.
   - MINEUR: ajout d'un principe ou d'une section, ou extension notable d'une règle;
   - CORRECTIF: clarification, reformulation ou correction sans changement de sens.
 
-**Version**: 1.2.1 | **Ratified**: 2026-11-13 | **Last Amended**: 2026-11-13
+**Version**: 1.3.0 | **Ratified**: 2026-11-13 | **Last Amended**: 2026-11-13

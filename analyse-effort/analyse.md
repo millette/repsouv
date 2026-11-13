@@ -33,7 +33,7 @@ Aucune réponse rejetée ni échec, dans aucune variante. Jetons en entrée : 11
 
 ## Décision
 
-`OPENAI_MODEL=gpt-6.1-sol`, `OPENAI_REASONING_EFFORT=low`, repli `gpt-6-astra` (il ne sert que sur une réponse rejetée, donc presque jamais ; le repli est un modèle, pas un effort). Import complet estimé à 3,58 $ en borne haute, environ 0,9 $ en réel d'après le banc (contre environ 3 $ avec Astra), 12 s par outil.
+`OPENAI_MODEL=gpt-6.1-sol`, `OPENAI_REASONING_EFFORT=low`, repli `gpt-6-astra` (il ne sert que sur une réponse rejetée, donc presque jamais ; le repli est un modèle, pas un effort). Import complet estimé à 3,58 $ en borne haute, environ 0,9 $ en réel d'après le banc (contre environ 4,5 $ avec Astra à jetons égaux, son prix par jeton étant cinq fois plus élevé : `packages/scripts/prix.ts`), 12 s par outil.
 
 Réserves : une seule exécution par variante sur 20 outils ; le 20/20 de Sol `low` tient peut-être pour un ou deux points à la chance (Sol `medium` est à 19/20). `gpt-6-astra` reste disponible par `OPENAI_MODEL` pour les cas difficiles.
 
