@@ -10,5 +10,6 @@ export default defineConfig({
   site: process.env.SITE_URL || undefined,
   base: process.env.SITE_BASE || "/",
   trailingSlash: "always",
+  compressHTML: true,
   integrations: [solid()],
 });

@@ -5,6 +5,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, type Page, test } from "@playwright/test";
 import { actifs, identifiant } from "./donnees.ts";
+import { affiches, attendus, donnees } from "./explorateur.ts";
 
 const un = (critere: (o: (typeof actifs)[number]) => boolean) => `/outils/${identifiant(actifs.find(critere)!.nom)}/`;
 const PAGES: [string, string][] = [
@@ -15,6 +16,14 @@ const PAGES: [string, string][] = [
   ["fiche d'une alternative de Charles", un((o) => o.source_repertoire_id === "charles" && o.enrichi_le !== undefined)],
   ["fiche non enrichie", un((o) => o.enrichi_le === undefined)],
   ["page introuvable", "/404.html"],
+];
+const quatre = donnees.outils.slice(0, 4).map((o) => `comparer=${o.id}`).join("&");
+/** États de l'explorateur à contrôler: l'île doit être montée avant l'analyse. */
+const EXPLORATEUR: [string, string][] = [
+  ["explorateur en cartes", "/explorer/"],
+  ["explorateur en tableau, filtres ouverts", "/explorer/?vue=tableau&statut=libre&score=1&donnees=confirme&pays=FR&source=praxis&enrichi=oui&tag=chiffrement"],
+  ["explorateur avec une comparaison de quatre outils", `/explorer/?${quatre}`],
+  ["explorateur sans résultat", "/explorer/?q=zzzzzz"],
 ];
 
 export async function violations(page: Page): Promise<string[]> {
@@ -47,6 +56,20 @@ for (const theme of ["light", "dark"] as const) {
         expect(await violations(page)).toEqual([]);
       });
     }
+    for (const [nom, adresse] of EXPLORATEUR) {
+      test(`aucune violation axe A ou AA: ${nom}`, async ({ page }) => {
+        await page.goto(adresse);
+        await expect(page.locator("form[data-commandes]")).toBeVisible();
+        await expect(page.locator("[data-theme-pret]")).toBeVisible();
+        expect(await violations(page)).toEqual([]);
+      });
+    }
+    test("aucune violation axe A ou AA: explorateur en erreur de chargement", async ({ page }) => {
+      await page.route("**/explorateur.json", (route) => route.fulfill({ status: 500, body: "panne" }));
+      await page.goto("/explorer/");
+      await expect(page.locator('main [role="alert"]')).toBeVisible();
+      expect(await violations(page)).toEqual([]);
+    });
   });
 }
 
@@ -80,4 +103,49 @@ test("parcours au clavier seul: lien d'évitement, navigation, liste, fiche et r
   await retour.focus();
   await page.keyboard.press("Enter");
   await expect(page.locator("h1")).toHaveText("Outils");
+});
+
+test("explorateur au clavier seul: chercher, filtrer, trier, choisir deux outils, lire la comparaison, ouvrir une fiche", async ({ page }) => {
+  await page.goto("/explorer/");
+  await expect(page.locator("form[data-commandes]")).toBeVisible();
+
+  // Chercher: le champ reçoit le focus par tabulation depuis le début du contenu, puis se vide.
+  const recherche = page.getByLabel("Chercher un outil par son nom");
+  await recherche.focus();
+  await page.keyboard.type("a");
+  await expect.poll(() => affiches(page)).toEqual(attendus({ q: "a" }));
+  await page.keyboard.press("Backspace");
+
+  // Trier: la liste suivante est à une tabulation; les flèches changent le tri.
+  await page.keyboard.press("Tab");
+  await expect(page.getByLabel("Trier par")).toBeFocused();
+  await page.getByLabel("Trier par").selectOption("nom");
+  await expect.poll(() => affiches(page)).toEqual(attendus({ tri: "nom" }));
+
+  // Filtrer: une case se coche à la barre d'espace, avec un contour de focus visible.
+  const libre = page.locator('input[name="statut"][value="libre"]');
+  await libre.focus();
+  const contour = await libre.evaluate((e) => getComputedStyle(e).outlineStyle !== "none" && parseFloat(getComputedStyle(e).outlineWidth) > 0);
+  expect(contour).toBe(true);
+  await page.keyboard.press("Space");
+  const liste = attendus({ tri: "nom", statuts: ["libre"] });
+  await expect.poll(() => affiches(page)).toEqual(liste);
+
+  // Choisir deux outils à comparer, à la barre d'espace.
+  for (const id of liste.slice(0, 2)) {
+    await page.locator(`.resultats [data-outil="${id}"] input[name="comparer"]`).focus();
+    await page.keyboard.press("Space");
+  }
+  await expect(page.locator("table.tableau-comparaison caption")).toHaveText("Comparaison de 2 outils");
+
+  // Le tableau de comparaison, qui peut défiler, est atteignable au clavier.
+  await page.getByRole("region", { name: "Tableau de comparaison" }).focus();
+  await expect(page.getByRole("region", { name: "Tableau de comparaison" })).toBeFocused();
+
+  // Ouvrir la fiche du premier outil comparé, à la touche Entrée.
+  const lien = page.locator("table.tableau-comparaison thead th a").first();
+  const nom = await lien.textContent();
+  await lien.focus();
+  await page.keyboard.press("Enter");
+  await expect(page.locator("h1")).toHaveText(nom!);
 });

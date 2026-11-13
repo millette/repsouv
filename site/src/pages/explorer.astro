@@ -5,17 +5,21 @@
 // le contenu d'attente reste affiché, le dit et renvoie à la page « Outils »
 // (specs/002-explorateur-outils/contracts/pages.md). Un <noscript> ne suffirait pas: certains navigateurs où les
 // scripts sont bloqués ne l'affichent pas.
+import Explorateur from "../components/Explorateur.tsx";
 import Page from "../layouts/Page.astro";
 import { adresseOutils } from "../lib/adresses.ts";
+import { adresseDonnees } from "../lib/chargement.ts";
 import { site } from "../lib/site.ts";
 
 const { base } = site();
 ---
 <Page titre="Explorer les outils" description="Trier, filtrer et comparer les outils du répertoire." courante="explorer">
   <h1>Explorer les outils</h1>
-  <!-- Contenu d'attente: remplacé par l'explorateur dès qu'il est monté. Sans JavaScript, il reste affiché. -->
-  <p class="alert" role="status" data-attente>
-    Chargement des outils… L'explorateur demande JavaScript pour trier, filtrer et comparer les outils ; sans lui, la liste complète se lit sur la page
-    <a class="link" href={adresseOutils(base)}>Outils</a>.
-  </p>
+  <Explorateur client:only="solid-js" adresseDonnees={adresseDonnees(base)} base={base}>
+    <!-- Contenu d'attente: remplacé par l'explorateur dès qu'il est monté. Sans JavaScript, il reste affiché. -->
+    <p slot="fallback" class="alert" role="status" data-attente>
+      Chargement des outils… L'explorateur demande JavaScript pour trier, filtrer et comparer les outils ; sans lui, la liste complète se lit sur la page
+      <a class="link" href={adresseOutils(base)}>Outils</a>.
+    </p>
+  </Explorateur>
 </Page>

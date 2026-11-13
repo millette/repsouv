@@ -348,3 +348,121 @@ blockquote {
   gap: 0.75rem;
   margin-block: 1rem;
 }
+
+/* Explorateur (île Solid): commandes, résultats, comparaison. */
+.commandes {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 1px solid var(--color-base-300);
+  border-radius: var(--radius-box, 0.5rem);
+}
+.commandes-ligne {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 0.75rem 1.25rem;
+}
+.commande {
+  display: grid;
+  gap: 0.25rem;
+  min-width: min(100%, 12rem);
+}
+.commande > label,
+.commande > legend {
+  font-weight: 600;
+}
+.commande .input,
+.commande .select {
+  width: 100%;
+}
+.commande-vue {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 1rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.commande-vue legend {
+  float: left;
+  width: 100%;
+}
+.filtre-groupe summary {
+  cursor: pointer;
+  font-weight: 600;
+  padding-block: 0.25rem;
+}
+.filtre-valeurs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
+  gap: 0.35rem 1rem;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  border: 0;
+}
+.filtre-note {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 0.9rem;
+}
+.filtre-valeur {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 1.75rem;
+  cursor: pointer;
+}
+.explorateur {
+  display: grid;
+  /* minmax(0, …): une colonne de grille ne s'élargit pas pour un tableau large, qui défile alors dans son conteneur. */
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  margin-block: 1rem;
+}
+.comparaison-avis:empty {
+  display: none;
+}
+.comparaison-avis {
+  font-weight: 600;
+}
+.tri-en-cours {
+  font-weight: 400;
+}
+/* Un tableau large défile seul: la page, elle, ne défile jamais en largeur. */
+.tableau-defilant {
+  max-width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--color-base-300);
+  border-radius: var(--radius-box, 0.5rem);
+}
+.tableau-defilant caption {
+  padding: 0.5rem 1rem;
+  text-align: start;
+  font-weight: 600;
+}
+.tableau-outils th,
+.tableau-outils td,
+.tableau-comparaison th,
+.tableau-comparaison td {
+  vertical-align: top;
+  white-space: normal;
+}
+.tableau-comparaison thead th {
+  min-width: 10rem;
+}
+.tableau-comparaison thead th .btn {
+  display: block;
+  margin-top: 0.35rem;
+}
+.tableau-comparaison tbody th {
+  min-width: 11rem;
+  font-weight: 600;
+}
+.comparer {
+  font-size: 0.9rem;
+}
+.etat-erreur {
+  display: block;
+}
