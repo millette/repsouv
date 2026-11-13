@@ -3,6 +3,8 @@
 // Greffon PostCSS: applique le thème sombre de daisyUI quand le système le demande. La feuille daisyui.css ne
 // l'active que par l'attribut data-theme="dark", qui demanderait un script; le site n'en a pas pour la lecture.
 // Les déclarations du thème sombre sont donc recopiées sous une requête média, sans table de couleurs à tenir à jour.
+// Le thème du système cède à un choix explicite: l'interrupteur de l'en-tête (src/components/Theme.tsx) pose alors
+// data-theme sur la page.
 
 const SELECTEUR_SOMBRE = "[data-theme=dark]";
 

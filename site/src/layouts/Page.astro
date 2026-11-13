@@ -4,6 +4,7 @@
 // Gabarit de toutes les pages (contracts/pages.md): langue, titre, lien d'évitement, régions nommées, pied d'attribution.
 import "../styles/global.css";
 import Attribution from "../components/Attribution.astro";
+import InterrupteurTheme from "../components/Theme.tsx";
 import { adresseAccueil } from "../lib/adresses.ts";
 import { NOM_SITE, site } from "../lib/site.ts";
 
@@ -26,8 +27,9 @@ const { base } = site();
   <body>
     <a class="lien-evitement" href="#contenu">Aller au contenu</a>
     <header class="entete">
-      <div class="page">
+      <div class="page entete-barre">
         <a class="entete-nom" href={adresseAccueil(base)}>{NOM_SITE}</a>
+        <InterrupteurTheme client:load />
       </div>
     </header>
     <main id="contenu" class="page" tabindex="-1">

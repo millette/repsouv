@@ -32,8 +32,8 @@ Les tests dans un navigateur demandent Chromium (`nub x playwright install chrom
 
 - **Données** : le site lit `outils.json`, `categories.json`, `criteres.json`, `tags.json` et `sources.json` ; un fichier manquant ou invalide, ou deux outils qui donneraient la même adresse de fiche, arrêtent le build avec un message qui nomme le fautif.
 - **Provenance** : chaque champ affiché dit d'où il vient (source, déduction du dépôt, IA, Open Hub). La table est dans `src/lib/provenance.ts`, et les tests du site bâti refusent un champ produit par IA sans son signalement « à vérifier ».
-- **Lecture sans JavaScript** : toutes les pages sont du HTML complet. Seuls les filtres en demandent ; c'est une île [SolidJS](https://www.solidjs.com/) (`src/components/Filtres.tsx`), la seule du site.
-- **Styles** : [daisyUI](https://daisyui.com/) importé comme feuille de style, sans Tailwind ni classe utilitaire. La mise en page est dans `src/styles/global.css` ; deux greffons PostCSS (`postcss/`) retirent les variantes réactives de daisyUI et appliquent son thème sombre selon la préférence du système.
+- **Lecture sans JavaScript** : toutes les pages sont du HTML complet. Seuls les filtres et l'interrupteur de thème en demandent ; ce sont deux îles [SolidJS](https://www.solidjs.com/) (`src/components/Filtres.tsx`, `src/components/Theme.tsx`).
+- **Styles** : [daisyUI](https://daisyui.com/) importé comme feuille de style, sans Tailwind ni classe utilitaire. La mise en page est dans `src/styles/global.css` ; deux greffons PostCSS (`postcss/`) retirent les variantes réactives de daisyUI et appliquent son thème sombre selon la préférence du système. Un interrupteur clair ou sombre, dans l'en-tête (`src/components/Theme.tsx`), retient le choix de la personne dans le navigateur.
 - **Markdown** : les descriptions longues sont rendues par [Sätteri](https://satteri.bruits.org/), titres décalés sous ceux de la fiche et HTML brut neutralisé.
 
 ## Licences

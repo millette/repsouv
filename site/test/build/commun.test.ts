@@ -29,6 +29,18 @@ test("chaque page déclare le français, a un titre, un seul h1, un contenu prin
   }
 });
 
+test("chaque page a dans son en-tête l'interrupteur de thème, masqué tant que le script ne l'a pas révélé", () => {
+  for (const chemin of toutes) {
+    const etiquette = lirePage(chemin).querySelector("header label.swap");
+    assert.ok(etiquette, chemin);
+    assert.ok(etiquette.hasAttribute("hidden"), chemin);
+    const caseTheme = etiquette.querySelector('input[type="checkbox"].theme-controller');
+    assert.equal(caseTheme?.getAttribute("value"), "dark", chemin);
+    assert.equal(caseTheme?.getAttribute("aria-label"), "Thème sombre", chemin);
+    assert.equal(etiquette.querySelectorAll("svg[aria-hidden=true]").length, 2, chemin);
+  }
+});
+
 test("chaque page porte dans son pied l'attribution à Praxis, la licence CC BY-SA 4.0 et le lien vers le répertoire d'origine", () => {
   for (const chemin of toutes) {
     const pied = lirePage(chemin).querySelector("footer");

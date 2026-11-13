@@ -41,6 +41,7 @@ const avecTheme = (css: string) => postcss([themeSombre()]).process(css, { from:
 
 test("themeSombre applique le thème sombre de daisyUI selon la préférence du système", () => {
   const css = ":root,[data-theme=light]{color-scheme:light;--c:1}:root:has(input.x[value=dark]:checked),[data-theme=dark]{color-scheme:dark;--c:2}";
+  // Le thème du système cède à un choix explicite: data-theme posé sur la page par l'interrupteur de l'en-tête.
   assert.equal(avecTheme(css), `${css}@media (prefers-color-scheme: dark){:root:not([data-theme]){color-scheme:dark;--c:2}}`);
 });
 
