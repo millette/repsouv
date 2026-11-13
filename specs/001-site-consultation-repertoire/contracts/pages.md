@@ -21,6 +21,7 @@ le portent.
 | Pied: autres sources | Les Services FACiLes et Charles, nommés et liés d'après `sources.json` (FR-020) |
 | Pied: IA | Une phrase qui dit que les champs marqués « Produit par IA, à vérifier » résument des pages tierces |
 | Pied: date | La date de dernière mise à jour des données (`meta.updated_at` de `outils.json`) |
+| Pied: dépôt et build | Un lien « Code source et données » vers le dépôt déclaré dans `package.json`; le hash Git court du build, lié à son commit dans le dépôt; la date du build dans un élément `<time>` (amendement du 2026-11-13). Sans dépôt Git au moment du build, le hash est omis |
 | Sans script | Tout le contenu ci-dessus et celui de la page est dans le HTML servi |
 
 ## Accueil: `<base>/`

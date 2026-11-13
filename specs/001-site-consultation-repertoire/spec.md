@@ -16,6 +16,7 @@
 - Q: La fiche doit-elle aussi afficher le pays de l'éditeur, le logiciel dont un service est une instance et les données Open Hub ? → A: Oui, les trois.
 - Q: Dans chaque type de filtre, peut-on choisir une seule valeur ou plusieurs à la fois ? → A: Plusieurs valeurs dans chaque type: « ou » à l'intérieur d'un type, « et » entre les types.
 - Q: Les filtres et la recherche actifs doivent-ils se retrouver dans l'adresse de la page ? → A: Oui, l'adresse reflète les choix et un lien restaure la liste filtrée.
+- Q: (amendement, après la livraison) Que doit dire le pied de page sur le dépôt et sur le build ? → A: Le dépôt (https://github.com/millette/repsouv) est déclaré dans `package.json`; le pied de chaque page porte un lien vers ce dépôt, le hash Git du build et sa date.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -284,6 +285,11 @@ sur chacune la présence de l'attribution, de la licence et des signalements d'I
   mention et le lien de la licence CC BY-SA 4.0, et un lien vers le répertoire d'origine.
 - **FR-020**: Le site DOIT créditer les autres sources des données (Services FACiLes, Charles)
   telles que le dépôt les déclare, sans attribuer leurs outils à Praxis.
+- **FR-037**: Chaque page DOIT porter dans son pied un lien vers le dépôt du projet, dont l'adresse est
+  celle que le dépôt déclare.
+- **FR-038**: Chaque page DOIT indiquer dans son pied de quelle version du dépôt le site a été bâti
+  (le hash Git, lié à cette version dans le dépôt) et la date du build; si la version ne peut pas
+  être connue au moment du build, le pied l'omet sans laisser de mention vide.
 
 **Données**
 

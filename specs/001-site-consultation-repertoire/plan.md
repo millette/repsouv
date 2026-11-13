@@ -151,3 +151,24 @@ du dépôt fixe les règles de l'île et des styles.
 ## Complexity Tracking
 
 Aucune violation à justifier.
+
+## Amendement du 2026-11-13: dépôt et build dans le pied de page
+
+Ajout après la livraison (FR-037, FR-038), à la suite de la clarification « ajouter le dépôt à
+`package.json`; le pied de page porte un lien vers ce dépôt, le hash Git et la date du build ».
+
+**Approche**: le champ `repository` est ajouté au `package.json` de la racine et à celui du site.
+Au build, `site/src/lib/depot.ts` lit l'adresse du dépôt dans le `package.json` de la racine, le
+hash du commit en cours par `git rev-parse HEAD` (commande locale, sans réseau) et l'heure du build;
+le composant `Attribution.astro` les affiche. La logique est en fonctions pures, les lectures
+(fichier, commande, horloge) étant injectées pour les tests. Hors d'un dépôt Git, le hash est omis.
+
+**Constitution**: conforme. Aucune dépendance ajoutée, aucun appel réseau; le hash et la date sont
+des faits du build, pas du contenu généré; tests écrits avant le code.
+
+**Limite connue**: la date du build rend deux builds successifs différents d'une ligne; les tests
+vérifient sa forme et sa fraîcheur, pas sa valeur.
+
+**Fichiers touchés**: `package.json`, `site/package.json`, `site/src/lib/depot.ts`,
+`site/src/components/Attribution.astro`, `site/test/depot.test.ts`, `site/test/build/commun.test.ts`.
+

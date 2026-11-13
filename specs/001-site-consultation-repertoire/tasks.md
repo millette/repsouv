@@ -288,3 +288,17 @@ Validation du 2026-11-13 (T043). Les 17 scénarios de [quickstart.md](quickstart
 | 17 (téléphone, 360 px) | `site/test/e2e/telephone.spec.ts` | Réussi |
 
 Totaux: 62 tests unitaires, 34 tests du site bâti, 34 tests dans Chromium; `nub run check` sans erreur.
+
+---
+
+## Phase 9: Dépôt et build dans le pied de page (amendement du 2026-11-13)
+
+**Goal**: le dépôt est déclaré dans `package.json`; chaque page lie le dépôt et dit de quelle version
+et quand le site a été bâti (FR-037, FR-038).
+
+- [ ] T049 Ajouter le champ `repository` (`git+https://github.com/millette/repsouv.git`) au `package.json` de la racine et à `site/package.json` (avec `directory: "site"`), et `homepage` (`https://millette.github.io/repsouv/`) aux deux
+- [ ] T050 [P] Écrire `site/test/depot.test.ts`: `adresseDepot(paquet)` rend `https://github.com/millette/repsouv` pour `git+https://…/repsouv.git`, pour `https://…/repsouv`, pour `git@github.com:millette/repsouv.git` et pour un champ `repository` en chaîne, et rien si le champ manque; `infosBuild({ lirePaquet, git, maintenant })` rend l'adresse du dépôt, le hash complet et court (7 caractères), l'adresse du commit (`<dépôt>/commit/<hash>`) et la date ISO du build; si `git` échoue, le hash, le hash court et l'adresse du commit sont absents; `formaterDateHeure(iso)` écrit la date et l'heure en français, à l'heure de Toronto
+- [ ] T051 [P] Ajouter à `site/test/build/commun.test.ts`: le pied de chaque page a un lien « Code source et données » vers l'adresse du dépôt déclarée dans `../package.json`; un lien dont le texte est un hash de 7 caractères hexadécimaux, vers `<dépôt>/commit/<hash complet>`, où ce hash désigne un commit qui existe dans le dépôt (`git cat-file -e`); un élément `<time datetime>` dont la date est celle d'un build récent (moins d'un jour); toutes les pages portent le même hash
+- [ ] T052 Implémenter `site/src/lib/depot.ts` jusqu'à ce que T050 passe, et compléter `site/src/components/Attribution.astro` et `site/src/lib/site.ts` (infos du build calculées une fois) jusqu'à ce que T051 passe
+- [ ] T053 Reporter dans `implementation.md` (pied de page), `site/README.md`, `README.md` et `historique.md`; vérifier que tous les contrôles passent
+
