@@ -9,8 +9,8 @@
 // Un résumé de 3 ou 4 paragraphes sur le répertoire et son utilité est rédigé par l'API OpenAI à
 // partir de toutes les statistiques et de la liste des outils (clé OPENAI_API_KEY dans .env; modèle:
 // OPENAI_MODEL). --sans-resume l'omet: le sommaire est alors calculé localement, sans appel à l'API.
-// Des graphiques (Vega-Lite, convertis en SVG et en PNG par vl-convert) sont écrits dans le dossier
-// graphiques/ à côté du sommaire, et leurs images PNG y sont insérées. --sans-graphiques les omet.
+// Des graphiques (Vega-Lite, convertis en SVG par vl-convert) sont écrits dans le dossier
+// graphiques/ à côté du sommaire, et ces images SVG y sont insérées. --sans-graphiques les omet.
 // Le calcul des statistiques et le rendu sont des fonctions pures; seul le résumé utilise le réseau.
 import { writeFileSync } from "node:fs";
 import { basename, dirname, join } from "node:path";
@@ -56,7 +56,7 @@ export type ResumeIA = { paragraphes: string[]; modele: string; date: string } |
 export interface OptionsRendu {
   genereLe: string;
   resume?: ResumeIA;
-  /** Graphiques déjà écrits (voir graphiques.ts): chaque image PNG est insérée dans sa section. */
+  /** Graphiques déjà écrits (voir graphiques.ts): chaque image SVG est insérée dans sa section. */
   graphiques?: GraphiqueEcrit[];
 }
 
@@ -72,7 +72,7 @@ export function rendreMarkdown(s: Statistiques, { genereLe, resume, graphiques =
   const ens = s.enrichissement.enrichis;
   const aucunEnrichi = "*Aucun outil n'est enrichi pour l'instant.*";
   const parts: string[] = [];
-  /** L'image PNG du graphique `id`, suivie d'une ligne vide; rien si ce graphique n'existe pas. */
+  /** L'image SVG du graphique `id`, suivie d'une ligne vide; rien si ce graphique n'existe pas. */
   const image = (id: string) => {
     const g = graphiques.find((x) => x.id === id);
     return g ? `![${g.description.replace(/[\[\]]/g, "")}](${g.svg})\n\n` : "";

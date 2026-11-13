@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Graphiques du sommaire: des spécifications Vega-Lite construites à partir des statistiques (calcul
-// pur), puis converties en SVG et en PNG par vl-convert (https://github.com/vega/vl-convert).
+// pur), puis converties en SVG par vl-convert (https://github.com/vega/vl-convert).
 //
 // Les données sont toujours incluses dans la spécification (`data.values`): aucun fichier externe,
 // aucune URL. Les nombres sont écrits à la française (virgule décimale) et vl-convert est appelé avec

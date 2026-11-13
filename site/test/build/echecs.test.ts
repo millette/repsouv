@@ -48,8 +48,9 @@ function fichiersDe(dossier: string): string[] {
   return readdirSync(dossier, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? fichiersDe(join(dossier, e.name)) : [join(dossier, e.name)]));
 }
 
-test("le code du site ne fait aucun appel réseau, sauf la lecture de son propre fichier de données par l'explorateur", () => {
-  // Seul src/lib/chargement.ts appelle fetch, vers l'adresse qu'on lui passe: explorateur.json, fichier statique du site.
+test("le code du site ne fait aucun appel réseau, sauf la lecture de ses propres fichiers statiques par le chargeur", () => {
+  // Seul src/lib/chargement.ts appelle fetch, vers l'adresse qu'on lui passe: explorateur.json, la fiche d'un outil
+  // (boîte des détails) ou la spécification d'un graphique, tous des fichiers statiques du site.
   const fautifs = fichiersDe("src")
     .filter((f) => f !== join("src", "lib", "chargement.ts"))
     .filter((f) => /\bfetch\s*\(|node:https?|node:net|XMLHttpRequest|WebSocket/.test(readFileSync(f, "utf8")));
