@@ -7,7 +7,8 @@
 //   - la description est composée en français depuis le pays, le tarif et les caractéristiques (tables PAYS, TARIF,
 //     CARACTERISTIQUES; une caractéristique inconnue est signalée en avertissement et omise), avec les services remplacés;
 //   - le score est estimé (score_estime, voir ajouter.ts) et la catégorie vient de CATEGORIE_PAR_CATEGORIE (par catégorie
-//     Charles) et de CATEGORIE_PAR_ID (exceptions par alternative; null = exclue), à réviser à la main; cinq catégories
+//     Charles) et de CATEGORIE_PAR_ID (exceptions par alternative; null = exclue), à réviser à la main; LIEN_PAR_ID corrige
+//     une URL morte de la source en attendant qu'elle soit corrigée en amont; cinq catégories
 //     que le répertoire n'avait pas (CATEGORIES_CHARLES) sont ajoutées à categories.json avec leur source;
 //   - alternative_a vient de sites-us.json inversé: l'URL de chaque site qui liste l'alternative; `pays` reprend country;
 //   - les outils sont datés du dernier commit touchant data/ (API GitLab), sinon de l'heure de lecture.
@@ -117,6 +118,12 @@ export const CATEGORIE_PAR_ID: Readonly<Record<string, string | null>> = {
   codeberg: "gestion-de-projets-et-des-taches",
   coreupdate: "securite-et-gestion-des-acces", // gestion des correctifs
   appleplans: null, // Plans d'Apple: américain selon la source elle-même (country: US)
+};
+
+/** Lien corrigé par alternative (id), quand l'URL de la source est morte; à retirer dès que la source est corrigée (voir tickets/charles-amont.md). */
+export const LIEN_PAR_ID: Readonly<Record<string, string>> = {
+  infomaniak: "https://www.infomaniak.com/fr/ksuite/kdrive", // la source donne /kdrive, qui répond 404
+  lasuite: "https://www.infomaniak.com/fr/ksuite", // la source donne /fr/la-suite, qui répond 404
 };
 
 /** « d'origine … » selon le pays (data: country); la tournure « d'origine » est celle que classify.ts lit pour le critère contrôle. */
@@ -309,7 +316,8 @@ export function extraireCharles(donnees: DonneesCharles): ExtractionCharles {
       exclus.push(`${a.name} (${a.id}: exclue par CATEGORIE_PAR_ID)`);
       continue;
     }
-    if (!a.name.trim() || !/^https?:\/\/\S+$/.test(a.url)) throw new Error(`données Charles: alternative « ${a.id} » sans nom ou sans URL http(s)`);
+    const lien = LIEN_PAR_ID[a.id] ?? a.url;
+    if (!a.name.trim() || !/^https?:\/\/\S+$/.test(lien)) throw new Error(`données Charles: alternative « ${a.id} » sans nom ou sans URL http(s)`);
     const sitesRemplaces = remplace.get(a.id) ?? [];
     if (!sitesRemplaces.length) avertissements.push(`${a.name}: aucun site de sites-us.json ne la propose en alternative`);
     const manques: string[] = [];
@@ -319,7 +327,7 @@ export function extraireCharles(donnees: DonneesCharles): ExtractionCharles {
     const alternative_a = uniques(sitesRemplaces.map((s) => s.url));
     categoriesUtilisees.add(categorie!);
     outils.push({
-      categorie: categorie!, nom: a.name.trim(), score: classement.criteres.length, score_estime: true, lien: a.url, description,
+      categorie: categorie!, nom: a.name.trim(), score: classement.criteres.length, score_estime: true, lien, description,
       derniere_modification: "", changement: null, source_repertoire_id: ID_CHARLES, pays: a.country,
       ...(alternative_a.length && { alternative_a }),
       ...classement,

@@ -2,7 +2,7 @@
   "meta": {
     "data_license": "CC-BY-SA-4.0",
     "created_at": "2026-11-12T12:35:52-05:00",
-    "updated_at": "2026-11-13T10:15:36-05:00"
+    "updated_at": "2026-11-13T10:26:07-05:00"
   },
   "outils": [
     {
@@ -4731,10 +4731,10 @@
       "nom": "Infomaniak kDrive",
       "score": 0,
       "score_estime": true,
-      "lien": "https://www.infomaniak.com/kdrive",
+      "lien": "https://www.infomaniak.com/fr/ksuite/kdrive",
       "description": "Infomaniak kDrive est une alternative européenne recensée par Charles, d'origine suisse, gratuite avec des options payantes. Caractéristiques : hébergé en Suisse, écoresponsable, conforme au RGPD. Proposée en remplacement de Dropbox, OneDrive, Google Drive, Google Photos et Google Workspace.",
       "derniere_modification": "2026-09-08T17:47:04-04:00",
-      "changement": "nouveau",
+      "changement": "modification",
       "source_repertoire_id": "charles",
       "pays": "CH",
       "alternative_a": [
@@ -5610,10 +5610,10 @@
       "nom": "La Suite (Infomaniak)",
       "score": 0,
       "score_estime": true,
-      "lien": "https://www.infomaniak.com/fr/la-suite",
+      "lien": "https://www.infomaniak.com/fr/ksuite",
       "description": "La Suite (Infomaniak) est une alternative européenne recensée par Charles, d'origine suisse, payante. Caractéristiques : suite bureautique, hébergé en Suisse, collaboratif. Proposée en remplacement de Microsoft Office et Google Contacts.",
       "derniere_modification": "2026-09-08T17:47:04-04:00",
-      "changement": "nouveau",
+      "changement": "modification",
       "source_repertoire_id": "charles",
       "pays": "CH",
       "alternative_a": [

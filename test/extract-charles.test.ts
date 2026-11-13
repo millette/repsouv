@@ -8,7 +8,7 @@ import { test } from "node:test";
 import { slug, type Categorie } from "../categories.ts";
 import type { OutilClasse } from "../classify.ts";
 import {
-  CARACTERISTIQUES, CATEGORIE_PAR_CATEGORIE, CATEGORIE_PAR_ID, CATEGORIES_CHARLES, composerDescription, extraireCharles, lireDossierCharles, PAYS, SOURCE_CHARLES,
+  CARACTERISTIQUES, CATEGORIE_PAR_CATEGORIE, CATEGORIE_PAR_ID, CATEGORIES_CHARLES, composerDescription, extraireCharles, LIEN_PAR_ID, lireDossierCharles, PAYS, SOURCE_CHARLES,
   synchroniserCharles, TARIF, telechargerCharles, urlsCharles, type DonneesCharles,
 } from "../extract-charles.ts";
 import { USER_AGENT } from "../agent.ts";
@@ -63,6 +63,15 @@ test("les tables renvoient à des slugs; chaque catégorie déclarée a pour id 
   assert.equal(CATEGORIE_PAR_ID.appleplans, null, "Plans d'Apple est exclu (américain selon la source)");
   for (const v of Object.values(PAYS)) assert.match(v, /^d'origine /);
   for (const v of [...Object.values(TARIF), ...Object.values(CARACTERISTIQUES)]) assert.ok(v.trim());
+  for (const url of Object.values(LIEN_PAR_ID)) assert.match(url, /^https:\/\/\S+$/);
+});
+
+test("extraireCharles: LIEN_PAR_ID remplace l'URL morte de la source par le lien corrigé, et seulement pour les alternatives listées", () => {
+  const d = structuredClone(DONNEES);
+  d.alternatives.push(alternative("infomaniak", "Infomaniak kDrive", "cloud", { url: "https://www.infomaniak.com/kdrive" }));
+  const { outils } = extraireCharles(d);
+  assert.equal(outils.find((o) => o.nom === "Infomaniak kDrive")!.lien, LIEN_PAR_ID.infomaniak);
+  assert.equal(outils.find((o) => o.nom === "Qwant")!.lien, "https://qwant.example/");
 });
 
 test("composerDescription: pays, tarif, caractéristiques traduites (sans doublon) et services remplacés; ce qui manque aux tables est rapporté", () => {
