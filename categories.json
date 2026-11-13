@@ -2,7 +2,7 @@
   "meta": {
     "data_license": "CC-BY-SA-4.0",
     "created_at": "2026-11-12T12:35:52-05:00",
-    "updated_at": "2026-11-13T09:52:56-05:00"
+    "updated_at": "2026-11-13T10:08:51-05:00"
   },
   "categories": [
     {
@@ -129,31 +129,36 @@
       "id": "paiement-en-ligne",
       "nom": "Paiement en ligne",
       "icone": "💳",
-      "source_repertoire_id": "charles"
+      "source_repertoire_id": "charles",
+      "description": "Ces outils permettent d’accepter des paiements en ligne et de gérer les transactions liées à la vente de produits ou de services. Ils répondent aux besoins d’encaissement des organismes et des petites équipes."
     },
     {
       "id": "assistants-d-intelligence-artificielle",
       "nom": "Assistants d’intelligence artificielle",
       "icone": "🤖",
-      "source_repertoire_id": "charles"
+      "source_repertoire_id": "charles",
+      "description": "Ces outils d’intelligence artificielle aident à rédiger du contenu, à rechercher de l’information dans les documents d’une organisation et à programmer. Certains offrent des options d’hébergement en Europe ou d’auto-hébergement pour répondre aux besoins de contrôle des données."
     },
     {
       "id": "hebergement-web-et-infrastructure",
       "nom": "Hébergement Web et infrastructure",
       "icone": "🖥️",
-      "source_repertoire_id": "charles"
+      "source_repertoire_id": "charles",
+      "description": "Ces outils permettent d’héberger des sites Web, des applications et des données sur des serveurs distants. Ils répondent aux besoins de déploiement et de gestion d’infrastructures infonuagiques, avec des options de localisation des données en Europe."
     },
     {
       "id": "commerce-en-ligne",
       "nom": "Commerce en ligne",
       "icone": "🛒",
-      "source_repertoire_id": "charles"
+      "source_repertoire_id": "charles",
+      "description": "Cette catégorie regroupe des places de marché pour acheter en ligne des produits variés, notamment du matériel technologique et des biens culturels. Elle comprend aussi des options pour se procurer du matériel reconditionné avec garantie."
     },
     {
       "id": "diffusion-audio-et-video",
       "nom": "Diffusion audio et vidéo",
       "icone": "🎬",
-      "source_repertoire_id": "charles"
+      "source_repertoire_id": "charles",
+      "description": "Ces plateformes permettent de visionner en ligne des émissions, des documentaires, des films et d’autres contenus audiovisuels de diffuseurs publics européens. Elles répondent aux besoins de divertissement, d’information et d’accès à des contenus culturels."
     }
   ]
 }
