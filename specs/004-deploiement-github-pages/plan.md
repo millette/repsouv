@@ -23,7 +23,7 @@ dans un navigateur du site bâti sous `/repsouv/`.
 **Language/Version**: YAML de GitHub Actions; TypeScript et Node.js 26 pour les tests
 
 **Primary Dependencies**: actions `actions/checkout` v7, `actions/setup-node` v7,
-`astral-sh/setup-uv` v10, `actions/configure-pages` v6, `actions/upload-pages-artifact` v5,
+`astral-sh/setup-uv` v10.3.3 (version exacte: ce dépôt ne publie pas d'étiquette « v10 »), `actions/configure-pages` v6, `actions/upload-pages-artifact` v5,
 `actions/deploy-pages` v5 (versions relevées le 2026-11-13); nub, installé par son script. Aucune
 dépendance ajoutée au dépôt.
 

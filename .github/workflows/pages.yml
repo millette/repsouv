@@ -37,7 +37,8 @@ jobs:
           node-version-file: .node-version
 
       - name: Installer uv (pour le contrôle des licences)
-        uses: astral-sh/setup-uv@v10
+        # Version exacte: setup-uv ne publie plus d'étiquette majeure (« v10 » n'existe pas).
+        uses: astral-sh/setup-uv@v10.3.3
 
       - name: Installer nub
         run: |
