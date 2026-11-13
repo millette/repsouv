@@ -7,12 +7,12 @@ et la règle de sélection. Une adresse partagée aujourd'hui doit donner la mê
 
 | Paramètre | Répétable | Valeurs | Exemple |
 |---|---|---|---|
-| `categorie` | Oui | Un `categories[].id` | `categorie=visioconference` |
+| `categorie` | Oui | Un `categories[].id` | `categorie=messagerie-electronique` |
 | `tag` | Oui | Un `tags[].id` | `tag=chiffrement&tag=sans-publicite` |
 | `statut` | Oui | `libre`, `partiel`, `source-disponible`, `proprietaire`, `non-enrichi` | `statut=libre&statut=partiel` |
 | `q` | Non | Texte libre: une partie du nom | `q=next` |
 
-Exemple complet: `<base>/?categorie=visioconference&statut=libre&statut=partiel&q=jit`
+Exemple complet: `<base>/?categorie=messagerie-electronique&statut=libre&statut=partiel&q=mail`
 
 Règles de lecture:
 
