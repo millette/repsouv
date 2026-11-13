@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 #
-# Publie le site de consultation (site/) sur GitHub Pages, à chaque changement de la branche principale ou à la main.
+# Publie le site de consultation (packages/site/) sur GitHub Pages, à chaque changement de la branche principale ou à la main.
 # Tous les contrôles du dépôt et du site passent d'abord: si l'un échoue, rien n'est mis en ligne et le site publié
 # reste celui d'avant. La publication lit les données du dépôt telles quelles: elle ne lance aucun script payant,
 # n'emploie aucun secret et n'écrit rien dans le dépôt.
@@ -45,7 +45,8 @@ jobs:
           curl -fsSL https://nubjs.com/install.sh | bash
           echo "$HOME/.nub/bin" >> "$GITHUB_PATH"
 
-      - name: Installer les dépendances de la racine
+      # Une seule installation, à la racine, pour tous les espaces de travail (packages/scripts et packages/site).
+      - name: Installer les dépendances
         run: nub install
 
       - name: Tests de la racine (unitaires, données, schémas)
@@ -57,24 +58,20 @@ jobs:
       - name: Licences (REUSE)
         run: nub run licences
 
-      - name: Installer les dépendances du site
-        working-directory: site
-        run: nub install
-
       - name: Types du site
-        working-directory: site
+        working-directory: packages/site
         run: nub run check
 
       - name: Tests du site (unitaires, puis site bâti)
-        working-directory: site
+        working-directory: packages/site
         run: nub run test
 
       - name: Installer Chromium pour les tests dans un navigateur
-        working-directory: site
+        working-directory: packages/site
         run: nub exec playwright install --with-deps chromium
 
       - name: Tests du site dans un navigateur
-        working-directory: site
+        working-directory: packages/site
         run: nub run test:e2e
 
       # L'adresse et le chemin du site viennent du dépôt qui publie: une copie se publie à sa propre adresse.
@@ -84,7 +81,7 @@ jobs:
 
       # Après les tests, qui bâtissent le site à la racine d'un domaine: ce build-ci est celui qui est publié.
       - name: Bâtir le site pour son adresse de publication
-        working-directory: site
+        working-directory: packages/site
         env:
           SITE_URL: ${{ steps.pages.outputs.origin }}
           SITE_BASE: ${{ steps.pages.outputs.base_path }}
@@ -93,7 +90,7 @@ jobs:
       - name: Déposer le site bâti
         uses: actions/upload-pages-artifact@v5
         with:
-          path: site/dist
+          path: packages/site/dist
 
   publier:
     name: Mettre en ligne

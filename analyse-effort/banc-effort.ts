@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Banc d'essai: une variante (modèle, effort de raisonnement) enrichit puis vérifie un échantillon fixe d'outils, comparé
-// à la référence de outils.json (voir analyse.md). Usage, depuis la racine du dépôt, avec la clé dans .env:
+// à la référence de donnees/outils.json (voir analyse.md). Usage, avec la clé dans le fichier .env de la racine du dépôt:
 //   node analyse-effort/banc-effort.ts <modele> <effort|-> [n]
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { chargerCategories } from "../categories.ts";
-import { confirmateurOpenAI, confirmerOutils } from "../confirmer.ts";
-import { chargerCriteres, chargerTags, enrichirOutils, expliqueurOpenAI, generateurOpenAI } from "../enrichir.ts";
-import { chargerEnv } from "../env.ts";
-import { lireFichier } from "../fichiers.ts";
-import { ajouterUsage, coutTotal, formaterCouts, type Usage, type UsagesParModele } from "../prix.ts";
-import type { OutilClasse } from "../classify.ts";
+import { chargerCategories } from "../packages/scripts/categories.ts";
+import { confirmateurOpenAI, confirmerOutils } from "../packages/scripts/confirmer.ts";
+import { chargerCriteres, chargerTags, enrichirOutils, expliqueurOpenAI, generateurOpenAI } from "../packages/scripts/enrichir.ts";
+import { chargerEnv } from "../packages/scripts/env.ts";
+import { DOSSIER_DONNEES, lireFichier } from "../packages/scripts/fichiers.ts";
+import { ajouterUsage, coutTotal, formaterCouts, type Usage, type UsagesParModele } from "../packages/scripts/prix.ts";
+import type { OutilClasse } from "../packages/scripts/classify.ts";
 
 chargerEnv();
 const [modele = "gpt-6.1-sol", effortArg = "-", nArg = "20"] = process.argv.slice(2);
@@ -24,10 +24,10 @@ const n = Number(nArg);
 const DOSSIER = dirname(fileURLToPath(import.meta.url));
 
 type Outil = OutilClasse & Record<string, unknown>;
-const reference = lireFichier<Outil>("outils.json", "outils").donnees;
-const tags = chargerTags("tags.json");
-const criteres = chargerCriteres("criteres.json");
-const categories = chargerCategories("categories.json");
+const reference = lireFichier<Outil>(join(DOSSIER_DONNEES, "outils.json"), "outils").donnees;
+const tags = chargerTags(join(DOSSIER_DONNEES, "tags.json"));
+const criteres = chargerCriteres(join(DOSSIER_DONNEES, "criteres.json"));
+const categories = chargerCategories(join(DOSSIER_DONNEES, "categories.json"));
 
 // Échantillon fixe: moitié libres, partiels ou source-disponible, moitié propriétaires, espacés dans l'ordre alphabétique.
 const fichierEchantillon = join(DOSSIER, "echantillon.json");

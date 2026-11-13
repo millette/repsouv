@@ -5,13 +5,13 @@ version = 1
 
 # Code, schémas JSON, configuration et documentation du dépôt, dont les artefacts Spec Kit de chaque fonctionnalité (specs/), conservés après elle.
 [[annotations]]
-path = ["schemas/**", "README.md", "implementation.md", "historique.md", "tickets/**", "specs/**","package.json", "nub.lock", "skills-lock.json", "tsconfig.json", "tsconfig.schemas.json", ".gitignore", ".env.example", ".node-version", ".mcp.json"]
+path = ["donnees/schemas/**", "README.md", "implementation.md", "historique.md", "tickets/**", "specs/**","package.json", "nub.lock", "skills-lock.json", "packages/scripts/package.json", "packages/scripts/tsconfig.json", "packages/scripts/tsconfig.schemas.json", ".gitignore", ".env.example", ".node-version", ".mcp.json"]
 SPDX-FileCopyrightText = "2026 Robin Millette <https://robin.millette.info/>"
 SPDX-License-Identifier = "AGPL-3.0-or-later"
 
 # Données, adaptées du répertoire d'origine (Praxis), des Services FACiLes et des données de l'extension Charles (MIT), et ce qui en est dérivé: sommaire et graphiques.
 [[annotations]]
-path = ["outils.json", "categories.json", "criteres.json", "tags.json", "sources.json", "sommaire.md", "graphiques/**"]
+path = ["donnees/outils.json", "donnees/categories.json", "donnees/criteres.json", "donnees/tags.json", "donnees/sources.json", "donnees/sommaire.md", "donnees/graphiques/**"]
 SPDX-FileCopyrightText = [
   "2026 Sven Buridans, François Delnooz, Marie-Renee Duguay (Praxis), Répertoire d'outils favorisant la souveraineté numérique",
   "2026 Yanis Kerdjana et les contributeurs de Charles <https://gitlab.com/yaniskerdjana/charles> (données de l'extension, MIT)",
@@ -64,8 +64,8 @@ path = [".claude/skills/solidjs/**"]
 SPDX-FileCopyrightText = "2026 Robin Millette <https://robin.millette.info/>"
 SPDX-License-Identifier = "AGPL-3.0-or-later"
 
-# Site de consultation (site/): ses fichiers .ts, .tsx, .mjs, .css et .astro portent leurs en-têtes; ceux-ci ne le peuvent pas.
+# Site de consultation (packages/site/): ses fichiers .ts, .tsx, .mjs, .css et .astro portent leurs en-têtes; ceux-ci ne le peuvent pas.
 [[annotations]]
-path = ["site/package.json", "site/nub.lock", "site/tsconfig.json", "site/.gitignore", "site/README.md", "site/test/fixtures/**"]
+path = ["packages/site/package.json", "packages/site/tsconfig.json", "packages/site/.gitignore", "packages/site/README.md", "packages/site/test/fixtures/**"]
 SPDX-FileCopyrightText = "2026 Robin Millette <https://robin.millette.info/>"
 SPDX-License-Identifier = "AGPL-3.0-or-later"

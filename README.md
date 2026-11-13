@@ -1,18 +1,18 @@
 # Répertoire d'outils favorisant la souveraineté numérique : données
 
-*Documentation : [README](README.md) · [Implémentation](implementation.md) · [Historique](historique.md) · [Sommaire statistique](sommaire.md)*
+*Documentation : [README](README.md) · [Implémentation](implementation.md) · [Historique](historique.md) · [Sommaire statistique](donnees/sommaire.md)*
 
 ## En bref
 
 Ce dépôt est une extraction en JSON du [répertoire d'outils favorisant la souveraineté numérique](https://praxis.encommun.io/n/voRYZbuBYZKLejs8JyNkc5C4o7s/), une note publiée sur Praxis par La bande numérique (FCCF) pour les OSBL des arts et de la culture du Canada français. Le répertoire évalue 60 outils numériques, répartis en 20 catégories, selon trois critères (où restent les données, qui contrôle l'outil, de qui il dépend), et attribue à chacun 2 ou 3 étoiles. Le dépôt publie ces données sous une forme structurée et documentée (`outils.json`, `categories.json`, `criteres.json`, `tags.json`, `sources.json`, avec leurs schémas JSON), les tient à jour depuis la page en ligne, et y ajoute ce que la page ne dit pas : à quel critère chaque étoile correspond (déduit des descriptions), et, pour 142 outils sur 154 (57 des 60 outils de Praxis, les 22 services FACiL et 63 des 72 alternatives de Charles), un enrichissement par IA (description longue, tags, statut du code source, licence, dépôt de code, second avis sur la souveraineté) ainsi que les critères vérifiés d'après la page de l'outil, citation à l'appui. Il accueille aussi d'autres sources : les 22 [Services FACiLes](https://facil.services/) (logiciels libres hébergés au Québec par FACiL, avec le logiciel sous-jacent et les services qu'ils remplacent), 72 alternatives européennes aux services américains tirées des données de [Charles](https://gitlab.com/yaniskerdjana/charles) (extension Chrome de Yanis Kerdjana ; la source ne décrit pas ses outils : leur description est composée depuis le pays, le tarif et les caractéristiques qu'elle donne) et des outils ajoutés à la main, chacun rattaché à sa source (`sources.json`). Avec ces sources, le répertoire s'adresse aux organismes et aux petites équipes du Canada français, au-delà des seuls OSBL des arts et de la culture.
 
-Le [sommaire statistique](sommaire.md) qui en résulte distingue 56 logiciels libres, 13 partiellement libres, 3 à code source disponible et 70 propriétaires parmi les 142 outils enrichis, avec les licences, les forges de code, les tags et les critères de souveraineté par statut du code source. Les données sont sous licence CC BY-SA 4.0 (comme la source, dont elles sont une adaptation), le code sous AGPL-3.0-or-later. Les champs produits par IA sont des résumés de pages tierces, à vérifier avant de s'y fier ; la démarche, ses limites et ses mesures sont documentées dans [implementation.md](implementation.md) et [historique.md](historique.md).
+Le [sommaire statistique](donnees/sommaire.md) qui en résulte distingue 56 logiciels libres, 13 partiellement libres, 3 à code source disponible et 70 propriétaires parmi les 142 outils enrichis, avec les licences, les forges de code, les tags et les critères de souveraineté par statut du code source. Les données sont sous licence CC BY-SA 4.0 (comme la source, dont elles sont une adaptation), le code sous AGPL-3.0-or-later. Les champs produits par IA sont des résumés de pages tierces, à vérifier avant de s'y fier ; la démarche, ses limites et ses mesures sont documentées dans [implementation.md](implementation.md) et [historique.md](historique.md).
 
-<img src="graphiques/statut-code-source.svg" alt="Répartition des outils du répertoire par statut du code source : libre, partiellement libre, code source disponible, propriétaire, pas encore enrichi" width="720">
+<img src="donnees/graphiques/statut-code-source.svg" alt="Répartition des outils du répertoire par statut du code source : libre, partiellement libre, code source disponible, propriétaire, pas encore enrichi" width="720">
 
-*Statut du code source des outils du répertoire, d'après [`sommaire.md`](sommaire.md) (image produite par `node sommaire.ts`).*
+*Statut du code source des outils du répertoire, d'après [`sommaire.md`](donnees/sommaire.md) (image produite par `node sommaire.ts`).*
 
-Le dépôt contient aussi un **site statique de consultation** ([`site/`](site/README.md)) : un accueil qui présente le projet, une page « Explorer » qui liste les outils par catégorie, même sans JavaScript, et permet de les trier, de les filtrer et d'en comparer de deux à quatre côte à côte, une fiche par outil, et une page de statistiques qui reprend les graphiques du sommaire, avec la provenance de chaque champ et l'attribution sur chaque page. Il se bâtit à partir des fichiers JSON, sans les modifier, et se publie sur GitHub Pages à chaque changement de la branche principale (<https://millette.github.io/repsouv/>, une fois GitHub Pages activé dans les réglages du dépôt ; voir [`site/README.md`](site/README.md#publication)).
+Le dépôt contient aussi un **site statique de consultation** ([`site/`](packages/site/README.md)) : un accueil qui présente le projet, une page « Explorer » qui liste les outils par catégorie, même sans JavaScript, et permet de les trier, de les filtrer et d'en comparer de deux à quatre côte à côte, une fiche par outil, et une page de statistiques qui reprend les graphiques du sommaire, avec la provenance de chaque champ et l'attribution sur chaque page. Il se bâtit à partir des fichiers JSON, sans les modifier, et se publie sur GitHub Pages à chaque changement de la branche principale (<https://millette.github.io/repsouv/>, une fois GitHub Pages activé dans les réglages du dépôt ; voir [`site/README.md`](packages/site/README.md#publication)).
 
 **Sommaire :** [Démarrage rapide](#démarrage-rapide) · [Source, crédits et licences](#source-crédits-et-licences) · [Autres commandes](#autres-commandes) · [Outils à installer](#outils-à-installer) · [Fichiers JSON](#fichiers-json) · [Sommaire statistique](#sommaire-statistique) · [Utiliser les données](#utiliser-les-données) · [Documentation](#documentation)
 
@@ -97,7 +97,7 @@ node ajouter.ts <lien> --nom=… --categorie=<id> --description=… --source=<id
                                  # ajoute à la main un outil (et sa source dans sources.json); node update.ts l'enrichit ensuite
 ```
 
-Site de consultation, avec nub, dans `site/` (voir [`site/README.md`](site/README.md)) :
+Site de consultation, avec nub, dans `site/` (voir [`site/README.md`](packages/site/README.md)) :
 
 ```sh
 nub install && nub run build     # bâtit site/dist/ à partir des JSON de la racine (158 pages), sans appel réseau ni vl-convert; demande `nub install` à la racine
@@ -275,7 +275,7 @@ Les sources des outils, dans le tableau `sources` : `{ id, nom, url, extracteur,
 
 ## Sommaire statistique
 
-[`sommaire.md`](sommaire.md) est généré par `node sommaire.ts` à partir des données (voir [Génération du sommaire statistique](implementation.md#génération-du-sommaire-statistique)) ; sa première ligne donne la date de génération, et son résumé est rédigé par un modèle d'IA, à relire. Au 2026-11-13 :
+[`sommaire.md`](donnees/sommaire.md) est généré par `node sommaire.ts` à partir des données (voir [Génération du sommaire statistique](implementation.md#génération-du-sommaire-statistique)) ; sa première ligne donne la date de génération, et son résumé est rédigé par un modèle d'IA, à relire. Au 2026-11-13 :
 
 - **154 outils** répartis en **25 catégories** : 60 du répertoire Praxis (**8 à 3 étoiles** et **52 à 2 étoiles**), 22 des Services FACiLes et 72 alternatives de Charles, ces 94 au score estimé d'après leur évaluation enrichie (13 à 2 étoiles, 24 à 1, 57 à 0).
 - **142 outils enrichis** sur 154 (les 3 outils de Praxis et les 9 alternatives de Charles dont la page est illisible restent à enrichir), dont **69 logiciels libres ou partiellement libres** (48,6 %) : 56 libres (les 21 services FACiL libres et le logiciel de Praxis qu'ils font tourner comptent chacun), 13 partiellement libres, 3 à code source disponible, 70 propriétaires.
@@ -287,7 +287,7 @@ Le sommaire détaille chaque point par catégorie et par statut du code source, 
 
 ## Utiliser les données
 
-Pour un aperçu chiffré, voir [`sommaire.md`](sommaire.md). Pour obtenir le répertoire courant, ignorer les outils portant `removed`. Pour les logiciels libres, filtrer sur `source` (`libre` ou `partiel`) et utiliser `licence` (ou `custom_license`) et `repo`. Par exemple, avec [jaq](https://github.com/01mf02/jaq) :
+Pour un aperçu chiffré, voir [`sommaire.md`](donnees/sommaire.md). Pour obtenir le répertoire courant, ignorer les outils portant `removed`. Pour les logiciels libres, filtrer sur `source` (`libre` ou `partiel`) et utiliser `licence` (ou `custom_license`) et `repo`. Par exemple, avec [jaq](https://github.com/01mf02/jaq) :
 
 ```sh
 # licence et dates du fichier
@@ -322,8 +322,8 @@ jaq '.outils[] | select(.criteres_confirmes and (.criteres_confirmes.criteres | 
 | [README.md](README.md) | Ce fichier : le démarrage rapide, la source, les crédits et licences, les commandes, les outils à installer, les fichiers de données et comment les utiliser |
 | [implementation.md](implementation.md) | Le flux de travail, le contenu du dépôt, les schémas, chaque script et ses options, la classification et ses analyses, l'enrichissement, la génération du sommaire, les scripts npm, les tests, le dépannage et les conventions de documentation |
 | [historique.md](historique.md) | Les étapes du projet et les décisions prises, par date |
-| [sommaire.md](sommaire.md) | Le sommaire statistique généré (données, dates, catégories, statuts, licences, critères, forges, tags, fiabilité) |
-| [site/README.md](site/README.md) | Le site de consultation : commandes, publication sur GitHub Pages, variables d'environnement, règles (données, provenance, lecture sans JavaScript, explorateur, statistiques, styles) et licences |
+| [sommaire.md](donnees/sommaire.md) | Le sommaire statistique généré (données, dates, catégories, statuts, licences, critères, forges, tags, fiabilité) |
+| [site/README.md](packages/site/README.md) | Le site de consultation : commandes, publication sur GitHub Pages, variables d'environnement, règles (données, provenance, lecture sans JavaScript, explorateur, statistiques, styles) et licences |
 | `specs/` | Les artefacts Spec Kit de chaque fonctionnalité du site (spécification, plan, recherche, contrats, tâches) : `001-site-consultation-repertoire`, `002-explorateur-outils`, `003-page-statistiques`, `004-deploiement-github-pages` |
 | [analyse-effort/analyse.md](analyse-effort/analyse.md) | Le banc d'essai des modèles et des efforts de raisonnement sur 20 outils, d'où viennent les valeurs par défaut |
 | [tickets/charles-amont.md](tickets/charles-amont.md) | Brouillon du ticket à ouvrir au dépôt de Charles (fichier de licence manquant, alternatives sans site, alternative américaine, deux liens morts) ; pas encore ouvert |

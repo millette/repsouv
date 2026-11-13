@@ -1,6 +1,6 @@
 # Analyse : modèle OpenAI et effort de raisonnement
 
-*Documentation : [README](../README.md) · [Implémentation](../implementation.md) · [Historique](../historique.md) · [Sommaire statistique](../sommaire.md)*
+*Documentation : [README](../README.md) · [Implémentation](../implementation.md) · [Historique](../historique.md) · [Sommaire statistique](../donnees/sommaire.md)*
 
 Banc d'essai du 2026-11-12 pour choisir le modèle OpenAI par défaut, son repli et l'effort de raisonnement (`reasoning.effort`) des appels d'enrichissement et de vérification des critères. Résultat : `gpt-6.1-sol` à effort `low` reproduit `gpt-6-astra` sur l'échantillon pour un cinquième du prix ; ce sont les valeurs par défaut depuis (`MODELE_PAR_DEFAUT`, `EFFORT_PAR_DEFAUT` dans `enrichir.ts`, repli `gpt-6-astra`).
 
