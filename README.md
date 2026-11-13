@@ -99,7 +99,7 @@ node ajouter.ts <lien> --nom=… --categorie=<id> --description=… --source=<id
 Site de consultation, avec nub, dans `site/` (voir [`site/README.md`](site/README.md)) :
 
 ```sh
-nub install && nub run build     # bâtit site/dist/ à partir des JSON de la racine (159 pages), sans appel réseau ni vl-convert; demande `nub install` à la racine
+nub install && nub run build     # bâtit site/dist/ à partir des JSON de la racine (158 pages), sans appel réseau ni vl-convert; demande `nub install` à la racine
 nub run dev                      # serveur de développement
 nub run test && nub run test:e2e # tests unitaires, tests du site bâti, puis tests dans Chromium
 ```

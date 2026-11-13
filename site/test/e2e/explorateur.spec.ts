@@ -112,3 +112,14 @@ test("un filtre s'applique en moins de 100 ms", async ({ page }) => {
   });
   expect(duree).toBeLessThan(100);
 });
+
+test("la page ne lance aucune requête qui échoue", async ({ page }) => {
+  const echecs: string[] = [];
+  page.on("response", (r) => {
+    if (r.status() >= 400) echecs.push(`${r.status()} ${r.url()}`);
+  });
+  await ouvrir(page);
+  await expect.poll(() => affiches(page)).toEqual(attendus());
+  await page.waitForLoadState("networkidle");
+  expect(echecs).toEqual([]);
+});

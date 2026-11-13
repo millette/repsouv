@@ -601,3 +601,13 @@ blockquote {
   gap: 0.5rem 1rem;
   flex-grow: 0;
 }
+
+/* Bloc « Trier et filtrer » de l'explorateur: replié par défaut. */
+.commandes-repli > summary {
+  cursor: pointer;
+  font-weight: 700;
+  padding: 0.5rem 0;
+}
+.commandes-repli[open] > summary {
+  margin-bottom: 0.5rem;
+}

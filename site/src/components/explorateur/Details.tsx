@@ -20,8 +20,9 @@ export default function Details(props: Props) {
   const outil = () => t().donnees.outils.find((o) => o.id === id());
   const adresse = () => adresseFiche(id(), t().base);
 
-  // Une source vide (boîte fermée) ne lance aucune lecture.
-  const [fiche] = createResource(id, async (i) => contenuFiche(new DOMParser().parseFromString(await chargerFiche(adresseFiche(i, t().base)), "text/html")));
+  // Boîte fermée: aucune lecture. Solid ne tient pour « pas de source » que false, null et undefined: une chaîne
+  // vide lancerait la lecture d'une fiche sans identifiant.
+  const [fiche] = createResource(() => id() || false, async (i) => contenuFiche(new DOMParser().parseFromString(await chargerFiche(adresseFiche(i, t().base)), "text/html")));
 
   // L'état commande la boîte: l'ouvrir en modale retient le focus et le rend à la commande d'origine à la fermeture.
   createEffect(() => {

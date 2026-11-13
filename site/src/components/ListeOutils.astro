@@ -1,0 +1,25 @@
+---
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
+// Liste complète des outils actifs, par catégorie, en balisage statique: ce que la page « Explorer » montre sans
+// JavaScript, et tant que l'explorateur n'a pas lu ses données (specs/002-explorateur-outils, second amendement).
+import { groupesParCategorie } from "../lib/repertoire.ts";
+import { site } from "../lib/site.ts";
+import CarteOutil from "./CarteOutil.astro";
+import Provenance from "./Provenance.astro";
+
+const { categories, actifs, base } = site();
+const groupes = groupesParCategorie(categories, actifs);
+---
+<div class="liste-statique" data-liste-statique>
+  <p class="compteur">{actifs.length} outils, en {groupes.length} catégories.</p>
+  {groupes.map(({ categorie, outils }) => (
+    <section class="categorie" data-categorie={categorie.id} aria-labelledby={`categorie-${categorie.id}`}>
+      <h2 id={`categorie-${categorie.id}`}><span aria-hidden="true">{categorie.icone}</span> {categorie.nom}</h2>
+      {categorie.description && <p class="categorie-description">{categorie.description} <Provenance type="ia" /></p>}
+      <ul class="cartes">
+        {outils.map((outil) => <CarteOutil outil={outil} base={base} />)}
+      </ul>
+    </section>
+  ))}
+</div>

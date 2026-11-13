@@ -28,9 +28,17 @@ export const adresse = (choix: Partial<Etat> = {}): string => {
 /** Identifiants des résultats affichés (cartes ou lignes du tableau), dans l'ordre de la page. */
 export const affiches = (page: Page): Promise<string[]> => page.locator(".resultats [data-outil]").evaluateAll((e) => e.map((x) => x.getAttribute("data-outil")!));
 
+/** Attend que l'explorateur ait lu ses données, puis ouvre le bloc « Trier et filtrer » s'il est replié. */
+export async function pret(page: Page): Promise<void> {
+  const repli = page.locator("details[data-commandes-repli]");
+  await expect(repli).toBeVisible();
+  if (!(await repli.evaluate((d) => (d as HTMLDetailsElement).open))) await repli.locator("> summary").click();
+  await expect(page.locator("form[data-commandes]")).toBeVisible();
+}
+
 export async function ouvrir(page: Page, chemin = "/explorer/"): Promise<void> {
   await page.goto(chemin);
-  await expect(page.locator("form[data-commandes]")).toBeVisible();
+  await pret(page);
 }
 
 /** Ouvre le groupe repliable d'un filtre s'il est fermé. */

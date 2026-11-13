@@ -1,10 +1,14 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
-// L'explorateur dit toujours où il en est: chargement, erreur, absence de JavaScript (US5 de specs/002-explorateur-outils).
-import { expect, test } from "@playwright/test";
-import { affiches, attendus } from "./explorateur.ts";
+// La page « Explorer » dit toujours où elle en est, et montre toujours la liste (specs/002-explorateur-outils, second
+// amendement): pendant le chargement, en cas d'échec et sans JavaScript, la liste complète reste affichée.
+import { expect, type Page, test } from "@playwright/test";
+import { affiches, attendus, pret, total } from "./explorateur.ts";
 
-test("pendant le chargement des données, un état de chargement est visible et annoncé", async ({ page }) => {
+const statique = (page: Page) => page.locator("[data-liste-statique]");
+const repli = (page: Page) => page.locator("details[data-commandes-repli]");
+
+test("pendant le chargement des données, la liste complète reste lisible et un état de chargement est annoncé", async ({ page }) => {
   let liberer: () => void = () => {};
   const attente = new Promise<void>((r) => (liberer = r));
   await page.route("**/explorateur.json", async (route) => {
@@ -12,12 +16,36 @@ test("pendant le chargement des données, un état de chargement est visible et 
     await route.continue();
   });
   await page.goto("/explorer/");
-  const chargement = page.locator('[role="status"]', { hasText: "Chargement des outils…" });
-  await expect(chargement.first()).toBeVisible();
-  await expect(page.locator("[data-chargement]")).toBeVisible();
+  await expect(page.locator('[role="status"][data-chargement]')).toHaveText("Chargement des outils…");
+  await expect(statique(page).locator("[data-outil]")).toHaveCount(total);
+  await expect(statique(page)).toBeVisible();
+  await expect(repli(page)).toBeHidden();
   liberer();
-  await expect(page.locator("form[data-commandes]")).toBeVisible();
+  await expect(repli(page)).toBeVisible();
   await expect(page.locator("[data-chargement]")).toHaveCount(0);
+});
+
+test("une fois les données lues, les résultats remplacent la liste statique: aucune carte en double", async ({ page }) => {
+  await page.goto("/explorer/");
+  await expect(repli(page)).toBeVisible();
+  await expect(statique(page)).toBeHidden();
+  await expect(page.locator("[data-outil]:visible")).toHaveCount(total);
+  await expect.poll(() => affiches(page)).toEqual(attendus());
+});
+
+test("le bloc « Trier et filtrer » est replié au départ, et ouvert quand l'adresse porte déjà un filtre ou un tri", async ({ page }) => {
+  await page.goto("/explorer/");
+  await expect(repli(page)).toBeVisible();
+  await expect(repli(page).locator("> summary")).toHaveText("Trier et filtrer");
+  expect(await repli(page).evaluate((d) => (d as HTMLDetailsElement).open)).toBe(false);
+  await expect(page.locator("form[data-commandes]")).toBeHidden();
+  await repli(page).locator("> summary").click();
+  await expect(page.locator("form[data-commandes]")).toBeVisible();
+  for (const adresse of ["/explorer/?statut=libre", "/explorer/?tri=nom", "/explorer/?vue=tableau"]) {
+    await page.goto(adresse);
+    await expect(repli(page)).toBeVisible();
+    expect(await repli(page).evaluate((d) => (d as HTMLDetailsElement).open)).toBe(true);
+  }
 });
 
 for (const [cas, reponse] of [
@@ -25,30 +53,36 @@ for (const [cas, reponse] of [
   ["un fichier illisible", { status: 200, contentType: "application/json", body: "<html>pas du json" }],
   ["un fichier sans ses tableaux", { status: 200, contentType: "application/json", body: '{"outils":[]}' }],
 ] as const) {
-  test(`${cas}: un message d'erreur, « Réessayer » et un lien vers la page « Outils »`, async ({ page }) => {
+  test(`${cas}: un message d'erreur et « Réessayer », la liste complète restant affichée`, async ({ page }) => {
     let panne = true;
     await page.route("**/explorateur.json", (route) => (panne ? route.fulfill(reponse) : route.continue()));
     await page.goto("/explorer/");
     const alerte = page.locator('main [role="alert"]');
     await expect(alerte).toContainText("Les outils n'ont pas pu être chargés");
-    await expect(alerte.getByRole("link", { name: "Outils" })).toHaveAttribute("href", "/outils/");
-    await expect(page.locator("form[data-commandes]")).toHaveCount(0);
-    // Une fois la panne passée, « Réessayer » charge la liste.
+    await expect(alerte).toContainText("La liste complète reste affichée");
+    await expect(statique(page)).toBeVisible();
+    await expect(statique(page).locator("[data-outil]")).toHaveCount(total);
+    await expect(repli(page)).toBeHidden();
+    // Une fois la panne passée, « Réessayer » charge l'explorateur.
     panne = false;
     await alerte.getByRole("button", { name: "Réessayer" }).click();
-    await expect(page.locator("form[data-commandes]")).toBeVisible();
+    await pret(page);
     await expect.poll(() => affiches(page)).toEqual(attendus());
     await expect(page.locator('main [role="alert"]')).toHaveCount(0);
+    await expect(statique(page)).toBeHidden();
   });
 }
 
 test.describe("sans JavaScript", () => {
   test.use({ javaScriptEnabled: false });
 
-  test("la page « Explorer » dit qu'elle demande JavaScript et renvoie à la page « Outils »; elle n'est pas vide", async ({ page }) => {
-    await page.goto("/explorer/");
+  test("la page « Explorer » montre la liste complète, par catégorie, sans formulaire", async ({ page }) => {
+    await page.goto("/explorer/?statut=libre");
     await expect(page.locator("h1")).toHaveText("Explorer les outils");
-    await expect(page.locator("main [data-attente]")).toContainText("L'explorateur demande JavaScript");
-    await expect(page.locator("main [data-attente] a")).toHaveAttribute("href", "/outils/");
+    await expect(page.locator("[data-outil]:visible")).toHaveCount(total);
+    await expect(statique(page).locator("section[data-categorie] h2").first()).toBeVisible();
+    await expect(repli(page)).toBeHidden();
+    await expect(page.locator("form[data-commandes]")).toBeHidden();
+    await expect(page.locator("[data-chargement]")).toHaveCount(0);
   });
 });

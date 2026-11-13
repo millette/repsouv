@@ -5,12 +5,11 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, type Page, test } from "@playwright/test";
 import { actifs, identifiant } from "./donnees.ts";
-import { affiches, attendus, donnees } from "./explorateur.ts";
+import { affiches, attendus, donnees, pret } from "./explorateur.ts";
 
 const un = (critere: (o: (typeof actifs)[number]) => boolean) => `/outils/${identifiant(actifs.find(critere)!.nom)}/`;
 const PAGES: [string, string][] = [
   ["accueil", "/"],
-  ["page « Outils »", "/outils/"],
   ["fiche enrichie de Praxis", un((o) => o.source_repertoire_id === "praxis" && o.enrichi_le !== undefined)],
   ["fiche d'un service FACiL", un((o) => o.source_repertoire_id === "facil")],
   ["fiche d'une alternative de Charles", un((o) => o.source_repertoire_id === "charles" && o.enrichi_le !== undefined)],
@@ -20,7 +19,7 @@ const PAGES: [string, string][] = [
 const quatre = donnees.outils.slice(0, 4).map((o) => `comparer=${o.id}`).join("&");
 /** États de l'explorateur à contrôler: l'île doit être montée avant l'analyse. */
 const EXPLORATEUR: [string, string][] = [
-  ["explorateur en cartes", "/explorer/"],
+  ["explorateur en cartes, « Trier et filtrer » ouvert", "/explorer/"],
   ["explorateur en tableau, filtres ouverts", "/explorer/?vue=tableau&statut=libre&score=1&donnees=confirme&pays=FR&source=praxis&enrichi=oui&tag=chiffrement"],
   ["explorateur avec une comparaison de quatre outils", `/explorer/?${quatre}`],
   ["explorateur sans résultat", "/explorer/?q=zzzzzz"],
@@ -60,7 +59,7 @@ for (const theme of ["light", "dark"] as const) {
     for (const [nom, adresse] of EXPLORATEUR) {
       test(`aucune violation axe A ou AA: ${nom}`, async ({ page }) => {
         await page.goto(adresse);
-        await expect(page.locator("form[data-commandes]")).toBeVisible();
+        await pret(page);
         await expect(page.locator("[data-theme-pret]")).toBeVisible();
         expect(await violations(page)).toEqual([]);
       });
@@ -78,6 +77,12 @@ for (const theme of ["light", "dark"] as const) {
         await f.locator("summary").click();
       }
       await page.locator('figure[data-graphique="categories-statut"]').getByRole("button", { name: "Libre", exact: true }).click();
+      expect(await violations(page)).toEqual([]);
+    });
+    test("aucune violation axe A ou AA: explorateur, « Trier et filtrer » replié", async ({ page }) => {
+      await page.goto("/explorer/");
+      await expect(page.locator("details[data-commandes-repli]")).toBeVisible();
+      await expect(page.locator("[data-theme-pret]")).toBeVisible();
       expect(await violations(page)).toEqual([]);
     });
     test("aucune violation axe A ou AA: explorateur, boîte « Détails » ouverte", async ({ page }) => {
@@ -107,15 +112,21 @@ test("parcours au clavier seul: lien d'évitement, navigation, liste, fiche et r
   await expect(page).toHaveURL(/#contenu$/);
 
   // La navigation principale mène à la liste; le lien qui a le focus a un contour visible.
-  const outils = page.getByRole("navigation", { name: "Navigation principale" }).getByRole("link", { name: "Outils" });
-  await outils.focus();
-  const contour = await outils.evaluate((e) => getComputedStyle(e).outlineStyle !== "none" && parseFloat(getComputedStyle(e).outlineWidth) > 0);
+  const explorer = page.getByRole("navigation", { name: "Navigation principale" }).getByRole("link", { name: "Explorer" });
+  await explorer.focus();
+  const contour = await explorer.evaluate((e) => getComputedStyle(e).outlineStyle !== "none" && parseFloat(getComputedStyle(e).outlineWidth) > 0);
   expect(contour).toBe(true);
   await page.keyboard.press("Enter");
-  await expect(page.locator("h1")).toHaveText("Outils");
+  await expect(page.locator("h1")).toHaveText("Explorer les outils");
+  await expect(page.locator("details[data-commandes-repli]")).toBeVisible();
+
+  // Le bloc « Trier et filtrer » s'ouvre au clavier.
+  await page.locator("details[data-commandes-repli] > summary").focus();
+  await page.keyboard.press("Enter");
+  await expect(page.locator("form[data-commandes]")).toBeVisible();
 
   // La première carte s'ouvre à la touche Entrée, et le lien de retour ramène à la liste.
-  const lien = page.locator("[data-outil] a").first();
+  const lien = page.locator(".resultats [data-outil] a").first();
   const nom = await lien.textContent();
   await lien.focus();
   await page.keyboard.press("Enter");
@@ -123,12 +134,12 @@ test("parcours au clavier seul: lien d'évitement, navigation, liste, fiche et r
   const retour = page.getByRole("link", { name: "Retour à la liste des outils" });
   await retour.focus();
   await page.keyboard.press("Enter");
-  await expect(page.locator("h1")).toHaveText("Outils");
+  await expect(page.locator("h1")).toHaveText("Explorer les outils");
 });
 
 test("explorateur au clavier seul: chercher, filtrer, trier, choisir deux outils, lire la comparaison, ouvrir une fiche", async ({ page }) => {
   await page.goto("/explorer/");
-  await expect(page.locator("form[data-commandes]")).toBeVisible();
+  await pret(page);
 
   // Chercher: le champ reçoit le focus par tabulation depuis le début du contenu, puis se vide.
   const recherche = page.getByLabel("Chercher un outil par son nom");

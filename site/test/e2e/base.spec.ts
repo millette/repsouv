@@ -3,14 +3,15 @@
 // Le site bâti pour GitHub Pages, servi sous le chemin du dépôt (specs/004-deploiement-github-pages): tout y
 // fonctionne comme à la racine, et aucune requête ne sort de ce chemin.
 import { expect, test } from "@playwright/test";
+import { pret } from "./explorateur.ts";
 
 const BASE = "/repsouv/";
 test.use({ baseURL: "http://localhost:4398" });
 
-test("la navigation mène aux quatre pages, sous le chemin du dépôt", async ({ page }) => {
+test("la navigation mène aux trois pages, sous le chemin du dépôt", async ({ page }) => {
   await page.goto(BASE);
   const nav = page.getByRole("navigation", { name: "Navigation principale" });
-  for (const [lien, titre, chemin] of [["Outils", "Outils", "outils/"], ["Explorer", "Explorer les outils", "explorer/"], ["Statistiques", "Statistiques", "statistiques/"], ["Accueil", /Répertoire d'outils/, ""]] as const) {
+  for (const [lien, titre, chemin] of [["Explorer", "Explorer les outils", "explorer/"], ["Statistiques", "Statistiques", "statistiques/"], ["Accueil", /Répertoire d'outils/, ""]] as const) {
     await nav.getByRole("link", { name: lien, exact: true }).click();
     await expect(page.locator("h1")).toHaveText(titre);
     expect(new URL(page.url()).pathname).toBe(BASE + chemin);
@@ -24,7 +25,7 @@ test("l'explorateur charge ses données, filtre, et sa boîte « Détails » mon
     if (u.host === "localhost:4398" && !u.pathname.startsWith(BASE)) horsBase.push(u.pathname);
   });
   await page.goto(`${BASE}explorer/`);
-  await expect(page.locator("form[data-commandes]")).toBeVisible();
+  await pret(page);
   await expect(page.locator("[data-compteur]")).toContainText(/^\d+ outils affichés sur \d+/);
   await page.locator('input[name="statut"][value="libre"]').check();
   await expect(page).toHaveURL(/\/repsouv\/explorer\/\?statut=libre$/);
@@ -46,17 +47,18 @@ test("un graphique de la page « Statistiques » devient interactif, et une lign
   await f.locator("summary").click();
   await f.getByRole("link", { name: "Libre", exact: true }).click();
   await expect(page).toHaveURL(/\/repsouv\/explorer\/\?statut=libre$/);
-  await expect(page.locator("form[data-commandes]")).toBeVisible();
+  await pret(page);
 });
 
-test("une fiche s'ouvre depuis la page « Outils », et son retour ramène à la liste", async ({ page }) => {
-  await page.goto(`${BASE}outils/`);
-  const lien = page.locator("[data-outil] a").first();
+test("une fiche s'ouvre depuis la liste de la page « Explorer », et son retour y ramène", async ({ page }) => {
+  await page.goto(`${BASE}explorer/`);
+  await pret(page);
+  const lien = page.locator(".resultats [data-outil] a").first();
   const nom = await lien.textContent();
   await lien.click();
   await expect(page.locator("h1")).toHaveText(nom!);
   await page.getByRole("link", { name: "Retour à la liste des outils" }).click();
-  expect(new URL(page.url()).pathname).toBe(`${BASE}outils/`);
+  expect(new URL(page.url()).pathname).toBe(`${BASE}explorer/`);
 });
 
 test("une adresse inconnue sert la page introuvable, dont le lien ramène à l'accueil du site", async ({ page }) => {

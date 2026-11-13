@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Accueil: présentation du projet (ce qu'est le répertoire, sa genèse, les crédits, les logiciels utilisés). La liste
-// des outils est sur la page « Outils », le tri et les filtres dans l'explorateur. Les nombres viennent des données;
+// des outils est sur la page « Explorer », avec le tri et les filtres. Les nombres viennent des données;
 // le reste, de la documentation du dépôt (src/lib/presentation.ts).
 import Page from "../layouts/Page.astro";
-import { adresseExplorer, adresseOutils } from "../lib/adresses.ts";
+import { adresseExplorer } from "../lib/adresses.ts";
 import { formaterDate } from "../lib/libelles.ts";
 import { ETAPES, LOGICIELS } from "../lib/presentation.ts";
 import { LIBELLES_PROVENANCE } from "../lib/provenance.ts";
@@ -32,8 +32,7 @@ const parSource = (id: string) => actifs.filter((o) => o.source_repertoire_id ==
       {criteres.map((c) => <li><span aria-hidden="true">{c.icon}</span> {c.titre}</li>)}
     </ul>
     <p class="actions">
-      <a class="btn btn-primary" href={adresseOutils(base)}>Voir tous les outils</a>
-      <a class="btn" href={adresseExplorer(base)}>Explorer et comparer</a>
+      <a class="btn btn-primary" href={adresseExplorer(base)}>Voir, trier et comparer les outils</a>
     </p>
   </section>
 

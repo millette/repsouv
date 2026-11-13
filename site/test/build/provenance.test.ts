@@ -45,8 +45,8 @@ test("le signalement d'IA est du texte visible, jamais un attribut title ni un t
     for (const e of page.querySelectorAll("[title]")) assert.ok(!(e.getAttribute("title") ?? "").includes("IA"), chemin);
     for (const e of page.querySelectorAll(".provenance")) {
       assert.ok(texte(e).length > 0, chemin);
-      // Le formulaire de filtres est masqué en entier tant que le script ne l'a pas révélé: son signalement apparaît avec lui.
-      if (e.closest("form[data-filtres]")) continue;
+      // Le formulaire de l'explorateur est masqué en entier tant que le script ne l'a pas révélé: son signalement apparaît avec lui.
+      if (e.closest("details[data-commandes-repli]")) continue;
       assert.ok(e.closest(".sr-seul, [hidden], [aria-hidden=true]") === null, chemin);
     }
   }

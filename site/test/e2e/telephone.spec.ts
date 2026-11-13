@@ -3,7 +3,7 @@
 // Sur un téléphone (360 px de large), les pages se lisent sans défilement horizontal.
 import { expect, type Page, test } from "@playwright/test";
 import { actifs, identifiant } from "./donnees.ts";
-import { donnees } from "./explorateur.ts";
+import { donnees, pret } from "./explorateur.ts";
 
 test.use({ viewport: { width: 360, height: 740 } });
 
@@ -11,7 +11,6 @@ export const deborde = (page: Page) => page.evaluate(() => document.documentElem
 
 for (const [nom, adresse] of [
   ["l'accueil", "/"],
-  ["la page « Outils »", "/outils/"],
   ["une fiche enrichie avec Open Hub", `/outils/${identifiant(actifs.find((o) => "openhub" in o)!.nom)}/`],
   ["une fiche non enrichie", `/outils/${identifiant(actifs.find((o) => o.enrichi_le === undefined)!.nom)}/`],
 ] as const) {
@@ -30,14 +29,14 @@ for (const [nom, adresse] of [
 ] as const) {
   test(`${nom} ne déborde pas: un tableau large défile seul`, async ({ page }) => {
     await page.goto(adresse);
-    await expect(page.locator("form[data-commandes]")).toBeVisible();
+    await pret(page);
     expect(await deborde(page)).toBeLessThanOrEqual(0);
   });
 }
 
 test("sur téléphone, les filtres de l'explorateur restent utilisables", async ({ page }) => {
   await page.goto("/explorer/");
-  await expect(page.locator("form[data-commandes]")).toBeVisible();
+  await pret(page);
   await page.locator('details[data-groupe="tag"] summary').click();
   await page.locator('input[name="tag"][value="chiffrement"]').check();
   await expect(page).toHaveURL(/tag=chiffrement/);

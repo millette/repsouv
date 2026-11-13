@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
-// Page « Outils » du site bâti (specs/002-explorateur-outils/contracts/pages.md): tous les outils actifs, par catégorie,
-// lisibles sans script, sans filtre ni île.
+// Liste statique de la page « Explorer » du site bâti (specs/002-explorateur-outils, second amendement): tous les outils
+// actifs, par catégorie, lisibles sans script; le formulaire de l'explorateur y est replié et masqué.
 import assert from "node:assert/strict";
+import { existsSync } from "node:fs";
 import { test } from "node:test";
 import { identifiant } from "../../src/lib/adresses.ts";
 import { LIBELLES_PROVENANCE } from "../../src/lib/provenance.ts";
@@ -12,9 +13,10 @@ import { batirAuBesoin, donneesReelles, lirePage, texte } from "./outils.ts";
 batirAuBesoin();
 const d = donneesReelles();
 const actifs = d.outils.filter((o) => !o.removed);
-const page = lirePage("outils/index.html");
-const sections = [...page.querySelectorAll("section[data-categorie]")];
-const cartes = [...page.querySelectorAll("[data-outil]")];
+const page = lirePage("explorer/index.html");
+const liste = page.querySelector("[data-liste-statique]")!;
+const sections = [...liste.querySelectorAll("section[data-categorie]")];
+const cartes = [...liste.querySelectorAll("[data-outil]")];
 const carteDe = (nom: string) => cartes.find((c) => c.getAttribute("data-outil") === identifiant(nom))!;
 
 test("une section par catégorie ayant un outil actif, dans l'ordre des données, avec son titre", () => {
@@ -71,11 +73,18 @@ test("aucun élément vide dans une carte", () => {
   }
 });
 
-test("la page n'a ni formulaire ni île: tout filtrage passe par l'explorateur, auquel elle renvoie", () => {
-  assert.equal(page.querySelectorAll("main form, main astro-island").length, 0);
-  assert.ok([...page.querySelectorAll("main a")].some((a) => a.getAttribute("href") === "/explorer/"));
+test("le formulaire de l'explorateur est rendu au build, replié dans un details fermé et masqué sans script", () => {
+  const repli = page.querySelector("main details[data-commandes-repli]");
+  assert.ok(repli);
+  assert.ok(repli.hasAttribute("hidden"));
+  assert.ok(!repli.hasAttribute("open"));
+  assert.equal(texte(repli.querySelector("summary")), "Trier et filtrer");
+  assert.ok(repli.querySelector("form[data-commandes]"));
+  // Seule la liste statique porte des cartes dans le HTML servi: l'île n'en rend aucune au build.
+  assert.equal(page.querySelectorAll("main [data-outil]").length, cartes.length);
 });
 
-test("la page annonce le nombre total d'outils", () => {
-  assert.ok(texte(page.querySelector("main .compteur")).includes(`${actifs.length} outils`));
+test("la liste annonce le nombre total d'outils, et la page « Outils » n'existe plus", () => {
+  assert.ok(texte(liste.querySelector(".compteur")).includes(`${actifs.length} outils`));
+  assert.equal(existsSync("dist/outils/index.html"), false);
 });

@@ -36,11 +36,6 @@ export function adresseAccueil(base: string, parametres = ""): string {
   return normaliserBase(base) + (parametres ? `?${parametres}` : "");
 }
 
-/** Page « Outils »: la liste par catégorie, lisible sans JavaScript. */
-export function adresseOutils(base: string): string {
-  return `${normaliserBase(base)}outils/`;
-}
-
 /** Page « Explorer », avec les paramètres d'un état (specs/002-explorateur-outils/contracts/adresse.md). */
 export function adresseExplorer(base: string, parametres = ""): string {
   return `${normaliserBase(base)}explorer/` + (parametres ? `?${parametres}` : "");

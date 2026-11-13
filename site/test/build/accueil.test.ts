@@ -42,9 +42,9 @@ test("chaque logiciel utilisé est nommé, lié et décrit", () => {
   }
 });
 
-test("l'accueil mène à la page « Outils » et à l'explorateur, et ne porte ni carte d'outil, ni formulaire, ni île", () => {
+test("l'accueil mène à la page « Explorer », et ne porte ni carte d'outil, ni formulaire, ni île", () => {
   const liens = [...principal.querySelectorAll("a")].map((a) => a.getAttribute("href"));
-  assert.ok(liens.includes("/outils/"));
+  assert.ok(!liens.includes("/outils/"));
   assert.ok(liens.includes("/explorer/"));
   assert.equal(principal.querySelectorAll("[data-outil], form, astro-island").length, 0);
 });

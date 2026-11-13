@@ -5,7 +5,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import { slug } from "../../categories.ts";
-import { adresseAccueil, adresseExplorer, adresseFiche, adresseOutils, identifiant, verifierUnicite } from "../src/lib/adresses.ts";
+import { adresseAccueil, adresseExplorer, adresseFiche, identifiant, verifierUnicite } from "../src/lib/adresses.ts";
 
 test("identifiant: minuscules, sans accents, tirets, sans caractère à encoder", () => {
   assert.equal(identifiant("CIRA Canadian Shield / Bouclier canadien"), "cira-canadian-shield-bouclier-canadien");
@@ -34,8 +34,6 @@ test("adresseFiche et adresseAccueil appliquent le chemin de base", () => {
   assert.equal(adresseAccueil("/"), "/");
   assert.equal(adresseAccueil("/repertoire"), "/repertoire/");
   assert.equal(adresseAccueil("/repertoire/", "tag=chiffrement"), "/repertoire/?tag=chiffrement");
-  assert.equal(adresseOutils("/"), "/outils/");
-  assert.equal(adresseOutils("/repertoire"), "/repertoire/outils/");
   assert.equal(adresseExplorer("/"), "/explorer/");
   assert.equal(adresseExplorer("/repertoire/", "tag=chiffrement"), "/repertoire/explorer/?tag=chiffrement");
 });

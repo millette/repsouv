@@ -8,7 +8,7 @@ import Etoiles from "../../components/Etoiles.astro";
 import OpenHub from "../../components/OpenHub.astro";
 import Provenance from "../../components/Provenance.astro";
 import Page from "../../layouts/Page.astro";
-import { adresseExplorer, adresseFiche, adresseOutils, identifiant } from "../../lib/adresses.ts";
+import { adresseExplorer, adresseFiche, identifiant } from "../../lib/adresses.ts";
 import type { OutilClasse } from "../../lib/donnees.ts";
 import { LIBELLES_STATUT, nomHote, nomPays } from "../../lib/libelles.ts";
 import { rendreDescription } from "../../lib/markdown.ts";
@@ -31,7 +31,7 @@ const voirAussi = apparentes(outil, actifs);
 const remplace = outil.alternative_a ?? [];
 const aCode = Boolean(outil.licence || outil.custom_license || outil.repo);
 ---
-<Page titre={outil.nom} description={outil.description} courante="outils">
+<Page titre={outil.nom} description={outil.description} courante="explorer">
   <div data-section-entete>
     <h1>{outil.nom}</h1>
     <p class="fiche-meta">
@@ -122,5 +122,5 @@ const aCode = Boolean(outil.licence || outil.custom_license || outil.repo);
     <p>Cet outil provient de : <a class="link" href={source.url}>{source.nom}</a>.</p>
   </section>
 
-  <p class="retour"><a class="link" href={adresseOutils(base)}>Retour à la liste des outils</a></p>
+  <p class="retour"><a class="link" href={adresseExplorer(base)}>Retour à la liste des outils</a></p>
 </Page>

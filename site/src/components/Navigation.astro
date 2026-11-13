@@ -3,9 +3,9 @@
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Navigation principale, dans l'en-tête de chaque page. La page en cours porte aria-current et un soulignement:
 // elle ne se distingue pas par la couleur seule.
-import { adresseAccueil, adresseExplorer, adresseOutils, adresseStatistiques } from "../lib/adresses.ts";
+import { adresseAccueil, adresseExplorer, adresseStatistiques } from "../lib/adresses.ts";
 
-export type PageCourante = "accueil" | "outils" | "explorer" | "statistiques";
+export type PageCourante = "accueil" | "explorer" | "statistiques";
 
 interface Props {
   courante?: PageCourante | undefined;
@@ -14,7 +14,6 @@ interface Props {
 const { courante, base } = Astro.props;
 const liens: { id: PageCourante; libelle: string; adresse: string }[] = [
   { id: "accueil", libelle: "Accueil", adresse: adresseAccueil(base) },
-  { id: "outils", libelle: "Outils", adresse: adresseOutils(base) },
   { id: "explorer", libelle: "Explorer", adresse: adresseExplorer(base) },
   { id: "statistiques", libelle: "Statistiques", adresse: adresseStatistiques(base) },
 ];

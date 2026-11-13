@@ -3,6 +3,7 @@
 // Page « Statistiques » dans un navigateur (specs/003-page-statistiques/contracts): images sans JavaScript, puis vue
 // interactive (survol, flèches, légende, thème), liens vers l'explorateur, et image conservée si la vue échoue.
 import { expect, type Locator, type Page, test } from "@playwright/test";
+import { pret } from "./explorateur.ts";
 
 const figure = (page: Page, id: string) => page.locator(`figure[data-graphique="${id}"]`);
 
@@ -143,7 +144,7 @@ test.describe("avec JavaScript", () => {
     const ligne = f.locator("tbody tr", { has: page.getByRole("link", { name: "Libre", exact: true }) });
     const outils = (await ligne.locator("td").nth(1).textContent())!.trim();
     await ligne.getByRole("link", { name: "Libre", exact: true }).click();
-    await expect(page.locator("form[data-commandes]")).toBeVisible();
+    await pret(page);
     await expect(page.locator("[data-compteur]")).toContainText(new RegExp(`^${outils} outils affichés`));
   });
 

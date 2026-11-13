@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // L'adresse porte tout l'état de l'explorateur (US4 de specs/002-explorateur-outils, contracts/adresse.md).
 import { expect, test } from "@playwright/test";
-import { adresse, affiches, attendus, cocher, deplier, donnees, etat, ouvrir, total } from "./explorateur.ts";
+import { adresse, affiches, attendus, cocher, deplier, donnees, etat, ouvrir, total, pret } from "./explorateur.ts";
 
 const [a, b] = donnees.outils.filter((o) => o.statut === "libre").map((o) => o.id);
 const pays = donnees.pays[0]!.code;
@@ -92,7 +92,7 @@ test("les liens de catégorie et de tag d'une fiche ouvrent l'explorateur filtr�
   const outil = donnees.outils.find((o) => o.tags.length > 0)!;
   await page.goto(`/outils/${outil.id}/`);
   await page.locator('[data-section="tags"] dt a').first().click();
-  await expect(page.locator("form[data-commandes]")).toBeVisible();
+  await pret(page);
   await expect.poll(() => affiches(page)).toEqual(attendus({ tags: [outil.tags[0]!] }));
   await expect(page.locator(`input[name="tag"][value="${outil.tags[0]}"]`)).toBeChecked();
   await page.goto(`/outils/${outil.id}/`);
