@@ -2,7 +2,7 @@
   "meta": {
     "data_license": "CC-BY-SA-4.0",
     "created_at": "2026-11-12T12:35:52-05:00",
-    "updated_at": "2026-11-12T17:41:57-05:00"
+    "updated_at": "2026-11-13T07:30:39-05:00"
   },
   "outils": [
     {
@@ -286,7 +286,10 @@
         "premier_mois": "2014-10-01",
         "dernier_mois": "2026-11-01",
         "consulte_le": "2026-11-12T17:20:28-05:00"
-      }
+      },
+      "voir_aussi": [
+        "Ébauche FACiLe"
+      ]
     },
     {
       "categorie": "bureautique-et-collaboration",
@@ -419,7 +422,10 @@
         "premier_mois": "2015-03-01",
         "dernier_mois": "2026-11-01",
         "consulte_le": "2026-11-12T17:17:21-05:00"
-      }
+      },
+      "voir_aussi": [
+        "Bureautique FACiLe"
+      ]
     },
     {
       "categorie": "bureautique-et-collaboration",
@@ -470,7 +476,7 @@
         "date": "2026-11-12T12:56:50-05:00"
       },
       "source_repertoire_id": "praxis",
-      "echecs_openhub": 2
+      "echecs_openhub": 3
     },
     {
       "categorie": "bureautique-et-collaboration",
@@ -588,7 +594,7 @@
         "date": "2026-11-12T12:57:07-05:00"
       },
       "source_repertoire_id": "praxis",
-      "echecs_openhub": 2
+      "echecs_openhub": 3
     },
     {
       "categorie": "communication-et-collaboration-d-equipe",
@@ -722,7 +728,10 @@
         "premier_mois": "2015-06-01",
         "dernier_mois": "2026-11-01",
         "consulte_le": "2026-11-12T17:20:30-05:00"
-      }
+      },
+      "voir_aussi": [
+        "Équipe FACiLe"
+      ]
     },
     {
       "categorie": "communication-et-collaboration-d-equipe",
@@ -789,7 +798,10 @@
         "premier_mois": "2013-12-01",
         "dernier_mois": "2026-11-01",
         "consulte_le": "2026-11-12T17:20:31-05:00"
-      }
+      },
+      "voir_aussi": [
+        "Conférence FACiLe"
+      ]
     },
     {
       "categorie": "communautes-reseaux-et-partage-des-connaissances",
@@ -804,7 +816,7 @@
         "controle"
       ],
       "confiance": "moyenne",
-      "echecs_enrichissement": 2,
+      "echecs_enrichissement": 3,
       "source_repertoire_id": "praxis"
     },
     {
@@ -871,7 +883,10 @@
         "premier_mois": "2016-02-01",
         "dernier_mois": "2026-11-01",
         "consulte_le": "2026-11-12T17:17:26-05:00"
-      }
+      },
+      "voir_aussi": [
+        "Jasette FACiLe"
+      ]
     },
     {
       "categorie": "communautes-reseaux-et-partage-des-connaissances",
@@ -938,7 +953,10 @@
         "premier_mois": "2011-10-01",
         "dernier_mois": "2026-11-01",
         "consulte_le": "2026-11-12T17:17:26-05:00"
-      }
+      },
+      "voir_aussi": [
+        "Forums du libre du Québec"
+      ]
     },
     {
       "categorie": "comptabilite-et-finances",
@@ -1335,7 +1353,7 @@
         "date": "2026-11-12T12:58:12-05:00"
       },
       "source_repertoire_id": "praxis",
-      "echecs_openhub": 2
+      "echecs_openhub": 3
     },
     {
       "categorie": "gestion-de-projets-et-des-taches",
@@ -1590,7 +1608,7 @@
         "date": "2026-11-12T12:58:40-05:00"
       },
       "source_repertoire_id": "praxis",
-      "echecs_openhub": 2
+      "echecs_openhub": 3
     },
     {
       "categorie": "gestion-de-la-relation-des-membres-et-crm",
@@ -1803,7 +1821,10 @@
         "date": "2026-11-12T12:59:03-05:00"
       },
       "source_repertoire_id": "praxis",
-      "echecs_openhub": 2
+      "echecs_openhub": 3,
+      "voir_aussi": [
+        "Événement FACiLe"
+      ]
     },
     {
       "categorie": "gestion-documentaire-et-signature-electronique",
@@ -1867,7 +1888,7 @@
         "dependance"
       ],
       "confiance": "élevée",
-      "echecs_enrichissement": 2,
+      "echecs_enrichissement": 3,
       "source_repertoire_id": "praxis"
     },
     {
@@ -2375,7 +2396,7 @@
         "controle"
       ],
       "confiance": "moyenne",
-      "echecs_enrichissement": 2,
+      "echecs_enrichissement": 3,
       "source_repertoire_id": "praxis"
     },
     {
@@ -2606,7 +2627,7 @@
         "date": "2026-11-12T13:00:04-05:00"
       },
       "source_repertoire_id": "praxis",
-      "echecs_openhub": 2
+      "echecs_openhub": 3
     },
     {
       "categorie": "securite-et-gestion-des-acces",
@@ -2659,7 +2680,7 @@
         "date": "2026-11-12T13:00:09-05:00"
       },
       "source_repertoire_id": "praxis",
-      "echecs_openhub": 2
+      "echecs_openhub": 3
     },
     {
       "categorie": "stockage-infonuagique-et-sauvegarde",
@@ -2880,7 +2901,10 @@
         "premier_mois": "2010-03-01",
         "dernier_mois": "2026-04-01",
         "consulte_le": "2026-11-12T17:17:34-05:00"
-      }
+      },
+      "voir_aussi": [
+        "Nuage FACiLe"
+      ]
     },
     {
       "categorie": "stockage-infonuagique-et-sauvegarde",
@@ -3079,7 +3103,7 @@
         "date": "2026-11-12T13:00:59-05:00"
       },
       "source_repertoire_id": "praxis",
-      "echecs_openhub": 2
+      "echecs_openhub": 3
     },
     {
       "categorie": "veille-et-gestion-de-l-information",
@@ -3185,7 +3209,7 @@
         "date": "2026-11-12T13:01:06-05:00"
       },
       "source_repertoire_id": "praxis",
-      "echecs_openhub": 2
+      "echecs_openhub": 3
     },
     {
       "categorie": "veille-et-gestion-de-l-information",
@@ -3238,7 +3262,7 @@
         "date": "2026-11-12T13:01:11-05:00"
       },
       "source_repertoire_id": "praxis",
-      "echecs_openhub": 2
+      "echecs_openhub": 3
     },
     {
       "categorie": "gestion-d-evenements-et-billetterie",
@@ -3259,12 +3283,36 @@
         "https://www.eventbrite.ca/"
       ],
       "criteres": [],
-      "confiance": "indéterminée"
+      "confiance": "faible",
+      "description_longue": "L’**Agenda du libre du Québec** est un service de diffusion d’événements de la communauté du libre. Il propose un calendrier spécialisé pour faire connaître des activités liées à cet univers, plutôt qu’un agenda généraliste. Pour un OSBL des arts et de la culture, il peut constituer un canal de diffusion lorsque les activités rejoignent les thèmes du libre, des contenus ouverts ou des communs.\n\nLe service repose sur **agenda-libre-ruby**, un logiciel libre de gestion de calendriers développé avec Ruby on Rails. Le projet vise les événements et les activités de communautés engagées pour les libertés, dans des domaines qui comprennent les logiciels, les arts, les données, le matériel, les contenus, les communs et Internet. Son code source est publié sur Framagit.\n\nIl faut distinguer le service québécois du logiciel qui le fait fonctionner : le dépôt décrit les fondations techniques, mais ne précise pas les modalités d’exploitation de cette instance. Les renseignements fournis n’identifient ni son hébergeur ni le pays de stockage des données. Ils ne permettent pas non plus de confirmer des fonctions de billetterie, de paiement ou de gestion des inscriptions.",
+      "tags": [
+        "evenements-billetterie",
+        "communaute-reseau-social"
+      ],
+      "source": "libre",
+      "licence": "AGPL-3.0-only",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://framagit.org/agenda-libre/agenda-libre-ruby",
+      "evaluation_enrichie": {
+        "score": 0,
+        "criteres": [],
+        "confiance": "faible"
+      },
+      "enrichi_le": "2026-11-13T07:24:13-05:00",
+      "criteres_confirmes": {
+        "criteres": [],
+        "preuves": {},
+        "infirmes": {},
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-13T07:28:52-05:00"
+      },
+      "echecs_openhub": 1
     },
     {
       "categorie": "bureautique-et-collaboration",
       "nom": "Bureautique FACiLe",
-      "score": 0,
+      "score": 1,
       "score_estime": true,
       "lien": "https://bureautique.facil.services/",
       "description": "Suite bureautique en ligne qui libère votre travail. (Pour les membres de FACiL.)",
@@ -3279,13 +3327,61 @@
         "https://docs.google.com/",
         "https://www.microsoft.com/microsoft-365"
       ],
-      "criteres": [],
-      "confiance": "indéterminée"
+      "criteres": [
+        "dependance"
+      ],
+      "confiance": "moyenne",
+      "voir_aussi": [
+        "Collabora Online"
+      ],
+      "description_longue": "**Bureautique FACiLe** est un service de bureautique en ligne proposé par FACiL, un organisme québécois de promotion de l’informatique libre. Destiné aux membres de FACiL, il repose sur **Collabora Online**, un logiciel libre de travail sur des documents dans un navigateur Web. Il constitue une solution de remplacement aux suites bureautiques en ligne propriétaires, comme Google Docs ou Microsoft 365, pour les usages de rédaction et de collaboration.\n\nCollabora Online s’appuie sur la technologie de LibreOffice. Il permet de consulter et de modifier des textes, des feuilles de calcul et des présentations, avec des fonctions de collaboration en temps réel. Il prend en charge les formats OpenDocument ainsi que les principaux formats de Microsoft Office, sans garantir un rendu identique pour tous les documents complexes.\n\nPour un OSBL culturel, ce type de service peut servir à préparer collectivement un budget, un compte rendu ou un document de programmation. L’accès au service FACiLe évite d’avoir à déployer soi-même le logiciel. Les renseignements fournis ne précisent toutefois ni les limites d’utilisation, ni les modalités de sauvegarde, ni le lieu d’hébergement des données. Ces points sont à vérifier auprès de FACiL avant d’y déposer des documents sensibles.",
+      "tags": [
+        "redaction-documents",
+        "collaboration-temps-reel"
+      ],
+      "source": "libre",
+      "licence": "MPL-2.0",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://gerrit.collaboraoffice.com/",
+      "evaluation_enrichie": {
+        "score": 1,
+        "criteres": [
+          "dependance"
+        ],
+        "confiance": "moyenne"
+      },
+      "enrichi_le": "2026-11-13T07:24:24-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees"
+        ],
+        "preuves": {
+          "donnees": "Release artifacts — the nightly container image, the Helm chart, and build assets are published from here."
+        },
+        "infirmes": {},
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-13T07:28:58-05:00"
+      },
+      "openhub_id": "761437",
+      "openhub": {
+        "organisation": null,
+        "activite": "Very High",
+        "licences": [],
+        "langage_principal": "C++",
+        "lignes_de_code": 9060080,
+        "contributeurs_total": 2975,
+        "contributeurs_12_mois": 323,
+        "commits_12_mois": 18054,
+        "premier_mois": "2015-03-01",
+        "dernier_mois": "2026-11-01",
+        "consulte_le": "2026-11-13T07:30:25-05:00"
+      }
     },
     {
       "categorie": "creation-et-gestion-de-contenus-numeriques",
       "nom": "Canal FACiLe",
-      "score": 0,
+      "score": 2,
       "score_estime": true,
       "lien": "https://canal.facil.services/",
       "description": "Une plateforme de diffusion de vidéos destinée principalement aux membres de FACiL.",
@@ -3299,13 +3395,64 @@
       "alternative_a": [
         "https://www.youtube.com/"
       ],
-      "criteres": [],
-      "confiance": "indéterminée"
+      "criteres": [
+        "controle",
+        "dependance"
+      ],
+      "confiance": "moyenne",
+      "description_longue": "Canal FACiLe est un service de diffusion de vidéos proposé par FACiL, organisme québécois de promotion de l’informatique libre. Destiné principalement à ses membres, il repose sur **PeerTube**, un logiciel libre développé par Framasoft. Il constitue une solution de rechange aux plateformes centralisées comme YouTube ou Vimeo, avec un hébergement organisé autour d’instances indépendantes.\n\nPeerTube permet de publier des vidéos, d’ajouter des descriptions et des mots-clés, puis d’intégrer un lecteur dans un site Web. Le logiciel prend également en charge la diffusion en direct. Pour un organisme artistique ou culturel, ces fonctions peuvent servir à présenter des créations, des entretiens ou des captations, sous réserve des conditions d’accès et de publication de Canal FACiLe.\n\nLa plateforme utilise **ActivityPub** pour communiquer avec d’autres services du fédivers. Les internautes peuvent suivre des chaînes depuis des services compatibles ou par flux RSS. PeerTube peut aussi répartir une partie de la diffusion entre les personnes qui regardent une vidéo, grâce au partage pair-à-pair dans le navigateur.\n\nL’extrait fourni décrit les capacités générales de PeerTube, et non les paramètres propres à Canal FACiLe. Il ne précise ni les quotas, ni les modalités d’inscription, ni l’emplacement des serveurs du service. Ces éléments doivent donc être vérifiés auprès de FACiL avant d’y déposer des contenus.",
+      "tags": [
+        "federe-decentralise",
+        "communaute-reseau-social"
+      ],
+      "source": "libre",
+      "licence": "AGPL-3.0-or-later",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/Chocobozzz/PeerTube",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "controle",
+          "dependance"
+        ],
+        "confiance": "moyenne"
+      },
+      "enrichi_le": "2026-11-13T07:24:40-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "preuves": {
+          "donnees": "Create your own instance See the production guide, which is the recommended way to install or upgrade PeerTube.",
+          "dependance": "Be part of a network of multiple small federated, interoperable video hosting providers. Follow video creators and create videos. No vendor lock-in. All on a platform that is community-owned and ad-free."
+        },
+        "infirmes": {},
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-13T07:29:01-05:00"
+      },
+      "openhub_id": "735045",
+      "openhub": {
+        "organisation": null,
+        "activite": "Very High",
+        "licences": [
+          "GNU Affero General Public License v3.0"
+        ],
+        "langage_principal": "TypeScript",
+        "lignes_de_code": 2215375,
+        "contributeurs_total": 856,
+        "contributeurs_12_mois": 149,
+        "commits_12_mois": 2119,
+        "premier_mois": "2015-06-01",
+        "dernier_mois": "2026-11-01",
+        "consulte_le": "2026-11-13T07:30:25-05:00"
+      }
     },
     {
       "categorie": "gestion-de-projets-et-des-taches",
       "nom": "Code FACiLe",
-      "score": 0,
+      "score": 1,
       "score_estime": true,
       "lien": "https://code.facil.services/",
       "description": "Collaborer sur du code informatique.",
@@ -3320,13 +3467,55 @@
         "https://github.com/",
         "https://bitbucket.org/"
       ],
-      "criteres": [],
-      "confiance": "indéterminée"
+      "criteres": [
+        "controle"
+      ],
+      "confiance": "moyenne",
+      "description_longue": "Code FACiLe est un service de collaboration sur du code informatique proposé par FACIL, un organisme québécois de promotion de l’informatique libre. Il donne accès à une forge logicielle fondée sur **GitLab**, comme solution de rechange à des plateformes telles que GitHub, sans que l’organisme utilisateur ait à exploiter sa propre installation.\n\nGitLab réunit l’hébergement de dépôts Git, le suivi des problèmes et des demandes d’amélioration, ainsi que les demandes de fusion permettant de réviser les changements avant leur intégration. Pour un OSBL culturel, ces fonctions peuvent servir à coordonner le développement d’un site Web, d’un outil interne ou d’un projet numérique avec des équipes techniques et des partenaires. L’historique des modifications facilite aussi la continuité du travail entre plusieurs personnes.\n\nLa référence logicielle fournie est **GitLab FOSS**, un miroir en lecture seule dont le code propriétaire a été retiré, sous licence MIT. Le développement principal de GitLab se poursuit dans un dépôt distinct. L’extrait fourni décrit ce logiciel, et non les modalités propres à Code FACiLe : il ne précise ni les quotas, ni les sauvegardes, ni l’emplacement des données, ni les fonctionnalités effectivement activées sur le service.",
+      "tags": [
+        "gestion-projets-taches"
+      ],
+      "source": "libre",
+      "licence": "MIT",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://gitlab.com/gitlab-org/gitlab-foss",
+      "evaluation_enrichie": {
+        "score": 1,
+        "criteres": [
+          "controle"
+        ],
+        "confiance": "moyenne"
+      },
+      "enrichi_le": "2026-11-13T07:24:53-05:00",
+      "criteres_confirmes": {
+        "criteres": [],
+        "preuves": {},
+        "infirmes": {},
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-13T07:29:04-05:00"
+      },
+      "openhub_id": "587575",
+      "openhub": {
+        "organisation": null,
+        "activite": "Very High",
+        "licences": [
+          "MIT License"
+        ],
+        "langage_principal": "Ruby",
+        "lignes_de_code": 6724078,
+        "contributeurs_total": 7621,
+        "contributeurs_12_mois": 1678,
+        "commits_12_mois": 89834,
+        "premier_mois": "2011-10-01",
+        "dernier_mois": "2026-11-01",
+        "consulte_le": "2026-11-13T07:30:26-05:00"
+      }
     },
     {
       "categorie": "communication-et-collaboration-d-equipe",
       "nom": "Conférence FACiLe",
-      "score": 0,
+      "score": 1,
       "score_estime": true,
       "lien": "https://conference.facil.services/",
       "description": "Tenir des séances de visioconférence avec messagerie texte, édition collaborative et partage d'écran.",
@@ -3344,13 +3533,66 @@
         "https://www.messenger.com/",
         "https://apps.apple.com/app/facetime/id1110145091"
       ],
-      "criteres": [],
-      "confiance": "indéterminée"
+      "criteres": [
+        "controle"
+      ],
+      "confiance": "moyenne",
+      "voir_aussi": [
+        "Jitsi Meet"
+      ],
+      "description_longue": "**Conférence FACiLe** est un service de visioconférence proposé par FACiL, un organisme québécois consacré à la promotion de l’informatique libre. Il repose sur **Jitsi Meet**, un logiciel libre de réunions audio et vidéo. Le service constitue une solution de remplacement aux plateformes de visioconférence propriétaires pour les rencontres d’équipe, les comités ou les échanges entre partenaires d’un organisme culturel.\n\nLa description du service mentionne la messagerie texte, le partage d’écran et l’édition collaborative. Ces fonctions permettent de discuter pendant une séance, de présenter un document ou de travailler ensemble sur du contenu. L’extrait fourni ne précise toutefois pas les modalités de l’édition collaborative ni les éventuelles limites de participation.\n\nJitsi Meet peut être déployé sur une infrastructure indépendante. Le dépôt présenté fournit les outils nécessaires pour installer ses composants avec Docker Compose et publie son code sous licence Apache-2.0. L’utilisation de Conférence FACiLe évite à l’organisme utilisateur d’administrer lui-même cette infrastructure.\n\nLa documentation générale de Jitsi présente des communications chiffrées et un usage possible sans compte. Les règles d’accès propres à Conférence FACiLe, l’emplacement de ses serveurs et ses pratiques de conservation des données ne sont pas précisés dans l’extrait fourni.",
+      "tags": [
+        "messagerie-visioconference",
+        "collaboration-temps-reel",
+        "chiffrement"
+      ],
+      "source": "libre",
+      "licence": "Apache-2.0",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/jitsi/docker-jitsi-meet",
+      "evaluation_enrichie": {
+        "score": 1,
+        "criteres": [
+          "controle"
+        ],
+        "confiance": "moyenne"
+      },
+      "enrichi_le": "2026-11-13T07:25:06-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "preuves": {
+          "donnees": "This repository contains the necessary tools to run a Jitsi Meet stack on Docker using Docker Compose.",
+          "dependance": "Jitsi is a set of Open Source projects that allows you to easily build and deploy secure videoconferencing solutions."
+        },
+        "infirmes": {},
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-13T07:29:09-05:00"
+      },
+      "openhub_id": "714272",
+      "openhub": {
+        "organisation": "Atlassian",
+        "activite": "Very High",
+        "licences": [
+          "Apache License 2.0"
+        ],
+        "langage_principal": "TypeScript",
+        "lignes_de_code": 204097,
+        "contributeurs_total": 810,
+        "contributeurs_12_mois": 121,
+        "commits_12_mois": 1062,
+        "premier_mois": "2013-12-01",
+        "dernier_mois": "2026-11-01",
+        "consulte_le": "2026-11-13T07:30:26-05:00"
+      }
     },
     {
       "categorie": "messagerie-electronique",
       "nom": "Courriel FACiLe",
-      "score": 0,
+      "score": 2,
       "score_estime": true,
       "lien": "https://courriel.facil.services/",
       "description": "Correspondre sur Internet, le pistage et la centralisation en moins. (Pour les membres de FACiL.)",
@@ -3365,13 +3607,58 @@
         "https://mail.google.com/",
         "https://outlook.live.com/"
       ],
-      "criteres": [],
-      "confiance": "indéterminée"
+      "criteres": [
+        "controle",
+        "dependance"
+      ],
+      "confiance": "moyenne",
+      "description_longue": "Courriel FACiLe est un service de messagerie électronique proposé par **FACiL**, un organisme québécois de promotion de l’informatique libre. Destiné à ses membres, il permet de correspondre sur Internet en privilégiant une solution de rechange aux grandes plateformes de courriel centralisées. La présentation du service met l’accent sur la réduction du pistage et de la centralisation.\n\nLe service repose sur **SnappyMail**, un logiciel libre de messagerie Web. Celui-ci fournit une interface accessible dans un navigateur pour consulter, rédiger et organiser des messages électroniques. Pour un OSBL des arts et de la culture, ce type de service peut servir aux échanges courants avec les artistes, les partenaires et les membres de l’équipe, sous réserve des conditions d’adhésion de FACiL.\n\nSnappyMail prend notamment en charge les dossiers de messages, les identités d’expédition et des fonctions liées aux messages chiffrés ou signés. Ces possibilités du logiciel ne garantissent toutefois pas qu’elles soient toutes activées dans Courriel FACiLe.\n\nLa page fournie documente le logiciel plutôt que les modalités du service. Elle ne précise ni la capacité des boîtes, ni les sauvegardes, ni l’emplacement des serveurs de Courriel FACiLe. Ces points restent à vérifier auprès de FACiL avant une utilisation organisationnelle.",
+      "tags": [
+        "courriel-infolettres",
+        "vie-privee"
+      ],
+      "source": "libre",
+      "licence": "AGPL-3.0-or-later",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/the-djmaze/snappymail",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "controle",
+          "dependance"
+        ],
+        "confiance": "moyenne"
+      },
+      "enrichi_le": "2026-11-13T07:25:22-05:00",
+      "criteres_confirmes": {
+        "criteres": [],
+        "preuves": {},
+        "infirmes": {},
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-13T07:29:13-05:00"
+      },
+      "openhub_id": "762412",
+      "openhub": {
+        "organisation": null,
+        "activite": "Moderate",
+        "licences": [
+          "GNU Affero General Public License v3.0"
+        ],
+        "langage_principal": "JavaScript",
+        "lignes_de_code": 205667,
+        "contributeurs_total": 226,
+        "contributeurs_12_mois": 20,
+        "commits_12_mois": 281,
+        "premier_mois": "2013-09-01",
+        "dernier_mois": "2026-11-01",
+        "consulte_le": "2026-11-13T07:30:27-05:00"
+      }
     },
     {
       "categorie": "gestion-de-projets-et-des-taches",
       "nom": "Dates FACiLes",
-      "score": 0,
+      "score": 1,
       "score_estime": true,
       "lien": "https://date.facil.services/",
       "description": "Planifier des rendez-vous.",
@@ -3385,13 +3672,55 @@
       "alternative_a": [
         "https://doodle.com/"
       ],
-      "criteres": [],
-      "confiance": "indéterminée"
+      "criteres": [
+        "controle"
+      ],
+      "confiance": "moyenne",
+      "description_longue": "**Dates FACiLes** est un service de sondages en ligne proposé par FACIL, un organisme québécois voué à la promotion de l’informatique libre. Il permet de chercher une date commune pour un rendez-vous ou de recueillir les préférences d’un groupe afin de prendre une décision. Il constitue une solution de remplacement à Doodle pour ces usages.\n\nLe service repose sur **Framadate**, un logiciel libre développé dans l’écosystème de Framasoft. Le principe consiste à proposer plusieurs possibilités, puis à inviter les personnes concernées à indiquer leurs préférences. Pour un OSBL des arts et de la culture, ce type d’outil peut servir à coordonner une réunion de conseil d’administration, une rencontre de comité ou une séance de préparation avec des partenaires.\n\nDates FACiLes est une instance hébergée : l’organisme utilise le service de FACIL plutôt que d’installer et d’administrer lui-même Framadate. Le logiciel sous-jacent peut toutefois être installé sur une autre infrastructure.\n\nLe dépôt Framadate consulté est indiqué comme **archivé et en lecture seule**. Cette mention concerne ce dépôt de code et ne permet pas, à elle seule, de conclure à l’arrêt du service Dates FACiLes ni de déterminer la version actuellement déployée.",
+      "tags": [
+        "gestion-projets-taches"
+      ],
+      "source": "libre",
+      "licence": "CECILL-B",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://framagit.org/framasoft/framadate/framadate",
+      "evaluation_enrichie": {
+        "score": 1,
+        "criteres": [
+          "controle"
+        ],
+        "confiance": "moyenne"
+      },
+      "enrichi_le": "2026-11-13T07:25:35-05:00",
+      "criteres_confirmes": {
+        "criteres": [],
+        "preuves": {},
+        "infirmes": {},
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-13T07:29:16-05:00"
+      },
+      "openhub_id": "762846",
+      "openhub": {
+        "organisation": null,
+        "activite": "Not Available",
+        "licences": [
+          "GNU Affero General Public License v3.0 or later"
+        ],
+        "langage_principal": "TypeScript",
+        "lignes_de_code": 13753,
+        "contributeurs_total": 34,
+        "contributeurs_12_mois": 0,
+        "commits_12_mois": 0,
+        "premier_mois": "2018-09-01",
+        "dernier_mois": "2024-08-01",
+        "consulte_le": "2026-11-13T07:30:28-05:00"
+      }
     },
     {
       "categorie": "bureautique-et-collaboration",
       "nom": "Ébauche FACiLe",
-      "score": 0,
+      "score": 1,
       "score_estime": true,
       "lien": "https://ebauche.facil.services/",
       "description": "Suite bureautique pour le travail collaboratif chiffré de bout en bout.",
@@ -3406,13 +3735,66 @@
         "https://docs.google.com/",
         "https://www.microsoft.com/microsoft-365"
       ],
-      "criteres": [],
-      "confiance": "indéterminée"
+      "criteres": [
+        "controle"
+      ],
+      "confiance": "moyenne",
+      "voir_aussi": [
+        "CryptPad"
+      ],
+      "description_longue": "Ébauche FACiLe est un service de bureautique collaborative proposé par **FACiLe**, un organisme québécois de promotion de l’informatique libre. Il repose sur **CryptPad**, une suite bureautique libre développée par l’équipe de CryptPad chez XWiki SAS, en France. Il constitue une solution de remplacement aux suites collaboratives propriétaires pour travailler à plusieurs sur des documents dans un navigateur.\n\nCryptPad synchronise les modifications en temps réel et chiffre le contenu dans le navigateur avant son envoi au serveur. Pour un OSBL culturel, ce fonctionnement peut servir à rédiger collectivement des documents de travail, préparer des réunions ou élaborer des projets avec des partenaires, tout en limitant l’accès de l’hébergeur au contenu.\n\nLe **chiffrement de bout en bout** n’élimine toutefois pas la nécessité de faire confiance à l’exploitant du service. Le code exécuté dans le navigateur est fourni par le serveur : sa sécurité et sa maintenance restent donc importantes. La documentation précise aussi que ce chiffrement ne garantit pas l’absence de journalisation des adresses IP ou de l’activité.\n\nLe logiciel CryptPad peut être installé sur une infrastructure indépendante. Cette possibilité est distincte de l’utilisation du service Ébauche FACiLe : l’extrait fourni ne précise ni l’emplacement de ses serveurs, ni ses quotas, ni ses modalités de conservation des documents.",
+      "tags": [
+        "redaction-documents",
+        "collaboration-temps-reel",
+        "chiffrement",
+        "vie-privee",
+        "auto-hebergeable"
+      ],
+      "source": "libre",
+      "licence": "AGPL-3.0-only",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/cryptpad/cryptpad",
+      "evaluation_enrichie": {
+        "score": 1,
+        "criteres": [
+          "controle"
+        ],
+        "confiance": "moyenne"
+      },
+      "enrichi_le": "2026-11-13T07:25:50-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "preuves": {
+          "donnees": "Refer to our admin installation guide for production-related instructions, customization, and maintenance details.",
+          "dependance": "Our developer guide provides instructions for setting up a local instance without HTTPS or our more advanced security features."
+        },
+        "infirmes": {},
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-13T07:29:21-05:00"
+      },
+      "openhub_id": "731278",
+      "openhub": {
+        "organisation": null,
+        "activite": "High",
+        "licences": [],
+        "langage_principal": "JavaScript",
+        "lignes_de_code": 241863,
+        "contributeurs_total": 143,
+        "contributeurs_12_mois": 24,
+        "commits_12_mois": 1002,
+        "premier_mois": "2014-10-01",
+        "dernier_mois": "2026-11-01",
+        "consulte_le": "2026-11-13T07:30:28-05:00"
+      }
     },
     {
       "categorie": "communication-et-collaboration-d-equipe",
       "nom": "Équipe FACiLe",
-      "score": 0,
+      "score": 1,
       "score_estime": true,
       "lien": "https://equipe.facil.services/",
       "description": "Communication en temps-réel pour le travail d'équipe",
@@ -3428,13 +3810,66 @@
         "https://www.microsoft.com/microsoft-teams",
         "https://discord.com/"
       ],
-      "criteres": [],
-      "confiance": "indéterminée"
+      "criteres": [
+        "controle"
+      ],
+      "confiance": "moyenne",
+      "voir_aussi": [
+        "Mattermost"
+      ],
+      "description_longue": "Équipe FACiLe est un service de communication en temps réel pour le travail d’équipe, proposé par FACiL, un organisme québécois de promotion de l’informatique libre. Il repose sur **Mattermost**, une plateforme de collaboration qui peut remplacer un outil de messagerie d’équipe comme Slack.\n\nPour un OSBL culturel, ce type de service permet de regrouper les échanges liés aux activités, aux projets et au fonctionnement interne dans un espace commun. Mattermost organise les conversations en canaux et permet les messages directs ainsi que le partage de fichiers. Il est accessible dans un navigateur et dispose également d’applications pour Android, iOS, Windows, macOS et Linux.\n\nLe logiciel propose aussi des appels vocaux, le partage d’écran, des automatisations et des intégrations avec d’autres outils, notamment par API et webhooks. **La disponibilité de ces fonctions dans Équipe FACiLe dépend toutefois de la configuration et de l’édition utilisées**; l’extrait fourni ne précise pas lesquelles sont activées.\n\nMattermost suit un modèle à noyau ouvert, avec des composantes libres et des fonctionnalités commerciales. Son installation sur une infrastructure indépendante est possible. Pour le service Équipe FACiLe lui-même, les conditions d’accès, les limites d’utilisation et le lieu d’hébergement des données ne sont pas précisés dans les renseignements fournis.",
+      "tags": [
+        "messagerie-visioconference",
+        "stockage-partage-fichiers",
+        "application-mobile",
+        "application-bureau",
+        "api-integrations"
+      ],
+      "source": "partiel",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/mattermost/mattermost",
+      "evaluation_enrichie": {
+        "score": 1,
+        "criteres": [
+          "controle"
+        ],
+        "confiance": "moyenne"
+      },
+      "enrichi_le": "2026-11-13T07:26:05-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "preuves": {
+          "donnees": "Download and Install Mattermost Self-Hosted - Deploy a Mattermost Self-hosted instance in minutes via Docker, Ubuntu, or tar.",
+          "dependance": "This repo is the primary source for core development on the Mattermost platform; it's written in Go and React, runs as a single Linux binary, and relies on PostgreSQL."
+        },
+        "infirmes": {},
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-13T07:29:24-05:00"
+      },
+      "openhub_id": "724252",
+      "openhub": {
+        "organisation": null,
+        "activite": "Very High",
+        "licences": [],
+        "langage_principal": "TypeScript",
+        "lignes_de_code": 2546648,
+        "contributeurs_total": 1682,
+        "contributeurs_12_mois": 120,
+        "commits_12_mois": 2736,
+        "premier_mois": "2015-06-01",
+        "dernier_mois": "2026-11-01",
+        "consulte_le": "2026-11-13T07:30:29-05:00"
+      }
     },
     {
       "categorie": "gestion-d-evenements-et-billetterie",
       "nom": "Événement FACiLe",
-      "score": 0,
+      "score": 1,
       "score_estime": true,
       "lien": "https://evenement.facil.services/",
       "description": "S'organiser et se mobiliser sans la surveillance des GAFAM.",
@@ -3450,13 +3885,45 @@
         "https://www.meetup.com/",
         "https://www.eventbrite.ca/"
       ],
-      "criteres": [],
-      "confiance": "indéterminée"
+      "criteres": [
+        "controle"
+      ],
+      "confiance": "moyenne",
+      "voir_aussi": [
+        "Mobilizon"
+      ],
+      "description_longue": "Événement FACiLe est un service de création et de diffusion d’événements proposé par **FACiL**, un organisme québécois de promotion de l’informatique libre. Il s’appuie sur **Mobilizon**, un logiciel libre permettant de rassembler des personnes, d’organiser des activités et de gérer des groupes. Il constitue une solution de remplacement aux fonctions d’organisation d’événements de plateformes comme Facebook ou Meetup.\n\nPour un OSBL des arts et de la culture, ce type de service peut servir à annoncer une rencontre, un atelier ou une activité publique et à recueillir des inscriptions. Mobilizon permet notamment de publier des pages d’événements et de coordonner des activités au sein de groupes. Il ne faut toutefois pas l’assimiler à une solution de billetterie payante : le contenu fourni ne documente pas la vente de billets ni le traitement des paiements.\n\nMobilizon repose sur une architecture **fédérée**, utilisant le protocole ActivityPub pour permettre les échanges entre instances compatibles. Événement FACiLe donne accès à ce logiciel sans que l’organisme utilisateur ait à exploiter sa propre installation. L’extrait fourni décrit le logiciel plutôt que les modalités du service : il ne précise ni les limites d’utilisation, ni les engagements de soutien, ni le lieu d’hébergement des données.",
+      "tags": [
+        "evenements-billetterie",
+        "communaute-reseau-social",
+        "federe-decentralise"
+      ],
+      "source": "libre",
+      "licence": "AGPL-3.0-or-later",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://framagit.org/kaihuri/mobilizon",
+      "evaluation_enrichie": {
+        "score": 1,
+        "criteres": [
+          "controle"
+        ],
+        "confiance": "moyenne"
+      },
+      "enrichi_le": "2026-11-13T07:26:17-05:00",
+      "criteres_confirmes": {
+        "criteres": [],
+        "preuves": {},
+        "infirmes": {},
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-13T07:29:28-05:00"
+      },
+      "echecs_openhub": 1
     },
     {
       "categorie": "securite-et-gestion-des-acces",
       "nom": "Extrait FACiLe",
-      "score": 0,
+      "score": 2,
       "score_estime": true,
       "lien": "https://extrait.facil.services/",
       "description": "Chiffrer et partager des messages sur le web.",
@@ -3470,13 +3937,63 @@
       "alternative_a": [
         "https://pastebin.com/"
       ],
-      "criteres": [],
-      "confiance": "indéterminée"
+      "criteres": [
+        "controle",
+        "dependance"
+      ],
+      "confiance": "moyenne",
+      "description_longue": "**Extrait FACiLe** est un service de partage de textes chiffrés proposé par FACiL, un organisme québécois de promotion de l’informatique libre. Il repose sur **PrivateBin**, un logiciel libre de type « pastebin ». Il permet de transmettre un message ou un extrait de document au moyen d’un lien, plutôt que d’envoyer son contenu directement par courriel ou dans une messagerie.\n\nPrivateBin chiffre et déchiffre les contenus dans le navigateur avec AES à 256 bits. Le serveur conserve donc le texte sous forme chiffrée. La clé de déchiffrement se trouve dans la partie du lien située après le caractère `#`. Toute personne possédant le lien complet peut lire le contenu, à moins qu’une protection supplémentaire par mot de passe soit utilisée.\n\nLe logiciel propose plusieurs options, selon la configuration retenue par le service : expiration des textes, suppression après lecture, protection par mot de passe, discussions et mise en forme Markdown. L’extrait fourni ne confirme pas lesquelles sont activées sur Extrait FACiLe.\n\nPour un OSBL culturel, ce service peut servir au partage ponctuel d’informations entre collègues ou partenaires. **Le chiffrement ne supprime toutefois pas toute nécessité de confiance envers l’hébergeur** : un serveur compromis pourrait transmettre du code malveillant au navigateur. Les journaux d’accès peuvent aussi révéler certaines informations sur les consultations. L’emplacement des serveurs d’Extrait FACiLe n’est pas précisé dans les renseignements fournis.",
+      "tags": [
+        "chiffrement",
+        "vie-privee",
+        "stockage-partage-fichiers"
+      ],
+      "source": "libre",
+      "licence": "Zlib",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/PrivateBin/PrivateBin",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "controle",
+          "dependance"
+        ],
+        "confiance": "moyenne"
+      },
+      "enrichi_le": "2026-11-13T07:26:29-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees"
+        ],
+        "preuves": {
+          "donnees": "self-hosted"
+        },
+        "infirmes": {},
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-13T07:29:34-05:00"
+      },
+      "openhub_id": "762059",
+      "openhub": {
+        "organisation": null,
+        "activite": "High",
+        "licences": [
+          "Creative Commons Attribution 4.0"
+        ],
+        "langage_principal": "PHP",
+        "lignes_de_code": 36742,
+        "contributeurs_total": 200,
+        "contributeurs_12_mois": 34,
+        "commits_12_mois": 830,
+        "premier_mois": "2012-04-01",
+        "dernier_mois": "2026-11-01",
+        "consulte_le": "2026-11-13T07:30:30-05:00"
+      }
     },
     {
       "categorie": "gestion-de-la-relation-des-membres-et-crm",
       "nom": "Formulaire FACiLe",
-      "score": 0,
+      "score": 2,
       "score_estime": true,
       "lien": "https://formulaire.facil.services/",
       "description": "Construire des formulaires pour des enquêtes et des sondages en ligne",
@@ -3490,8 +4007,42 @@
       "alternative_a": [
         "https://forms.google.com/"
       ],
-      "criteres": [],
-      "confiance": "indéterminée"
+      "criteres": [
+        "controle",
+        "dependance"
+      ],
+      "confiance": "moyenne",
+      "description_longue": "Formulaire FACiLe est un service de création de formulaires en ligne proposé par FACiL, un organisme québécois consacré à la promotion de l’informatique libre. Il repose sur **LiberaForms**, un logiciel libre de création de formulaires et de gestion des réponses. Il constitue une solution de remplacement aux services propriétaires de sondages et de questionnaires, comme Google Forms.\n\nPour un OSBL culturel, ce type d’outil peut servir à réaliser une enquête auprès du public, recueillir des commentaires après une activité ou consulter ses membres. LiberaForms permet notamment d’ajouter des champs conditionnels, de demander des pièces jointes, de personnaliser la présentation et de définir des conditions d’expiration du formulaire.\n\nLe logiciel propose aussi des notifications par courriel, le partage de l’édition des formulaires et un accès en lecture seule aux réponses pour d’autres utilisateurs. Les réponses peuvent être exportées en **CSV, JSON ou PDF**, ou présentées sous forme de graphiques. Un historique des modifications des réponses est également prévu.\n\nLiberaForms comprend des fonctions de chiffrement de bout en bout des réponses et de gestion de clés PGP. Leur disponibilité et leur configuration sur Formulaire FACiLe restent à vérifier auprès du service. L’extrait fourni décrit le logiciel sous-jacent, mais ne précise ni les limites d’utilisation du service ni le lieu d’hébergement des données.",
+      "tags": [
+        "chiffrement",
+        "rapports-analytique"
+      ],
+      "source": "libre",
+      "licence": "AGPL-3.0-only",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://codeberg.org/LiberaForms/server",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "controle",
+          "dependance"
+        ],
+        "confiance": "moyenne"
+      },
+      "enrichi_le": "2026-11-13T07:26:41-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees"
+        ],
+        "preuves": {
+          "donnees": "See the /docs directory for installation and setup documentation."
+        },
+        "infirmes": {},
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-13T07:29:40-05:00"
+      },
+      "echecs_openhub": 1
     },
     {
       "categorie": "communautes-reseaux-et-partage-des-connaissances",
@@ -3512,12 +4063,59 @@
         "https://groups.google.com/"
       ],
       "criteres": [],
-      "confiance": "indéterminée"
+      "confiance": "faible",
+      "voir_aussi": [
+        "Discourse"
+      ],
+      "description_longue": "Les **Forums du libre du Québec** sont un espace de discussion en ligne consacré au libre, dont l’objectif annoncé est de permettre des échanges civilisés. Le service utilise **Discourse**, un logiciel libre de forums communautaires. Il propose ainsi un lieu de conversation organisé par sujets, plutôt qu’un échange limité à une chaîne de courriels ou à un fil de messagerie.\n\nDiscourse permet de créer des sujets de discussion et d’y regrouper les réponses. Le logiciel comprend également une fonction de clavardage et peut être personnalisé avec des thèmes et des extensions. Ces possibilités appartiennent à la plateforme, mais les informations fournies ne permettent pas de confirmer lesquelles sont activées sur les Forums du libre du Québec.\n\nPour un OSBL des arts et de la culture, ce type d’espace peut servir à poser des questions sur les logiciels libres, à partager des connaissances et à consulter des échanges antérieurs. Il ne constitue pas, à lui seul, un service de soutien technique garanti.\n\nLe code de Discourse est public et le logiciel peut être installé sur une infrastructure indépendante. Toutefois, l’identité de l’organisme qui exploite cette instance, son fournisseur d’hébergement et le lieu de conservation des données ne sont pas précisés dans le contenu fourni. Le caractère libre du logiciel ne suffit donc pas à établir les conditions d’hébergement de ce service particulier.",
+      "tags": [
+        "communaute-reseau-social"
+      ],
+      "source": "libre",
+      "licence": "GPL-2.0-or-later",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/discourse/discourse",
+      "evaluation_enrichie": {
+        "score": 0,
+        "criteres": [],
+        "confiance": "faible"
+      },
+      "enrichi_le": "2026-11-13T07:26:55-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "preuves": {
+          "donnees": "You can self-host Discourse on your own infrastructure.",
+          "dependance": "Discourse is a 100% open-source community platform for those who want complete control over how and where their site is run."
+        },
+        "infirmes": {},
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-13T07:29:45-05:00"
+      },
+      "openhub_id": "633846",
+      "openhub": {
+        "organisation": null,
+        "activite": "Very High",
+        "licences": [
+          "GNU General Public License v2.0 or later"
+        ],
+        "langage_principal": "Ruby",
+        "lignes_de_code": 1726075,
+        "contributeurs_total": 1206,
+        "contributeurs_12_mois": 137,
+        "commits_12_mois": 7701,
+        "premier_mois": "2011-10-01",
+        "dernier_mois": "2026-11-01",
+        "consulte_le": "2026-11-13T07:30:31-05:00"
+      }
     },
     {
       "categorie": "communautes-reseaux-et-partage-des-connaissances",
       "nom": "Jasette FACiLe",
-      "score": 0,
+      "score": 2,
       "score_estime": true,
       "lien": "https://jasette.facil.services/",
       "description": "Échanger sur un réseau social dont vous n'êtes pas le produit.",
@@ -3531,13 +4129,52 @@
       "alternative_a": [
         "https://x.com/"
       ],
-      "criteres": [],
-      "confiance": "indéterminée"
+      "criteres": [
+        "controle",
+        "dependance"
+      ],
+      "confiance": "moyenne",
+      "voir_aussi": [
+        "Mastodon"
+      ],
+      "description_longue": "**Jasette FACiLe** est un service de réseau social proposé par FACIL, un organisme québécois de promotion de l’informatique libre. Il repose sur **Mastodon**, un logiciel libre de microblogage. Il constitue une solution de remplacement aux plateformes sociales centralisées pour publier des nouvelles, partager des contenus et entretenir des échanges avec une communauté.\n\nMastodon permet de diffuser du texte, des liens, des images et des vidéos. Les publications des comptes suivis apparaissent dans un fil chronologique, actualisé en temps réel. Pour un organisme artistique ou culturel, ce type de service peut servir à faire connaître ses activités, à suivre des partenaires ou à participer à des discussions professionnelles et communautaires.\n\nJasette FACiLe s’inscrit dans le **Fédivers** : grâce au protocole ActivityPub, les membres peuvent suivre des comptes et interagir avec des personnes inscrites sur d’autres serveurs compatibles, y compris ceux qui utilisent un autre logiciel que Mastodon. L’audience n’est donc pas limitée aux membres du même service.\n\nLe logiciel comprend des fonctions de signalement, de blocage, de masquage et de filtrage, ainsi que des options pour restreindre la visibilité des publications. Les conditions d’inscription, les règles de modération et le lieu précis d’hébergement de Jasette FACiLe ne sont toutefois pas documentés dans l’extrait fourni, qui décrit surtout le logiciel Mastodon.",
+      "tags": [
+        "communaute-reseau-social",
+        "federe-decentralise"
+      ],
+      "source": "libre",
+      "licence": "AGPL-3.0-or-later",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/mastodon/mastodon",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "controle",
+          "dependance"
+        ],
+        "confiance": "moyenne"
+      },
+      "enrichi_le": "2026-11-13T07:27:09-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "preuves": {
+          "donnees": "Your self-hosted, globally interconnected microblogging community",
+          "dependance": "Based on open standards, with no vendor lock-in."
+        },
+        "infirmes": {},
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-13T07:29:48-05:00"
+      },
+      "echecs_openhub": 1
     },
     {
       "categorie": "veille-et-gestion-de-l-information",
       "nom": "Journal FACiLe",
-      "score": 0,
+      "score": 2,
       "score_estime": true,
       "lien": "https://journal.facil.services/",
       "description": "Rassembler tous vos fils d'actualité au même endroit.",
@@ -3555,8 +4192,44 @@
         "https://www.instagram.com/",
         "https://www.reddit.com/"
       ],
-      "criteres": [],
-      "confiance": "indéterminée"
+      "criteres": [
+        "controle",
+        "dependance"
+      ],
+      "confiance": "moyenne",
+      "description_longue": "Journal FACiLe est un service de lecture et de suivi de fils d’actualité proposé par **FACiL**, une association québécoise consacrée à la promotion de l’informatique libre. Il repose sur **FreshRSS**, un agrégateur libre accessible dans un navigateur. Il permet de rassembler les publications de plusieurs sources au même endroit plutôt que de consulter chaque site séparément ou de recourir à un agrégateur propriétaire.\n\nPour un organisme artistique ou culturel, ce type de service peut servir à suivre les nouvelles du secteur, les publications de partenaires et les sites spécialisés qui proposent des fils RSS ou Atom. FreshRSS permet notamment d’organiser les contenus avec des étiquettes et de repartager des sélections d’articles sous forme de fils ou de listes de sources.\n\nLe logiciel prend en charge plusieurs comptes, propose une interface traduite dans plusieurs langues et dispose d’une API pour des applications clientes compatibles. Il peut aussi extraire des informations de certains sites sans fil RSS, au moyen de règles de collecte configurées.\n\nJournal FACiLe évite à l’organisme d’installer lui-même FreshRSS. Les fonctions effectivement accessibles dépendent toutefois de la configuration du service. L’extrait fourni décrit le logiciel, mais ne précise ni les conditions d’inscription ni le lieu d’hébergement des données de cette instance.",
+      "tags": [
+        "notes-veille",
+        "api-integrations"
+      ],
+      "source": "libre",
+      "licence": "AGPL-3.0-only",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/FreshRSS/FreshRSS",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "controle",
+          "dependance"
+        ],
+        "confiance": "moyenne"
+      },
+      "enrichi_le": "2026-11-13T07:27:22-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "preuves": {
+          "donnees": "FreshRSS is a self-hosted RSS feed aggregator.",
+          "dependance": "Put the application somewhere on your server (expose only the ./p/ folder to the Web)"
+        },
+        "infirmes": {},
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-13T07:29:52-05:00"
+      },
+      "echecs_openhub": 1
     },
     {
       "categorie": "navigation-web",
@@ -3577,12 +4250,35 @@
         "https://goo.gl/"
       ],
       "criteres": [],
-      "confiance": "indéterminée"
+      "confiance": "faible",
+      "description_longue": "Minifi.ca est un service Web de **raccourcissement de liens**. Il permet de remplacer une adresse Web longue par un lien plus court, utilisable dans les communications d’un organisme. Pour un OSBL des arts et de la culture, ce type de service peut servir à diffuser une adresse dans un programme imprimé, une présentation ou une publication où l’espace est limité. Il remplit la même fonction générale que les autres services de liens courts.\n\nLe service repose sur **Lstu**, dont le nom signifie *Let’s Shorten That Url*. Ce logiciel libre de raccourcissement d’URL est développé en Perl avec le cadre logiciel Mojolicious. Son code est publié sur Framagit sous la licence WTFPL. Minifi.ca est une instance hébergée de ce logiciel : son utilisation ne nécessite donc pas d’installer Lstu sur les serveurs de l’organisme.\n\nLes informations fournies ne précisent pas l’identité de l’exploitant de Minifi.ca, le pays d’hébergement ni les conditions de conservation des données. Elles ne permettent pas non plus de confirmer la présence de statistiques de consultation ou de liens personnalisables. La possibilité d’installer Lstu ailleurs doit être distinguée des garanties offertes par cette instance précise.",
+      "tags": [
+        "navigation-web"
+      ],
+      "source": "libre",
+      "licence": "WTFPL",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://framagit.org/fiat-tux/hat-softwares/lstu",
+      "evaluation_enrichie": {
+        "score": 0,
+        "criteres": [],
+        "confiance": "faible"
+      },
+      "enrichi_le": "2026-11-13T07:27:33-05:00",
+      "criteres_confirmes": {
+        "criteres": [],
+        "preuves": {},
+        "infirmes": {},
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-13T07:29:55-05:00"
+      },
+      "echecs_openhub": 1
     },
     {
       "categorie": "stockage-infonuagique-et-sauvegarde",
       "nom": "Nuage FACiLe",
-      "score": 0,
+      "score": 1,
       "score_estime": true,
       "lien": "https://nuage.facil.services/",
       "description": "Partager et synchroniser des fichiers, des contacts, des calendriers et bien plus. (Pour les membres de FACiL.)",
@@ -3598,13 +4294,58 @@
         "https://onedrive.live.com/",
         "https://www.dropbox.com/"
       ],
-      "criteres": [],
-      "confiance": "indéterminée"
+      "criteres": [
+        "controle"
+      ],
+      "confiance": "moyenne",
+      "voir_aussi": [
+        "Nextcloud"
+      ],
+      "description_longue": "Nuage FACiLe est un service de stockage et de synchronisation proposé par FACiL, organisme québécois de promotion de l’informatique libre. Réservé à ses membres, il repose sur **Nextcloud**, un logiciel libre de partage de fichiers et de services collaboratifs. Il constitue une solution de remplacement aux espaces infonuagiques propriétaires comme Google Drive ou Dropbox.\n\nLe service permet de **partager et synchroniser des fichiers, des contacts et des calendriers**. Pour un organisme artistique ou culturel membre de FACiL, ces fonctions peuvent servir à échanger des documents de production, à retrouver des fichiers sur plusieurs appareils ou à tenir des calendriers communs. Les possibilités supplémentaires dépendent toutefois des applications activées par l’équipe qui administre le service.\n\nNextcloud peut être installé sur une infrastructure indépendante, mais Nuage FACiLe est ici un service déjà hébergé : les membres n’ont pas à administrer leur propre serveur. La page fournie décrit les mises à jour du logiciel Nextcloud, et non les conditions particulières de Nuage FACiLe. Elle ne précise donc ni le quota de stockage, ni les modalités de sauvegarde, ni l’emplacement des données de cette instance. Ces éléments sont à vérifier auprès de FACiL avant d’y déposer des documents sensibles.",
+      "tags": [
+        "stockage-partage-fichiers"
+      ],
+      "source": "libre",
+      "licence": "AGPL-3.0-or-later",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/nextcloud/server",
+      "evaluation_enrichie": {
+        "score": 1,
+        "criteres": [
+          "controle"
+        ],
+        "confiance": "moyenne"
+      },
+      "enrichi_le": "2026-11-13T07:27:45-05:00",
+      "criteres_confirmes": {
+        "criteres": [],
+        "preuves": {},
+        "infirmes": {},
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-13T07:30:01-05:00"
+      },
+      "openhub_id": "727926",
+      "openhub": {
+        "organisation": "Nextcloud",
+        "activite": "Not Available",
+        "licences": [
+          "GNU Affero General Public License v3.0"
+        ],
+        "langage_principal": "PHP",
+        "lignes_de_code": 18487145,
+        "contributeurs_total": 5084,
+        "contributeurs_12_mois": 634,
+        "commits_12_mois": 85905,
+        "premier_mois": "2010-03-01",
+        "dernier_mois": "2026-04-01",
+        "consulte_le": "2026-11-13T07:30:35-05:00"
+      }
     },
     {
       "categorie": "communautes-reseaux-et-partage-des-connaissances",
       "nom": "Parlote FACiLe",
-      "score": 0,
+      "score": 2,
       "score_estime": true,
       "lien": "https://parlote.facil.services/",
       "description": "Échanger sur une réseau social dont vous n'êtes pas le produit.",
@@ -3620,13 +4361,65 @@
         "https://plus.google.com/",
         "https://x.com/"
       ],
-      "criteres": [],
-      "confiance": "indéterminée"
+      "criteres": [
+        "controle",
+        "dependance"
+      ],
+      "confiance": "moyenne",
+      "description_longue": "Parlote FACiLe est un service de réseau social proposé par FACiL, un organisme québécois de promotion de l’informatique libre. Il repose sur **diaspora***, un logiciel libre de réseau social distribué qui met l’accent sur la vie privée. Il constitue une alternative aux réseaux sociaux centralisés pour publier des nouvelles et échanger au sein d’une communauté.\n\nContrairement à une plateforme exploitée depuis un service unique, diaspora* fonctionne avec plusieurs serveurs indépendants, appelés *pods*, qui communiquent entre eux. Parlote FACiLe est l’un de ces points d’accès au réseau. Les personnes qui utilisent le service n’ont donc pas à installer ni à administrer elles-mêmes le logiciel pour participer aux échanges.\n\nPour un OSBL des arts et de la culture, ce type de service peut servir à partager des activités, diffuser des réflexions ou entretenir des liens avec une communauté présente sur diaspora*. Il ne faut toutefois pas confondre fédération et confidentialité absolue : la diffusion des publications dépend des paramètres de partage et des destinataires.\n\nLe code de diaspora* est public et peut être installé sur une infrastructure indépendante. L’extrait fourni documente surtout ce logiciel : il ne précise pas les conditions d’inscription, les règles de modération ni le lieu d’hébergement propre à Parlote FACiLe.",
+      "tags": [
+        "communaute-reseau-social",
+        "federe-decentralise",
+        "vie-privee"
+      ],
+      "source": "libre",
+      "licence": "AGPL-3.0-or-later",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/diaspora/diaspora",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "controle",
+          "dependance"
+        ],
+        "confiance": "moyenne"
+      },
+      "enrichi_le": "2026-11-13T07:27:57-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "preuves": {
+          "donnees": "Whether you just want to try it out, want to install it on your server or want to contribute and need a development setup, our installation guides will get you started!",
+          "dependance": "Whether you just want to try it out, want to install it on your server or want to contribute and need a development setup, our installation guides will get you started!"
+        },
+        "infirmes": {},
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-13T07:30:06-05:00"
+      },
+      "openhub_id": "485371",
+      "openhub": {
+        "organisation": null,
+        "activite": "Low",
+        "licences": [
+          "GNU Affero General Public License v3.0 or later"
+        ],
+        "langage_principal": "Ruby",
+        "lignes_de_code": 85857,
+        "contributeurs_total": 525,
+        "contributeurs_12_mois": 5,
+        "commits_12_mois": 110,
+        "premier_mois": "2010-06-01",
+        "dernier_mois": "2026-07-01",
+        "consulte_le": "2026-11-13T07:30:36-05:00"
+      }
     },
     {
       "categorie": "veille-et-gestion-de-l-information",
       "nom": "Planète FACiLe",
-      "score": 0,
+      "score": 2,
       "score_estime": true,
       "lien": "https://planete.facil.qc.ca/",
       "description": "Agrégateur de blogues pour les membres de FACiL.",
@@ -3641,13 +4434,56 @@
         "https://feedly.com/",
         "https://www.inoreader.com/"
       ],
-      "criteres": [],
-      "confiance": "indéterminée"
+      "criteres": [
+        "controle",
+        "dependance"
+      ],
+      "confiance": "moyenne",
+      "description_longue": "Planète FACiLe est un **agrégateur de blogues destiné aux membres de FACiL**, organisme québécois consacré à la promotion de l’informatique libre. Le service rassemble des publications de plusieurs blogues dans un même espace de consultation. Il permet ainsi de suivre une communauté sans devoir visiter séparément chacun de ses sites et peut remplacer une tournée manuelle des blogues concernés.\n\nLe service proposé par FACiL repose sur **BilboPlanet**, un logiciel libre d’agrégation de blogues développé en PHP. Ce type de logiciel sert à créer un « planète », c’est-à-dire un site qui réunit les publications de plusieurs sources. Le code de BilboPlanet est public et peut être installé sur une infrastructure indépendante. Utiliser Planète FACiLe ne nécessite donc pas d’exploiter soi-même ce logiciel.\n\nPour un OSBL culturel, ce service peut constituer une source de veille sur les sujets abordés par la communauté de FACiL. Il ne faut toutefois pas le confondre avec un lecteur de flux personnel configurable pour chaque personne. Les renseignements fournis ne précisent ni les modalités de sélection des blogues, ni la localisation de l’hébergement, ni les engagements de disponibilité du service.",
+      "tags": [
+        "notes-veille",
+        "communaute-reseau-social"
+      ],
+      "source": "libre",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/theclimber/Bilboplanet",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "controle",
+          "dependance"
+        ],
+        "confiance": "moyenne"
+      },
+      "enrichi_le": "2026-11-13T07:28:09-05:00",
+      "criteres_confirmes": {
+        "criteres": [],
+        "preuves": {},
+        "infirmes": {},
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-13T07:30:12-05:00"
+      },
+      "openhub_id": "316680",
+      "openhub": {
+        "organisation": null,
+        "activite": "Not Available",
+        "licences": [],
+        "langage_principal": "PHP",
+        "lignes_de_code": 173914,
+        "contributeurs_total": 15,
+        "contributeurs_12_mois": 0,
+        "commits_12_mois": 0,
+        "premier_mois": "2009-10-01",
+        "dernier_mois": "2014-09-01",
+        "consulte_le": "2026-11-13T07:30:37-05:00"
+      }
     },
     {
       "categorie": "navigation-web",
       "nom": "Recherche FACiLe",
-      "score": 0,
+      "score": 1,
       "score_estime": true,
       "lien": "https://recherche.facil.services/",
       "description": "Rechercher sans se faire pister et profiler.",
@@ -3662,13 +4498,58 @@
         "https://www.google.com/",
         "https://www.bing.com/"
       ],
-      "criteres": [],
-      "confiance": "indéterminée"
+      "criteres": [
+        "controle"
+      ],
+      "confiance": "moyenne",
+      "description_longue": "**Recherche FACiLe** est un service de recherche sur le Web proposé par FACIL, un organisme québécois de promotion de l’informatique libre. Il repose sur **SearXNG**, un métamoteur de recherche libre qui rassemble des résultats provenant de plusieurs moteurs de recherche et bases de données. Il offre ainsi une autre porte d’entrée vers les contenus du Web que l’utilisation directe d’un moteur commercial.\n\nSearXNG est conçu pour ne pas suivre les personnes qui effectuent des recherches ni établir leur profil. Pour un organisme culturel, Recherche FACiLe peut servir aux recherches documentaires courantes, à la veille ou au repérage de ressources. Le service s’utilise dans un navigateur, sans que l’organisme ait à installer et administrer sa propre instance du logiciel.\n\nLe code de SearXNG est public et peut être installé sur une infrastructure choisie par l’organisation. Cette possibilité concerne toutefois le logiciel, et non le choix du lieu d’hébergement du service Recherche FACiLe lui-même.\n\nLa page fournie décrit surtout SearXNG. Elle ne précise pas l’emplacement des serveurs de Recherche FACiLe ni ses modalités particulières d’exploitation. Par ailleurs, les résultats dépendent des services de recherche interrogés : le recours à un logiciel libre ne supprime donc pas toute dépendance envers des fournisseurs externes.",
+      "tags": [
+        "navigation-web",
+        "vie-privee"
+      ],
+      "source": "libre",
+      "licence": "AGPL-3.0-or-later",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://github.com/searxng/searxng",
+      "evaluation_enrichie": {
+        "score": 1,
+        "criteres": [
+          "controle"
+        ],
+        "confiance": "moyenne"
+      },
+      "enrichi_le": "2026-11-13T07:28:21-05:00",
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees"
+        ],
+        "preuves": {
+          "donnees": "To install SearXNG, see Installation guide."
+        },
+        "infirmes": {},
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-13T07:30:16-05:00"
+      },
+      "openhub_id": "761187",
+      "openhub": {
+        "organisation": null,
+        "activite": "Not Available",
+        "licences": [],
+        "langage_principal": "Python",
+        "lignes_de_code": 39391,
+        "contributeurs_total": 355,
+        "contributeurs_12_mois": 51,
+        "commits_12_mois": 789,
+        "premier_mois": "2013-10-01",
+        "dernier_mois": "2026-03-01",
+        "consulte_le": "2026-11-13T07:30:37-05:00"
+      }
     },
     {
       "categorie": "stockage-infonuagique-et-sauvegarde",
       "nom": "Transfert FACiLe",
-      "score": 0,
+      "score": 1,
       "score_estime": true,
       "lien": "https://transfert.facil.services/",
       "description": "Transférer des fichiers trop gros pour être simplement joints à vos courriels.",
@@ -3683,13 +4564,42 @@
         "https://wetransfer.com/",
         "https://www.dropbox.com/"
       ],
-      "criteres": [],
-      "confiance": "indéterminée"
+      "criteres": [
+        "controle"
+      ],
+      "confiance": "moyenne",
+      "description_longue": "Transfert FACiLe est un service de partage de fichiers proposé par **FACiL**, un organisme québécois de promotion de l’informatique libre. Il permet de transmettre des fichiers trop volumineux pour être joints à un courriel. Il constitue une solution de remplacement aux pièces jointes et aux services commerciaux de transfert de fichiers, plutôt qu’un espace de travail documentaire partagé.\n\nLe service repose sur **Lufi**, un logiciel libre de partage de fichiers dont le nom signifie « Let’s Upload that File ». Lufi permet de déposer des fichiers dans un navigateur, puis de communiquer un lien de téléchargement aux destinataires. Le logiciel chiffre les fichiers dans le navigateur avant leur envoi au serveur; la clé de déchiffrement est transmise dans le lien de partage. La confidentialité dépend donc aussi de la façon dont ce lien est communiqué.\n\nPour un OSBL culturel, ce type de service peut servir à envoyer des visuels, des dossiers de présentation ou des documents de production. Il faut toutefois vérifier les limites de taille et les délais de conservation propres à Transfert FACiLe avant l’envoi. Le transfert de fichiers ne remplace pas une sauvegarde ni un système d’archivage.",
+      "tags": [
+        "stockage-partage-fichiers",
+        "chiffrement",
+        "vie-privee"
+      ],
+      "source": "libre",
+      "licence": "AGPL-3.0-or-later",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://framagit.org/fiat-tux/hat-softwares/lufi",
+      "evaluation_enrichie": {
+        "score": 1,
+        "criteres": [
+          "controle"
+        ],
+        "confiance": "moyenne"
+      },
+      "enrichi_le": "2026-11-13T07:28:35-05:00",
+      "criteres_confirmes": {
+        "criteres": [],
+        "preuves": {},
+        "infirmes": {},
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-13T07:30:19-05:00"
+      },
+      "echecs_openhub": 1
     },
     {
       "categorie": "communautes-reseaux-et-partage-des-connaissances",
       "nom": "Wiki FACiLe",
-      "score": 0,
+      "score": 1,
       "score_estime": true,
       "lien": "https://wiki.facil.qc.ca/",
       "description": "Espace de travail collaboratif destiné principalement aux membres de FACiL.",
@@ -3704,8 +4614,52 @@
         "https://www.microsoft.com/sharepoint",
         "https://www.atlassian.com/software/confluence"
       ],
-      "criteres": [],
-      "confiance": "indéterminée"
+      "criteres": [
+        "controle"
+      ],
+      "confiance": "moyenne",
+      "description_longue": "Wiki FACiLe est un **espace de travail collaboratif proposé par FACiL**, organisme québécois consacré à la promotion de l’informatique libre. Il s’adresse principalement à ses membres et repose sur MediaWiki, le logiciel libre également utilisé par Wikipédia. Il permet de regrouper des connaissances et des documents de travail dans des pages Web liées entre elles, plutôt que de les disperser dans des échanges de courriels ou des fichiers séparés.\n\nMediaWiki offre la rédaction et la modification de pages, un historique des versions, des pages de discussion et un classement par catégories. Ces fonctions peuvent soutenir la documentation des activités d’un organisme, la préparation de contenus collectifs et la conservation de connaissances au fil des changements dans une équipe. La contribution se fait par modifications successives des pages, plutôt que par une édition simultanée de type traitement de texte collaboratif.\n\nLa page technique fournie décrit **MediaWiki 1.43**, une version à soutien prolongé. Elle ne confirme toutefois pas la version effectivement installée sur Wiki FACiLe. Les modalités d’accès, les permissions de modification et le lieu d’hébergement des données du service ne sont pas précisés dans les éléments fournis.",
+      "tags": [
+        "notes-veille",
+        "gestion-documentaire",
+        "communaute-reseau-social"
+      ],
+      "source": "libre",
+      "licence": "GPL-2.0-or-later",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://gerrit.wikimedia.org/r/mediawiki/core",
+      "evaluation_enrichie": {
+        "score": 1,
+        "criteres": [
+          "controle"
+        ],
+        "confiance": "moyenne"
+      },
+      "enrichi_le": "2026-11-13T07:28:47-05:00",
+      "criteres_confirmes": {
+        "criteres": [],
+        "preuves": {},
+        "infirmes": {},
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-13T07:30:23-05:00"
+      },
+      "openhub_id": "22",
+      "openhub": {
+        "organisation": "Wikimedia",
+        "activite": "Very High",
+        "licences": [
+          "GNU General Public License v2.0 or later"
+        ],
+        "langage_principal": "PHP",
+        "lignes_de_code": 2252478,
+        "contributeurs_total": 1715,
+        "contributeurs_12_mois": 312,
+        "commits_12_mois": 11995,
+        "premier_mois": "2003-04-01",
+        "dernier_mois": "2026-10-01",
+        "consulte_le": "2026-11-13T07:30:39-05:00"
+      }
     }
   ]
 }
