@@ -24,8 +24,8 @@ racine, sauf trois fichiers de configuration (`tsconfig.json`, `REUSE.toml`, doc
 **Language/Version**: TypeScript, exécuté par Node.js 26 (`>=26 <27`, comme la racine)
 
 **Primary Dependencies**: Astro 7 (sortie statique), SolidJS 1.9 par `@astrojs/solid-js` (île des
-filtres), daisyUI 5 importé directement en CSS (sans Tailwind ni classes utilitaires), `marked` 18
-(rendu de `description_longue`). Toutes dans `site/package.json`; aucune n'entre dans le
+filtres), daisyUI 5 importé directement en CSS (sans Tailwind ni classes utilitaires), Sätteri
+(`satteri` 0.11, rendu de `description_longue`). Toutes dans `site/package.json`; aucune n'entre dans le
 `package.json` de la racine.
 
 **Storage**: aucun. Lecture seule des fichiers `outils.json`, `categories.json`, `criteres.json`,

@@ -5,6 +5,8 @@ Décisions techniques prises pour le plan. Versions relevées le 2026-11-13 avec
 ## 1. Générateur de site
 
 - **Décision**: Astro 7 (7.4.x), sortie statique, dans `site/`.
+- **Justification écrite de la dépendance d'exécution** (principe V): sans générateur, il
+  faudrait écrire et maintenir gabarits, routage des fiches et serveur de développement.
 - **Pourquoi**: demandé pour cette fonctionnalité. Astro produit du HTML complet sans JavaScript
   par défaut, ce que FR-026 exige, et bâtit une page par outil à partir de données locales
   (`getStaticPaths`). Il demande Node.js `>=22.23.4`, compatible avec le Node.js 26 du dépôt.
@@ -30,6 +32,8 @@ Décisions techniques prises pour le plan. Versions relevées le 2026-11-13 avec
 - **Solutions écartées**: Tailwind CSS 4 avec daisyUI en greffon (classes utilitaires dans le
   balisage, contraire à la règle); CSS entièrement écrit à la main (plus long et moins cohérent
   pour les états de focus et les thèmes).
+- **Justification écrite de la dépendance d'exécution** (principe V): daisyUI apporte des
+  composants accessibles (focus, contrastes, thèmes) qu'il faudrait sinon écrire et tester.
 - **À vérifier à l'implémentation**: le nom exact du fichier CSS dans le paquet installé et la
   façon dont Astro 7 charge `postcss.config.mjs`.
 - **Vigilance**: contraste des couleurs du thème (WCAG AA) et focus visible, contrôlés par axe;
@@ -78,18 +82,23 @@ Décisions techniques prises pour le plan. Versions relevées le 2026-11-13 avec
 
 ## 6. Rendu de `description_longue`
 
-- **Décision**: `marked` 18, appelé au build dans `site/src/lib/markdown.ts`, avec les titres
-  décalés de deux niveaux (un `#` de la description devient un `h3`, plafonné à `h6`) et le HTML
-  brut écarté.
+- **Décision**: [Sätteri](https://satteri.bruits.org/) (`satteri` 0.11, MIT), appelé au build
+  dans `site/src/lib/markdown.ts` par `markdownToHtml`, avec deux greffons mdast du site
+  (`defineMdastPlugin`): l'un décale les titres de deux niveaux (un `#` de la description devient
+  un `h3`, plafonné à `h6`), l'autre remplace tout nœud de HTML brut par du texte.
 - **Pourquoi**: le champ est en Markdown (titres, listes, gras), et une fiche a déjà un `h1` (le
   nom) et des `h2` (sections). L'enrichissement refuse déjà le HTML dans ce champ, mais le texte
-  résume des pages tierces: le site n'insère jamais de HTML venu des données. `marked` n'a aucune
-  dépendance et tourne au build seulement: rien n'est envoyé au navigateur.
+  résume des pages tierces: le site n'insère jamais de HTML venu des données. Par défaut, Sätteri
+  réémet le HTML brut tel quel (vérifié le 2026-11-13: `<script>` et `<img onerror>` passent), d'où
+  le second greffon. Sätteri est demandé pour ce projet (2026-11-13), à la place de `marked`; son
+  moteur est en Rust, ses greffons en JavaScript, et il tourne au build seulement: rien n'est
+  envoyé au navigateur.
 - **Justification écrite de la dépendance d'exécution** (principe V): sans analyseur Markdown, la
   description longue s'afficherait en texte brut avec ses symboles, pour le champ le plus lu de
   la fiche; en écrire un à la main serait plus long et moins sûr.
 - **Solutions écartées**: le pipeline Markdown d'Astro (fait pour des fichiers, pas pour des
-  chaînes venues de JSON); `markdown-it` (équivalent, plus de dépendances).
+  chaînes venues de JSON); `marked` (premier choix de ce plan, remplacé à la demande); `markdown-it`
+  (équivalent, plus de dépendances).
 
 ## 7. Filtres, recherche et état dans l'adresse
 

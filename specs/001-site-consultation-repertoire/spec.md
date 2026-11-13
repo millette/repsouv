@@ -315,8 +315,9 @@ sur chacune la présence de l'attribution, de la licence et des signalements d'I
 ### Key Entities *(include if feature involves data)*
 
 - **Outil**: un outil ou service numérique du répertoire. Porte les champs de sa source (nom,
-  catégorie, score, description courte, lien, source, parfois pays, logiciel sous-jacent, services
-  remplacés et outils apparentés), les critères déduits par le dépôt et, s'il est enrichi, les
+  catégorie, score, description courte, lien, source, parfois pays, logiciel sous-jacent et
+  services remplacés), ce que le dépôt en déduit (critères déduits, outils apparentés) et, s'il est
+  enrichi, les
   champs produits par IA (description longue, tags, statut du code source, licence, dépôt de code,
   second avis, critères vérifiés avec citations) et parfois des données publiques d'Open Hub. Peut avoir un score
   estimé. Peut être retiré.

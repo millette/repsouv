@@ -63,3 +63,9 @@ SPDX-License-Identifier = "MIT"
 path = [".claude/skills/solidjs/**"]
 SPDX-FileCopyrightText = "2026 Robin Millette <https://robin.millette.info/>"
 SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+# Site de consultation (site/): ses fichiers .ts, .tsx, .mjs, .css et .astro portent leurs en-têtes; ceux-ci ne le peuvent pas.
+[[annotations]]
+path = ["site/package.json", "site/nub.lock", "site/tsconfig.json", "site/.gitignore", "site/README.md", "site/test/fixtures/**"]
+SPDX-FileCopyrightText = "2026 Robin Millette <https://robin.millette.info/>"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
