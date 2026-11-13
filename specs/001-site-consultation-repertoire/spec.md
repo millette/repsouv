@@ -8,6 +8,15 @@
 
 **Input**: User description: "Un site Web statique public pour consulter le répertoire, destiné aux organismes et aux petites équipes du Canada français. Première tranche, en lecture seule: page d'accueil par catégorie, fiche par outil, filtres et recherche, outils non enrichis affichés sans champs vides. Limites: données lues telles quelles, champs produits par IA signalés, attribution CC BY-SA 4.0 sur chaque page, lecture sans JavaScript, français, accessibilité."
 
+## Clarifications
+
+### Session 2026-11-13
+
+- Q: Sur la fiche d'un outil, quels critères de souveraineté le site doit-il afficher ? → A: Les critères vérifiés (avec citation), les critères déduits des étoiles et le second avis du modèle (évaluation enrichie).
+- Q: La fiche doit-elle aussi afficher le pays de l'éditeur, le logiciel dont un service est une instance et les données Open Hub ? → A: Oui, les trois.
+- Q: Dans chaque type de filtre, peut-on choisir une seule valeur ou plusieurs à la fois ? → A: Plusieurs valeurs dans chaque type: « ou » à l'intérieur d'un type, « et » entre les types.
+- Q: Les filtres et la recherche actifs doivent-ils se retrouver dans l'adresse de la page ? → A: Oui, l'adresse reflète les choix et un lien restaure la liste filtrée.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Parcourir le répertoire par catégorie (Priority: P1)
@@ -45,9 +54,11 @@ figure une fois, sous sa catégorie, avec ses quatre informations, et qu'un lien
 ### User Story 2 - Lire la fiche d'un outil (Priority: P1)
 
 La personne ouvre la fiche d'un outil pour décider s'il convient à son organisme. Elle y lit la
-description longue, ce que disent les trois critères de souveraineté avec la citation qui appuie
-chaque verdict, la licence, le dépôt de code, les tags, les services que l'outil remplace, les
-outils apparentés et la source dont l'outil provient. Elle sait, pour chaque information, si elle
+description longue, ce que disent les trois critères de souveraineté (vérifiés avec la citation qui
+appuie chaque verdict, déduits des étoiles, et second avis du modèle), la licence, le dépôt de
+code, les tags, le pays de l'éditeur, le logiciel derrière un service, les données publiques
+d'Open Hub, les services que l'outil remplace, les outils apparentés et la source dont l'outil
+provient. Elle sait, pour chaque information, si elle
 vient de la source ou d'un modèle d'IA.
 
 **Why this priority**: la liste ne suffit pas à choisir un outil. La fiche porte ce que le dépôt
@@ -74,9 +85,23 @@ montre que les champs de la source, sans titre ni emplacement vide.
 5. **Given** n'importe quel outil, **When** la personne ouvre sa fiche, **Then** elle voit le nom
    de la source dont il provient, un lien vers cette source et un lien vers le site de l'outil.
 6. **Given** un outil non enrichi, **When** la personne ouvre sa fiche, **Then** elle ne voit que
-   les champs de sa source (nom, catégorie, score, description, lien, source, services remplacés
-   s'il y en a), sans section vide, sans mention « inconnu » et sans avertissement d'IA sans objet.
-7. **Given** un outil enrichi dont un champ est absent (pas de dépôt, pas de licence connue),
+   les champs de sa source (nom, catégorie, score, description, lien, source, pays et services
+   remplacés s'il y en a) et les critères déduits par le dépôt, signalés comme une déduction, sans
+   section vide, sans mention « inconnu » et sans avertissement d'IA sans objet.
+7. **Given** un outil enrichi, **When** la personne lit la section des critères, **Then** elle
+   distingue trois lectures nommées et expliquées: les critères vérifiés d'après la page de l'outil
+   (IA, avec citation), les critères déduits des étoiles (heuristique du dépôt, avec sa fiabilité)
+   et le second avis du modèle (IA, avec l'explication de l'écart quand il diffère du répertoire).
+8. **Given** un service qui est une instance d'un logiciel, **When** la personne ouvre sa fiche,
+   **Then** le logiciel est nommé et lié, et la fiche dit que la description et les critères
+   portent sur ce logiciel.
+9. **Given** un outil dont la source donne le pays de l'éditeur, **When** la personne ouvre sa
+    fiche, **Then** le pays s'affiche par son nom en français, comme une affirmation de la source.
+10. **Given** un outil qui a des données Open Hub, **When** la personne ouvre sa fiche, **Then**
+    elle voit l'organisation porteuse, l'activité, les licences déclarées, le langage principal,
+    le nombre de contributeurs et de commits sur 12 mois, la date de lecture et un lien vers la
+    page Open Hub du projet, présentés comme des données publiques d'Open Hub.
+11. **Given** un outil enrichi dont un champ est absent (pas de dépôt, pas de licence connue),
    **When** la personne ouvre sa fiche, **Then** ce champ n'apparaît pas plutôt que d'apparaître
    vide.
 
@@ -85,8 +110,9 @@ montre que les champs de la source, sans titre ni emplacement vide.
 ### User Story 3 - Trouver un outil par filtre ou par nom (Priority: P2)
 
 La personne cherche un outil précis ou veut réduire la liste à ce qui la concerne. Elle filtre par
-catégorie, par tag et par statut du code source, et cherche par nom. La liste se réduit aux outils
-qui répondent à tous ses choix, et elle sait combien il en reste.
+catégorie, par tag et par statut du code source, en choisissant une ou plusieurs valeurs de chaque
+type, et cherche par nom. La liste se réduit aux outils qui répondent à ses choix, elle sait
+combien il en reste, et elle peut partager l'adresse de la liste filtrée.
 
 **Why this priority**: avec 154 outils en 25 catégories, la liste complète se parcourt mais se
 fouille mal. Les filtres rendent le site utile pour une recherche ciblée, mais le répertoire reste
@@ -97,21 +123,26 @@ et vérifier que les outils affichés sont exactement ceux des données qui rép
 
 **Acceptance Scenarios**:
 
-1. **Given** la page d'accueil, **When** la personne choisit une catégorie, **Then** seuls les
-   outils de cette catégorie restent affichés.
-2. **Given** la page d'accueil, **When** la personne choisit un tag, **Then** seuls les outils qui
-   portent ce tag restent affichés.
-3. **Given** la page d'accueil, **When** la personne choisit un statut du code source, **Then**
-   seuls les outils de ce statut restent affichés; un choix « pas encore enrichi » montre les
-   outils sans statut.
+1. **Given** la page d'accueil, **When** la personne choisit une ou plusieurs catégories, **Then**
+   seuls les outils de l'une de ces catégories restent affichés.
+2. **Given** la page d'accueil, **When** la personne choisit un ou plusieurs tags, **Then** seuls
+   les outils qui portent au moins un de ces tags restent affichés.
+3. **Given** la page d'accueil, **When** la personne choisit un ou plusieurs statuts du code
+   source, **Then** seuls les outils de l'un de ces statuts restent affichés; un choix « pas encore
+   enrichi » montre les outils sans statut.
 4. **Given** la page d'accueil, **When** la personne tape une partie d'un nom, **Then** seuls les
    outils dont le nom la contient restent affichés, sans égard à la casse ni aux accents.
-5. **Given** plusieurs filtres et une recherche actifs, **When** la liste se met à jour, **Then**
-   seuls les outils qui répondent à tous les choix restent, et le nombre de résultats est affiché
-   et annoncé aux lecteurs d'écran.
-6. **Given** des choix qui ne correspondent à aucun outil, **When** la liste se met à jour,
+5. **Given** des choix dans plusieurs types de filtre et une recherche actifs, **When** la liste se
+   met à jour, **Then** seuls restent les outils qui répondent à chaque type de filtre (au moins
+   une valeur choisie dans chacun) et à la recherche, et le nombre de résultats est affiché et
+   annoncé aux lecteurs d'écran.
+6. **Given** des filtres ou une recherche actifs, **When** la personne copie l'adresse de la page
+   et l'ouvre ailleurs, **Then** la même liste filtrée s'affiche, avec les mêmes choix cochés.
+7. **Given** des filtres appliqués l'un après l'autre, **When** la personne utilise le bouton
+   précédent du navigateur, **Then** elle retrouve l'état précédent des filtres.
+8. **Given** des choix qui ne correspondent à aucun outil, **When** la liste se met à jour,
    **Then** un message dit qu'aucun outil ne correspond et propose d'effacer les filtres.
-7. **Given** un navigateur où JavaScript est désactivé, **When** la personne ouvre la page
+9. **Given** un navigateur où JavaScript est désactivé, **When** la personne ouvre la page
    d'accueil, **Then** la liste complète reste lisible et les filtres qui ne peuvent pas
    fonctionner ne s'affichent pas comme s'ils fonctionnaient.
 
@@ -156,6 +187,12 @@ sur chacune la présence de l'attribution, de la licence et des signalements d'I
   outil retiré): son nom s'affiche en texte, sans lien mort.
 - Une catégorie sans description, ou sans outil actif: la catégorie sans description s'affiche
   sans paragraphe vide; la catégorie sans outil ne s'affiche pas.
+- Une adresse partagée qui nomme une catégorie, un tag ou un statut qui n'existe plus: la valeur
+  inconnue est ignorée, les autres choix s'appliquent, et la page ne tombe pas en erreur.
+- Un outil enrichi dont Open Hub ne donne pas une valeur (langage, contributeurs): la ligne
+  correspondante n'apparaît pas.
+- Un outil au score estimé pas encore enrichi, dont la fiabilité de la déduction est
+  « indéterminée »: la fiche le dit en clair plutôt que d'afficher une fiabilité vide.
 - Un outil enrichi sans critères vérifiés, ou dont un critère est indéterminé: la section dit que
   la page de l'outil ne permet pas de conclure, sans inventer de citation.
 - Une description longue rédigée en Markdown (titres, listes, gras): elle est rendue en texte mis
@@ -188,9 +225,10 @@ sur chacune la présence de l'attribution, de la licence et des signalements d'I
 - **FR-005**: Chaque outil actif DOIT avoir sa propre fiche, à une adresse unique, stable d'une
   génération à l'autre tant que son nom ne change pas.
 - **FR-006**: La fiche d'un outil enrichi DOIT montrer, quand ils existent: la description longue,
-  les critères de souveraineté vérifiés, la licence (identifiant reconnu ou licence maison avec son
-  lien), le dépôt de code, les tags avec leur description, les services remplacés, les outils
-  apparentés et la source dont l'outil provient.
+  les critères de souveraineté (vérifiés, déduits et second avis), la licence (identifiant reconnu
+  ou licence maison avec son lien), le dépôt de code, les tags avec leur description, le pays de
+  l'éditeur, le logiciel dont l'outil est une instance, les données Open Hub, les services
+  remplacés, les outils apparentés et la source dont l'outil provient.
 - **FR-007**: Pour chacun des trois critères, la fiche DOIT montrer la question du critère, son
   verdict (confirmé, infirmé ou indéterminé) et, pour un verdict confirmé ou infirmé, la citation
   qui l'appuie, reproduite sans modification.
@@ -199,26 +237,46 @@ sur chacune la présence de l'attribution, de la licence et des signalements d'I
 - **FR-009**: Chaque outil apparenté qui a une fiche DOIT y renvoyer par un lien; les autres
   s'affichent en texte.
 - **FR-010**: Un outil non enrichi DOIT s'afficher, dans la liste comme sur sa fiche, avec les
-  seuls champs de sa source; aucun champ absent ne DOIT produire de titre, d'emplacement ou de
-  mention vide.
+  seuls champs de sa source et, sur sa fiche, les critères déduits par le dépôt (FR-032); aucun
+  champ absent ne DOIT produire de titre, d'emplacement ou de mention vide.
 - **FR-011**: Un champ absent d'un outil enrichi NE DOIT PAS s'afficher.
 
 **Filtres et recherche**
 
 - **FR-012**: La page d'accueil DOIT permettre de filtrer les outils par catégorie, par tag et par
-  statut du code source, y compris « pas encore enrichi ».
+  statut du code source, y compris « pas encore enrichi », en choisissant une ou plusieurs valeurs
+  dans chaque type.
 - **FR-013**: La page d'accueil DOIT permettre de chercher un outil par une partie de son nom, sans
   égard à la casse ni aux accents.
-- **FR-014**: Les filtres et la recherche DOIVENT se combiner: seuls les outils qui répondent à
-  tous les choix restent affichés.
+- **FR-014**: Les filtres et la recherche DOIVENT se combiner: à l'intérieur d'un type, un outil
+  est retenu s'il répond à au moins une des valeurs choisies; entre les types et avec la recherche,
+  il doit répondre à tous. Un type sans valeur choisie ne filtre rien.
+- **FR-036**: L'adresse de la page DOIT refléter les filtres et la recherche actifs; ouvrir cette
+  adresse DOIT restaurer la même liste et les mêmes choix, et le bouton précédent du navigateur
+  DOIT ramener à l'état précédent. Une valeur inconnue dans l'adresse est ignorée.
 - **FR-015**: Le nombre d'outils affichés DOIT être indiqué et mis à jour à chaque changement, et
   un message DOIT s'afficher quand aucun outil ne correspond, avec un moyen d'effacer les choix.
 
 **Provenance et honnêteté**
 
 - **FR-016**: Chaque champ produit par un modèle d'IA (description longue, tags, statut du code
-  source, licence, dépôt de code, critères vérifiés, description de catégorie) DOIT être signalé
-  comme tel partout où il s'affiche, avec l'avertissement « à vérifier ».
+  source, licence, dépôt de code, critères vérifiés, second avis, description de catégorie) DOIT
+  être signalé comme tel partout où il s'affiche, avec l'avertissement « à vérifier ».
+- **FR-032**: La fiche DOIT montrer les critères déduits des étoiles (`criteres`) et la fiabilité
+  de cette déduction (`confiance`), signalés comme une heuristique de ce dépôt et non comme une
+  donnée de la source ni comme un verdict vérifié.
+- **FR-033**: La fiche d'un outil enrichi DOIT montrer le second avis du modèle
+  (`evaluation_enrichie`): son score, ses critères, sa fiabilité et, quand il diffère du
+  répertoire, l'explication de l'écart; le tout signalé comme produit par IA.
+- **FR-034**: Les trois lectures des critères (vérifiés, déduits, second avis) DOIVENT être
+  nommées, expliquées en une phrase chacune et visuellement séparées, pour qu'on ne les confonde
+  pas.
+- **FR-035**: La fiche DOIT montrer, quand ils existent: le pays de l'éditeur (nom en français,
+  présenté comme une affirmation de la source), le logiciel dont l'outil est une instance (nom et
+  lien, avec la mention que la description et les critères portent sur ce logiciel) et les données
+  Open Hub (organisation, activité, licences déclarées, langage principal, taille, contributeurs et
+  commits sur 12 mois, date de lecture, lien vers la page du projet), présentées comme des données
+  publiques d'Open Hub.
 - **FR-017**: Le signalement d'IA NE DOIT PAS reposer sur la couleur seule ni sur le survol.
 - **FR-018**: La section des critères vérifiés DOIT dire que le verdict est celui d'un modèle d'IA
   et que la citation permet de le contrôler.
@@ -257,15 +315,22 @@ sur chacune la présence de l'attribution, de la licence et des signalements d'I
 ### Key Entities *(include if feature involves data)*
 
 - **Outil**: un outil ou service numérique du répertoire. Porte les champs de sa source (nom,
-  catégorie, score, description courte, lien, source, parfois services remplacés et outils
-  apparentés) et, s'il est enrichi, les champs produits par IA (description longue, tags, statut du
-  code source, licence, dépôt de code, critères vérifiés avec citations). Peut avoir un score
+  catégorie, score, description courte, lien, source, parfois pays, logiciel sous-jacent, services
+  remplacés et outils apparentés), les critères déduits par le dépôt et, s'il est enrichi, les
+  champs produits par IA (description longue, tags, statut du code source, licence, dépôt de code,
+  second avis, critères vérifiés avec citations) et parfois des données publiques d'Open Hub. Peut avoir un score
   estimé. Peut être retiré.
 - **Catégorie**: regroupe des outils. Porte un nom, une icône et une description produite par IA.
 - **Critère de souveraineté**: une des trois questions du répertoire (où restent les données, qui
   contrôle l'outil, de qui il dépend). Chaque outil vérifié a un verdict par critère.
 - **Verdict**: confirmé, infirmé ou indéterminé, pour un critère et un outil; appuyé par une
   citation quand il est confirmé ou infirmé; produit par un modèle d'IA.
+- **Critères déduits**: les critères que les étoiles représentent, déduits de la description par
+  une heuristique du dépôt, avec une fiabilité (élevée, moyenne, faible ou indéterminée).
+- **Second avis**: l'évaluation du modèle d'IA sur la souveraineté de l'outil (score, critères,
+  fiabilité, explication de l'écart avec le répertoire).
+- **Données Open Hub**: données publiques d'un projet de logiciel libre (organisation, activité,
+  licences déclarées, langage, taille, contributeurs, commits), avec leur date de lecture.
 - **Tag**: un mot-clé d'un vocabulaire restreint, avec sa description; un outil enrichi en porte de
   1 à 5.
 - **Source**: le répertoire ou la collection dont un outil provient (Praxis, Services FACiLes,
@@ -281,6 +346,10 @@ sur chacune la présence de l'attribution, de la licence et des signalements d'I
   et ouvre sa fiche en moins de 30 secondes.
 - **SC-003**: Une personne réduit la liste aux outils libres d'une catégorie donnée en trois
   actions ou moins.
+- **SC-011**: Pour 100 % des combinaisons de filtres essayées, ouvrir l'adresse copiée affiche
+  exactement la même liste d'outils que celle de la page d'origine.
+- **SC-012**: Sur 100 % des fiches, chaque lecture des critères porte son nom et sa provenance
+  (source, heuristique du dépôt ou IA); aucune n'est présentée sans elle.
 - **SC-004**: 100 % des pages portent l'attribution, la licence CC BY-SA 4.0 et le lien vers le
   répertoire d'origine; 100 % des fiches lient la source de l'outil.
 - **SC-005**: 100 % des champs produits par IA affichés portent le signalement « à vérifier »; 0
@@ -303,19 +372,20 @@ sur chacune la présence de l'attribution, de la licence et des signalements d'I
 - **Nombre d'outils non enrichis**: la demande parle de 14 outils non enrichis; les données en
   comptent 12 au 2026-11-13 (3 de Praxis, 9 de Charles). La spécification ne fixe pas ce nombre:
   la règle s'applique à tout outil sans enrichissement, quel qu'en soit le compte.
-- **Critères affichés**: la fiche montre les critères vérifiés (`criteres_confirmes`), les seuls
-  qui portent une citation. Les critères déduits des étoiles (`criteres`, `confiance`) et le second
-  avis du modèle (`evaluation_enrichie`) ne sont pas affichés dans cette tranche.
-- **Champs non demandés**: le pays de l'éditeur, le logiciel dont un service est une instance
-  (`instance_de`), les données Open Hub et les dates (`derniere_modification`, `enrichi_le`) ne sont
-  pas affichés dans cette tranche. Ils pourront l'être plus tard sans changer les données.
+- **Critères sur la page d'accueil**: la liste ne montre aucun critère; les trois lectures ne
+  s'affichent que sur la fiche.
+- **Dates**: les dates des outils (`derniere_modification`, `enrichi_le`) ne sont pas affichées
+  dans cette tranche, sauf la date de lecture des données Open Hub et la date des critères
+  vérifiés, qui disent de quand datent ces informations.
+- **Outils non enrichis**: « les seuls champs de leur source » s'entend avec les critères déduits
+  par le dépôt, que la clarification demande d'afficher; ils sont signalés comme une déduction.
 - **Description courte**: c'est le champ `description`, tel que la source le donne (pour Charles,
   tel que l'extracteur le compose à partir des champs de la source). Elle n'est pas signalée comme
   produite par IA.
 - **Statut du code source sur la page d'accueil**: c'est un champ produit par IA; il porte donc le
   signalement aussi dans la liste, sous une forme assez courte pour ne pas l'alourdir.
-- **Filtres**: une valeur à la fois par type de filtre (une catégorie, un tag, un statut), combinée
-  avec la recherche par nom. Le choix multiple à l'intérieur d'un type est hors de cette tranche.
+- **Filtres et JavaScript**: sans JavaScript, une adresse qui porte des filtres affiche la liste
+  complète; la restauration des filtres depuis l'adresse fait partie de ce qui peut en demander.
 - **Attribution**: en plus des auteur·trices de Praxis, le site crédite les Services FACiLes et
   Charles, parce que le dépôt déclare ces sources et que la constitution l'exige (principe III).
 - **Public**: des personnes sans formation technique, qui consultent le site sur ordinateur ou sur
