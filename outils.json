@@ -2,7 +2,7 @@
   "meta": {
     "data_license": "CC-BY-SA-4.0",
     "created_at": "2026-11-12T12:35:52-05:00",
-    "updated_at": "2026-11-13T10:26:07-05:00"
+    "updated_at": "2026-11-13T10:28:10-05:00"
   },
   "outils": [
     {
@@ -4724,12 +4724,12 @@
       ],
       "criteres": [],
       "confiance": "indéterminée",
-      "echecs_enrichissement": 2
+      "echecs_enrichissement": 3
     },
     {
       "categorie": "stockage-infonuagique-et-sauvegarde",
       "nom": "Infomaniak kDrive",
-      "score": 0,
+      "score": 1,
       "score_estime": true,
       "lien": "https://www.infomaniak.com/fr/ksuite/kdrive",
       "description": "Infomaniak kDrive est une alternative européenne recensée par Charles, d'origine suisse, gratuite avec des options payantes. Caractéristiques : hébergé en Suisse, écoresponsable, conforme au RGPD. Proposée en remplacement de Dropbox, OneDrive, Google Drive, Google Photos et Google Workspace.",
@@ -4744,9 +4744,42 @@
         "https://photos.google.com/",
         "https://workspace.google.com/"
       ],
-      "criteres": [],
-      "confiance": "indéterminée",
-      "echecs_enrichissement": 2
+      "criteres": [
+        "dependance"
+      ],
+      "confiance": "moyenne",
+      "description_longue": "## Stockage et collaboration en Suisse\n\n**Infomaniak kDrive** est un service de stockage, de synchronisation et de partage de fichiers exploité par Infomaniak, une entreprise suisse indépendante. Il constitue une solution de remplacement à des services comme Dropbox, Google Drive ou OneDrive pour centraliser les documents d’une équipe et y accéder depuis plusieurs appareils. Une offre gratuite et des formules payantes sont proposées.\n\nLe service permet de partager des fichiers et d’en recevoir directement dans son espace grâce à des boîtes de dépôt. Il propose aussi la modification collaborative de documents bureautiques en temps réel avec OnlyOffice. Certaines offres professionnelles intègrent également Microsoft Word, Excel et PowerPoint, qu’Infomaniak indique héberger sur ses propres serveurs en Suisse.\n\n## Hébergement et protection des données\n\nSelon l’éditeur, kDrive est conçu et hébergé exclusivement en Suisse. Les données sont chiffrées et chaque fichier est répliqué sur trois supports physiques répartis dans deux centres de données. Infomaniak affirme ne pas revendre ni analyser les données et annonce une conformité au RGPD et à la loi suisse sur la protection des données.\n\nPour un organisme canadien, cet hébergement implique toutefois de conserver les fichiers à l’extérieur du Canada. Le service reste exploité par Infomaniak : il ne s’agit pas d’une solution à installer sur les serveurs de l’organisme.",
+      "tags": [
+        "stockage-partage-fichiers",
+        "collaboration-temps-reel",
+        "hebergement-europe",
+        "chiffrement",
+        "gratuit"
+      ],
+      "source": "proprietaire",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": null,
+      "evaluation_enrichie": {
+        "score": 1,
+        "criteres": [
+          "dependance"
+        ],
+        "confiance": "moyenne"
+      },
+      "enrichi_le": "2026-11-13T10:27:42-05:00",
+      "criteres_confirmes": {
+        "criteres": [],
+        "preuves": {},
+        "infirmes": {
+          "donnees": "Confiez vos données à un cloud de confiance, indépendant, conçu et hébergé exclusivement en Suisse qui est conforme au RGPD et à la nLPD.",
+          "controle": "Infomaniak, une entreprise suisse indépendante",
+          "dependance": "kDrive réplique chaque fichier sur trois supports physiques dans deux data centers en Suisse pour garantir la continuité du service."
+        },
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-13T10:27:59-05:00"
+      }
     },
     {
       "categorie": "stockage-infonuagique-et-sauvegarde",
@@ -4813,7 +4846,7 @@
         "dependance"
       ],
       "confiance": "indéterminée",
-      "echecs_enrichissement": 2
+      "echecs_enrichissement": 3
     },
     {
       "categorie": "communautes-reseaux-et-partage-des-connaissances",
@@ -4920,7 +4953,7 @@
         "modele": "gpt-6.1-sol",
         "date": "2026-11-13T10:04:42-05:00"
       },
-      "echecs_openhub": 2
+      "echecs_openhub": 3
     },
     {
       "categorie": "communication-et-collaboration-d-equipe",
@@ -4978,7 +5011,7 @@
         "modele": "gpt-6.1-sol",
         "date": "2026-11-13T10:04:46-05:00"
       },
-      "echecs_openhub": 2
+      "echecs_openhub": 3
     },
     {
       "categorie": "communication-et-collaboration-d-equipe",
@@ -5100,7 +5133,7 @@
       ],
       "criteres": [],
       "confiance": "indéterminée",
-      "echecs_enrichissement": 2
+      "echecs_enrichissement": 3
     },
     {
       "categorie": "commerce-en-ligne",
@@ -5118,7 +5151,7 @@
       ],
       "criteres": [],
       "confiance": "indéterminée",
-      "echecs_enrichissement": 2
+      "echecs_enrichissement": 3
     },
     {
       "categorie": "commerce-en-ligne",
@@ -5283,7 +5316,7 @@
         "modele": "gpt-6.1-sol",
         "date": "2026-11-13T10:05:09-05:00"
       },
-      "echecs_openhub": 2
+      "echecs_openhub": 3
     },
     {
       "categorie": "hebergement-web-et-infrastructure",
@@ -5509,7 +5542,7 @@
       ],
       "criteres": [],
       "confiance": "indéterminée",
-      "echecs_enrichissement": 2
+      "echecs_enrichissement": 3
     },
     {
       "categorie": "assistants-d-intelligence-artificielle",
@@ -5603,7 +5636,7 @@
         "modele": "gpt-6.1-sol",
         "date": "2026-11-13T10:05:34-05:00"
       },
-      "echecs_openhub": 2
+      "echecs_openhub": 3
     },
     {
       "categorie": "bureautique-et-collaboration",
@@ -5621,8 +5654,37 @@
         "https://contacts.google.com/"
       ],
       "criteres": [],
-      "confiance": "indéterminée",
-      "echecs_enrichissement": 2
+      "confiance": "élevée",
+      "description_longue": "La Suite d’Infomaniak, commercialisée sous le nom **kSuite**, rassemble des outils de bureautique et de collaboration développés et hébergés en Suisse. Elle constitue une solution de remplacement à plusieurs services de Microsoft 365 ou de Google Workspace pour les courriels, les fichiers et le travail d’équipe.\n\nLa suite comprend **Mail** pour les courriels, **kDrive** pour le stockage, le partage et la synchronisation de fichiers, ainsi que **kMeet** pour les réunions en ligne. L’offre professionnelle ajoute **kChat**, une messagerie d’équipe. L’édition collaborative de documents en ligne est proposée avec Microsoft Office ou OnlyOffice. Des fonctions d’intelligence artificielle sont également présentées, notamment l’assistance à la rédaction, la recherche OCR, la transcription audio et la traduction de messages; leur disponibilité dépend de l’offre choisie.\n\nUne formule gratuite destinée aux particuliers inclut 20 Go pour les courriels et 15 Go pour les fichiers. L’offre **kSuite PRO**, facturée par utilisateur, vise les organisations et propose notamment davantage de stockage et les fonctions avancées d’IA.\n\nInfomaniak se présente comme une entreprise indépendante engagée pour la confidentialité. Pour une organisation canadienne, il faut toutefois distinguer cet hébergement suisse d’un hébergement local : la page indique que kSuite est exclusivement développée et hébergée en Suisse, sans option canadienne mentionnée.",
+      "tags": [
+        "redaction-documents",
+        "stockage-partage-fichiers",
+        "courriel-infolettres",
+        "messagerie-visioconference",
+        "hebergement-europe"
+      ],
+      "source": "proprietaire",
+      "licence": null,
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": null,
+      "evaluation_enrichie": {
+        "score": 0,
+        "criteres": [],
+        "confiance": "élevée"
+      },
+      "enrichi_le": "2026-11-13T10:27:53-05:00",
+      "criteres_confirmes": {
+        "criteres": [],
+        "preuves": {},
+        "infirmes": {
+          "donnees": "Cloud 100% suisse",
+          "controle": "La Suite (Infomaniak) est une alternative européenne recensée par Charles, d'origine suisse, payante.",
+          "dependance": "Développé et hébergé en Suisse"
+        },
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-13T10:28:04-05:00"
+      }
     },
     {
       "categorie": "navigation-web",
@@ -5717,7 +5779,7 @@
         "modele": "gpt-6.1-sol",
         "date": "2026-11-13T10:05:41-05:00"
       },
-      "echecs_openhub": 2
+      "echecs_openhub": 3
     },
     {
       "categorie": "gestion-de-la-relation-des-membres-et-crm",
@@ -6088,7 +6150,7 @@
         "modele": "gpt-6.1-sol",
         "date": "2026-11-13T10:06:09-05:00"
       },
-      "echecs_openhub": 2
+      "echecs_openhub": 3
     },
     {
       "categorie": "communication-et-collaboration-d-equipe",
@@ -6106,7 +6168,7 @@
       ],
       "criteres": [],
       "confiance": "indéterminée",
-      "echecs_enrichissement": 2
+      "echecs_enrichissement": 3
     },
     {
       "categorie": "communication-et-collaboration-d-equipe",
@@ -6344,7 +6406,7 @@
         "modele": "gpt-6.1-sol",
         "date": "2026-11-13T10:06:28-05:00"
       },
-      "echecs_openhub": 2
+      "echecs_openhub": 3
     },
     {
       "categorie": "stockage-infonuagique-et-sauvegarde",
@@ -6394,7 +6456,7 @@
         "modele": "gpt-6-astra",
         "date": "2026-11-13T10:06:38-05:00"
       },
-      "echecs_openhub": 2
+      "echecs_openhub": 3
     },
     {
       "categorie": "stockage-infonuagique-et-sauvegarde",
@@ -6448,7 +6510,7 @@
         "modele": "gpt-6.1-sol",
         "date": "2026-11-13T10:06:44-05:00"
       },
-      "echecs_openhub": 2
+      "echecs_openhub": 3
     },
     {
       "categorie": "bureautique-et-collaboration",
@@ -6541,7 +6603,7 @@
         "modele": "gpt-6.1-sol",
         "date": "2026-11-13T10:06:50-05:00"
       },
-      "echecs_openhub": 2
+      "echecs_openhub": 3
     },
     {
       "categorie": "bureautique-et-collaboration",
@@ -6562,7 +6624,7 @@
         "dependance"
       ],
       "confiance": "indéterminée",
-      "echecs_enrichissement": 2
+      "echecs_enrichissement": 3
     },
     {
       "categorie": "assistants-d-intelligence-artificielle",
@@ -7764,7 +7826,7 @@
         "modele": "gpt-6.1-sol",
         "date": "2026-11-13T10:08:10-05:00"
       },
-      "echecs_openhub": 2
+      "echecs_openhub": 3
     },
     {
       "categorie": "securite-et-gestion-des-acces",
@@ -7812,7 +7874,7 @@
         "modele": "gpt-6.1-sol",
         "date": "2026-11-13T10:08:14-05:00"
       },
-      "echecs_openhub": 2
+      "echecs_openhub": 3
     },
     {
       "categorie": "securite-et-gestion-des-acces",
@@ -7860,7 +7922,7 @@
         "modele": "gpt-6.1-sol",
         "date": "2026-11-13T10:08:17-05:00"
       },
-      "echecs_openhub": 2
+      "echecs_openhub": 3
     },
     {
       "categorie": "securite-et-gestion-des-acces",
@@ -7878,7 +7940,7 @@
       ],
       "criteres": [],
       "confiance": "indéterminée",
-      "echecs_enrichissement": 2
+      "echecs_enrichissement": 3
     },
     {
       "categorie": "gestion-de-projets-et-des-taches",
@@ -7971,7 +8033,7 @@
       ],
       "criteres": [],
       "confiance": "indéterminée",
-      "echecs_enrichissement": 2
+      "echecs_enrichissement": 3
     }
   ]
 }
