@@ -88,6 +88,15 @@ données, le code et la documentation cohérents.
 
 - Pour une fonctionnalité menée avec Spec Kit, `specs/NNN-nom/plan.md` et `tasks.md` remplacent
   `IMPLEMENTATION_PLAN.md`.
+- Le travail se fait sur une branche, jamais directement sur `main`, dans trois cas:
+  - une fonctionnalité menée avec Spec Kit, sur la branche `NNN-nom` créée par `/speckit-specify`;
+  - un changement de forme des données, ou une rupture de compatibilité (principe I);
+  - tout changement de code qui demande plus d'un commit.
+- Un changement qui tient en un seul commit et ne touche ni la forme des données ni leur
+  compatibilité PEUT aller directement sur `main`: correction ponctuelle, documentation, mise à
+  jour des données par les scripts.
+- Une branche n'est fusionnée dans `main` que lorsque les trois contrôles ci-dessous passent; elle
+  est supprimée après la fusion.
 - Avant chaque commit, `nub run test`, `nub run typecheck` et `nub run licences` DOIVENT passer.
 - Les messages de commit expliquent le pourquoi, dans le style de l'historique du dépôt.
 - À la fin d'une fonctionnalité, son contenu durable est reporté dans `implementation.md` et
@@ -103,4 +112,4 @@ données, le code et la documentation cohérents.
   - MINEUR: ajout d'un principe ou d'une section, ou extension notable d'une règle;
   - CORRECTIF: clarification, reformulation ou correction sans changement de sens.
 
-**Version**: 1.0.0 | **Ratified**: 2026-11-13 | **Last Amended**: 2026-11-13
+**Version**: 1.1.0 | **Ratified**: 2026-11-13 | **Last Amended**: 2026-11-13
