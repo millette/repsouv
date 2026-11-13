@@ -9,7 +9,8 @@ Rapport d'impact
 - Raison: depuis le monorepo, les versions des dépendances partagées viennent d'un catalogue
   (`workspaces.catalog`, renvois `catalog:`) que npm ne lit pas; installer les dépendances demande donc nub.
   Décision de Robin Millette (2026-11-13): garder le catalogue.
-- Règle modifiée: Contraintes techniques, « Utilisation »: les scripts d'utilisation DOIVENT toujours s'exécuter
+- Règles modifiées: principe V (« Pourquoi »: les dépendances d'exécution s'installent avec nub) et
+  Contraintes techniques, « Utilisation »: les scripts d'utilisation DOIVENT toujours s'exécuter
   avec Node.js seul, sans nub; leurs dépendances s'installent avec nub (`nub install`). Avant: « fonctionner avec
   Node.js seul, sans nub », installation comprise.
 - Principes modifiés: aucun. Sections ajoutées: aucune. Sections retirées: aucune.
@@ -81,7 +82,7 @@ relancer aussi souvent que voulu sans payer deux fois.
 - Pas d'abstraction prématurée.
 - Pas de dépendance d'exécution sans justification écrite.
 
-Pourquoi: un utilisateur n'installe que Node.js et les dépendances d'exécution; chaque dépendance
+Pourquoi: un utilisateur n'installe que Node.js et, avec nub, les dépendances d'exécution; chaque dépendance
 et chaque abstraction de plus est un coût pour lui et pour qui relira le code.
 
 ### VI. Tout en français

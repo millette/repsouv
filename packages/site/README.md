@@ -6,7 +6,7 @@ Un site statique, en lecture seule, pour consulter le répertoire d'outils favor
 
 ## Commandes
 
-Les dépendances s'installent une seule fois, à la racine du dépôt, pour les trois paquets de `packages/` (`nub install`). Les commandes se lancent ensuite dans `packages/site/`, avec [nub](https://nubjs.com/) et Node.js 26, ou de la racine du dépôt par les raccourcis `site:*`. Le site n'importe rien du paquet des scripts : il lit `donnees/` et importe les modules purs de `packages/commun/` (types des données, slug, statistiques, graphiques) par des imports ordinaires.
+Les dépendances s'installent une seule fois, à la racine du dépôt, pour les trois paquets de `packages/` (`nub install`). Les commandes se lancent ensuite dans `packages/site/`, avec [nub](https://nubjs.com/) et Node.js 26, ou de la racine du dépôt par les raccourcis `site:*`. Le site n'importe rien du paquet des scripts : il lit `donnees/` et importe les modules purs de `packages/commun/` (types des données, identifiants, slug, statistiques, graphiques) par des imports ordinaires.
 
 ```sh
 nub run dev          # serveur de développement                                                      (racine : nub run site:dev)

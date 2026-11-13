@@ -62,7 +62,9 @@ valident les dates de « meta » et écrivent, le site refuse un tableau vide et
 ### Hors plan : catalogue des versions partagées
 Les six dépendances déclarées par plus d'un paquet prennent leur plage dans `workspaces.catalog` du
 `package.json` de la racine, et les paquets y renvoient par `catalog:` (commit `c1f9ebd`). npm ne comprend pas
-ce protocole : décision de Robin Millette (2026-11-13), garder le catalogue et installer avec nub.
+ce protocole : décision de Robin Millette (2026-11-13), garder le catalogue et installer avec nub. La constitution
+passe ensuite à 1.3.0 (amendement mineur) : les scripts s'exécutent avec Node.js seul, leurs dépendances
+s'installent avec nub.
 **État** : fait
 
 ### Étape 4 : documentation, constitution, licences

@@ -8,7 +8,7 @@ Certaines commandes **coûtent de l'argent** : l'enrichissement, la vérificatio
 
 ## Scripts
 
-Ils se lancent avec `node`, de la racine du dépôt ou d'ailleurs en donnant leur chemin : ils trouvent `donnees/` et le fichier `.env` de la racine d'après leur propre emplacement.
+Ils se lancent avec `node`, de la racine du dépôt ou d'ailleurs en donnant leur chemin : sans chemin de fichier, ils prennent `donnees/outils.json` d'après leur propre emplacement (sauf `extract.ts` et `classify.ts`, qui demandent le chemin), et `update.ts` et `sommaire.ts` lisent le `.env` de la racine.
 
 | Script | Rôle |
 |---|---|
@@ -17,10 +17,10 @@ Ils se lancent avec `node`, de la racine du dépôt ou d'ailleurs en donnant leu
 | `extract-facil.ts` | Importe ou met à jour les Services FACiLes |
 | `extract-charles.ts` | Importe ou met à jour les alternatives de l'extension Charles |
 | `ajouter.ts` | Ajoute à la main un outil qui ne vient d'aucune source extraite |
-| `extract.ts` | Outil exceptionnel : reconstruit `outils.json` et `criteres.json` depuis la page, en écrasant l'existant avec `--force` |
+| `extract.ts` | Outil exceptionnel : reconstruit `outils.json` et `categories.json` (et `criteres.json` s'il est donné) depuis la page, en écrasant l'existant avec `--force` |
 | `classify.ts` | Outil exceptionnel : reclasse tous les outils après un changement des règles de classification |
 
-Les autres fichiers sont des modules que ces scripts partagent : `enrichir.ts`, `confirmer.ts` et `openhub.ts` (appels aux API), `categories.ts`, `sources.ts`, `logiciel.ts`, `fichiers.ts` (lecture et écriture des fichiers de données, chemins du dépôt), `graphiques.ts` (écriture des SVG par `vl-convert`), `prix.ts`, `spdx.ts`, `agent.ts`, `env.ts`, `cli.ts`, `progress.ts`, `duree.ts`, `temps.ts` et `couleurs.ts` ; `generer-schemas.ts`, `schemas-types.ts` et `affiner-schema.ts` produisent les schémas JSON. Les types des données, le calcul des statistiques et la construction des graphiques viennent de [`packages/commun`](../commun/README.md).
+Les autres fichiers sont des modules que ces scripts partagent : `enrichir.ts`, `confirmer.ts`, `categories.ts` (descriptions des catégories) et `openhub.ts` (appels aux API), `sources.ts` et `fichiers.ts` (lecture et écriture des fichiers de données, chemins du dépôt), `logiciel.ts` (logiciel derrière un service, renvois `voir_aussi`), `graphiques.ts` (écriture des SVG par `vl-convert`), `prix.ts`, `spdx.ts`, `agent.ts`, `env.ts`, `cli.ts`, `progress.ts`, `duree.ts`, `temps.ts` et `couleurs.ts` ; `generer-schemas.ts`, `schemas-types.ts`, `affiner-schema.ts` et `build.config.ts` produisent les schémas JSON. Les types des données, le calcul des statistiques et la construction des graphiques viennent de [`packages/commun`](../commun/README.md).
 
 ## Commandes
 
