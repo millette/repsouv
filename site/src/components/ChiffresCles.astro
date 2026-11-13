@@ -1,0 +1,45 @@
+---
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
+// Chiffres clés de la page « Statistiques »: chaque part dit sur combien d'outils elle porte.
+import { decimal, nombre, part } from "../lib/nombres.ts";
+import { LIBELLES_PROVENANCE } from "../lib/provenance.ts";
+import type { ChiffresCles } from "../lib/statistiques.ts";
+
+interface Props {
+  chiffres: ChiffresCles;
+}
+const { chiffres: c } = Astro.props;
+const sur = `sur ${nombre(c.outils)} outils`;
+const etoiles = (n: number) => (n > 1 ? `${n} étoiles` : `${n} étoile`);
+---
+<section class="chiffres-cles" aria-labelledby="titre-chiffres">
+  <h2 id="titre-chiffres">Chiffres clés</h2>
+  <dl class="definitions">
+    <dt>Outils</dt>
+    <dd>{nombre(c.outils)} outils, en {nombre(c.categories)} catégories.</dd>
+    <dt>Étoiles</dt>
+    <dd>
+      {c.etoiles.map((e, i) => <>{i > 0 && " ; "}{nombre(e.outils)} à {etoiles(e.etoiles)} ({part(e.outils, c.outils)})</>)}, {sur}. Moyenne : {decimal(c.moyenne)} étoile{c.moyenne >= 2 ? "s" : ""}.
+      {c.estimes > 0 && <> Pour {nombre(c.estimes)} outils ({part(c.estimes, c.outils)}, {sur}), la source ne donne pas d'étoiles : le score est estimé.</>}
+    </dd>
+    <dt>Outils enrichis</dt>
+    <dd>
+      {nombre(c.enrichis)} ({part(c.enrichis, c.outils)}), {sur}. Leurs fiches portent des champs rédigés par un modèle d'IA : <span class="provenance provenance-ia">{LIBELLES_PROVENANCE.ia}</span>
+    </dd>
+    <dt>Provenance</dt>
+    <dd>
+      <ul>
+        {c.provenance.map((p) => <li>{p.nom} : {nombre(p.outils)} outils ({part(p.outils, c.outils)}, {sur}), dont {nombre(p.enrichis)} enrichis.</li>)}
+      </ul>
+    </dd>
+    {c.pays.length > 0 && (
+      <>
+        <dt>Pays de l'éditeur</dt>
+        <dd>
+          {c.pays.map((p, i) => <>{i > 0 && ", "}{p.nom} {nombre(p.outils)}</>)} ; sur {nombre(c.avecPays)} outils dont la source donne le pays.
+        </dd>
+      </>
+    )}
+  </dl>
+</section>

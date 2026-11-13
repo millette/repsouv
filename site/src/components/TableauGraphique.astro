@@ -1,0 +1,23 @@
+---
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
+// Tableau des mêmes chiffres qu'un graphique: légende, en-têtes de colonnes, et un lien vers les outils comptés quand
+// un filtre de l'explorateur y correspond.
+import type { Tableau } from "../lib/tableaux.ts";
+
+interface Props {
+  tableau: Tableau;
+}
+const { tableau } = Astro.props;
+---
+<div class="tableau-defilant" tabindex="0" role="region" aria-label={`Chiffres : ${tableau.legende}`}>
+  <table class="table tableau-chiffres">
+    <caption>{tableau.legende}</caption>
+    <thead>
+      <tr>{tableau.colonnes.map((c) => <th scope="col">{c}</th>)}</tr>
+    </thead>
+    <tbody>
+      {tableau.lignes.map((ligne) => <tr>{ligne.map((c) => <td>{c.lien ? <a class="link" href={c.lien}>{c.texte}</a> : c.texte}</td>)}</tr>)}
+    </tbody>
+  </table>
+</div>

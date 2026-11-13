@@ -3,7 +3,7 @@
 // Le build échoue avec un message clair plutôt que de publier un site partiel (FR-024), et ne fait aucun appel réseau (FR-025).
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
 
@@ -57,4 +57,22 @@ test("le code du site ne fait aucun appel réseau, sauf la lecture de son propre
   // Hors commentaires (l'en-tête de licence porte une adresse), le chargeur ne nomme aucun hôte.
   const code = readFileSync(join("src", "lib", "chargement.ts"), "utf8").replace(/^\s*\/\/.*$/gm, "");
   assert.doesNotMatch(code, /https?:\/\//);
+});
+
+test("le build ne lance jamais vl-convert: les graphiques sont rendus par vega dans Node", () => {
+  // Un faux vl-convert, placé en tête du PATH, laisse une trace s'il est lancé et échoue.
+  mkdirSync("test-results", { recursive: true });
+  const faux = mkdtempSync(join("test-results", "faux-vl-convert-"));
+  const dossier = mkdtempSync(join("test-results", "sans-vl-convert-"));
+  const trace = join(process.cwd(), faux, "lance");
+  try {
+    writeFileSync(join(faux, "vl-convert"), `#!/bin/sh\necho lancé > "${trace}"\nexit 1\n`, { mode: 0o755 });
+    const r = spawnSync("nub", ["exec", "astro", "build", "--outDir", dossier], { encoding: "utf8", env: { ...process.env, PATH: `${join(process.cwd(), faux)}:${process.env.PATH}` } });
+    assert.equal(r.status, 0, r.stdout + r.stderr);
+    assert.ok(existsSync(join(dossier, "graphiques", "statut-code-source-clair.svg")));
+    assert.equal(existsSync(trace), false, "vl-convert a été lancé");
+  } finally {
+    rmSync(faux, { recursive: true, force: true });
+    rmSync(dossier, { recursive: true, force: true });
+  }
 });

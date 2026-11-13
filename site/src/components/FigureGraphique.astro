@@ -1,0 +1,48 @@
+---
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
+// Un graphique de la page « Statistiques » (specs/003-page-statistiques/contracts/page.md): titre, provenance et base
+// de ses chiffres, image de chaque thème (le CSS montre celle du thème en cours, sans JavaScript), et le tableau des
+// mêmes chiffres dans un bloc repliable.
+import { adresseGraphique } from "../lib/adresses.ts";
+import type { Graphique } from "../lib/statistiques.ts";
+import type { ProvenanceGraphique, Tableau } from "../lib/tableaux.ts";
+import { THEMES_GRAPHIQUES } from "../lib/themes-graphiques.ts";
+import TableauGraphique from "./TableauGraphique.astro";
+
+interface Props {
+  graphique: Graphique;
+  tableau: Tableau;
+  provenance: ProvenanceGraphique;
+  /** Phrase qui dit sur combien d'outils portent les chiffres. */
+  baseChiffres: string;
+  dimensions: Record<string, { largeur: number; hauteur: number }>;
+  base: string;
+}
+const { graphique, tableau, provenance, baseChiffres, dimensions, base } = Astro.props;
+---
+<figure class="graphique" data-graphique={graphique.id} aria-labelledby={`titre-${graphique.id}`}>
+  <h2 id={`titre-${graphique.id}`}>{graphique.titre}</h2>
+  <p class="graphique-provenance">
+    {provenance.libelles.map((l) => <><span class="provenance">{l}</span>{" "}</>)}
+    {provenance.note} <span class="graphique-base">{baseChiffres}</span>
+  </p>
+  <div class="graphique-zone">
+    {THEMES_GRAPHIQUES.map((theme) => (
+      <img
+        class={`graphique-image graphique-${theme}`}
+        src={adresseGraphique(base, graphique.id, theme, "svg")}
+        alt={graphique.description}
+        width={dimensions[theme]!.largeur}
+        height={dimensions[theme]!.hauteur}
+        loading="lazy"
+        decoding="async"
+      />
+    ))}
+    <slot />
+  </div>
+  <details class="graphique-chiffres">
+    <summary>Voir les chiffres</summary>
+    <TableauGraphique tableau={tableau} />
+  </details>
+</figure>

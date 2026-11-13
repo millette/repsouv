@@ -1,0 +1,31 @@
+---
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
+// Page « Statistiques » (specs/003-page-statistiques/contracts/page.md): le portrait chiffré du répertoire, calculé
+// au build par les fonctions de la racine qui produisent sommaire.md. Elle se lit sans JavaScript: images et tableaux.
+import ChiffresCles from "../components/ChiffresCles.astro";
+import FigureGraphique from "../components/FigureGraphique.astro";
+import Page from "../layouts/Page.astro";
+import { donneesExplorateur } from "../lib/explorateur.ts";
+import { formaterDate } from "../lib/libelles.ts";
+import { LICENCE_DONNEES, rendus, site, statistiques } from "../lib/site.ts";
+import { chiffresCles } from "../lib/statistiques.ts";
+import { baseDe, provenanceDe, tableauDe } from "../lib/tableaux.ts";
+
+const donnees = site();
+const { stats, graphiques } = await statistiques();
+const explorateur = donneesExplorateur(donnees);
+const contexte = { base: donnees.base, categories: explorateur.categories, tags: explorateur.tags };
+const images = await rendus();
+const dimensionsDe = (id: string) => Object.fromEntries(images.filter((r) => r.id === id).map((r) => [r.theme, { largeur: r.largeur, hauteur: r.hauteur }]));
+---
+<Page titre="Statistiques" description="Le portrait chiffré du répertoire : chiffres clés et graphiques, avec le tableau des mêmes chiffres." courante="statistiques">
+  <h1>Statistiques</h1>
+  <p class="introduction">
+    Le portrait chiffré du répertoire, calculé à partir des données du {formaterDate(donnees.meta.updated_at)}. Sous chaque graphique, « Voir les chiffres » ouvre le
+    tableau des mêmes valeurs. Les graphiques sont des dérivés des données, partagés sous la même licence
+    <a class="link" rel="license" href={LICENCE_DONNEES.url}>{LICENCE_DONNEES.nom}</a>.
+  </p>
+  <ChiffresCles chiffres={chiffresCles(stats, donnees)} />
+  {graphiques.map((g) => <FigureGraphique graphique={g} tableau={tableauDe(g, contexte)} provenance={provenanceDe(g.id)} baseChiffres={baseDe(g.id, stats)} dimensions={dimensionsDe(g.id)} base={donnees.base} />)}
+</Page>

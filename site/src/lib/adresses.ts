@@ -46,6 +46,16 @@ export function adresseExplorer(base: string, parametres = ""): string {
   return `${normaliserBase(base)}explorer/` + (parametres ? `?${parametres}` : "");
 }
 
+/** Page « Statistiques ». */
+export function adresseStatistiques(base: string): string {
+  return `${normaliserBase(base)}statistiques/`;
+}
+
+/** Fichier d'un graphique (image ou spécification compilée) pour un thème. */
+export function adresseGraphique(base: string, id: string, theme: string, extension: "svg" | "json"): string {
+  return `${normaliserBase(base)}graphiques/${id}-${theme}.${extension}`;
+}
+
 export function adresseFiche(id: string, base: string): string {
   return `${normaliserBase(base)}outils/${id}/`;
 }

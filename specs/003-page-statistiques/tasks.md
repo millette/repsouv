@@ -30,7 +30,7 @@ description: "Liste des tâches de la page « Statistiques »"
 
 ## Phase 1: Setup (Shared Infrastructure)
 
-- [ ] T001 Ajouter `vega` et `vega-lite` aux dépendances de `site/package.json` avec `nub add` (fait pendant la recherche; vérifier `site/nub.lock`), et vérifier que `nub run build` passe encore
+- [x] T001 Ajouter `vega` et `vega-lite` aux dépendances de `site/package.json` avec `nub add` (fait pendant la recherche; vérifier `site/nub.lock`), et vérifier que `nub run build` passe encore
 
 ---
 
@@ -40,17 +40,17 @@ description: "Liste des tâches de la page « Statistiques »"
 
 ### Tests (à écrire d'abord, ils doivent échouer)
 
-- [ ] T002 [P] Écrire `site/test/nombres.test.ts`: `nombre(3938168)` → « 3 938 168 »; `decimal(1.16)` → « 1,16 »; `pourcent(36.36)` → « 36,4 % » (une décimale, virgule, espace avant « % »); `part(56, 154)` → « 36,4 % »; `part(1, 0)` → « 0 % »
-- [ ] T003 [P] Écrire `site/test/statistiques.test.ts` (sur `test/fixtures/valide`): `statistiquesDuSite(donnees)` rend les `Statistiques` et les `Graphique` de la racine pour les outils des données; `chiffresCles(s, donnees)` rend le total, le nombre de catégories ayant un outil, le nombre d'outils à 3, 2, 1 et 0 étoiles (somme égale au total), la moyenne, le nombre de scores estimés, les outils enrichis, la provenance par source et les pays nommés en français avec leur nombre d'outils
-- [ ] T004 [P] Écrire `site/test/themes-graphiques.test.ts`: `adapterAuTheme(spec, "clair")` rend la spécification telle quelle; `adapterAuTheme(spec, "sombre")` rend une copie (l'original n'est pas modifié) dont seuls `background` et `config` diffèrent, `data`, `encoding`, `layer`, `facet` et `spec` restant égaux; les couleurs de texte du thème sombre ont un contraste d'au moins 4,5 pour 1 avec son fond (`contraste(a, b)`); les couleurs des séries (palette de `graphiques.ts`) ne figurent pas parmi les couleurs remplacées
-- [ ] T005 [P] Écrire `site/test/rendu.test.ts`: `rendreSvg(spec)` rend, pour chacun des graphiques des fixtures, une chaîne qui commence par `<svg` et contient son titre; `compilerVega(spec)` rend un objet avec `marks` et `signals`
+- [x] T002 [P] Écrire `site/test/nombres.test.ts`: `nombre(3938168)` → « 3 938 168 »; `decimal(1.16)` → « 1,16 »; `pourcent(36.36)` → « 36,4 % » (une décimale, virgule, espace avant « % »); `part(56, 154)` → « 36,4 % »; `part(1, 0)` → « 0 % »
+- [x] T003 [P] Écrire `site/test/statistiques.test.ts` (sur `test/fixtures/valide`): `statistiquesDuSite(donnees)` rend les `Statistiques` et les `Graphique` de la racine pour les outils des données; `chiffresCles(s, donnees)` rend le total, le nombre de catégories ayant un outil, le nombre d'outils à 3, 2, 1 et 0 étoiles (somme égale au total), la moyenne, le nombre de scores estimés, les outils enrichis, la provenance par source et les pays nommés en français avec leur nombre d'outils
+- [x] T004 [P] Écrire `site/test/themes-graphiques.test.ts`: `adapterAuTheme(spec, "clair")` rend la spécification telle quelle; `adapterAuTheme(spec, "sombre")` rend une copie (l'original n'est pas modifié) dont seuls `background` et `config` diffèrent, `data`, `encoding`, `layer`, `facet` et `spec` restant égaux; les couleurs de texte du thème sombre ont un contraste d'au moins 4,5 pour 1 avec son fond (`contraste(a, b)`); les couleurs des séries (palette de `graphiques.ts`) ne figurent pas parmi les couleurs remplacées
+- [x] T005 [P] Écrire `site/test/rendu.test.ts`: `rendreSvg(spec)` rend, pour chacun des graphiques des fixtures, une chaîne qui commence par `<svg` et contient son titre; `compilerVega(spec)` rend un objet avec `marks` et `signals`
 
 ### Implementation
 
-- [ ] T006 [P] Implémenter `site/src/lib/nombres.ts` jusqu'à ce que T002 passe
-- [ ] T007 Implémenter `site/src/lib/statistiques.ts` (imports de `../../../statistiques.ts` et `../../../graphiques.ts`) jusqu'à ce que T003 passe
-- [ ] T008 [P] Implémenter `site/src/lib/themes-graphiques.ts` jusqu'à ce que T004 passe
-- [ ] T009 Implémenter `site/src/lib/rendu.ts` (`vega-lite` puis `vega`, sans navigateur) jusqu'à ce que T005 passe
+- [x] T006 [P] Implémenter `site/src/lib/nombres.ts` jusqu'à ce que T002 passe
+- [x] T007 Implémenter `site/src/lib/statistiques.ts` (imports de `../../../statistiques.ts` et `../../../graphiques.ts`) jusqu'à ce que T003 passe
+- [x] T008 [P] Implémenter `site/src/lib/themes-graphiques.ts` jusqu'à ce que T004 passe
+- [x] T009 Implémenter `site/src/lib/rendu.ts` (`vega-lite` puis `vega`, sans navigateur) jusqu'à ce que T005 passe
 
 **Checkpoint**: les tests unitaires passent; le site sait calculer et dessiner sans `vl-convert`.
 
@@ -66,14 +66,14 @@ graphique, son image, son texte de remplacement et son tableau.
 
 ### Tests for User Story 1 ⚠️
 
-- [ ] T010 [P] [US1] Écrire `site/test/tableaux.test.ts` d'après data-model.md: `tableauDe(graphique, contexte)` rend pour chacun des neuf `id` les colonnes du modèle, une ligne par valeur de `spec.data.values`, dans le même ordre, avec les nombres à la française et les dates en clair; un `id` inconnu rend un tableau générique (une colonne par champ) plutôt que d'échouer
-- [ ] T011 [P] [US1] Écrire `site/test/build/statistiques.test.ts` d'après contracts/page.md: `statistiques/index.html` a `<h1>` « Statistiques », la date des données, la mention des dérivés sous CC BY-SA 4.0 et la section « Chiffres clés » avec les nombres recalculés depuis les données par `calculerStatistiques`; un `<figure data-graphique>` par graphique de `construireGraphiques`, dans l'ordre, avec `<h2>`, deux `<img>` (`-clair.svg`, `-sombre.svg`) au même `alt` égal à la description du graphique, et un `<details>` fermé « Voir les chiffres » contenant un `<table>` avec `<caption>` et `<th scope="col">`; le nombre de lignes de chaque tableau égale le nombre de valeurs de la spécification; les 18 fichiers `.svg` existent dans `dist/graphiques/` et commencent par `<svg`; la page ne contient pas le résumé du sommaire; aucun nombre de la page n'a de point décimal
-- [ ] T012 [P] [US1] Adapter `site/test/build/commun.test.ts` (quatre liens de navigation, « Statistiques » en cours sur `statistiques/index.html`) et ajouter à `site/test/build/echecs.test.ts`: le build réussit avec un `PATH` où `vl-convert` est introuvable
+- [x] T010 [P] [US1] Écrire `site/test/tableaux.test.ts` d'après data-model.md: `tableauDe(graphique, contexte)` rend pour chacun des neuf `id` les colonnes du modèle, une ligne par valeur de `spec.data.values`, dans le même ordre, avec les nombres à la française et les dates en clair; un `id` inconnu rend un tableau générique (une colonne par champ) plutôt que d'échouer
+- [x] T011 [P] [US1] Écrire `site/test/build/statistiques.test.ts` d'après contracts/page.md: `statistiques/index.html` a `<h1>` « Statistiques », la date des données, la mention des dérivés sous CC BY-SA 4.0 et la section « Chiffres clés » avec les nombres recalculés depuis les données par `calculerStatistiques`; un `<figure data-graphique>` par graphique de `construireGraphiques`, dans l'ordre, avec `<h2>`, deux `<img>` (`-clair.svg`, `-sombre.svg`) au même `alt` égal à la description du graphique, et un `<details>` fermé « Voir les chiffres » contenant un `<table>` avec `<caption>` et `<th scope="col">`; le nombre de lignes de chaque tableau égale le nombre de valeurs de la spécification; les 18 fichiers `.svg` existent dans `dist/graphiques/` et commencent par `<svg`; la page ne contient pas le résumé du sommaire; aucun nombre de la page n'a de point décimal
+- [x] T012 [P] [US1] Adapter `site/test/build/commun.test.ts` (quatre liens de navigation, « Statistiques » en cours sur `statistiques/index.html`) et ajouter à `site/test/build/echecs.test.ts`: le build réussit avec un `PATH` où `vl-convert` est introuvable
 
 ### Implementation for User Story 1
 
-- [ ] T013 [US1] Implémenter `site/src/lib/tableaux.ts` (colonnes par `id`, lignes, sans les liens ni la provenance) jusqu'à ce que T010 passe
-- [ ] T014 [US1] Créer `site/src/pages/graphiques/[fichier].ts` (point de terminaison statique: pour chaque graphique et chaque thème, `<id>-<thème>.svg` par `rendreSvg(adapterAuTheme(spec, thème))`), `site/src/components/ChiffresCles.astro`, `site/src/components/TableauGraphique.astro`, `site/src/components/FigureGraphique.astro` et `site/src/pages/statistiques.astro` (`courante="statistiques"`); ajouter « Statistiques » à `site/src/components/Navigation.astro` et `adresseStatistiques(base)` à `site/src/lib/adresses.ts`; styles dans `site/src/styles/global.css` (une seule des deux images visible selon le thème, avec la règle du thème du site); jusqu'à ce que T011 et T012 passent
+- [x] T013 [US1] Implémenter `site/src/lib/tableaux.ts` (colonnes par `id`, lignes, sans les liens ni la provenance) jusqu'à ce que T010 passe
+- [x] T014 [US1] Créer `site/src/pages/graphiques/[fichier].ts` (point de terminaison statique: pour chaque graphique et chaque thème, `<id>-<thème>.svg` par `rendreSvg(adapterAuTheme(spec, thème))`), `site/src/components/ChiffresCles.astro`, `site/src/components/TableauGraphique.astro`, `site/src/components/FigureGraphique.astro` et `site/src/pages/statistiques.astro` (`courante="statistiques"`); ajouter « Statistiques » à `site/src/components/Navigation.astro` et `adresseStatistiques(base)` à `site/src/lib/adresses.ts`; styles dans `site/src/styles/global.css` (une seule des deux images visible selon le thème, avec la règle du thème du site); jusqu'à ce que T011 et T012 passent
 - [ ] T015 [US1] Écrire `site/test/e2e/statistiques.spec.ts`, premiers cas: sans JavaScript, chaque graphique montre une image visible avec son `alt`, « Voir les chiffres » s'ouvre et montre le tableau; en thème sombre du système, c'est l'image `-sombre.svg` qui est visible, et en thème clair l'image `-clair.svg`
 
 **Checkpoint**: la page est complète et lisible sans JavaScript.
@@ -86,8 +86,8 @@ graphique, son image, son texte de remplacement et son tableau.
 
 **Independent Test**: lire les blocs des critères, du statut et des licences: provenance et base en texte.
 
-- [ ] T016 [P] [US4] Ajouter à `site/test/tableaux.test.ts` et à `site/test/build/statistiques.test.ts`: `provenanceDe(id)` rend les libellés de data-model.md (`ia` pour `statut-code-source`, `categories-statut`, `licences`, `forges`, `tags`, `criteres-verdicts`; `heuristique` et `ia` pour `criteres-repertoire-enrichie` et `criteres-par-statut`; aucun pour `enrichissement-jours`) et une phrase qui nomme ce que le graphique compte; `baseDe(id, s)` rend la phrase du dénominateur (« Sur 154 outils », « Sur les 142 outils enrichis », « Sur les 142 outils vérifiés »…) calculée depuis les statistiques; sur la page bâtie, chaque `<figure>` porte ces libellés et cette phrase en texte, les trois graphiques des critères nomment « déduit des étoiles », « évaluation par IA » et « vérifié … citation », et chaque pourcentage des chiffres clés est suivi de son dénominateur
-- [ ] T017 [US4] Compléter `site/src/lib/tableaux.ts` (`provenanceDe`, `baseDe`) et `site/src/components/FigureGraphique.astro`, `ChiffresCles.astro` jusqu'à ce que T016 passe
+- [x] T016 [P] [US4] Ajouter à `site/test/tableaux.test.ts` et à `site/test/build/statistiques.test.ts`: `provenanceDe(id)` rend les libellés de data-model.md (`ia` pour `statut-code-source`, `categories-statut`, `licences`, `forges`, `tags`, `criteres-verdicts`; `heuristique` et `ia` pour `criteres-repertoire-enrichie` et `criteres-par-statut`; aucun pour `enrichissement-jours`) et une phrase qui nomme ce que le graphique compte; `baseDe(id, s)` rend la phrase du dénominateur (« Sur 154 outils », « Sur les 142 outils enrichis », « Sur les 142 outils vérifiés »…) calculée depuis les statistiques; sur la page bâtie, chaque `<figure>` porte ces libellés et cette phrase en texte, les trois graphiques des critères nomment « déduit des étoiles », « évaluation par IA » et « vérifié … citation », et chaque pourcentage des chiffres clés est suivi de son dénominateur
+- [x] T017 [US4] Compléter `site/src/lib/tableaux.ts` (`provenanceDe`, `baseDe`) et `site/src/components/FigureGraphique.astro`, `ChiffresCles.astro` jusqu'à ce que T016 passe
 
 ---
 
@@ -97,8 +97,8 @@ graphique, son image, son texte de remplacement et son tableau.
 
 **Independent Test**: suivre un lien de chacun des trois tableaux: l'explorateur montre autant d'outils que le chiffre.
 
-- [ ] T018 [P] [US3] Ajouter à `site/test/tableaux.test.ts` et à `site/test/build/statistiques.test.ts`: `tableauDe` pose un lien sur la première colonne des lignes de `statut-code-source` (`?statut=<id>`, « Pas encore enrichi » → `non-enrichi`), de `categories-statut` (`?categorie=<id>&statut=<id>`) et de `tags` (`?tag=<id>`), et aucun sur les six autres tableaux; une valeur sans identifiant connu reste du texte; sur la page bâtie, pour chaque lien, le nombre d'outils que `retenu` de `site/src/lib/selection.ts` retient dans `dist/explorateur.json` avec l'état lu de l'adresse du lien égale le chiffre de la ligne
-- [ ] T019 [US3] Compléter `site/src/lib/tableaux.ts` et `site/src/components/TableauGraphique.astro` jusqu'à ce que T018 passe; ajouter à `site/test/e2e/statistiques.spec.ts`: ouvrir « Voir les chiffres » du tableau des statuts, activer « Libre », et l'explorateur affiche le nombre d'outils du tableau
+- [x] T018 [P] [US3] Ajouter à `site/test/tableaux.test.ts` et à `site/test/build/statistiques.test.ts`: `tableauDe` pose un lien sur la première colonne des lignes de `statut-code-source` (`?statut=<id>`, « Pas encore enrichi » → `non-enrichi`), de `categories-statut` (`?categorie=<id>&statut=<id>`) et de `tags` (`?tag=<id>`), et aucun sur les six autres tableaux; une valeur sans identifiant connu reste du texte; sur la page bâtie, pour chaque lien, le nombre d'outils que `retenu` de `site/src/lib/selection.ts` retient dans `dist/explorateur.json` avec l'état lu de l'adresse du lien égale le chiffre de la ligne
+- [x] T019 [US3] Compléter `site/src/lib/tableaux.ts` et `site/src/components/TableauGraphique.astro` jusqu'à ce que T018 passe; ajouter à `site/test/e2e/statistiques.spec.ts`: ouvrir « Voir les chiffres » du tableau des statuts, activer « Libre », et l'explorateur affiche le nombre d'outils du tableau
 
 ---
 

@@ -48,8 +48,8 @@ test("chaque page a la navigation principale, avec la page en cours indiquée", 
     const nav = lirePage(chemin).querySelector('header nav[aria-label="Navigation principale"]');
     assert.ok(nav, chemin);
     const liens = [...nav.querySelectorAll("a")];
-    assert.deepEqual(liens.map((a) => [texte(a), a.getAttribute("href")]), [["Accueil", "/"], ["Outils", "/outils/"], ["Explorer", "/explorer/"]], chemin);
-    const attendue = chemin === "index.html" ? "Accueil" : chemin.startsWith("outils/") ? "Outils" : chemin.startsWith("explorer/") ? "Explorer" : null;
+    assert.deepEqual(liens.map((a) => [texte(a), a.getAttribute("href")]), [["Accueil", "/"], ["Outils", "/outils/"], ["Explorer", "/explorer/"], ["Statistiques", "/statistiques/"]], chemin);
+    const attendue = chemin === "index.html" ? "Accueil" : chemin.startsWith("outils/") ? "Outils" : chemin.startsWith("explorer/") ? "Explorer" : chemin.startsWith("statistiques/") ? "Statistiques" : null;
     assert.deepEqual(liens.filter((a) => a.getAttribute("aria-current") === "page").map((a) => texte(a)), attendue ? [attendue] : [], chemin);
   }
 });

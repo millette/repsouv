@@ -466,3 +466,58 @@ blockquote {
 .etat-erreur {
   display: block;
 }
+
+/* Page « Statistiques »: chiffres clés, graphiques et leurs tableaux. */
+.chiffres-cles .definitions ul {
+  margin: 0;
+  padding-inline-start: 1.25rem;
+  list-style: revert;
+}
+.graphique {
+  margin: 2.5rem 0 0;
+}
+.graphique-provenance {
+  max-width: 52rem;
+  font-size: 0.95rem;
+}
+.graphique-zone {
+  max-width: 100%;
+  overflow-x: auto;
+}
+.graphique-image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-box, 0.5rem);
+}
+/* Une seule des deux images est montrée: celle du thème en cours, avec la même règle que le thème du site. */
+.graphique-sombre {
+  display: none;
+}
+[data-theme="dark"] .graphique-clair {
+  display: none;
+}
+[data-theme="dark"] .graphique-sombre {
+  display: block;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .graphique-clair {
+    display: none;
+  }
+  :root:not([data-theme]) .graphique-sombre {
+    display: block;
+  }
+}
+.graphique-chiffres {
+  margin-top: 0.75rem;
+}
+.graphique-chiffres summary {
+  cursor: pointer;
+  font-weight: 600;
+  padding-block: 0.25rem;
+}
+.tableau-chiffres th,
+.tableau-chiffres td {
+  white-space: normal;
+  vertical-align: top;
+}
