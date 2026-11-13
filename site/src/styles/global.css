@@ -106,7 +106,8 @@ main:focus {
   font-style: italic;
   border: 1px dashed currentColor;
   border-radius: var(--radius-selector, 0.25rem);
-  white-space: nowrap;
+  /* Peut passer à la ligne: un libellé long ne doit pas élargir la page sur un téléphone. */
+  max-width: 100%;
 }
 
 .compteur {
