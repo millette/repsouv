@@ -80,6 +80,13 @@ test("aucun élément vide dans une carte", () => {
   }
 });
 
+test("le formulaire de filtres signale que statuts et tags sont produits par IA, et il est masqué sans script", () => {
+  const formulaire = page.querySelector("form[data-filtres]");
+  assert.ok(formulaire);
+  assert.ok(formulaire.hasAttribute("hidden"));
+  assert.ok(texte(formulaire).includes(LIBELLES_PROVENANCE.ia));
+});
+
 test("le compteur annonce le nombre total d'outils", () => {
   const compteur = page.querySelector("[aria-live=polite]");
   assert.ok(compteur);

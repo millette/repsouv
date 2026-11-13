@@ -34,3 +34,16 @@ test("le balisage du site n'emploie aucune variante réactive (sm:, md:, lg:, xl
     .filter((f) => /class(List)?=[^>]*?\b(max-)?(sm|md|lg|xl|2xl):/.test(readFileSync(f, "utf8")));
   assert.deepEqual(fautifs, []);
 });
+
+import themeSombre from "../postcss/theme-sombre.mjs";
+
+const avecTheme = (css: string) => postcss([themeSombre()]).process(css, { from: undefined }).css;
+
+test("themeSombre applique le thème sombre de daisyUI selon la préférence du système", () => {
+  const css = ":root,[data-theme=light]{color-scheme:light;--c:1}:root:has(input.x[value=dark]:checked),[data-theme=dark]{color-scheme:dark;--c:2}";
+  assert.equal(avecTheme(css), `${css}@media (prefers-color-scheme: dark){:root:not([data-theme]){color-scheme:dark;--c:2}}`);
+});
+
+test("themeSombre ne touche pas une feuille sans thème sombre", () => {
+  assert.equal(avecTheme(".a{b:c}"), ".a{b:c}");
+});

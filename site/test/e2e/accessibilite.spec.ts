@@ -25,6 +25,19 @@ async function violations(page: Page): Promise<string[]> {
 for (const theme of ["light", "dark"] as const) {
   test.describe(`thème ${theme === "light" ? "clair" : "sombre"}`, () => {
     test.use({ colorScheme: theme });
+    test("le thème demandé par le système est bien appliqué", async ({ page }) => {
+      await page.goto("/");
+      // Luminosité du fond de page: sombre en thème sombre, claire en thème clair.
+      const clarte = await page.evaluate(() => {
+        const toile = document.createElement("canvas").getContext("2d")!;
+        toile.fillStyle = getComputedStyle(document.documentElement).backgroundColor;
+        toile.fillRect(0, 0, 1, 1);
+        const [r, v, b] = toile.getImageData(0, 0, 1, 1).data;
+        return (r! + v! + b!) / 3;
+      });
+      if (theme === "dark") expect(clarte).toBeLessThan(90);
+      else expect(clarte).toBeGreaterThan(200);
+    });
     for (const [nom, adresse] of PAGES) {
       test(`aucune violation axe A ou AA: ${nom}`, async ({ page }) => {
         await page.goto(adresse);

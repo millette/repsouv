@@ -263,3 +263,10 @@ Task: "Créer site/src/components/OpenHub.astro"
    `historique.md`, suppression de `specs/`.
 
 Un commit par tâche ou par petit groupe de tâches, chacun avec tous les contrôles verts.
+
+---
+
+## Phase 8: Convergence
+
+- [x] T047 Appliquer le thème sombre de daisyUI selon la préférence du système (`prefers-color-scheme: dark`) par un greffon PostCSS testé dans `site/postcss/` et `site/test/styles.test.ts`, et faire vérifier par `site/test/e2e/accessibilite.spec.ts` que le fond de page est sombre quand le thème sombre est demandé per T003, T039 (partial)
+- [x] T048 Signaler dans `site/src/components/Filtres.tsx` que les statuts du code source et les tags sont produits par IA, à vérifier, avec un test dans `site/test/build/accueil.test.ts` per FR-016 (partial)

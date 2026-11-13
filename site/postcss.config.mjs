@@ -2,5 +2,6 @@
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Chargé par Vite (Astro) pour toutes les feuilles de style du site.
 import sansVariantes from "./postcss/sans-variantes.mjs";
+import themeSombre from "./postcss/theme-sombre.mjs";
 
-export default { plugins: [sansVariantes()] };
+export default { plugins: [sansVariantes(), themeSombre()] };

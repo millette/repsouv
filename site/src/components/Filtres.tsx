@@ -7,6 +7,7 @@
 import { createEffect, createMemo, createSignal, For, onCleanup, onMount, Show } from "solid-js";
 import { createStore, reconcile } from "solid-js/store";
 import { ecrireEtat, estVide, type Etat, etatVide, lireEtat, retenu, type ValeursConnues } from "../lib/filtres.ts";
+import { LIBELLES_PROVENANCE } from "../lib/provenance.ts";
 
 interface Valeur {
   id: string;
@@ -143,6 +144,9 @@ export default function Filtres(props: Props) {
           <label for="recherche-nom">Chercher un outil par son nom</label>
           <input id="recherche-nom" class="input" type="search" name="q" autocomplete="off" value={etat.q} onInput={(e) => chercher(e.currentTarget.value)} />
         </div>
+        <p class="filtre-note">
+          Le statut du code source et les tags : <span class="provenance provenance-ia">{LIBELLES_PROVENANCE.ia}</span>
+        </p>
         <Groupe type="statuts" legende="Statut du code source" valeurs={props.statuts} ouvert />
         <Groupe type="categories" legende="Catégorie" valeurs={props.categories} />
         <Groupe type="tags" legende="Tag" valeurs={props.tags} />
