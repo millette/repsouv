@@ -1,0 +1,31 @@
+{
+  "version": 2,
+  "meta": {
+    "$comment": "SPDX-License-Identifier: AGPL-3.0-or-later; SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>",
+    "description": "Fichier de verrouillage des skills installés dans .agents/skills/ (liens depuis .claude/skills/). Chaque skill garde la licence de son dépôt d'origine, déclarée ci-dessous dans skills.<nom>.meta et dans REUSE.toml."
+  },
+  "skills": {
+    "astro": {
+      "source": "ianshk/astro-skills",
+      "sourceType": "github",
+      "skillPath": "skills/astro/SKILL.md",
+      "computedHash": "da804993394f5ea3962a2f874844f8ee72e31e024c2928f0ddfbfaba28012065",
+      "meta": {
+        "license": "MIT",
+        "copyright": "2026 Ian Callaghan <https://github.com/ianshk/astro-skills>",
+        "url": "https://github.com/ianshk/astro-skills"
+      }
+    },
+    "daisyui": {
+      "source": "saadeghi/daisyui",
+      "sourceType": "github",
+      "skillPath": "skills/daisyui/SKILL.md",
+      "computedHash": "4dfba5cd295d5ee38d352fc40649eb89b550975d8951a323e3de7922eac467d2",
+      "meta": {
+        "license": "MIT",
+        "copyright": "2026 Pouya Saadeghi <https://github.com/saadeghi/daisyui>",
+        "url": "https://github.com/saadeghi/daisyui"
+      }
+    }
+  }
+}

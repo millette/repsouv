@@ -53,6 +53,15 @@ test("REUSE.toml déclare CC-BY-SA-4.0 pour les données et leurs dérivés, et 
     assert.ok(reuse.includes(`"${chemin}"`), `annoté: ${chemin} (skill ou outil installé, MIT)`);
   }
   assert.match(reuse, /SPDX-License-Identifier = "MIT"/);
+  // skills-lock.json déclare sa propre licence (meta.$comment, comme les schémas) et celle de chaque skill installé (skills.<nom>.meta).
+  const verrou = JSON.parse(readFileSync("skills-lock.json", "utf8")) as { meta?: { $comment?: string }; skills: Record<string, { source: string; meta?: { license?: string; copyright?: string; url?: string } }> };
+  assert.match(verrou.meta?.$comment ?? "", new RegExp(`^SPDX-License-Identifier: ${LICENCE_CODE}; SPDX-FileCopyrightText: \\d{4} Robin Millette <`), "skills-lock.json: meta.$comment");
+  for (const [nom, skill] of Object.entries(verrou.skills)) {
+    assert.equal(skill.meta?.license, "MIT", `skills-lock.json: licence du skill ${nom}`);
+    assert.match(skill.meta?.copyright ?? "", /^\d{4} .+ <https?:\/\/\S+>$/, `skills-lock.json: copyright du skill ${nom}`);
+    assert.ok(reuse.includes(`<${skill.meta?.url}>`), `REUSE.toml: même dépôt d'origine que skills-lock.json pour ${nom}`);
+    assert.ok(skill.meta?.url?.endsWith(skill.source), `skills-lock.json: url et source cohérents pour ${nom}`);
+  }
   for (const chemin of ["README.md", "implementation.md", "historique.md", "package.json", "tsconfig.json", "tsconfig.schemas.json", "nub.lock", "skills-lock.json", ".gitignore", ".env.example"]) {
     assert.ok(reuse.includes(`"${chemin}"`), `annoté: ${chemin}`);
   }
