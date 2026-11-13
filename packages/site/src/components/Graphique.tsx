@@ -90,8 +90,9 @@ export default function Graphique(props: Props) {
           svg?.setAttribute("aria-label", props.description);
           racine?.closest(".graphique-zone")?.setAttribute("data-interactif", "");
           setPrete(true);
-        })().catch(() => {
-          // La vue n'a pas pu être dessinée: l'image produite au build reste affichée.
+        })().catch((erreur: unknown) => {
+          // La vue n'a pas pu être dessinée: l'image produite au build reste affichée, et la cause est journalisée.
+          console.error(`Graphique « ${props.id} »: vue interactive non dessinée`, erreur);
         });
       },
     ),

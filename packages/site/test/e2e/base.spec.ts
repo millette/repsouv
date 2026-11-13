@@ -42,7 +42,7 @@ test("l'explorateur charge ses données, filtre, et sa boîte « Détails » mon
 test("un graphique de la page « Statistiques » devient interactif, et une ligne de tableau mène à l'explorateur", async ({ page }) => {
   await page.goto(`${BASE}statistiques/`);
   const f = page.locator('figure[data-graphique="statut-code-source"]');
-  await f.scrollIntoViewIfNeeded();
+  await f.locator(".graphique-interactif").scrollIntoViewIfNeeded();
   await expect(f.locator("[data-vue-prete]")).toBeVisible();
   await f.locator("summary").click();
   await f.getByRole("link", { name: "Libre", exact: true }).click();

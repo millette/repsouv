@@ -47,7 +47,7 @@ test("la page « Statistiques » ne déborde pas, vues montées et tableaux ouve
   await page.goto("/statistiques/");
   expect(await deborde(page)).toBeLessThanOrEqual(0);
   for (const f of await page.locator("figure[data-graphique]").all()) {
-    await f.scrollIntoViewIfNeeded();
+    await f.locator(".graphique-interactif").scrollIntoViewIfNeeded();
     await expect(f.locator("[data-vue-prete]")).toBeVisible();
     await f.locator("summary").click();
   }
