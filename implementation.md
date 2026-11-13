@@ -31,6 +31,7 @@ Pour l'enrichissement et le résumé du sommaire, copier `.env.example` vers `.e
 ```
 Suivi courant    page en ligne ──▶ update.ts ──▶ outils.json + categories.json + criteres.json + sources.json   (nouveau, modification, retrait, comeback, pour les outils de la source Praxis; import initial si outils.json manque)
 Source FACiL     page des Services FACiLes ──▶ extract-facil.ts ──▶ outils.json + sources.json   (mêmes changements que Praxis, pour les outils de la source facil)
+Source Charles   dépôt GitLab de Charles (data/) ──▶ extract-charles.ts ──▶ outils.json + sources.json + categories.json   (mêmes changements, pour la source charles; cinq catégories déclarées)
 Ajout manuel     ajouter.ts ──▶ outils.json (+ sources.json)   (outil d'une autre source, enrichi ensuite par update)
 Reconstruction   page en ligne ──▶ extract.ts --force ──▶ classify.ts ──▶ outils.json   (volontaire: remplace tout, enrichissement compris)
 Enrichissement   update.ts (toujours, pour les outils non enrichis) ──▶ API OpenAI ──▶ outils.json (+ tags.json si de nouveaux tags)
@@ -52,6 +53,7 @@ Schémas          schemas-types.ts ──▶ obuild + RunTypes ──▶ generer
 | `extract.ts`, `classify.ts` | Les deux outils exceptionnels, sans script npm : reconstruction forcée depuis la page, et reclassement de tous les outils après un changement des règles |
 | `confirmer.ts` | Module de la vérification des critères (`criteres_confirmes`), appelé par `update.ts` après l'enrichissement |
 | `extract-facil.ts` | Extracteur et synchronisation de la source `facil` (Services FACiLes) : catégorie par logiciel et URL des services remplacés dans ses tables |
+| `extract-charles.ts` | Extracteur et synchronisation de la source `charles` (alternatives européennes de l'extension Charles) : catégories, pays, tarifs et caractéristiques dans ses tables, description composée, cinq catégories déclarées |
 | `ajouter.ts` | Ajout à la main d'un outil qui ne vient pas d'un répertoire extrait, avec sa source (`sources.json`) |
 | `sources.ts`, `openhub.ts` | Les sources des outils (validation, écriture de `sources.json`) et la lecture des données publiques d'Open Hub |
 | `logiciel.ts` | Le logiciel derrière un outil : page d'enrichissement et nom de logiciel (service instance d'un logiciel), renvois `voir_aussi` |
@@ -81,7 +83,7 @@ Les schémas valent pour du JSON ordinaire : les types du dépôt (chaînes, nom
 
 ## Scripts
 
-Six scripts se lancent avec `node` (ou `nub`) : `update.ts` et `sommaire.ts` (usage courant), `extract-facil.ts` (source FACiL) et `ajouter.ts` (ajout manuel), `extract.ts` et `classify.ts` (opérations exceptionnelles); `generer-schemas.ts` est un septième programme, qui ne se lance que par `nub run schemas` (il doit d'abord être empaqueté, voir plus bas); les autres fichiers sont des modules, utilisés par les scripts et par les tests. Tout est en TypeScript. Les fonctions principales sont exportées pour être réutilisables; le code de ligne de commande ne s'exécute que lorsque le script est lancé directement.
+Sept scripts se lancent avec `node` (ou `nub`) : `update.ts` et `sommaire.ts` (usage courant), `extract-facil.ts` (source FACiL), `extract-charles.ts` (source Charles) et `ajouter.ts` (ajout manuel), `extract.ts` et `classify.ts` (opérations exceptionnelles); `generer-schemas.ts` est un huitième programme, qui ne se lance que par `nub run schemas` (il doit d'abord être empaqueté, voir plus bas); les autres fichiers sont des modules, utilisés par les scripts et par les tests. Tout est en TypeScript. Les fonctions principales sont exportées pour être réutilisables; le code de ligne de commande ne s'exécute que lorsque le script est lancé directement.
 
 ### `extract.ts`
 
@@ -115,7 +117,7 @@ Résultats de la vérification des 57 outils enrichis (réimport du 2026-11-12, 
 nub update.ts [--dry-run] [--sans-couleur] [--nouveaux-tags] [--max-echecs=N] [--accepter-couts] [outils.json] [url]
 ```
 
-Télécharge la page en ligne (`[url]`, par défaut celle du répertoire; le même téléchargement qu'`extract.ts`), la compare à `outils.json` (par défaut `./outils.json`) et met le fichier à jour. **Si `outils.json` n'existe pas, c'est l'import initial** : tous les outils de la page sont écrits avec `changement: "nouveau"` et la date de la page, et une ligne « Import initial » le dit. `criteres.json` et `categories.json`, dans le même dossier, sont écrits eux aussi à chaque exécution (les catégories de la page, avec les descriptions déjà connues), et une ligne le signale quand leur contenu change (ou s'ils sont créés). Un `outils.json` au mauvais format est refusé, pas remplacé. `--dry-run` affiche les changements sans écrire (et le rappelle par une ligne « Simulation »). Pour chaque outil :
+Télécharge la page en ligne (`[url]`, par défaut celle du répertoire; le même téléchargement qu'`extract.ts`), la compare à `outils.json` (par défaut `./outils.json`) et met le fichier à jour. **Si `outils.json` n'existe pas, c'est l'import initial** : tous les outils de la page sont écrits avec `changement: "nouveau"` et la date de la page, et une ligne « Import initial » le dit. `criteres.json` et `categories.json`, dans le même dossier, sont écrits eux aussi à chaque exécution (les catégories de la page, avec les descriptions déjà connues, puis celles qu'un autre extracteur a déclarées avec `source_repertoire_id`, conservées telles quelles), et une ligne le signale quand leur contenu change (ou s'ils sont créés). Un `outils.json` au mauvais format est refusé, pas remplacé. `--dry-run` affiche les changements sans écrire (et le rappelle par une ligne « Simulation »). Pour chaque outil :
 
 - absent du fichier : `changement: "nouveau"`;
 - marqué `removed` et de retour sur la page : `"comeback"`, et `removed` disparaît;
@@ -163,7 +165,7 @@ nub sommaire.ts [--sans-resume] [--sans-graphiques] [--sans-couleur] [outils.jso
 
 ### `categories.ts`
 
-Les catégories (`categories.json`) : `slug(nom)` donne l'identifiant (minuscules sans accents, mots séparés par un tiret), `categoriesDepuis` construit la liste depuis la page (ordre d'apparition, sans doublon, descriptions existantes conservées, erreur si deux noms donnent le même identifiant), `nomCategorie` retrouve le nom à partir de l'identifiant (pour les consignes envoyées au modèle), et `decrireCategories` rédige par IA les descriptions manquantes : une à trois phrases en français (40 à 400 caractères, texte continu, sans HTML ni tiret cadratin), à partir du nom, de l'icône et des outils de la catégorie, validées puis écrites en place. `estimerCoutDescriptions` chiffre les appels pour `--dry-run`.
+Les catégories (`categories.json`) : `slug(nom)` donne l'identifiant (minuscules sans accents, mots séparés par un tiret), `categoriesDepuis` construit la liste depuis la page (ordre d'apparition, sans doublon, descriptions existantes conservées, erreur si deux noms donnent le même identifiant ; les catégories déclarées par un extracteur, qui portent `source_repertoire_id`, sont conservées après, dans leur ordre, et ne peuvent pas prendre l'identifiant d'une catégorie de la page), `categoriesAvec` ajoute ou met à jour celles qu'un extracteur déclare (description conservée, `source_repertoire_id` et slug exigés), `nomCategorie` retrouve le nom à partir de l'identifiant (pour les consignes envoyées au modèle), et `decrireCategories` rédige par IA les descriptions manquantes : une à trois phrases en français (40 à 400 caractères, texte continu, sans HTML ni tiret cadratin), à partir du nom, de l'icône et des outils de la catégorie, validées puis écrites en place. `estimerCoutDescriptions` chiffre les appels pour `--dry-run`.
 
 ### `enrichir.ts`
 
@@ -225,6 +227,21 @@ node extract-facil.ts [--fichier=page.html] [--sans-couleur] [outils.json] [url]
 ```
 
 Lit la page des [Services FACiLes](https://facil.services/) (téléchargée avec le User-Agent du projet, voir [`agent.ts`](#agentts), car le site refuse les clients sans en-tête de navigateur ; ou une copie locale par `--fichier`) : un bloc par service, avec le nom et le lien, une phrase de description, « Est une instance de : … » (`instance_de`, nom et lien vers le dépôt ou la version) et « Remplace : … » (`alternative_a`, convertis en URL par la table `ALTERNATIVES` ; un nom inconnu est signalé en avertissement et omis). La page n'a ni étoiles ni catégories : le score est estimé (`score_estime`, classification par seuil, puis alignement sur l'évaluation enrichie par `update`) et la catégorie vient de `CATEGORIE_PAR_LOGICIEL` (logiciel sous-jacent, en minuscules), à réviser à la main ; un logiciel inconnu arrête l'extraction en nommant les services concernés. La synchronisation est celle de `update` (`mettreAJour` pour la source `facil` : nouveau, modification, retrait, comeback, datés de la lecture, puisque la page n'affiche pas de date), sans toucher aux outils des autres sources ; `sources.json` reçoit la source `facil` (politique de confidentialité et page des données de FACiL). Les outils nouveaux sont enrichis par `node update.ts` comme les autres.
+
+### `extract-charles.ts`
+
+```sh
+node extract-charles.ts [--dossier=/chemin/du/clone] [--sans-couleur] [outils.json] [url]
+```
+
+Lit les données de [Charles](https://gitlab.com/yaniskerdjana/charles), une extension Chrome qui propose des alternatives européennes aux services américains : `data/alternatives.json` (nom, lien, pays, catégorie, tarif, caractéristiques), `data/sites-us.json` (les sites américains et les alternatives qui les remplacent) et `data/categories.json`, téléchargés tels quels depuis la branche `main` du dépôt (fichiers bruts, User-Agent du projet), avec la date du dernier commit touchant `data/` (API publique de GitLab, sans clé) comme `derniere_modification` ; si l'API ne répond pas, les outils sont datés de la lecture, avec un avertissement. `--dossier` lit un clone local (tests, hors ligne), daté de la lecture. La source n'a ni description, ni étoiles, ni dépôt :
+
+- la **catégorie** vient de `CATEGORIE_PAR_CATEGORIE` (une catégorie du répertoire pour chacune des 24 de l'extension) et de `CATEGORIE_PAR_ID` (exceptions par alternative : Anytype en veille, GitLab et Codeberg en gestion de projets comme Code FACiLe, CoreUpdate en sécurité ; `null` exclut l'alternative, ce qui est le cas de Plans d'Apple, américain selon la source) ; cinq catégories que la page Praxis n'a pas (`CATEGORIES_CHARLES` : paiement en ligne, assistants d'intelligence artificielle, hébergement Web et infrastructure, commerce en ligne, diffusion audio et vidéo) sont ajoutées à `categories.json` avec `source_repertoire_id: "charles"` dès qu'un outil les utilise ; une catégorie de l'extension absente de la table arrête l'extraction en la nommant ;
+- la **description** est composée en français : « X est une alternative européenne recensée par Charles, d'origine française, gratuite avec des options payantes. Caractéristiques : auto-hébergeable, open source, hébergé dans l'Union européenne. Proposée en remplacement de Dropbox et Google Drive. » (tables `PAYS`, `TARIF` et `CARACTERISTIQUES`, qui reprennent les mots-clés de `classify.ts` pour que la classification par seuil reste cohérente ; un pays, un tarif ou une caractéristique inconnus sont signalés en avertissement et omis) ;
+- le **score** est estimé (`score_estime`, classification par seuil, puis alignement sur l'évaluation enrichie par `update`) ;
+- `alternative_a` vient de `sites-us.json` inversé : l'URL du premier domaine de chaque site qui liste l'alternative (une alternative qu'aucun site ne propose, comme Matomo et Plausible, est signalée).
+
+Une alternative qui porte le nom d'un outil actif d'une autre source (clé de `logiciel.ts` : casse et espaces ignorés ; dix cas avec Praxis, dont Nextcloud, Mastodon et CryptPad) n'est **pas importée**, puisque `nom` est la clé unique de `outils.json` : le résumé les liste. La synchronisation est celle de `update` (`mettreAJour` pour la source `charles`), sans toucher aux outils des autres sources ; `sources.json` reçoit la source `charles` et `categories.json` les catégories déclarées utilisées (`categoriesAvec`). Les outils nouveaux sont enrichis par `node update.ts` comme les autres.
 
 ### `ajouter.ts`
 
@@ -442,6 +459,7 @@ Avec `node:test`, lancé par `nub --test` (le développement et les tests passen
 - `documentation.test.ts` : les trois fichiers Markdown rédigés (README, `implementation.md`, `historique.md`) existent, leurs liens relatifs et leurs ancres existent (ancres calculées comme GitHub, liens dans le code ignorés, liens vers le `sommaire.md` généré laissés à `test:data`), chacun commence par un titre et la ligne *Documentation*, sans tiret cadratin ni balise HTML (sauf l'image du README). Les outils communs (ancres, liens, conventions) sont dans `markdown.ts`.
 - `sources.test.ts` : source Praxis, validation des sources (slug, URL, extracteur, soumis_par et courriel), `sourcesAvec`, écriture et relecture de `sources.json`.
 - `extract-facil.test.ts` : extraction d'une page fictive (champs, instance_de, alternatives connues et inconnues, catégorie par logiciel, score estimé), erreurs (aucun service, logiciel sans catégorie, doublons), tables valides, synchronisation (nouveaux, inchangé, retrait, score aligné conservé), téléchargement avec en-tête de navigateur, CLI.
+- `extract-charles.test.ts` : source, tables (slugs, catégories déclarées utilisées, Plans d'Apple exclu), description composée, extraction de données fictives (catégorie par table et par exception, exclusion, score estimé, sites inversés, catégories utilisées, avertissements), erreurs (catégorie absente des données ou des tables, site vers une alternative inconnue, noms ou ids en double), URL des fichiers bruts et de l'API, téléchargement avec un faux `fetch` (en-tête, date du commit en heure de Toronto, repli sur l'heure de lecture, fichier en erreur ou malformé), lecture d'un clone, synchronisation (nouveaux, doublon listé, source et catégories écrites, inchangé, retrait, `voir_aussi`, score aligné conservé).
 - `ajouter.test.ts` : source demandée (connue, nouvelle, manquante), outil demandé (validation, score estimé ou donné, alternatives), écriture dans les fichiers, options de la ligne de commande, CLI.
 - `logiciel.test.ts` : nom de logiciel, racine du dépôt par forge (pages de version, de tag et de commit ; forges auto-hébergées ; hors forge), page d'enrichissement, renvois `voir_aussi` (symétrie, outils retirés, renvoi périmé, identité conservée).
 - `agent.test.ts` : forme du User-Agent (navigateur, nom/version, contact ; sans auteur), valeur lue dans `package.json`, `enTetes` ; chaque test de téléchargement vérifie l'en-tête envoyé (Praxis par un serveur local, FACiL, Open Hub, OpenAI).
@@ -477,6 +495,9 @@ Avec `node:test`, lancé par `nub --test` (le développement et les tests passen
 | `Open Hub HTTP 401` ou `Open Hub: Invalid API key` | Clé Open Hub invalide ; `HTTP 429` : limite quotidienne atteinte, réessayer le lendemain |
 | `page FACiL: logiciel sans catégorie dans CATEGORIE_PAR_LOGICIEL …` | Un nouveau service FACiL repose sur un logiciel que l'extracteur ne connaît pas : ajouter le logiciel (en minuscules) et sa catégorie à la table de `extract-facil.ts` |
 | `Avertissement: <service>: service remplacé inconnu « … »` | `extract-facil.ts` ne connaît pas l'URL d'un service que la page dit remplacer : l'ajouter à `ALTERNATIVES` (l'outil est extrait sans cette alternative) |
+| `données Charles: catégorie sans correspondance dans CATEGORIE_PAR_CATEGORIE …` | L'extension Charles a une nouvelle catégorie : lui donner une catégorie du répertoire dans la table de `extract-charles.ts` (ou en déclarer une dans `CATEGORIES_CHARLES`) |
+| `Avertissement: <alternative>: caractéristique « … » inconnu(e)` | `extract-charles.ts` ne sait pas traduire une caractéristique (ou un pays, un tarif) : l'ajouter aux tables (la description est composée sans) |
+| `Avertissement: date du dernier commit inconnue …` | L'API GitLab n'a pas répondu : les alternatives sont datées de la lecture ; relancer plus tard pour une date exacte |
 | `source « x » absente de sources.json: donner --source-nom et --source-url` | `ajouter.ts` : la source n'existe pas encore ; la créer avec ces options, ou choisir un identifiant existant |
 | `Option inconnue: …` | Option mal orthographiée. Les options valides sont décrites dans la section de chaque script |
 

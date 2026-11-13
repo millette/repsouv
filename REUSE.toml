@@ -9,11 +9,12 @@ path = ["schemas/**", "README.md", "implementation.md", "historique.md", "packag
 SPDX-FileCopyrightText = "2026 Robin Millette <https://robin.millette.info/>"
 SPDX-License-Identifier = "AGPL-3.0-or-later"
 
-# Données, adaptées du répertoire d'origine (Praxis), et ce qui en est dérivé: sommaire et graphiques.
+# Données, adaptées du répertoire d'origine (Praxis), des Services FACiLes et des données de l'extension Charles (MIT), et ce qui en est dérivé: sommaire et graphiques.
 [[annotations]]
 path = ["outils.json", "categories.json", "criteres.json", "tags.json", "sources.json", "sommaire.md", "graphiques/**"]
 SPDX-FileCopyrightText = [
   "2026 Sven Buridans, François Delnooz, Marie-Renee Duguay (Praxis), Répertoire d'outils favorisant la souveraineté numérique",
+  "2026 Yanis Kerdjana et les contributeurs de Charles <https://gitlab.com/yaniskerdjana/charles> (données de l'extension, MIT)",
   "2026 Robin Millette <https://robin.millette.info/>",
 ]
 SPDX-License-Identifier = "CC-BY-SA-4.0"

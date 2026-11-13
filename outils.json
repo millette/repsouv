@@ -2,7 +2,7 @@
   "meta": {
     "data_license": "CC-BY-SA-4.0",
     "created_at": "2026-11-12T12:35:52-05:00",
-    "updated_at": "2026-11-13T07:51:43-05:00"
+    "updated_at": "2026-11-13T09:44:12-05:00"
   },
   "outils": [
     {
@@ -3510,7 +3510,10 @@
         "premier_mois": "2011-10-01",
         "dernier_mois": "2026-11-01",
         "consulte_le": "2026-11-13T07:30:26-05:00"
-      }
+      },
+      "voir_aussi": [
+        "GitLab"
+      ]
     },
     {
       "categorie": "communication-et-collaboration-d-equipe",
@@ -4658,6 +4661,1251 @@
         "dernier_mois": "2026-10-01",
         "consulte_le": "2026-11-13T07:30:39-05:00"
       }
+    },
+    {
+      "categorie": "navigation-web",
+      "nom": "Qwant",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://www.qwant.com",
+      "description": "Qwant est une alternative européenne recensée par Charles, d'origine française, gratuite. Caractéristiques : axé sur la vie privée, sans pistage, hébergé dans l'Union européenne. Proposée en remplacement de Google Search.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://google.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "navigation-web",
+      "nom": "Ecosia",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://www.ecosia.org",
+      "description": "Ecosia est une alternative européenne recensée par Charles, d'origine allemande, gratuite. Caractéristiques : axé sur la vie privée, écoresponsable, hébergé dans l'Union européenne. Proposée en remplacement de Google Search.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://google.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "stockage-infonuagique-et-sauvegarde",
+      "nom": "Infomaniak kDrive",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://www.infomaniak.com/kdrive",
+      "description": "Infomaniak kDrive est une alternative européenne recensée par Charles, d'origine suisse, gratuite avec des options payantes. Caractéristiques : hébergé en Suisse, écoresponsable, conforme au RGPD. Proposée en remplacement de Dropbox, OneDrive, Google Drive, Google Photos et Google Workspace.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://dropbox.com/",
+        "https://onedrive.live.com/",
+        "https://drive.google.com/",
+        "https://photos.google.com/",
+        "https://workspace.google.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "stockage-infonuagique-et-sauvegarde",
+      "nom": "Tresorit",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://tresorit.com",
+      "description": "Tresorit est une alternative européenne recensée par Charles, d'origine suisse, payante. Caractéristiques : chiffrement de bout en bout, hébergé en Suisse, destiné aux entreprises. Proposée en remplacement de Dropbox et Google Drive.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://dropbox.com/",
+        "https://drive.google.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "communautes-reseaux-et-partage-des-connaissances",
+      "nom": "Pixelfed",
+      "score": 1,
+      "score_estime": true,
+      "lien": "https://pixelfed.org",
+      "description": "Pixelfed est une alternative européenne recensée par Charles, d'origine européenne, gratuite. Caractéristiques : décentralisé, open source, sans publicité. Proposée en remplacement de Instagram.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://instagram.com/"
+      ],
+      "criteres": [
+        "dependance"
+      ],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "communautes-reseaux-et-partage-des-connaissances",
+      "nom": "XING",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://www.xing.com",
+      "description": "XING est une alternative européenne recensée par Charles, d'origine allemande, gratuite avec des options payantes. Caractéristiques : réseau professionnel, hébergé dans l'Union européenne, conforme au RGPD. Proposée en remplacement de LinkedIn.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://linkedin.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "veille-et-gestion-de-l-information",
+      "nom": "Anytype",
+      "score": 2,
+      "score_estime": true,
+      "lien": "https://anytype.io",
+      "description": "Anytype est une alternative européenne recensée par Charles, d'origine suisse, gratuite. Caractéristiques : local-first (les données restent d'abord sur l'appareil), open source, axé sur la vie privée. Proposée en remplacement de Notion, Google Keep, Airtable et Evernote.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://notion.so/",
+        "https://keep.google.com/",
+        "https://airtable.com/",
+        "https://evernote.com/"
+      ],
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "communication-et-collaboration-d-equipe",
+      "nom": "Element",
+      "score": 1,
+      "score_estime": true,
+      "lien": "https://element.io",
+      "description": "Element est une alternative européenne recensée par Charles, d'origine britannique, gratuite avec des options payantes. Caractéristiques : chiffrement de bout en bout, protocole Matrix, open source. Proposée en remplacement de Slack.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://slack.com/"
+      ],
+      "criteres": [
+        "dependance"
+      ],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "communication-et-collaboration-d-equipe",
+      "nom": "Whereby",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://whereby.com",
+      "description": "Whereby est une alternative européenne recensée par Charles, d'origine norvégienne, gratuite avec des options payantes. Caractéristiques : visioconférence, fonctionne dans le navigateur, conforme au RGPD. Proposée en remplacement de Zoom et Google Meet.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://zoom.us/",
+        "https://meet.google.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "communication-et-collaboration-d-equipe",
+      "nom": "Tixeo",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://www.tixeo.com",
+      "description": "Tixeo est une alternative européenne recensée par Charles, d'origine française, payante. Caractéristiques : visioconférence, chiffrement de bout en bout, qualifié SecNumCloud. Proposée en remplacement de Microsoft Teams et Zoom.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://teams.microsoft.com/",
+        "https://zoom.us/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "commerce-en-ligne",
+      "nom": "Cdiscount",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://www.cdiscount.com",
+      "description": "Cdiscount est une alternative européenne recensée par Charles, d'origine française, en place de marché. Caractéristiques : place de marché française, produits variés. Proposée en remplacement de Amazon.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://amazon.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "commerce-en-ligne",
+      "nom": "Fnac",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://www.fnac.com",
+      "description": "Fnac est une alternative européenne recensée par Charles, d'origine française, en place de marché. Caractéristiques : détaillant français, technologie et culture. Proposée en remplacement de Amazon.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://amazon.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "commerce-en-ligne",
+      "nom": "Back Market",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://www.backmarket.com",
+      "description": "Back Market est une alternative européenne recensée par Charles, d'origine française, en place de marché. Caractéristiques : matériel reconditionné, écoresponsable, avec garantie. Proposée en remplacement de Amazon.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://amazon.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "gestion-de-projets-et-des-taches",
+      "nom": "GitLab",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://gitlab.com",
+      "description": "GitLab est une alternative européenne recensée par Charles, d'origine néerlandaise, gratuite avec des options payantes. Caractéristiques : hébergement de dépôts Git, intégration et déploiement continus, open source. Proposée en remplacement de GitHub.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://github.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée",
+      "voir_aussi": [
+        "Code FACiLe"
+      ]
+    },
+    {
+      "categorie": "gestion-de-projets-et-des-taches",
+      "nom": "Codeberg",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://codeberg.org",
+      "description": "Codeberg est une alternative européenne recensée par Charles, d'origine allemande, gratuite. Caractéristiques : hébergement de dépôts Git, porté par un organisme sans but lucratif, open source. Proposée en remplacement de GitHub.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://github.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "hebergement-web-et-infrastructure",
+      "nom": "OVHcloud",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://www.ovhcloud.com",
+      "description": "OVHcloud est une alternative européenne recensée par Charles, d'origine française, payante. Caractéristiques : hébergement infonuagique, centres de données en Europe, souverain. Proposée en remplacement de Amazon Web Services et Google Cloud.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://aws.amazon.com/",
+        "https://cloud.google.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "hebergement-web-et-infrastructure",
+      "nom": "Scaleway",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://www.scaleway.com",
+      "description": "Scaleway est une alternative européenne recensée par Charles, d'origine française, payante. Caractéristiques : hébergement infonuagique, centres de données en Europe, écoresponsable. Proposée en remplacement de Amazon Web Services et Google Cloud.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://aws.amazon.com/",
+        "https://cloud.google.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "hebergement-web-et-infrastructure",
+      "nom": "Hetzner",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://www.hetzner.com",
+      "description": "Hetzner est une alternative européenne recensée par Charles, d'origine allemande, payante. Caractéristiques : hébergement infonuagique, centres de données en Allemagne, abordable. Proposée en remplacement de Amazon Web Services.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://aws.amazon.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "analyse-et-mesure",
+      "nom": "Plausible",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://plausible.io",
+      "description": "Plausible est une alternative européenne recensée par Charles, d'origine estonienne, payante. Caractéristiques : analyse d'audience, léger, axé sur la vie privée.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "assistants-d-intelligence-artificielle",
+      "nom": "Mistral AI",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://chat.mistral.ai",
+      "description": "Mistral AI est une alternative européenne recensée par Charles, d'origine française, gratuite avec des options payantes. Caractéristiques : assistant d'intelligence artificielle, hébergé dans l'Union européenne, modèles ouverts. Proposée en remplacement de ChatGPT et Claude.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://chat.openai.com/",
+        "https://claude.ai/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "assistants-d-intelligence-artificielle",
+      "nom": "Aleph Alpha",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://www.aleph-alpha.com",
+      "description": "Aleph Alpha est une alternative européenne recensée par Charles, d'origine allemande, payante. Caractéristiques : assistant d'intelligence artificielle, hébergé en Allemagne, IA souveraine. Proposée en remplacement de ChatGPT et Claude.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://chat.openai.com/",
+        "https://claude.ai/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "messagerie-electronique",
+      "nom": "Proton Mail",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://proton.me/mail",
+      "description": "Proton Mail est une alternative européenne recensée par Charles, d'origine suisse, gratuite avec des options payantes. Caractéristiques : chiffrement de bout en bout, hébergé en Suisse, axé sur la vie privée. Proposée en remplacement de Gmail et Google Workspace.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://mail.google.com/",
+        "https://workspace.google.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "bureautique-et-collaboration",
+      "nom": "La Suite (Infomaniak)",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://www.infomaniak.com/fr/la-suite",
+      "description": "La Suite (Infomaniak) est une alternative européenne recensée par Charles, d'origine suisse, payante. Caractéristiques : suite bureautique, hébergé en Suisse, collaboratif. Proposée en remplacement de Microsoft Office et Google Contacts.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://office.com/",
+        "https://contacts.google.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "navigation-web",
+      "nom": "Vivaldi",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://vivaldi.com",
+      "description": "Vivaldi est une alternative européenne recensée par Charles, d'origine norvégienne, gratuite. Caractéristiques : axé sur la vie privée, personnalisable, sans pistage. Proposée en remplacement de Google Chrome.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://chrome.google.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "navigation-web",
+      "nom": "Qwant Maps",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://www.qwant.com/maps",
+      "description": "Qwant Maps est une alternative européenne recensée par Charles, d'origine française, gratuite. Caractéristiques : axé sur la vie privée, basé sur OpenStreetMap, hébergé en France. Proposée en remplacement de Google Maps.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://maps.google.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "gestion-de-la-relation-des-membres-et-crm",
+      "nom": "Framaforms",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://framaforms.org",
+      "description": "Framaforms est une alternative européenne recensée par Charles, d'origine française, gratuite. Caractéristiques : open source, hébergé en France, sans pistage. Proposée en remplacement de Google Forms, Typeform et SurveyMonkey.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://docs.google.com/",
+        "https://typeform.com/",
+        "https://surveymonkey.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "stockage-infonuagique-et-sauvegarde",
+      "nom": "SwissTransfer",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://www.swisstransfer.com",
+      "description": "SwissTransfer est une alternative européenne recensée par Charles, d'origine suisse, gratuite. Caractéristiques : hébergé en Suisse, utilisable sans compte, fichiers volumineux. Proposée en remplacement de WeTransfer.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://wetransfer.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "gestion-de-la-relation-des-membres-et-crm",
+      "nom": "Positive Group",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://positivegroup.com",
+      "description": "Positive Group est une alternative européenne recensée par Charles, d'origine française, payante. Caractéristiques : gestion de la relation client (CRM), hébergé en France, conforme au RGPD. Proposée en remplacement de Salesforce, HubSpot, Mailchimp et Zendesk.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://salesforce.com/",
+        "https://hubspot.com/",
+        "https://mailchimp.com/",
+        "https://zendesk.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "gestion-de-la-relation-des-membres-et-crm",
+      "nom": "Batch",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://batch.com",
+      "description": "Batch est une alternative européenne recensée par Charles, d'origine française, gratuite avec des options payantes. Caractéristiques : notifications poussées, hébergé en France, conforme au RGPD. Proposée en remplacement de Salesforce, HubSpot, Mailchimp et Zendesk.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://salesforce.com/",
+        "https://hubspot.com/",
+        "https://mailchimp.com/",
+        "https://zendesk.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "gestion-documentaire-et-signature-electronique",
+      "nom": "Mycellia",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://www.mycellia.com",
+      "description": "Mycellia est une alternative européenne recensée par Charles, d'origine française, payante. Caractéristiques : gestion documentaire, collaboratif, basé sur des logiciels open source, hébergé en France. Proposée en remplacement de Microsoft SharePoint, OpenText, DocuWare et Hyland (OnBase).",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://sharepoint.com/",
+        "https://opentext.com/",
+        "https://docuware.com/",
+        "https://hyland.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "bureautique-et-collaboration",
+      "nom": "SeaTable",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://seatable.com",
+      "description": "SeaTable est une alternative européenne recensée par Charles, d'origine allemande, gratuite avec des options payantes. Caractéristiques : sans code, bases de données, collaboratif, hébergé dans l'Union européenne. Proposée en remplacement de Notion et Airtable.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://notion.so/",
+        "https://airtable.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "communication-et-collaboration-d-equipe",
+      "nom": "Wire",
+      "score": 1,
+      "score_estime": true,
+      "lien": "https://wire.com",
+      "description": "Wire est une alternative européenne recensée par Charles, d'origine suisse, gratuite avec des options payantes. Caractéristiques : chiffrement de bout en bout, hébergé en Suisse, open source. Proposée en remplacement de WhatsApp.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://whatsapp.com/"
+      ],
+      "criteres": [
+        "dependance"
+      ],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "communication-et-collaboration-d-equipe",
+      "nom": "Olvid",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://www.olvid.io",
+      "description": "Olvid est une alternative européenne recensée par Charles, d'origine française, gratuite avec des options payantes. Caractéristiques : chiffrement de bout en bout, hébergé en France, certifié par l'ANSSI. Proposée en remplacement de WhatsApp.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://whatsapp.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "communication-et-collaboration-d-equipe",
+      "nom": "Whaller",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://whaller.com/fr/",
+      "description": "Whaller est une alternative européenne recensée par Charles, d'origine française, gratuite avec des options payantes. Caractéristiques : hébergé en France, collaboration d'équipe, souverain, qualifié SecNumCloud, certifié par l'ANSSI. Proposée en remplacement de Slack et Microsoft Teams.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://slack.com/",
+        "https://teams.microsoft.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "communication-et-collaboration-d-equipe",
+      "nom": "Rainbow4all",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://www.rainbow4all.com",
+      "description": "Rainbow4all est une alternative européenne recensée par Charles, d'origine française, payante. Caractéristiques : hébergé en France, collaboration d'équipe, visioconférence, téléphonie. Proposée en remplacement de Slack et Microsoft Teams.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://slack.com/",
+        "https://teams.microsoft.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "gestion-de-projets-et-des-taches",
+      "nom": "Zeeg",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://www.zeeg.me",
+      "description": "Zeeg est une alternative européenne recensée par Charles, d'origine allemande, gratuite avec des options payantes. Caractéristiques : prise de rendez-vous, hébergé dans l'Union européenne, conforme au RGPD. Proposée en remplacement de Google Agenda et Calendly.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://calendar.google.com/",
+        "https://calendly.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "gestion-de-projets-et-des-taches",
+      "nom": "Vyte",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://www.vyte.in",
+      "description": "Vyte est une alternative européenne recensée par Charles, d'origine française, gratuite avec des options payantes. Caractéristiques : prise de rendez-vous, hébergé en France, planification intelligente. Proposée en remplacement de Google Agenda et Calendly.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://calendar.google.com/",
+        "https://calendly.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "gestion-de-projets-et-des-taches",
+      "nom": "Proton Calendar",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://proton.me/calendar",
+      "description": "Proton Calendar est une alternative européenne recensée par Charles, d'origine suisse, gratuite avec des options payantes. Caractéristiques : chiffrement de bout en bout, hébergé en Suisse, axé sur la vie privée. Proposée en remplacement de Google Agenda.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://calendar.google.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "stockage-infonuagique-et-sauvegarde",
+      "nom": "Proton Drive",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://proton.me/drive",
+      "description": "Proton Drive est une alternative européenne recensée par Charles, d'origine suisse, gratuite avec des options payantes. Caractéristiques : chiffrement de bout en bout, hébergé en Suisse, axé sur la vie privée. Proposée en remplacement de Google Drive, Google Photos et Google Workspace.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://drive.google.com/",
+        "https://photos.google.com/",
+        "https://workspace.google.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "stockage-infonuagique-et-sauvegarde",
+      "nom": "Cloudeezy",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://cloudeezy.com",
+      "description": "Cloudeezy est une alternative européenne recensée par Charles, d'origine française, payante. Caractéristiques : basé sur Nextcloud, hébergé en France, souverain. Proposée en remplacement de Google Drive.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://drive.google.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "bureautique-et-collaboration",
+      "nom": "DeepL",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://www.deepl.com",
+      "description": "DeepL est une alternative européenne recensée par Charles, d'origine allemande, gratuite avec des options payantes. Caractéristiques : traduction, hébergé dans l'Union européenne, conforme au RGPD. Proposée en remplacement de Google Translate.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://translate.google.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "bureautique-et-collaboration",
+      "nom": "Lingva Translate",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://lingva.ml",
+      "description": "Lingva Translate est une alternative européenne recensée par Charles, d'origine européenne, gratuite. Caractéristiques : open source, sans pistage, axé sur la vie privée. Proposée en remplacement de Google Translate.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://translate.google.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "bureautique-et-collaboration",
+      "nom": "Moodle",
+      "score": 2,
+      "score_estime": true,
+      "lien": "https://moodle.org",
+      "description": "Moodle est une alternative européenne recensée par Charles, d'origine européenne, gratuite. Caractéristiques : open source, auto-hébergeable, éducation et formation. Proposée en remplacement de Google Classroom.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://classroom.google.com/"
+      ],
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "assistants-d-intelligence-artificielle",
+      "nom": "Vibe (Mistral)",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://mistral.ai/products/vibe",
+      "description": "Vibe (Mistral) est une alternative européenne recensée par Charles, d'origine française, gratuite avec des options payantes. Caractéristiques : assistant de programmation par IA, hébergé dans l'Union européenne, IA souveraine. Proposée en remplacement de Claude Code.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://anthropic.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "assistants-d-intelligence-artificielle",
+      "nom": "OpenCode",
+      "score": 2,
+      "score_estime": true,
+      "lien": "https://opencode.ai",
+      "description": "OpenCode est une alternative européenne recensée par Charles, d'origine européenne, gratuite. Caractéristiques : assistant de programmation par IA, open source, auto-hébergeable. Proposée en remplacement de Claude Code.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://anthropic.com/"
+      ],
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "securite-et-gestion-des-acces",
+      "nom": "CoreUpdate (Galeax)",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://coreupdate.com",
+      "description": "CoreUpdate (Galeax) est une alternative européenne recensée par Charles, d'origine française, payante. Caractéristiques : gestion des correctifs, hébergé en France, sans agent à installer, conforme au RGPD. Proposée en remplacement de Patch My PC.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://patchmypc.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "assistants-d-intelligence-artificielle",
+      "nom": "Outmind",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://www.outmind.ai",
+      "description": "Outmind est une alternative européenne recensée par Charles, d'origine française, payante. Caractéristiques : recherche d'entreprise, assistant d'intelligence artificielle, hébergé en France, conforme au RGPD. Proposée en remplacement de Microsoft Copilot.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://copilot.microsoft.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "gestion-de-la-relation-des-membres-et-crm",
+      "nom": "Ideta",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://www.ideta.io",
+      "description": "Ideta est une alternative européenne recensée par Charles, d'origine française, gratuite avec des options payantes. Caractéristiques : robot conversationnel, IA conversationnelle, sans code, multicanal, hébergé en France, conforme au RGPD. Proposée en remplacement de Intercom, Drift, ManyChat, LivePerson et Chatfuel.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://intercom.com/",
+        "https://drift.com/",
+        "https://manychat.com/",
+        "https://liveperson.com/",
+        "https://chatfuel.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "hebergement-web-et-infrastructure",
+      "nom": "Scalingo",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://scalingo.com",
+      "description": "Scalingo est une alternative européenne recensée par Charles, d'origine française, gratuite avec des options payantes. Caractéristiques : plateforme en tant que service (PaaS), hébergé dans l'Union européenne, neutre en carbone, conforme au RGPD. Proposée en remplacement de Heroku.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://heroku.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "diffusion-audio-et-video",
+      "nom": "ARTE",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://www.arte.tv",
+      "description": "ARTE est une alternative européenne recensée par Charles, d'origine française, gratuite. Caractéristiques : diffuseur public, sans publicité, hébergé dans l'Union européenne, conforme au RGPD. Proposée en remplacement de Netflix, Prime Video, Hulu, Disney+, Max, Paramount+, Apple TV+ et Peacock.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://netflix.com/",
+        "https://primevideo.com/",
+        "https://hulu.com/",
+        "https://disneyplus.com/",
+        "https://max.com/",
+        "https://paramountplus.com/",
+        "https://tv.apple.com/",
+        "https://peacocktv.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "diffusion-audio-et-video",
+      "nom": "france.tv",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://www.france.tv",
+      "description": "france.tv est une alternative européenne recensée par Charles, d'origine française, gratuite. Caractéristiques : diffuseur public, hébergé dans l'Union européenne, conforme au RGPD. Proposée en remplacement de Netflix, Prime Video, Hulu, Disney+, Max, Paramount+, Apple TV+ et Peacock.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://netflix.com/",
+        "https://primevideo.com/",
+        "https://hulu.com/",
+        "https://disneyplus.com/",
+        "https://max.com/",
+        "https://paramountplus.com/",
+        "https://tv.apple.com/",
+        "https://peacocktv.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "diffusion-audio-et-video",
+      "nom": "ARD Mediathek",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://www.ardmediathek.de",
+      "description": "ARD Mediathek est une alternative européenne recensée par Charles, d'origine allemande, gratuite. Caractéristiques : diffuseur public, sans publicité, hébergé dans l'Union européenne, conforme au RGPD. Proposée en remplacement de Netflix, Prime Video, Hulu, Disney+, Max, Paramount+, Apple TV+ et Peacock.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://netflix.com/",
+        "https://primevideo.com/",
+        "https://hulu.com/",
+        "https://disneyplus.com/",
+        "https://max.com/",
+        "https://paramountplus.com/",
+        "https://tv.apple.com/",
+        "https://peacocktv.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "paiement-en-ligne",
+      "nom": "Mollie",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://www.mollie.com",
+      "description": "Mollie est une alternative européenne recensée par Charles, d'origine néerlandaise, gratuite avec des options payantes. Caractéristiques : hébergé dans l'Union européenne, conforme au RGPD, destiné aux entreprises. Proposée en remplacement de Stripe et PayPal.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://stripe.com/",
+        "https://paypal.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "paiement-en-ligne",
+      "nom": "Adyen",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://www.adyen.com",
+      "description": "Adyen est une alternative européenne recensée par Charles, d'origine néerlandaise, payante. Caractéristiques : hébergé dans l'Union européenne, conforme au RGPD, destiné aux entreprises. Proposée en remplacement de Stripe et PayPal.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://stripe.com/",
+        "https://paypal.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "paiement-en-ligne",
+      "nom": "SumUp",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://www.sumup.com",
+      "description": "SumUp est une alternative européenne recensée par Charles, d'origine britannique, gratuite avec des options payantes. Caractéristiques : hébergé dans l'Union européenne, conforme au RGPD, destiné aux entreprises. Proposée en remplacement de Stripe et PayPal.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://stripe.com/",
+        "https://paypal.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "paiement-en-ligne",
+      "nom": "Payplug",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://www.payplug.com",
+      "description": "Payplug est une alternative européenne recensée par Charles, d'origine française, gratuite avec des options payantes. Caractéristiques : hébergé dans l'Union européenne, conforme au RGPD, destiné aux entreprises. Proposée en remplacement de Stripe.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://stripe.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "gestion-documentaire-et-signature-electronique",
+      "nom": "Yousign",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://yousign.com",
+      "description": "Yousign est une alternative européenne recensée par Charles, d'origine française, payante. Caractéristiques : hébergé dans l'Union européenne, conforme au RGPD, signature électronique. Proposée en remplacement de DocuSign.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://docusign.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "gestion-documentaire-et-signature-electronique",
+      "nom": "Scrive",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://www.scrive.com",
+      "description": "Scrive est une alternative européenne recensée par Charles, d'origine suédoise, payante. Caractéristiques : hébergé dans l'Union européenne, conforme au RGPD, signature électronique. Proposée en remplacement de DocuSign.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://docusign.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "gestion-documentaire-et-signature-electronique",
+      "nom": "Penneo",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://penneo.com",
+      "description": "Penneo est une alternative européenne recensée par Charles, d'origine danoise, payante. Caractéristiques : hébergé dans l'Union européenne, conforme au RGPD, signature électronique. Proposée en remplacement de DocuSign.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://docusign.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "gestion-documentaire-et-signature-electronique",
+      "nom": "Skribble",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://www.skribble.com",
+      "description": "Skribble est une alternative européenne recensée par Charles, d'origine suisse, gratuite avec des options payantes. Caractéristiques : hébergé en Suisse, conforme au RGPD, signature électronique. Proposée en remplacement de DocuSign.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://docusign.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "gestion-de-projets-et-des-taches",
+      "nom": "MeisterTask",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://www.meistertask.com",
+      "description": "MeisterTask est une alternative européenne recensée par Charles, d'origine allemande, gratuite avec des options payantes. Caractéristiques : hébergé dans l'Union européenne, conforme au RGPD. Proposée en remplacement de Asana, Trello et monday.com.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://asana.com/",
+        "https://trello.com/",
+        "https://monday.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "gestion-de-projets-et-des-taches",
+      "nom": "Wimi",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://www.wimi-teamwork.com",
+      "description": "Wimi est une alternative européenne recensée par Charles, d'origine française, gratuite avec des options payantes. Caractéristiques : hébergé dans l'Union européenne, conforme au RGPD. Proposée en remplacement de Asana.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://asana.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "gestion-de-projets-et-des-taches",
+      "nom": "Stackfield",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://www.stackfield.com",
+      "description": "Stackfield est une alternative européenne recensée par Charles, d'origine allemande, payante. Caractéristiques : chiffrement de bout en bout, hébergé dans l'Union européenne, conforme au RGPD. Proposée en remplacement de Asana, Trello et monday.com.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://asana.com/",
+        "https://trello.com/",
+        "https://monday.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "creation-et-gestion-de-contenus-numeriques",
+      "nom": "Sketch",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://www.sketch.com",
+      "description": "Sketch est une alternative européenne recensée par Charles, d'origine néerlandaise, payante. Caractéristiques : hébergé dans l'Union européenne, conforme au RGPD. Proposée en remplacement de Figma.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://figma.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "gestion-de-la-relation-des-membres-et-crm",
+      "nom": "involve.me",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://www.involve.me",
+      "description": "involve.me est une alternative européenne recensée par Charles, d'origine autrichienne, gratuite avec des options payantes. Caractéristiques : hébergé dans l'Union européenne, conforme au RGPD. Proposée en remplacement de Typeform et SurveyMonkey.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://typeform.com/",
+        "https://surveymonkey.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "gestion-de-projets-et-des-taches",
+      "nom": "n8n",
+      "score": 2,
+      "score_estime": true,
+      "lien": "https://n8n.io",
+      "description": "n8n est une alternative européenne recensée par Charles, d'origine allemande, gratuite avec des options payantes. Caractéristiques : open source, auto-hébergeable, hébergé dans l'Union européenne. Proposée en remplacement de Zapier et Make.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://zapier.com/",
+        "https://make.com/"
+      ],
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "securite-et-gestion-des-acces",
+      "nom": "Proton VPN",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://protonvpn.com",
+      "description": "Proton VPN est une alternative européenne recensée par Charles, d'origine suisse, gratuite avec des options payantes. Caractéristiques : hébergé en Suisse, sans pistage, open source. Proposée en remplacement de ExpressVPN.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://expressvpn.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "securite-et-gestion-des-acces",
+      "nom": "Mullvad VPN",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://mullvad.net",
+      "description": "Mullvad VPN est une alternative européenne recensée par Charles, d'origine suédoise, payante. Caractéristiques : hébergé dans l'Union européenne, sans pistage, open source. Proposée en remplacement de ExpressVPN.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://expressvpn.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "securite-et-gestion-des-acces",
+      "nom": "Proton Pass",
+      "score": 1,
+      "score_estime": true,
+      "lien": "https://proton.me/pass",
+      "description": "Proton Pass est une alternative européenne recensée par Charles, d'origine suisse, gratuite avec des options payantes. Caractéristiques : hébergé en Suisse, chiffrement de bout en bout, open source. Proposée en remplacement de LastPass.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://lastpass.com/"
+      ],
+      "criteres": [
+        "dependance"
+      ],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "securite-et-gestion-des-acces",
+      "nom": "NordPass",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://nordpass.com",
+      "description": "NordPass est une alternative européenne recensée par Charles, d'origine lituanienne, gratuite avec des options payantes. Caractéristiques : hébergé dans l'Union européenne, chiffrement de bout en bout, conforme au RGPD. Proposée en remplacement de LastPass.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://lastpass.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "gestion-de-projets-et-des-taches",
+      "nom": "Tuleap",
+      "score": 2,
+      "score_estime": true,
+      "lien": "https://www.tuleap.org",
+      "description": "Tuleap est une alternative européenne recensée par Charles, d'origine française, gratuite avec des options payantes. Caractéristiques : open source, auto-hébergeable, hébergé dans l'Union européenne. Proposée en remplacement de Asana, Trello et monday.com.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://asana.com/",
+        "https://trello.com/",
+        "https://monday.com/"
+      ],
+      "criteres": [
+        "donnees",
+        "dependance"
+      ],
+      "confiance": "indéterminée"
+    },
+    {
+      "categorie": "gestion-documentaire-et-signature-electronique",
+      "nom": "Universign",
+      "score": 0,
+      "score_estime": true,
+      "lien": "https://www.universign.com",
+      "description": "Universign est une alternative européenne recensée par Charles, d'origine française, payante. Caractéristiques : hébergé dans l'Union européenne, conforme au RGPD, signature électronique. Proposée en remplacement de DocuSign.",
+      "derniere_modification": "2026-09-08T17:47:04-04:00",
+      "changement": "nouveau",
+      "source_repertoire_id": "charles",
+      "alternative_a": [
+        "https://docusign.com/"
+      ],
+      "criteres": [],
+      "confiance": "indéterminée"
     }
   ]
 }
