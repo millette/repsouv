@@ -95,7 +95,8 @@ test("les chiffres d'un tableau sont ceux que son graphique dessine", () => {
   for (const g of graphiques) {
     const lignes = [...figure(g.id).querySelectorAll("tbody tr")].map((tr) => [...tr.querySelectorAll("td")].map((td) => texte(td)));
     valeursDe(g).forEach((valeur, i) => {
-      if (typeof valeur.n === "number") assert.ok(lignes[i]!.includes(nombre(valeur.n)) || lignes[i]!.some((c) => c.startsWith(`${nombre(valeur.n)} `)), `${g.id}: ligne ${i}, ${valeur.n}`);
+      const n = valeur.n;
+      if (typeof n === "number") assert.ok(lignes[i]!.includes(nombre(n)) || lignes[i]!.some((c) => c.startsWith(`${nombre(n)} `)), `${g.id}: ligne ${i}, ${n}`);
       if (typeof valeur.etiquette === "string") assert.ok(lignes[i]!.includes(valeur.etiquette), `${g.id}: ${valeur.etiquette}`);
     });
   }

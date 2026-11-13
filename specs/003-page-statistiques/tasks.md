@@ -74,7 +74,7 @@ graphique, son image, son texte de remplacement et son tableau.
 
 - [x] T013 [US1] Implémenter `site/src/lib/tableaux.ts` (colonnes par `id`, lignes, sans les liens ni la provenance) jusqu'à ce que T010 passe
 - [x] T014 [US1] Créer `site/src/pages/graphiques/[fichier].ts` (point de terminaison statique: pour chaque graphique et chaque thème, `<id>-<thème>.svg` par `rendreSvg(adapterAuTheme(spec, thème))`), `site/src/components/ChiffresCles.astro`, `site/src/components/TableauGraphique.astro`, `site/src/components/FigureGraphique.astro` et `site/src/pages/statistiques.astro` (`courante="statistiques"`); ajouter « Statistiques » à `site/src/components/Navigation.astro` et `adresseStatistiques(base)` à `site/src/lib/adresses.ts`; styles dans `site/src/styles/global.css` (une seule des deux images visible selon le thème, avec la règle du thème du site); jusqu'à ce que T011 et T012 passent
-- [ ] T015 [US1] Écrire `site/test/e2e/statistiques.spec.ts`, premiers cas: sans JavaScript, chaque graphique montre une image visible avec son `alt`, « Voir les chiffres » s'ouvre et montre le tableau; en thème sombre du système, c'est l'image `-sombre.svg` qui est visible, et en thème clair l'image `-clair.svg`
+- [x] T015 [US1] Écrire `site/test/e2e/statistiques.spec.ts`, premiers cas: sans JavaScript, chaque graphique montre une image visible avec son `alt`, « Voir les chiffres » s'ouvre et montre le tableau; en thème sombre du système, c'est l'image `-sombre.svg` qui est visible, et en thème clair l'image `-clair.svg`
 
 **Checkpoint**: la page est complète et lisible sans JavaScript.
 
@@ -110,21 +110,21 @@ graphique, son image, son texte de remplacement et son tableau.
 
 ### Tests for User Story 2 ⚠️
 
-- [ ] T020 [P] [US2] Écrire `site/test/interaction.test.ts`: `preparer(spec)` rend une copie dont les valeurs sont les mêmes avec un champ `_i` égal à leur rang, des paramètres `courant` (valeur `-1`) et `serie` (valeur `null`), les infobulles activées, et, pour un graphique qui a une série de couleur nominale, une opacité et un contour conditionnés par `serie` et `courant`; `seriesDe(spec)` rend le champ et les noms des séries d'un graphique à plusieurs séries (règle: des séries à isoler seulement quand la couleur suit un champ nominal qui regroupe plusieurs marques, c'est-à-dire un champ différent de celui de l'axe des catégories; donc `categories-statut`, `criteres-repertoire-enrichie`, `criteres-verdicts` et `licences` ont leurs séries, et `statut-code-source`, `forges`, `tags`, `enrichissement-jours` et `criteres-par-statut` n'en ont pas); chaque spécification préparée se compile (`compilerVega`) pour les graphiques des fixtures
-- [ ] T021 [P] [US2] Ajouter à `site/test/build/statistiques.test.ts`: les 18 fichiers `.json` de `dist/graphiques/` existent, sont du JSON avec `marks` et des signaux `courant` et `serie`, et leurs valeurs portent `_i`; ajouter à `site/test/e2e/statistiques.spec.ts`: une fois un graphique visible, la vue (`[data-vue]`) remplace l'image; survoler une marque affiche une infobulle (`[data-infobulle]`) avec la valeur de la ligne correspondante du tableau, sans attribut `title`; la tabulation s'arrête une seule fois par graphique; les flèches font apparaître dans la région `aria-live` le texte de la première, puis de la deuxième ligne du tableau, Fin la dernière, Échap vide la région; un bouton de légende pressé (`aria-pressed="true"`) estompe les autres séries et se relâche au second appui; basculer l'interrupteur de thème recharge la vue en sombre; quand la spécification ne peut pas être chargée (route en échec), l'image reste visible
+- [x] T020 [P] [US2] Écrire `site/test/interaction.test.ts`: `preparer(spec)` rend une copie dont les valeurs sont les mêmes avec un champ `_i` égal à leur rang, des paramètres `courant` (valeur `-1`) et `serie` (valeur `null`), les infobulles activées, et, pour un graphique qui a une série de couleur nominale, une opacité et un contour conditionnés par `serie` et `courant`; `seriesDe(spec)` rend le champ et les noms des séries d'un graphique à plusieurs séries (règle: des séries à isoler seulement quand la couleur suit un champ nominal qui regroupe plusieurs marques, c'est-à-dire un champ différent de celui de l'axe des catégories; donc `categories-statut`, `criteres-repertoire-enrichie`, `criteres-verdicts` et `licences` ont leurs séries, et `statut-code-source`, `forges`, `tags`, `enrichissement-jours` et `criteres-par-statut` n'en ont pas); chaque spécification préparée se compile (`compilerVega`) pour les graphiques des fixtures
+- [x] T021 [P] [US2] Ajouter à `site/test/build/statistiques.test.ts`: les 18 fichiers `.json` de `dist/graphiques/` existent, sont du JSON avec `marks` et des signaux `courant` et `serie`, et leurs valeurs portent `_i`; ajouter à `site/test/e2e/statistiques.spec.ts`: une fois un graphique visible, la vue (`[data-vue]`) remplace l'image; survoler une marque affiche une infobulle (`[data-infobulle]`) avec la valeur de la ligne correspondante du tableau, sans attribut `title`; la tabulation s'arrête une seule fois par graphique; les flèches font apparaître dans la région `aria-live` le texte de la première, puis de la deuxième ligne du tableau, Fin la dernière, Échap vide la région; un bouton de légende pressé (`aria-pressed="true"`) estompe les autres séries et se relâche au second appui; basculer l'interrupteur de thème recharge la vue en sombre; quand la spécification ne peut pas être chargée (route en échec), l'image reste visible
 
 ### Implementation for User Story 2
 
-- [ ] T022 [US2] Implémenter `site/src/lib/interaction.ts` jusqu'à ce que T020 passe, et faire écrire `<id>-<thème>.json` par `site/src/pages/graphiques/[fichier].ts` (`compilerVega(preparer(adapterAuTheme(spec, thème)))`)
-- [ ] T023 [US2] Créer l'île `site/src/components/Graphique.tsx` selon contracts/graphiques.md et le skill `solidjs` (import dynamique de `vega`; `createResource` pour la spécification, sous `<Suspense>` et `<ErrorBoundary>`; conteneur focalisable nommé; flèches, Début, Fin, Échap; région `aria-live`; infobulle; boutons de légende `aria-pressed`; observation de `data-theme` et de la préférence du système; `onCleanup` qui détruit la vue), la monter par `client:visible` dans `site/src/components/FigureGraphique.astro`, masquer les images quand la vue est prête, et ajouter les styles, jusqu'à ce que T021 passe
+- [x] T022 [US2] Implémenter `site/src/lib/interaction.ts` jusqu'à ce que T020 passe, et faire écrire `<id>-<thème>.json` par `site/src/pages/graphiques/[fichier].ts` (`compilerVega(preparer(adapterAuTheme(spec, thème)))`)
+- [x] T023 [US2] Créer l'île `site/src/components/Graphique.tsx` selon contracts/graphiques.md et le skill `solidjs` (import dynamique de `vega`; `createResource` pour la spécification, sous `<Suspense>` et `<ErrorBoundary>`; conteneur focalisable nommé; flèches, Début, Fin, Échap; région `aria-live`; infobulle; boutons de légende `aria-pressed`; observation de `data-theme` et de la préférence du système; `onCleanup` qui détruit la vue), la monter par `client:visible` dans `site/src/components/FigureGraphique.astro`, masquer les images quand la vue est prête, et ajouter les styles, jusqu'à ce que T021 passe
 
 ---
 
 ## Phase 7: Polish & Cross-Cutting Concerns
 
-- [ ] T024 [P] Étendre `site/test/e2e/accessibilite.spec.ts` (aucune violation axe A ou AA sur `/statistiques/`, vues montées et tableaux ouverts, en thème clair et sombre; parcours au clavier: atteindre un graphique, lire une valeur aux flèches, presser une série) et `site/test/e2e/telephone.spec.ts` (360 px: pas de défilement horizontal de la page, tableaux ouverts compris); corriger composants et styles
-- [ ] T025 Comparer les chiffres de la page à `sommaire.md`: régénérer le sommaire dans un dossier temporaire avec `node sommaire.ts --sans-resume --sans-graphiques` sur une copie des données, et vérifier que les chiffres clés et les valeurs des tableaux y figurent; dérouler les 16 scénarios de `specs/003-page-statistiques/quickstart.md` et consigner les résultats dans ce fichier (section « Résultats »); vérifier par `git status` que données, schémas, scripts, `sommaire.md` et `graphiques/` de la racine sont inchangés
-- [ ] T026 Reporter le contenu durable dans `implementation.md` (page « Statistiques », rendu sans `vl-convert`, dépendance du build du site aux modules de la racine, tests), `README.md`, `site/README.md` (prérequis: `nub install` à la racine) et `historique.md` (étape, décisions); ajouter en tête de `specs/002-explorateur-outils/contracts/pages.md` une note sur le quatrième lien de navigation; vérifier que tous les contrôles passent
+- [x] T024 [P] Étendre `site/test/e2e/accessibilite.spec.ts` (aucune violation axe A ou AA sur `/statistiques/`, vues montées et tableaux ouverts, en thème clair et sombre; parcours au clavier: atteindre un graphique, lire une valeur aux flèches, presser une série) et `site/test/e2e/telephone.spec.ts` (360 px: pas de défilement horizontal de la page, tableaux ouverts compris); corriger composants et styles
+- [x] T025 Comparer les chiffres de la page à `sommaire.md`: régénérer le sommaire dans un dossier temporaire avec `node sommaire.ts --sans-resume --sans-graphiques` sur une copie des données, et vérifier que les chiffres clés et les valeurs des tableaux y figurent; dérouler les 16 scénarios de `specs/003-page-statistiques/quickstart.md` et consigner les résultats dans ce fichier (section « Résultats »); vérifier par `git status` que données, schémas, scripts, `sommaire.md` et `graphiques/` de la racine sont inchangés
+- [x] T026 Reporter le contenu durable dans `implementation.md` (page « Statistiques », rendu sans `vl-convert`, dépendance du build du site aux modules de la racine, tests), `README.md`, `site/README.md` (prérequis: `nub install` à la racine) et `historique.md` (étape, décisions); ajouter en tête de `specs/002-explorateur-outils/contracts/pages.md` une note sur le quatrième lien de navigation; vérifier que tous les contrôles passent
 
 ---
 
@@ -158,3 +158,25 @@ Task: "Écrire site/test/rendu.test.ts"
 5. Polish: accessibilité, téléphone, cohérence avec le sommaire, documentation.
 
 Un commit par parcours, tous les contrôles verts.
+
+---
+
+## Résultats
+
+Validation du 2026-11-13 (T025). Les 16 scénarios de [quickstart.md](quickstart.md) passent.
+
+| Scénarios | Vérifiés par | Résultat |
+|---|---|---|
+| 1, 2, 3 (chiffres clés, neuf graphiques, tableaux fidèles) | `site/test/build/statistiques.test.ts`, `site/test/tableaux.test.ts` | Réussi |
+| 4 (cohérence avec le sommaire) | Sommaire régénéré dans un dossier temporaire (`node sommaire.ts --sans-resume --sans-graphiques` sur une copie des données): 77 chiffres de la page (statuts, licences, forges, tags, verdicts, chiffres clés) y figurent tous | Réussi |
+| 5 à 9, 12 (sans JavaScript, survol, clavier, légende, thème, vue en échec) | `site/test/e2e/statistiques.spec.ts` | Réussi |
+| 10 (liens) | `site/test/build/statistiques.test.ts` (compte égal dans l'explorateur pour chaque lien), `site/test/e2e/statistiques.spec.ts` | Réussi |
+| 11 (provenance) | `site/test/build/statistiques.test.ts`, `site/test/tableaux.test.ts` | Réussi |
+| 13, 14 (accessibilité, téléphone) | `site/test/e2e/accessibilite.spec.ts`, `site/test/e2e/telephone.spec.ts` | Réussi |
+| 15 (racine intacte) | `git status`: données, schémas, scripts, `sommaire.md` et `graphiques/` de la racine inchangés | Réussi |
+| 16 (sans `vl-convert`) | `site/test/build/echecs.test.ts`: un faux `vl-convert` en tête du `PATH` n'est jamais lancé | Réussi |
+
+Totaux: 122 tests unitaires, 56 tests du site bâti, 94 tests dans Chromium; `nub run check` sans erreur.
+
+Écarts avec le plan: les modules de la racine sont chargés par leur chemin plutôt que regroupés avec le code du site;
+les tests unitaires de la phase 2 ont été écrits en même temps que leur code, et non avant.

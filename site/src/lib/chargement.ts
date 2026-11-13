@@ -34,3 +34,10 @@ export async function chargerExplorateur(adresse: string, lire: (adresse: string
   }
   return objet as unknown as DonneesExplorateur;
 }
+
+/** Lit un fichier JSON statique du site (la spécification compilée d'un graphique); tout échec devient une erreur. */
+export async function chargerJson<T>(adresse: string, lire: (adresse: string) => Promise<Response> = (a) => fetch(a)): Promise<T> {
+  const reponse = await lire(adresse);
+  if (!reponse.ok) throw new Error(`Fichier illisible (${reponse.status}): ${adresse}`);
+  return (await reponse.json()) as T;
+}

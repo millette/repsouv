@@ -43,3 +43,14 @@ test("sur téléphone, les filtres de l'explorateur restent utilisables", async 
   await expect(page).toHaveURL(/tag=chiffrement/);
   expect(await deborde(page)).toBeLessThanOrEqual(0);
 });
+
+test("la page « Statistiques » ne déborde pas, vues montées et tableaux ouverts", async ({ page }) => {
+  await page.goto("/statistiques/");
+  expect(await deborde(page)).toBeLessThanOrEqual(0);
+  for (const f of await page.locator("figure[data-graphique]").all()) {
+    await f.scrollIntoViewIfNeeded();
+    await expect(f.locator("[data-vue-prete]")).toBeVisible();
+    await f.locator("summary").click();
+  }
+  expect(await deborde(page)).toBeLessThanOrEqual(0);
+});

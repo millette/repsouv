@@ -521,3 +521,52 @@ blockquote {
   white-space: normal;
   vertical-align: top;
 }
+
+/* Graphique interactif (île Solid): il prend la place de l'image quand sa vue est prête. */
+.graphique-zone[data-interactif] .graphique-image {
+  display: none;
+}
+.graphique-interactif {
+  position: relative;
+}
+.graphique-parcours {
+  display: inline-block;
+  max-width: 100%;
+  border-radius: var(--radius-box, 0.5rem);
+}
+.graphique-vue svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-box, 0.5rem);
+}
+.graphique-infobulle {
+  position: absolute;
+  z-index: 5;
+  max-width: 22rem;
+  margin: 0;
+  padding: 0.35rem 0.6rem;
+  background: var(--color-base-100);
+  color: var(--color-base-content);
+  border: 1px solid var(--color-base-content);
+  border-radius: var(--radius-field, 0.25rem);
+  font-size: 0.9rem;
+  pointer-events: none;
+}
+.graphique-valeur {
+  min-height: 1.5rem;
+  margin: 0.25rem 0;
+  font-weight: 600;
+}
+.graphique-series {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.5rem;
+  margin-block: 0.25rem;
+}
+.graphique-series .btn[aria-pressed="true"] {
+  outline: 2px solid currentColor;
+  outline-offset: 1px;
+  font-weight: 700;
+}

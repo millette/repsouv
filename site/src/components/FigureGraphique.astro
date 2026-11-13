@@ -5,9 +5,11 @@
 // de ses chiffres, image de chaque thème (le CSS montre celle du thème en cours, sans JavaScript), et le tableau des
 // mêmes chiffres dans un bloc repliable.
 import { adresseGraphique } from "../lib/adresses.ts";
+import { seriesDe } from "../lib/interaction.ts";
 import type { Graphique } from "../lib/statistiques.ts";
 import type { ProvenanceGraphique, Tableau } from "../lib/tableaux.ts";
 import { THEMES_GRAPHIQUES } from "../lib/themes-graphiques.ts";
+import GraphiqueInteractif from "./Graphique.tsx";
 import TableauGraphique from "./TableauGraphique.astro";
 
 interface Props {
@@ -39,7 +41,7 @@ const { graphique, tableau, provenance, baseChiffres, dimensions, base } = Astro
         decoding="async"
       />
     ))}
-    <slot />
+    <GraphiqueInteractif client:visible id={graphique.id} titre={graphique.titre} description={graphique.description} series={seriesDe(graphique.spec)?.noms ?? []} base={base} />
   </div>
   <details class="graphique-chiffres">
     <summary>Voir les chiffres</summary>

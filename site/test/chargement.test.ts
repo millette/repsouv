@@ -3,7 +3,7 @@
 // Lecture, dans le navigateur, du fichier de données de l'explorateur: tout échec devient un message clair.
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { adresseDonnees, chargerExplorateur } from "../src/lib/chargement.ts";
+import { adresseDonnees, chargerExplorateur, chargerJson } from "../src/lib/chargement.ts";
 
 const valide = { meta: {}, categories: [], tags: [], sources: [], criteres: [], pays: [], outils: [] };
 const reponse = (corps: string, status = 200) => async () => new Response(corps, { status });
@@ -35,4 +35,9 @@ test("un objet sans l'un des tableaux attendus est refusé en le nommant", async
 
 test("une panne de réseau est refusée avec un message en français", async () => {
   await assert.rejects(chargerExplorateur("/x.json", async () => { throw new TypeError("Failed to fetch"); }), /n'ont pas pu être chargés/);
+});
+
+test("chargerJson rend le contenu d'un fichier JSON et refuse une réponse en erreur", async () => {
+  assert.deepEqual(await chargerJson("/g.json", reponse('{"marks":[]}')), { marks: [] });
+  await assert.rejects(chargerJson("/g.json", reponse("non", 404)), /404/);
 });

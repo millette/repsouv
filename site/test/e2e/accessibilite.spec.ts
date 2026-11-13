@@ -64,6 +64,21 @@ for (const theme of ["light", "dark"] as const) {
         expect(await violations(page)).toEqual([]);
       });
     }
+    test("aucune violation axe A ou AA: page « Statistiques », images seules", async ({ page }) => {
+      await page.goto("/statistiques/");
+      await expect(page.locator("[data-theme-pret]")).toBeVisible();
+      expect(await violations(page)).toEqual([]);
+    });
+    test("aucune violation axe A ou AA: page « Statistiques », vues montées et tableaux ouverts", async ({ page }) => {
+      await page.goto("/statistiques/");
+      for (const f of await page.locator("figure[data-graphique]").all()) {
+        await f.scrollIntoViewIfNeeded();
+        await expect(f.locator("[data-vue-prete]")).toBeVisible();
+        await f.locator("summary").click();
+      }
+      await page.locator('figure[data-graphique="categories-statut"]').getByRole("button", { name: "Libre", exact: true }).click();
+      expect(await violations(page)).toEqual([]);
+    });
     test("aucune violation axe A ou AA: explorateur en erreur de chargement", async ({ page }) => {
       await page.route("**/explorateur.json", (route) => route.fulfill({ status: 500, body: "panne" }));
       await page.goto("/explorer/");
@@ -148,4 +163,31 @@ test("explorateur au clavier seul: chercher, filtrer, trier, choisir deux outils
   await lien.focus();
   await page.keyboard.press("Enter");
   await expect(page.locator("h1")).toHaveText(nom!);
+});
+
+test("statistiques au clavier seul: atteindre un graphique, lire une valeur aux flèches, mettre une série en évidence", async ({ page }) => {
+  await page.goto("/statistiques/");
+  const f = page.locator('figure[data-graphique="categories-statut"]');
+  await f.scrollIntoViewIfNeeded();
+  await expect(f.locator("[data-vue-prete]")).toBeVisible();
+  const parcours = f.locator(".graphique-parcours");
+  await parcours.focus();
+  const contour = await parcours.evaluate((e) => getComputedStyle(e).outlineStyle !== "none" && parseFloat(getComputedStyle(e).outlineWidth) > 0);
+  expect(contour).toBe(true);
+  await page.keyboard.press("ArrowRight");
+  await expect(f.locator("[data-valeur]")).toContainText("Catégorie :");
+  // De là, une tabulation mène aux boutons de la légende; Espace en presse un.
+  await page.keyboard.press("Tab");
+  const premier = f.getByRole("group", { name: "Mettre une série en évidence" }).getByRole("button").first();
+  await expect(premier).toBeFocused();
+  await page.keyboard.press("Space");
+  await expect(premier).toHaveAttribute("aria-pressed", "true");
+  // Puis au bloc « Voir les chiffres », qui s'ouvre à la touche Entrée.
+  await page.keyboard.press("Tab");
+  await page.keyboard.press("Tab");
+  await page.keyboard.press("Tab");
+  await page.keyboard.press("Tab");
+  await f.locator("summary").focus();
+  await page.keyboard.press("Enter");
+  await expect(f.locator("table")).toBeVisible();
 });

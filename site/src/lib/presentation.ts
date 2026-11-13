@@ -26,7 +26,7 @@ export const LOGICIELS: GroupeLogiciels[] = [
       { nom: "linkedom", url: "https://github.com/WebReflection/linkedom", role: "Lit les pages Web des sources et des outils.", paquet: "linkedom" },
       { nom: "OpenAI", url: "https://platform.openai.com/", role: "Ses modèles rédigent les champs d'enrichissement et vérifient les critères, citation à l'appui." },
       { nom: "Open Hub", url: "https://www.openhub.net/", role: "Fournit les données publiques des projets de logiciels libres." },
-      { nom: "Vega-Lite", url: "https://vega.github.io/vega-lite/", role: "Décrit les graphiques du sommaire statistique." },
+      { nom: "Vega-Lite", url: "https://vega.github.io/vega-lite/", role: "Décrit les graphiques du sommaire statistique et de la page de statistiques, que Vega dessine." },
       { nom: "vl-convert", url: "https://github.com/vega/vl-convert", role: "Convertit ces graphiques en images SVG." },
       { nom: "mion RunTypes", url: "https://mion.io/runtypes", role: "Génère les schémas JSON des fichiers de données à partir des types." },
     ],
@@ -63,5 +63,5 @@ export interface Etape {
 export const ETAPES: Etape[] = [
   { date: "2026-11-11", texte: "Extraction du répertoire en JSON, déduction des critères que les étoiles représentent, et premier enrichissement par IA." },
   { date: "2026-11-12", texte: "Vérification des critères par IA, citation à l'appui ; catégories décrites ; ajout des Services FACiLes." },
-  { date: "2026-11-13", texte: "Ajout des alternatives européennes de Charles ; site de consultation, puis explorateur." },
+  { date: "2026-11-13", texte: "Ajout des alternatives européennes de Charles ; site de consultation, explorateur et page de statistiques." },
 ];

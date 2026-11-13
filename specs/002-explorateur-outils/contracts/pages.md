@@ -1,5 +1,7 @@
 # Contrat: pages de la tranche 002
 
+> **Complété par la tranche 003** (2026-11-13). La navigation compte un quatrième lien, « Statistiques » (`<base>/statistiques/`), après « Explorer ». Voir [specs/003-page-statistiques/contracts/page.md](../../003-page-statistiques/contracts/page.md).
+
 Ce contrat complète celui de la tranche 001
 ([pages.md](../../001-site-consultation-repertoire/contracts/pages.md)), dont « Toutes les pages »
 et « Fiche » restent valables. Il remplace sa section « Accueil ».
