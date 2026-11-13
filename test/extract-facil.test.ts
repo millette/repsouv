@@ -10,7 +10,7 @@ import type { OutilClasse } from "../classify.ts";
 import { ALTERNATIVES, CATEGORIE_PAR_LOGICIEL, extraireFacil, SOURCE_FACIL, synchroniserFacil, telechargerFacil } from "../extract-facil.ts";
 import { ecrireFichier, lireFichier } from "../fichiers.ts";
 import { problemesSource, type Source } from "../sources.ts";
-import { CATEGORIES, META, OUTILS, SOURCES, TAGS } from "./donnees-fictives.ts";
+import { CATEGORIES, META, OUTILS, outil, SOURCES, TAGS } from "./donnees-fictives.ts";
 
 const service = (nom: string, url: string, description: string, logiciel: string, depot: string, remplace: string) => `
 <div class="un-service">
@@ -66,9 +66,9 @@ test("les tables de l'extracteur renvoient à des catégories et des URL valides
   assert.ok(ids.size > 0);
 });
 
-const dossier = () => {
+const dossier = (outils: OutilClasse[] = OUTILS) => {
   const d = mkdtempSync(join(tmpdir(), "facil-"));
-  ecrireFichier(join(d, "outils.json"), "outils", OUTILS, null, META.created_at);
+  ecrireFichier(join(d, "outils.json"), "outils", outils, null, META.created_at);
   ecrireFichier(join(d, "categories.json"), "categories", CATEGORIES, null, META.created_at);
   ecrireFichier(join(d, "tags.json"), "tags", TAGS, null, META.created_at);
   ecrireFichier(join(d, "sources.json"), "sources", [SOURCES[0]!], null, META.created_at);
@@ -101,6 +101,15 @@ test("synchroniserFacil: ajoute les services comme nouveaux (datés de la lectur
   assert.throws(() => synchroniserFacil(join(d, "absent", "outils.json"), PAGE, T1), /absent: lancer/);
 });
 
+test("synchroniserFacil: voir_aussi relie un service à l'outil d'une autre source qui est le même logiciel", () => {
+  const d = dossier([...OUTILS, outil("Discourse")]);
+  const f = join(d, "outils.json");
+  synchroniserFacil(f, PAGE, T1);
+  const outils = lireFichier<OutilClasse>(f, "outils").donnees;
+  assert.deepEqual(outils.find((o) => o.nom === "Discourse")!.voir_aussi, ["Forums du libre du Québec"]);
+  assert.deepEqual(outils.find((o) => o.nom === "Forums du libre du Québec")!.voir_aussi, ["Discourse"]);
+  assert.equal(outils.find((o) => o.nom === "Planète FACiLe")!.voir_aussi, undefined);
+});
 test("synchroniserFacil: un outil au score estimé déjà enrichi garde le score de l'évaluation enrichie et n'est pas marqué modifié pour autant", () => {
   const d = dossier();
   const f = join(d, "outils.json");

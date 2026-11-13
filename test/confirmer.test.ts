@@ -96,6 +96,17 @@ const faux = (reponses: unknown[], requetes: Requete[] = []): Confirmateur => as
 const lire = async () => PAGE;
 const options = (confirmer: Confirmateur, extra: Partial<Parameters<typeof confirmerOutils>[1]> = {}) => ({ confirmer, criteres: CRITERES, modele: "gpt-6-astra", lire, horloge: () => "2026-11-12T09:00:00-05:00", ...extra });
 
+test("instance_de: la page lue est celle du logiciel, la requête le dit, et les instructions expliquent le cas", async () => {
+  const requetes: Requete[] = [];
+  const urls: string[] = [];
+  const outils = [outil("Jasette FACiLe", { instance_de: { nom: "Mastodon", url: "https://github.com/mastodon/mastodon/releases/tag/v4.7.1" } })];
+  await confirmerOutils(outils, options(faux([], requetes), { lire: async (url) => (urls.push(url), PAGE) }));
+  assert.deepEqual(urls, ["https://github.com/mastodon/mastodon"]);
+  assert.match(requetes[0]!.messages[0]!, /"instance_de":\{"nom":"Mastodon"/);
+  assert.match(requetes[0]!.messages[0]!, /"page_lue":"https:\/\/github\.com\/mastodon\/mastodon"/);
+  assert.doesNotMatch(requeteOutil(outil("A"), PAGE, CRITERES).messages[0]!, /instance_de/);
+  assert.match(instructions(CRITERES), /instance_de.*service hébergé.*logiciel/);
+});
 test("confirmerOutils: un verdict par outil à vérifier, inscrit en place avec le modèle et la date, et sauvegardé", async () => {
   const outils = [outil("A"), outil("B", { criteres_confirmes: champConfirmes(validerConfirmation(valide, SOURCES), "m", "d") }), nonEnrichi("C")];
   let sauvegardes = 0;

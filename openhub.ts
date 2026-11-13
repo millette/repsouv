@@ -11,6 +11,7 @@ import type { OutilClasse } from "./classify.ts";
 import { MAX_ECHECS_PAR_DEFAUT } from "./enrichir.ts";
 import type { OpenHub } from "./extract.ts";
 import { horodatage } from "./temps.ts";
+import { estDepot, nomLogiciel, pageEnrichissement } from "./logiciel.ts";
 
 const API = "https://www.openhub.net";
 
@@ -145,6 +146,8 @@ const organisation = (url: string | null | undefined): string | null => {
 
 /** Une URL d'Open Hub concorde-t-elle avec `repo`: même dépôt, ou même organisation sur une forge. */
 const memeDepot = (url: string, repo: string): boolean => normaliser(url) === normaliser(repo) || (organisation(url) !== null && organisation(url) === organisation(repo));
+/** Les dépôts à comparer: `repo`, et `lien` quand il est lui-même sur une forge (l'hôte d'une forge ne distingue rien). */
+const depotsDe = (outil: { lien: string; repo?: string | null }): string[] => [outil.repo, estDepot(outil.lien) ? outil.lien : null].filter((u): u is string => !!u);
 
 /**
  * Le projet qui concorde directement avec l'outil (sans requête de plus): même hôte entre la page d'accueil Open Hub
@@ -152,9 +155,10 @@ const memeDepot = (url: string, repo: string): boolean => normaliser(url) === no
  */
 export function concordance(candidats: readonly ProjetOpenHub[], outil: { lien: string; repo?: string | null }): ProjetOpenHub | null {
   const hoteOutil = hote(outil.lien);
+  const depots = depotsDe(outil);
   return candidats.find((c) => {
-    if (hoteOutil && hote(c.accueil) === hoteOutil) return true;
-    return !!outil.repo && [c.accueil, ...c.liens].some((u) => !!u && memeDepot(u, outil.repo!));
+    if (hoteOutil && !estDepot(outil.lien) && hote(c.accueil) === hoteOutil) return true;
+    return depots.some((d) => [c.accueil, ...c.liens].some((u) => !!u && memeDepot(u, d)));
   }) ?? null;
 }
 
@@ -164,10 +168,11 @@ export function concordance(candidats: readonly ProjetOpenHub[], outil: { lien: 
  */
 export async function trouverConcordance(client: Pick<ClientOpenHub, "depots">, candidats: readonly ProjetOpenHub[], outil: { lien: string; repo?: string | null }, n = 3): Promise<ProjetOpenHub | null> {
   const direct = concordance(candidats, outil);
-  if (direct || !outil.repo) return direct;
+  const depots = depotsDe(outil);
+  if (direct || !depots.length) return direct;
   for (const c of candidats.slice(0, n)) {
-    const depots = await client.depots(c.vanity || c.id);
-    if (depots.some((u) => memeDepot(u, outil.repo!))) return c;
+    const siens = await client.depots(c.vanity || c.id);
+    if (siens.some((u) => depots.some((d) => memeDepot(u, d)))) return c;
   }
   return null;
 }
@@ -235,12 +240,14 @@ export async function completerOpenHub(outils: OutilClasse[], options: OptionsOp
     if (!aCompleterOpenHub(outil, maxEchecs)) continue;
     options.debut?.(outil.nom);
     try {
-      const candidats = await client.rechercher(outil.nom);
-      const trouve = await trouverConcordance(client, candidats, outil);
+      // Un service instance d'un logiciel: on cherche le logiciel, et on concorde sur son dépôt plutôt que sur l'hôte du service.
+      const cible = { lien: pageEnrichissement(outil), repo: outil.repo ?? null };
+      const candidats = await client.rechercher(nomLogiciel(outil));
+      const trouve = await trouverConcordance(client, candidats, cible);
       if (!trouve) {
         const liste = candidatsPourJournal(candidats);
         resultat.sansConcordance.push({ nom: outil.nom, candidats: liste });
-        throw new Error(`aucune concordance sûre avec ${outil.lien}${outil.repo ? ` ni ${outil.repo}` : ""}; candidats: ${liste}`);
+        throw new Error(`aucune concordance sûre avec ${cible.lien}${cible.repo ? ` ni ${cible.repo}` : ""}; candidats: ${liste}`);
       }
       const projet = await client.projet(trouve.vanity || trouve.id);
       const { echecs_openhub: _echecs, ...sansCompteur } = outil;

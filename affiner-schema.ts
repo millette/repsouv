@@ -36,6 +36,7 @@ function regle(nom: string, schema: Noeud, freres: Set<string>): Noeud {
   if (schema.type === "array" && estObjet(elements) && elements.type === "string") {
     if (nom === "tags") return { minItems: 1, maxItems: 5, uniqueItems: true };
     if (nom === "alternative_a") return { minItems: 1, uniqueItems: true, items: { ...elements, pattern: URL_HTTP } };
+    if (nom === "voir_aussi") return { minItems: 1, uniqueItems: true, $comment: "noms d'autres outils (outils[].nom) qui reposent sur le même logiciel" };
   }
   if (nom === "criteres" && schema.type === "array" && estObjet(elements) && elements.type !== "object") {
     return { maxItems: 3, uniqueItems: true };

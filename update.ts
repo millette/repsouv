@@ -60,6 +60,7 @@ import { CHAMPS_ENRICHIS, telechargerRepertoire, type Changement, type Critere, 
 import { verifierVlConvert } from "./graphiques.ts";
 import { createProgress, type Progress } from "./progress.ts";
 import { barreSommaire, genererSommaire } from "./sommaire.ts";
+import { lierVoirAussi } from "./logiciel.ts";
 import { abandonneConfirmation, aConfirmer, confirmateurOpenAI, confirmerOutils, estimerCoutConfirmation } from "./confirmer.ts";
 import { aDecrire, categoriesDepuis, decrireCategories, estimerCoutDescriptions, generateurDescriptionOpenAI, sauverCategories, type Categorie } from "./categories.ts";
 import { additionner, ajouterUsage, coutTotal, dollars, formaterCout, formaterCouts, soustraireUsages, type Usage, type UsagesParModele } from "./prix.ts";
@@ -89,7 +90,7 @@ export function mettreAJour(
   page: (Outil & Partial<OutilClasse>)[],
   modification: string,
   sourceId: string = ID_PRAXIS,
-): { outils: OutilClasse[]; resume: Resume; migres: number } {
+): { outils: OutilClasse[]; resume: Resume; migres: number; relies: number } {
   const resume: Resume = { nouveau: [], modification: [], retrait: [], comeback: [] };
   let migres = 0;
   const rattaches = existants.map((o) => {
@@ -140,7 +141,8 @@ export function mettreAJour(
     }
   }
   for (const p of page) if (!parNom.has(p.nom)) outils.push(marquer(p, "nouveau"));
-  return { outils, resume, migres };
+  const lies = lierVoirAussi(outils);
+  return { outils: lies.outils, resume, migres, relies: lies.relies };
 }
 
 // ---------- synchronisation des fichiers ----------
@@ -174,9 +176,9 @@ export interface Synchronisation {
 export function synchroniser(fichier: string, page: Outil[], criteres: Critere[], modification: string, dryRun: boolean, categoriesPage: Categorie[] = []): Synchronisation {
   const importInitial = !existsSync(fichier);
   let courant: Lu<OutilClasse> | null = importInitial ? null : lireFichier<OutilClasse>(fichier, "outils");
-  const { outils, resume, migres } = mettreAJour(courant?.donnees ?? [], page, modification);
+  const { outils, resume, migres, relies } = mettreAJour(courant?.donnees ?? [], page, modification);
   const total = Object.values(resume).reduce((n, noms) => n + noms.length, 0);
-  const ecrit = !dryRun && (total > 0 || importInitial || migres > 0);
+  const ecrit = !dryRun && (total > 0 || importInitial || migres > 0 || relies > 0);
   if (ecrit) courant = ecrireFichier(fichier, "outils", outils, courant);
   let criteresEcrits = false;
   if (!dryRun) {

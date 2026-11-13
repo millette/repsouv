@@ -27,6 +27,11 @@ test("analyserProjets: collection sans analyse (nom, vanity, accueil, liens, lic
 
 test("concordance: même hôte que lien (www et casse ignorés), ou même URL que repo (barre finale et .git ignorés); sinon null", () => {
   const [jami, client] = analyserProjets(COLLECTION);
+  const [gh] = analyserProjets(COLLECTION.replace("https://jami.net/", "https://github.com/x/y"));
+  assert.equal(concordance([gh!], { lien: "https://github.com/autre/projet" }), null, "un lien sur une forge ne concorde pas par hôte");
+  assert.equal(concordance([gh!], { lien: "https://github.com/x/y" }), gh, "un lien sur une forge concorde comme dépôt");
+  assert.equal(concordance([gh!], { lien: "https://github.com/x/autre" }), gh, "même organisation de forge");
+  assert.equal(concordance([gh!], { lien: "https://git.jami.net/x/y" }), null, "une forge auto-hébergée inconnue: ni hôte ni organisation");
   assert.equal(concordance([client!, jami!], { lien: "https://www.jami.net/fr/" }), jami);
   assert.equal(concordance([client!, jami!], { lien: "https://autre.example/", repo: "https://git.jami.net/savoirfairelinux/jami-project.git/" }), jami);
   assert.equal(concordance([client!, jami!], { lien: "https://autre.example/", repo: "https://github.com/x/y" }), null);
@@ -81,6 +86,17 @@ const faux = (recherche: ProjetOpenHub[], seul?: ProjetOpenHub) => {
   };
 };
 
+test("completerOpenHub: un service instance d'un logiciel: recherche par le nom du logiciel, concordance sur son dépôt normalisé plutôt que sur l'hôte du service", async () => {
+  const [jami] = analyserProjets(COLLECTION);
+  const [seul] = analyserProjets(SEUL);
+  const { client, appels } = faux([jami!], seul);
+  const outils: OutilClasse[] = [enrichi("Jasette FACiLe", { lien: "https://jasette.facil.example/", repo: null, instance_de: { nom: "Jami", url: "https://git.jami.net/savoirfairelinux/jami-project/-/tags/v1" } })];
+  const r = await completerOpenHub(outils, { client });
+  assert.deepEqual(r.completes, ["Jasette FACiLe"]);
+  assert.deepEqual(appels, ["rechercher Jami", "projet jami"]);
+  const sans = await completerOpenHub([enrichi("Autre FACiLe", { lien: "https://jami.net/", repo: null, instance_de: { nom: "X", url: "https://github.com/x/y" } })], { client: faux([jami!], seul).client });
+  assert.deepEqual(sans.completes, [], "l'hôte du service ne compte plus quand l'outil est une instance");
+});
 test("completerOpenHub: concordance trouvée: openhub_id et openhub inscrits en place, compteur retiré, sauvegarde; outil déjà complété jamais refait", async () => {
   const [jami] = analyserProjets(COLLECTION);
   const [seul] = analyserProjets(SEUL);

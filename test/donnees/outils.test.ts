@@ -14,6 +14,7 @@ import type { Critere } from "../../extract.ts";
 import { lireFichier } from "../../fichiers.ts";
 import { problemesSource, type Source } from "../../sources.ts";
 import { ID_PAR_ICONE } from "../../ids.ts";
+import { lierVoirAussi, nomLogiciel } from "../../logiciel.ts";
 import { exigerFichiers, FICHIERS_DONNEES } from "./garde.ts";
 
 exigerFichiers(FICHIERS_DONNEES);
@@ -31,6 +32,21 @@ test("outils.json: 60 outils de Praxis (et d'autres sources), chacun dans une ca
   for (const id of ids) assert.ok(utilisees.has(id), `catégorie ${id} sans outil`);
 });
 
+test("outils.json: voir_aussi renvoie, de façon symétrique, à des outils existants non retirés qui reposent sur le même logiciel", () => {
+  const actifs = outils.donnees.filter((o) => !o.removed);
+  const parNom = new Map(actifs.map((o) => [o.nom, o]));
+  const { outils: attendus } = lierVoirAussi(outils.donnees);
+  for (const [i, o] of outils.donnees.entries()) {
+    assert.deepEqual(o.voir_aussi, attendus[i]!.voir_aussi, `${o.nom}: voir_aussi à recalculer (node update.ts)`);
+    for (const nom of o.voir_aussi ?? []) {
+      const autre = parNom.get(nom);
+      assert.ok(autre, `${o.nom}: voir_aussi « ${nom} » absent ou retiré`);
+      assert.ok(autre!.voir_aussi?.includes(o.nom), `${nom} ne renvoie pas à ${o.nom}`);
+      assert.equal(nomLogiciel(autre!).toLowerCase(), nomLogiciel(o).toLowerCase());
+    }
+  }
+  assert.ok(actifs.filter((o) => o.voir_aussi).length >= 16, "au moins les huit logiciels communs à Praxis et FACiL");
+});
 test("sources.json: sources valides, Praxis présente, et chaque outil renvoie à une source existante", () => {
   const sources = lireFichier<Source>("sources.json", "sources").donnees;
   for (const s of sources) assert.deepEqual(problemesSource(s), [], s.id);

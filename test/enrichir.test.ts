@@ -8,7 +8,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import {
-  abandonne, aEnrichir, chargerTags, EFFORT_PAR_DEFAUT, effortDepuisEnv, enrichirOutils, ErreurDefinitive, modelesDepuisEnv, MODELE_PAR_DEFAUT, MODELE_REPLI_PAR_DEFAUT, obtenirValide, extraireContenu, instructions, instructionsEcart, lireContenu, MAX_TAGS, MIN_EXTRAIT, obtenirPage, problemesMarkdown, sauverTags,
+  abandonne, aEnrichir, chargerTags, EFFORT_PAR_DEFAUT, effortDepuisEnv, enrichirOutils, ErreurDefinitive, modelesDepuisEnv, MODELE_PAR_DEFAUT, MODELE_REPLI_PAR_DEFAUT, obtenirValide, extraireContenu, instructions, instructionsEcart, lireContenu, MAX_TAGS, MIN_EXTRAIT, obtenirPage, problemesMarkdown, resumePage, sauverTags,
   schemaReponse, validerEcart, validerProposition, type Expliqueur, type Generateur, type Tag, appelerOpenAI, estimerCoutEnrichissement } from "../enrichir.ts";
 import type { Usage } from "../prix.ts";
 import type { Outil } from "../extract.ts";
@@ -406,6 +406,19 @@ const unOutilAvecGenerateur = () => {
   return { generer, appels: () => appels };
 };
 
+test("instance_de: la page lue est le dépôt du logiciel (normalisé), la fiche donne instance_de et page_lue, et les instructions expliquent le cas", async () => {
+  const g = unOutilAvecGenerateur();
+  const urls: string[] = [];
+  const outils = [outil("Jasette FACiLe", { instance_de: { nom: "Mastodon", url: "https://github.com/mastodon/mastodon/releases/tag/v4.7.1" } })];
+  await enrichirOutils(outils, { tags: VOCAB, criteres: CRITERES, expliquer: expliquerOk, generer: g.generer, lire: async (url) => (urls.push(url), pageOk()) });
+  assert.deepEqual(urls, ["https://github.com/mastodon/mastodon"]);
+  const fiche = resumePage(outils[0]!, { titre: "T", meta_description: "M", extrait: "E", liens_depot: [] });
+  assert.equal(fiche.lien, "https://Jasette FACiLe.example/");
+  assert.deepEqual(fiche.instance_de, { nom: "Mastodon", url: "https://github.com/mastodon/mastodon/releases/tag/v4.7.1" });
+  assert.equal(fiche.page_lue, "https://github.com/mastodon/mastodon");
+  assert.equal("instance_de" in resumePage(outil("A"), null), false);
+  assert.match(instructions(VOCAB, CRITERES, false), /instance_de.*service hébergé.*logiciel/);
+});
 test("page: une page normale: enrichi, sans avertissement", async () => {
   const g = unOutilAvecGenerateur();
   const journal: string[] = [];

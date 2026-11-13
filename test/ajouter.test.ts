@@ -60,6 +60,17 @@ const dossier = () => {
   return d;
 };
 
+test("ajouterOutil: un outil ajouté qui est le logiciel d'un service existant reçoit voir_aussi, et le service aussi", () => {
+  const d = dossier();
+  const f = join(d, "outils.json");
+  const lu = lireFichier<OutilClasse>(f, "outils");
+  ecrireFichier(f, "outils", [...lu.donnees, { ...lu.donnees[0]!, nom: "Jasette FACiLe", lien: "https://jasette.facil.example/", source_repertoire_id: "facil", instance_de: { nom: "Mastodon", url: "https://github.com/mastodon/mastodon" } }], lu, T);
+  const r = ajouterOutil(f, { ...p, nom: "Mastodon", lien: "https://joinmastodon.example/", source: "praxis" }, T);
+  assert.deepEqual(r.outil.voir_aussi, ["Jasette FACiLe"]);
+  const outils = lireFichier<OutilClasse>(f, "outils").donnees;
+  assert.deepEqual(outils.find((o) => o.nom === "Jasette FACiLe")!.voir_aussi, ["Mastodon"]);
+  assert.deepEqual(outils.at(-1)!.voir_aussi, ["Jasette FACiLe"]);
+});
 test("ajouterOutil: écrit l'outil à la fin de outils.json et la source nouvelle dans sources.json; un second ajout de même nom est refusé", () => {
   const d = dossier();
   const r = ajouterOutil(join(d, "outils.json"), { ...p, sourceNom: "FACiL", sourceUrl: "https://facil.example/" }, T);

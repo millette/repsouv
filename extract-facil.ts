@@ -178,9 +178,9 @@ export function synchroniserFacil(fichier: string, html: string, maintenant: str
   const lu = lireSiExiste<OutilClasse>(fichier, "outils");
   if (!lu) throw new Error(`${fichier} absent: lancer « node update.ts » d'abord (import initial de Praxis)`);
   const { outils: page, source, avertissements } = extraireFacil(html);
-  const { outils, resume } = mettreAJour(lu.donnees, page as Outil[], maintenant, ID_FACIL);
+  const { outils, resume, relies } = mettreAJour(lu.donnees, page as Outil[], maintenant, ID_FACIL);
   const total = Object.values(resume).reduce((n, noms) => n + noms.length, 0);
-  const ecrit = total > 0;
+  const ecrit = total > 0 || relies > 0;
   if (ecrit) ecrireFichier(fichier, "outils", outils, lu, maintenant);
   const cheminSources = join(dirname(fichier), "sources.json");
   const sourcesLues = lireSiExiste<Source>(cheminSources, "sources");

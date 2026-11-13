@@ -195,7 +195,8 @@ Fichier unifié : le tableau `outils` contient 82 outils, 60 du répertoire Prax
 | `score` | Nombre d'étoiles ★ sur 3, donné par la source |
 | `score_estime` | Présent (`true`) quand la source ne donne pas d'étoiles (outil ajouté à la main sans `--score`) : `score`, `criteres` et `confiance` viennent de l'évaluation enrichie, ou, avant l'enrichissement, de la classification par seuil de la description |
 | `alternative_a` | Services, souvent propriétaires, auxquels l'outil se substitue (liste d'URL), quand la source le dit (FACiL : « Remplace : … », converti en URL par `extract-facil.ts` ; ou `--alternative-a` de `ajouter.ts`) ; absent sinon |
-| `instance_de` | Logiciel libre dont l'outil est une instance hébergée : `{ nom, url }` (nom et lien vers le dépôt ou la version, tels que la source les donne ; FACiL : « Est une instance de : … ») ; absent sinon |
+| `instance_de` | Logiciel libre dont l'outil est une instance hébergée : `{ nom, url }` (nom et lien vers le dépôt ou la version, tels que la source les donne ; FACiL : « Est une instance de : … ») ; absent sinon. L'enrichissement, la vérification des critères et la recherche Open Hub portent alors sur ce logiciel (son dépôt, ramené à sa racine) plutôt que sur la page du service |
+| `voir_aussi` | Noms des autres outils qui reposent sur le même logiciel (leur `nom`, ou leur `instance_de.nom` pour un service), par exemple « Mastodon » et « Jasette FACiLe », qui en est une instance ; recalculé à chaque écriture, absent sinon |
 | `lien` | Lien externe de l'outil |
 | `description` | Description fournie par la source |
 | `derniere_modification` | Dernière date de modification connue : ISO 8601 en heure de Toronto, avec le décalage (ex. `2026-11-05T09:53:00-05:00`) |

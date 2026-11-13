@@ -178,7 +178,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { synchroniser } from "../update.ts";
 import type { Critere, Outil } from "../extract.ts";
-import { lireFichier } from "../fichiers.ts";
+import { ecrireFichier, lireFichier } from "../fichiers.ts";
 import type { Source } from "../sources.ts";
 
 const CRITERES: Critere[] = [
@@ -290,6 +290,30 @@ test("mettreAJour: un outil au score estimé garde la classification de sa page,
   assert.deepEqual(modifie.resume.modification, ["P"]);
   assert.equal(modifie.outils[0]!.score, 3);
   assert.equal(modifie.outils[0]!.description_longue, "Longue.");
+});
+test("mettreAJour: voir_aussi relie les outils d'un même logiciel (nom ou instance_de.nom), toutes sources confondues, et le nombre de renvois changés est retourné", () => {
+  const jasette = base("Jasette FACiLe", { source_repertoire_id: "facil", score_estime: true, instance_de: { nom: "Mastodon", url: "https://github.com/mastodon/mastodon" } });
+  const page = [brut("Mastodon"), brut("Autre")];
+  const r = mettreAJour([jasette], page, NOUVELLE);
+  assert.equal(r.relies, 2);
+  assert.deepEqual(r.outils.map((o) => [o.nom, o.voir_aussi]), [["Jasette FACiLe", ["Mastodon"]], ["Mastodon", ["Jasette FACiLe"]], ["Autre", undefined]]);
+  const encore = mettreAJour(r.outils, page, NOUVELLE);
+  assert.equal(encore.relies, 0);
+  const retrait = mettreAJour(r.outils, [brut("Autre")], NOUVELLE);
+  assert.deepEqual(retrait.resume.retrait, ["Mastodon"]);
+  assert.equal(retrait.relies, 2, "un outil retiré ne renvoie plus et n'est plus cité");
+  assert.deepEqual(retrait.outils.map((o) => o.voir_aussi), [undefined, undefined, undefined]);
+});
+test("synchroniser: des renvois voir_aussi à mettre à jour suffisent à réécrire outils.json", () => {
+  const d = mkdtempSync(join(tmpdir(), "sync-"));
+  const f = join(d, "outils.json");
+  synchroniser(f, [brut("Mastodon")], CRITERES, NOUVELLE, false);
+  const lu = lireFichier<OutilClasse>(f, "outils");
+  ecrireFichier(f, "outils", [...lu.donnees, { ...lu.donnees[0]!, nom: "Jasette FACiLe", lien: "https://jasette", source_repertoire_id: "facil", instance_de: { nom: "Mastodon", url: "https://github.com/mastodon/mastodon" } }], lu, "2026-12-01T08:00:00-05:00");
+  const r = synchroniser(f, [brut("Mastodon")], CRITERES, NOUVELLE, false);
+  assert.equal(r.ecrit, true);
+  assert.deepEqual(lireFichier<OutilClasse>(f, "outils").donnees.map((o) => o.voir_aussi), [["Jasette FACiLe"], ["Mastodon"]]);
+  assert.equal(synchroniser(f, [brut("Mastodon")], CRITERES, NOUVELLE, false).ecrit, false);
 });
 test("synchroniser: sources.json est créé à côté de outils.json avec la source Praxis, puis conservé tel quel", () => {
   const d = mkdtempSync(join(tmpdir(), "sync-"));

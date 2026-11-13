@@ -18,6 +18,7 @@ import { lancer } from "./cli.ts";
 import { ecrireFichier, lireFichier, lireSiExiste } from "./fichiers.ts";
 import { problemesSource, sourcesAvec, type Source } from "./sources.ts";
 import { horodatage } from "./temps.ts";
+import { lierVoirAussi } from "./logiciel.ts";
 
 export interface ParametresAjout {
   lien: string;
@@ -86,8 +87,9 @@ export function ajouterOutil(fichier: string, p: ParametresAjout, maintenant: st
   const { source, nouvelle } = sourceDemandee(sourcesLues?.donnees ?? [], p);
   const outil = outilDemande(p, lu.donnees, categories, maintenant);
   if (nouvelle) ecrireFichier(cheminSources, "sources", sourcesAvec(sourcesLues?.donnees ?? [], source), sourcesLues, maintenant);
-  ecrireFichier(fichier, "outils", [...lu.donnees, outil], lu, maintenant);
-  return { outil, source, nouvelleSource: nouvelle };
+  const { outils } = lierVoirAussi([...lu.donnees, outil]);
+  ecrireFichier(fichier, "outils", outils, lu, maintenant);
+  return { outil: outils.at(-1)!, source, nouvelleSource: nouvelle };
 }
 
 const OPTIONS = ["nom", "categorie", "description", "source", "score", "alternative-a", "source-nom", "source-url", "source-pdc", "source-donnees", "soumis-par-nom", "soumis-par-url", "soumis-par-email"] as const;

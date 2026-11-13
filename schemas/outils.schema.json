@@ -78,6 +78,15 @@
             ],
             "additionalProperties": false
           },
+          "voir_aussi": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "uniqueItems": true,
+            "$comment": "noms d'autres outils (outils[].nom) qui reposent sur le même logiciel"
+          },
           "lien": {
             "type": "string",
             "pattern": "^https?://\\S+$"

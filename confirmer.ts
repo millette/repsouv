@@ -13,6 +13,7 @@ import type { Critere, CriteresConfirmes, Outil } from "./extract.ts";
 import { CONTROLE, DEPENDANCE, DONNEES, type CritereId } from "./ids.ts";
 import { additionner, coutPour, USAGE_VIDE, type Usage } from "./prix.ts";
 import { horodatage } from "./temps.ts";
+import { pageEnrichissement } from "./logiciel.ts";
 import { nomCategorie, type Categorie } from "./categories.ts";
 
 export const IDS_CRITERES: readonly CritereId[] = [DONNEES, CONTROLE, DEPENDANCE];
@@ -115,6 +116,7 @@ export function instructions(criteres: Critere[] = []): string {
     return `- ${id}${c ? ` (${c.titre}): ${c.description}` : ""}`;
   }).join("\n");
   return `Tu vérifies, pour un outil numérique, si chacun des trois critères de souveraineté numérique est satisfait, d'après les seuls textes fournis (description du répertoire, titre, méta-description et extrait de la page de l'outil).
+Quand « instance_de » est présent, l'outil est un service hébergé par un tiers, instance du logiciel libre nommé, et la page fournie (« page_lue ») est celle de ce logiciel: juge le service d'après ce que les textes disent du logiciel et de son hébergement.
 
 Les trois critères:
 ${definitions}
@@ -138,6 +140,7 @@ export function requeteOutil(outil: Outil, contenu: Contenu, criteres: Critere[]
       nom: outil.nom,
       categorie: nomCategorie(categories, outil.categorie),
       lien: outil.lien,
+      ...(outil.instance_de && { instance_de: outil.instance_de, page_lue: pageEnrichissement(outil) }),
       description: outil.description,
       page: { titre: contenu.titre, meta_description: contenu.meta_description, extrait: contenu.extrait },
     }),
@@ -199,7 +202,7 @@ export async function confirmerOutils(outils: OutilClasse[], options: OptionsCon
     }
     options.debut?.(outil.nom);
     try {
-      const { contenu, probleme } = await obtenirPage(outil.lien, lire);
+      const { contenu, probleme } = await obtenirPage(pageEnrichissement(outil), lire);
       if (!contenu || probleme) throw new Error(`${probleme ?? "page inaccessible"}; critères non vérifiés`);
       let parRepli = false;
       const confirmation = await obtenirValide(

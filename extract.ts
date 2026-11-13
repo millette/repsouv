@@ -86,6 +86,8 @@ export interface Outil {
   alternative_a?: string[];
   /** Logiciel libre dont l'outil est une instance hébergée (nom et lien vers son dépôt ou sa version), quand la source le dit (FACiL). */
   instance_de?: { nom: string; url: string };
+  /** Noms des autres outils (outils[].nom) qui reposent sur le même logiciel (nom, ou instance_de.nom): posé par logiciel.ts à chaque écriture; absent sinon. */
+  voir_aussi?: string[];
   lien: string;
   description: string;
   /** Dernière date de modification connue: ISO 8601 en heure de Toronto, avec décalage (2026-11-05T09:53:00-05:00). */
