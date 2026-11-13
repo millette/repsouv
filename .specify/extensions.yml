@@ -25,7 +25,7 @@ hooks:
   - extension: git
     command: speckit.git.commit
     enabled: true
-    optional: true
+    optional: false
     priority: 10
     prompt: Commit outstanding changes before clarification?
     description: Auto-commit before spec clarification

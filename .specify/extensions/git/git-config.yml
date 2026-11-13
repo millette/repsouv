@@ -15,7 +15,7 @@ branch_template: ""
 branch_prefix: ""
 
 # Commit message used by `git commit` during repository initialization
-init_commit_message: "[Spec Kit] Initial commit"
+init_commit_message: "Dépôt initialisé par Spec Kit, pour versionner les spécifications dès le départ"
 
 # Commit message style used by auto-commit hooks (speckit.git.commit):
 # "fixed"        - default; use the configured/static messages below.
@@ -30,50 +30,50 @@ commit_style: fixed
 auto_commit:
   default: false
   before_clarify:
-    enabled: false
-    message: "[Spec Kit] Save progress before clarification"
+    enabled: true
+    message: "Spec Kit: état du dépôt enregistré avant la clarification, pour isoler dans le commit suivant ce que les réponses changent à spec.md"
   before_plan:
-    enabled: false
-    message: "[Spec Kit] Save progress before planning"
+    enabled: true
+    message: "Spec Kit: état du dépôt enregistré avant la planification, pour isoler dans le commit suivant le plan et ses artefacts de conception"
   before_tasks:
-    enabled: false
-    message: "[Spec Kit] Save progress before task generation"
+    enabled: true
+    message: "Spec Kit: état du dépôt enregistré avant la génération des tâches, pour isoler tasks.md dans le commit suivant"
   before_implement:
-    enabled: false
-    message: "[Spec Kit] Save progress before implementation"
+    enabled: true
+    message: "Spec Kit: état du dépôt enregistré avant l'implémentation, pour séparer les artefacts de conception du code qui les réalise"
   before_checklist:
-    enabled: false
-    message: "[Spec Kit] Save progress before checklist"
+    enabled: true
+    message: "Spec Kit: état du dépôt enregistré avant la liste de vérification, pour l'isoler dans le commit suivant"
   before_analyze:
-    enabled: false
-    message: "[Spec Kit] Save progress before analysis"
+    enabled: true
+    message: "Spec Kit: état du dépôt enregistré avant l'analyse de cohérence, pour isoler dans le commit suivant les corrections qu'elle entraîne"
   before_taskstoissues:
-    enabled: false
-    message: "[Spec Kit] Save progress before issue sync"
+    enabled: true
+    message: "Spec Kit: état du dépôt enregistré avant la conversion des tâches en tickets, pour garder tasks.md tel qu'il a été converti"
   after_constitution:
-    enabled: false
-    message: "[Spec Kit] Add project constitution"
+    enabled: true
+    message: "Spec Kit: constitution du projet mise à jour, les principes auxquels spécifications, plans et tâches doivent se conformer"
   after_specify:
-    enabled: false
-    message: "[Spec Kit] Add specification"
+    enabled: true
+    message: "Spec Kit: spécification de la fonctionnalité (spec.md), pour fixer le quoi et le pourquoi avant de planifier le comment"
   after_clarify:
-    enabled: false
-    message: "[Spec Kit] Clarify specification"
+    enabled: true
+    message: "Spec Kit: spécification clarifiée, les réponses aux questions ouvertes inscrites dans spec.md avant la planification"
   after_plan:
-    enabled: false
-    message: "[Spec Kit] Add implementation plan"
+    enabled: true
+    message: "Spec Kit: plan d'implémentation (plan.md et artefacts de conception), pour décider du comment avant de découper en tâches"
   after_tasks:
-    enabled: false
-    message: "[Spec Kit] Add tasks"
+    enabled: true
+    message: "Spec Kit: tâches ordonnées par dépendance (tasks.md), pour implémenter le plan par petites étapes vérifiables"
   after_implement:
-    enabled: false
-    message: "[Spec Kit] Implementation progress"
+    enabled: true
+    message: "Spec Kit: avancement de l'implémentation, tâches de tasks.md réalisées et cochées"
   after_checklist:
-    enabled: false
-    message: "[Spec Kit] Add checklist"
+    enabled: true
+    message: "Spec Kit: liste de vérification de la fonctionnalité, pour contrôler la qualité des exigences avant d'implémenter"
   after_analyze:
-    enabled: false
-    message: "[Spec Kit] Add analysis report"
+    enabled: true
+    message: "Spec Kit: corrections issues de l'analyse de cohérence entre spec.md, plan.md et tasks.md, avant d'implémenter"
   after_taskstoissues:
-    enabled: false
-    message: "[Spec Kit] Sync tasks to issues"
+    enabled: true
+    message: "Spec Kit: tâches converties en tickets, pour suivre leur avancement hors du dépôt"

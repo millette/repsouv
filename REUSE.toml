@@ -3,9 +3,9 @@
 # Vérification: `nub run licences` (uvx reuse lint). Textes des licences: LICENSES/.
 version = 1
 
-# Code, schémas JSON, configuration et documentation du dépôt.
+# Code, schémas JSON, configuration et documentation du dépôt, dont les artefacts Spec Kit des fonctionnalités en cours (specs/).
 [[annotations]]
-path = ["schemas/**", "README.md", "implementation.md", "historique.md", "tickets/**", "package.json", "nub.lock", "skills-lock.json", "tsconfig.json", "tsconfig.schemas.json", ".gitignore", ".env.example", ".node-version"]
+path = ["schemas/**", "README.md", "implementation.md", "historique.md", "tickets/**", "specs/**","package.json", "nub.lock", "skills-lock.json", "tsconfig.json", "tsconfig.schemas.json", ".gitignore", ".env.example", ".node-version"]
 SPDX-FileCopyrightText = "2026 Robin Millette <https://robin.millette.info/>"
 SPDX-License-Identifier = "AGPL-3.0-or-later"
 
