@@ -8,6 +8,13 @@
 
 **Input**: User description: "Le projet doit pouvoir être déployé sur github pages"
 
+## Clarifications
+
+### Session 2026-11-13
+
+- Q: Quels contrôles la publication doit-elle passer avant de mettre le site en ligne ? → A: Tous: tests, types et licences de la racine, puis types, tests unitaires, tests du site bâti et tests dans un navigateur du site.
+- Q: Quand la publication doit-elle se déclencher ? → A: À chaque changement poussé sur la branche principale, et à la main.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Publier le site à chaque mise à jour du dépôt (Priority: P1)
@@ -159,8 +166,8 @@ publié à sa propre adresse, sans modifier le code.
 - **Mise à jour des données**: la publication ne lance pas `node update.ts`; les données sont
   mises à jour et poussées par la personne qui maintient le dépôt, comme aujourd'hui.
 - **Contrôles avant publication**: ceux que la constitution exige avant un commit (tests, types,
-  licences à la racine) et les tests du site, y compris dans un navigateur; à confirmer à la
-  clarification, parce que les tests dans un navigateur allongent chaque publication.
+  licences à la racine) et tous les tests du site, y compris dans un navigateur (clarification du
+  2026-11-13); chaque publication en est allongée de quelques minutes.
 - **Vérification**: la publication elle-même ne peut être exercée que sur GitHub, après que les
   changements sont poussés et le réglage fait; avant cela, le site bâti pour l'adresse du dépôt
   est vérifié sur le poste.

@@ -32,4 +32,3 @@
 ## Notes
 
 - « GitHub Pages » est nommé parce que c'est l'objet de la demande, pas un choix d'implémentation.
-- À confirmer à `/speckit-clarify`: quels contrôles précèdent chaque publication.
