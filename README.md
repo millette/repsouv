@@ -12,6 +12,8 @@ Le [sommaire statistique](sommaire.md) qui en résulte distingue 56 logiciels li
 
 *Statut du code source des outils du répertoire, d'après [`sommaire.md`](sommaire.md) (image produite par `node sommaire.ts`).*
 
+Le dépôt contient aussi un **site statique de consultation** ([`site/`](site/README.md)) : une page par outil, des filtres par catégorie, tag et statut du code source, la provenance de chaque champ et l'attribution sur chaque page. Il se bâtit à partir des fichiers JSON, sans les modifier ; son hébergement reste à décider.
+
 **Sommaire :** [Démarrage rapide](#démarrage-rapide) · [Source, crédits et licences](#source-crédits-et-licences) · [Autres commandes](#autres-commandes) · [Outils à installer](#outils-à-installer) · [Fichiers JSON](#fichiers-json) · [Sommaire statistique](#sommaire-statistique) · [Utiliser les données](#utiliser-les-données) · [Documentation](#documentation)
 
 ## Démarrage rapide
@@ -50,7 +52,7 @@ Le contenu du répertoire est l'œuvre des auteur·trices de la note, et non de 
 
 | Ce qui | Licence |
 |---|---|
-| **Code source, configuration et documentation** (`*.ts`, `test/`, `package.json`, `nub.lock`, `tsconfig*.json`, `README.md`, `implementation.md`, `historique.md`, `tickets/`, et `specs/` pendant une fonctionnalité) | [GNU Affero General Public License v3.0](https://www.gnu.org/licenses/agpl-3.0.html), identifiant SPDX `AGPL-3.0-or-later` (version 3 de la licence ou toute version ultérieure). Texte complet dans [`LICENSE`](LICENSE). Chaque fichier `.ts` commence par les en-têtes `SPDX-License-Identifier` et `SPDX-FileCopyrightText` |
+| **Code source, configuration et documentation** (`*.ts`, `test/`, `package.json`, `nub.lock`, `tsconfig*.json`, `README.md`, `implementation.md`, `historique.md`, `tickets/`, `site/`, `specs/`) | [GNU Affero General Public License v3.0](https://www.gnu.org/licenses/agpl-3.0.html), identifiant SPDX `AGPL-3.0-or-later` (version 3 de la licence ou toute version ultérieure). Texte complet dans [`LICENSE`](LICENSE). Chaque fichier `.ts` commence par les en-têtes `SPDX-License-Identifier` et `SPDX-FileCopyrightText` |
 | **Schémas JSON** (`schemas/*.schema.json`) | Même licence que le code, `AGPL-3.0-or-later`. Le JSON n'admet pas de commentaires : chaque schéma la déclare dans son mot-clé standard `$comment` (ajouté par `generer-schemas.ts`), et `REUSE.toml` la déclare pour `schemas/**` selon la spécification [REUSE](https://reuse.software/) |
 | **Données** (`outils.json`, `categories.json`, `criteres.json`, `tags.json`, `sources.json`) et ce qui en est dérivé : le **sommaire** (`sommaire.md`), ses **graphiques** (`graphiques/`) et les résultats du banc d'essai (`analyse-effort/*.json`) | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.fr), identifiant SPDX `CC-BY-SA-4.0`. Texte complet dans [`LICENSE-CC-BY-SA-4.0`](LICENSE-CC-BY-SA-4.0). Le JSON n'admet pas de commentaires : chaque fichier déclare sa licence dans `meta.data_license`, que les scripts maintiennent (voir [Fichiers JSON](#fichiers-json)) |
 | **Skill Claude Code** `charting-vega-lite` (`.claude/skills/`), copié depuis [oaustegard/claude-skills](https://github.com/oaustegard/claude-skills) | [MIT](https://opensource.org/license/mit), © 2025 Oskar Austegard. Aide à la rédaction des graphiques Vega-Lite pendant le développement; rien du projet n'en dépend à l'exécution |
@@ -92,6 +94,14 @@ node extract-facil.ts [--fichier=page.html]   # synchronise les Services FACiLes
 node extract-charles.ts [--dossier=clone]     # synchronise les alternatives de Charles (source charles, dépôt GitLab ou clone local) dans outils.json, sources.json et categories.json; node update.ts enrichit ensuite les nouveaux
 node ajouter.ts <lien> --nom=… --categorie=<id> --description=… --source=<id> [--score=N] [--alternative-a=url,…] [--source-nom=… --source-url=… --soumis-par-nom=…]
                                  # ajoute à la main un outil (et sa source dans sources.json); node update.ts l'enrichit ensuite
+```
+
+Site de consultation, avec nub, dans `site/` (voir [`site/README.md`](site/README.md)) :
+
+```sh
+nub install && nub run build     # bâtit site/dist/ à partir des JSON de la racine (156 pages), sans appel réseau
+nub run dev                      # serveur de développement
+nub run test && nub run test:e2e # tests unitaires, tests du site bâti, puis tests dans Chromium
 ```
 
 Développement, avec nub (commandes définies dans `package.json`) :
@@ -312,6 +322,7 @@ jaq '.outils[] | select(.criteres_confirmes and (.criteres_confirmes.criteres | 
 | [implementation.md](implementation.md) | Le flux de travail, le contenu du dépôt, les schémas, chaque script et ses options, la classification et ses analyses, l'enrichissement, la génération du sommaire, les scripts npm, les tests, le dépannage et les conventions de documentation |
 | [historique.md](historique.md) | Les étapes du projet et les décisions prises, par date |
 | [sommaire.md](sommaire.md) | Le sommaire statistique généré (données, dates, catégories, statuts, licences, critères, forges, tags, fiabilité) |
+| [site/README.md](site/README.md) | Le site de consultation : commandes, variables d'environnement, règles (données, provenance, styles) et tests |
 | [analyse-effort/analyse.md](analyse-effort/analyse.md) | Le banc d'essai des modèles et des efforts de raisonnement sur 20 outils, d'où viennent les valeurs par défaut |
 | [tickets/charles-amont.md](tickets/charles-amont.md) | Brouillon du ticket à ouvrir au dépôt de Charles (fichier de licence manquant, alternatives sans site, alternative américaine, deux liens morts) ; pas encore ouvert |
 | [.specify/memory/constitution.md](.specify/memory/constitution.md) | La constitution du projet : les six principes, les contraintes techniques, le flux de travail et la gouvernance que suivent les fonctionnalités menées avec [Spec Kit](https://github.com/github/spec-kit) |

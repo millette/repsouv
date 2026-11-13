@@ -190,10 +190,10 @@ d'IA sans signalement.
 - [x] T040 Corriger les violations relevées par T039 dans `site/src/components/`, `site/src/layouts/Page.astro` et `site/src/styles/global.css` (contraste, noms accessibles, ordre des titres, focus), sans classe utilitaire ni variante réactive
 - [x] T041 [P] Écrire `site/test/e2e/telephone.spec.ts` (fenêtre de 360 px de large): l'accueil et une fiche n'ont pas de défilement horizontal, et les filtres restent utilisables; corriger `site/src/styles/global.css` et les composants au besoin
 - [x] T042 Relier `site/package.json`: `test` lance `test:unit` puis `test:build`; `check` lance `astro check`; vérifier dans `site/` que `nub run check`, `nub run test` et `nub run test:e2e` passent, et à la racine que `nub run test`, `nub run typecheck` et `nub run licences` passent
-- [ ] T043 Dérouler les 17 scénarios de `specs/001-site-consultation-repertoire/quickstart.md` et consigner le résultat de chacun dans ce fichier (section « Résultats »), dont le résumé sera reporté dans `historique.md` par T045 ; `git status` à la racine montre qu'aucun fichier de données, schéma ou script n'a changé (SC-010)
-- [ ] T044 [P] Créer `site/README.md` (ligne « Documentation », ce que fait le site, commandes, variables `SITE_URL`, `SITE_BASE` et `DONNEES`, tests, licences), avec des liens `../` vers la documentation de la racine; il reste hors de `FICHIERS_REDIGES` de `test/markdown.ts`, dont la ligne « Documentation » suppose des liens relatifs à la racine
-- [ ] T045 Reporter le contenu durable dans `implementation.md` (section sur le site: structure, lecture des données, provenance, filtres et adresse, tests, publication à décider), `README.md` (le site dans « En bref », les commandes, la table « Documentation », les licences) et `historique.md` (étape du site, décisions tirées de research.md, question ouverte de l'hébergeur)
-- [ ] T046 Supprimer `specs/001-site-consultation-repertoire/` et `.specify/feature.json` une fois T045 relu, comme l'exige la constitution, puis lancer tous les contrôles une dernière fois
+- [x] T043 Dérouler les 17 scénarios de `specs/001-site-consultation-repertoire/quickstart.md` et consigner le résultat de chacun dans ce fichier (section « Résultats »), dont le résumé sera reporté dans `historique.md` par T045 ; `git status` à la racine montre qu'aucun fichier de données, schéma ou script n'a changé (SC-010)
+- [x] T044 [P] Créer `site/README.md` (ligne « Documentation », ce que fait le site, commandes, variables `SITE_URL`, `SITE_BASE` et `DONNEES`, tests, licences), avec des liens `../` vers la documentation de la racine; il reste hors de `FICHIERS_REDIGES` de `test/markdown.ts`, dont la ligne « Documentation » suppose des liens relatifs à la racine
+- [x] T045 Reporter le contenu durable dans `implementation.md` (section sur le site: structure, lecture des données, provenance, filtres et adresse, tests, publication à décider), `README.md` (le site dans « En bref », les commandes, la table « Documentation », les licences) et `historique.md` (étape du site, décisions tirées de research.md, question ouverte de l'hébergeur)
+- [x] T046 ~~Supprimer `specs/001-site-consultation-repertoire/` et `.specify/feature.json`~~ Remplacée le 2026-11-13: la constitution 1.2.0 conserve les dossiers `specs/`; lancer tous les contrôles une dernière fois
 
 ---
 
@@ -270,3 +270,21 @@ Un commit par tâche ou par petit groupe de tâches, chacun avec tous les contr�
 
 - [x] T047 Appliquer le thème sombre de daisyUI selon la préférence du système (`prefers-color-scheme: dark`) par un greffon PostCSS testé dans `site/postcss/` et `site/test/styles.test.ts`, et faire vérifier par `site/test/e2e/accessibilite.spec.ts` que le fond de page est sombre quand le thème sombre est demandé per T003, T039 (partial)
 - [x] T048 Signaler dans `site/src/components/Filtres.tsx` que les statuts du code source et les tags sont produits par IA, à vérifier, avec un test dans `site/test/build/accueil.test.ts` per FR-016 (partial)
+
+---
+
+## Résultats
+
+Validation du 2026-11-13 (T043). Les 17 scénarios de [quickstart.md](quickstart.md) passent.
+
+| Scénarios | Vérifiés par | Résultat |
+|---|---|---|
+| 1, 2, 3, 4, 5, 14 (liste, score estimé, fiches, service et logiciel, attribution) | `site/test/build/*.test.ts` (34 tests, sur les 154 outils) | Réussi |
+| 6, 7, 8, 9, 10 (filtres, recherche, aucun résultat, adresse partagée, bouton précédent) | `site/test/e2e/filtres.spec.ts` | Réussi |
+| 11 (sans JavaScript) | `site/test/e2e/sans-javascript.spec.ts` | Réussi |
+| 12, 13 (clavier seul, accessibilité axe A et AA, thèmes clair et sombre) | `site/test/e2e/accessibilite.spec.ts` | Réussi |
+| 15 (données invalides) | `site/test/build/echecs.test.ts` | Réussi |
+| 16 (données intactes) | `git status`: aucun fichier de données, schéma ou script de la racine modifié | Réussi |
+| 17 (téléphone, 360 px) | `site/test/e2e/telephone.spec.ts` | Réussi |
+
+Totaux: 62 tests unitaires, 34 tests du site bâti, 34 tests dans Chromium; `nub run check` sans erreur.

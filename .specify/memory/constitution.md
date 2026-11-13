@@ -100,7 +100,9 @@ données, le code et la documentation cohérents.
 - Avant chaque commit, `nub run test`, `nub run typecheck` et `nub run licences` DOIVENT passer.
 - Les messages de commit expliquent le pourquoi, dans le style de l'historique du dépôt.
 - À la fin d'une fonctionnalité, son contenu durable est reporté dans `implementation.md` et
-  `historique.md`, puis son dossier `specs/` est supprimé.
+  `historique.md`. Son dossier `specs/NNN-nom/` est conservé: la spécification, le plan, les
+  contrats et les tâches restent la trace de ce qui a été demandé et décidé, et le code peut y
+  renvoyer.
 
 ## Governance
 
@@ -112,4 +114,4 @@ données, le code et la documentation cohérents.
   - MINEUR: ajout d'un principe ou d'une section, ou extension notable d'une règle;
   - CORRECTIF: clarification, reformulation ou correction sans changement de sens.
 
-**Version**: 1.1.0 | **Ratified**: 2026-11-13 | **Last Amended**: 2026-11-13
+**Version**: 1.2.0 | **Ratified**: 2026-11-13 | **Last Amended**: 2026-11-13
