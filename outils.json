@@ -2,7 +2,7 @@
   "meta": {
     "data_license": "CC-BY-SA-4.0",
     "created_at": "2026-11-12T12:35:52-05:00",
-    "updated_at": "2026-11-13T07:30:39-05:00"
+    "updated_at": "2026-11-13T07:51:43-05:00"
   },
   "outils": [
     {
@@ -3307,7 +3307,7 @@
         "modele": "gpt-6.1-sol",
         "date": "2026-11-13T07:28:52-05:00"
       },
-      "echecs_openhub": 1
+      "echecs_openhub": 2
     },
     {
       "categorie": "bureautique-et-collaboration",
@@ -3328,13 +3328,12 @@
         "https://www.microsoft.com/microsoft-365"
       ],
       "criteres": [
-        "dependance"
+        "controle"
       ],
       "confiance": "moyenne",
       "voir_aussi": [
         "Collabora Online"
       ],
-      "description_longue": "**Bureautique FACiLe** est un service de bureautique en ligne proposé par FACiL, un organisme québécois de promotion de l’informatique libre. Destiné aux membres de FACiL, il repose sur **Collabora Online**, un logiciel libre de travail sur des documents dans un navigateur Web. Il constitue une solution de remplacement aux suites bureautiques en ligne propriétaires, comme Google Docs ou Microsoft 365, pour les usages de rédaction et de collaboration.\n\nCollabora Online s’appuie sur la technologie de LibreOffice. Il permet de consulter et de modifier des textes, des feuilles de calcul et des présentations, avec des fonctions de collaboration en temps réel. Il prend en charge les formats OpenDocument ainsi que les principaux formats de Microsoft Office, sans garantir un rendu identique pour tous les documents complexes.\n\nPour un OSBL culturel, ce type de service peut servir à préparer collectivement un budget, un compte rendu ou un document de programmation. L’accès au service FACiLe évite d’avoir à déployer soi-même le logiciel. Les renseignements fournis ne précisent toutefois ni les limites d’utilisation, ni les modalités de sauvegarde, ni le lieu d’hébergement des données. Ces points sont à vérifier auprès de FACiL avant d’y déposer des documents sensibles.",
       "tags": [
         "redaction-documents",
         "collaboration-temps-reel"
@@ -3347,11 +3346,10 @@
       "evaluation_enrichie": {
         "score": 1,
         "criteres": [
-          "dependance"
+          "controle"
         ],
         "confiance": "moyenne"
       },
-      "enrichi_le": "2026-11-13T07:24:24-05:00",
       "criteres_confirmes": {
         "criteres": [
           "donnees"
@@ -3376,7 +3374,9 @@
         "premier_mois": "2015-03-01",
         "dernier_mois": "2026-11-01",
         "consulte_le": "2026-11-13T07:30:25-05:00"
-      }
+      },
+      "description_longue": "**Bureautique FACiLe** est un service de bureautique en ligne proposé par FACiL, un organisme québécois de promotion du logiciel libre. Destiné aux membres de FACiL, il repose sur **Collabora Online**, une suite bureautique libre issue de LibreOffice. Il constitue une solution de remplacement aux suites bureautiques en ligne propriétaires pour travailler sur des documents depuis un navigateur Web.\n\nCollabora Online permet de consulter et de modifier des textes, des feuilles de calcul et des présentations. Il prend en charge le travail collaboratif, notamment la modification simultanée d’un document par plusieurs personnes, ainsi que les formats bureautiques courants, dont OpenDocument et les formats de Microsoft Office. Pour un organisme culturel, ces fonctions peuvent servir à préparer collectivement un budget, un compte rendu ou un document de programmation.\n\nBureautique FACiLe donne accès à ce logiciel sous la forme d’un service hébergé, plutôt que d’exiger que chaque organisme déploie sa propre installation. Les renseignements fournis ne précisent toutefois pas les quotas, les modalités de sauvegarde ni le lieu d’hébergement des données. L’accès est annoncé comme réservé aux membres, sans indication de tarif dans l’extrait disponible.\n\nLe logiciel sous-jacent figure également au répertoire sous le nom **Collabora Online**.",
+      "enrichi_le": "2026-11-13T07:50:10-05:00"
     },
     {
       "categorie": "creation-et-gestion-de-contenus-numeriques",
@@ -3515,7 +3515,7 @@
     {
       "categorie": "communication-et-collaboration-d-equipe",
       "nom": "Conférence FACiLe",
-      "score": 1,
+      "score": 2,
       "score_estime": true,
       "lien": "https://conference.facil.services/",
       "description": "Tenir des séances de visioconférence avec messagerie texte, édition collaborative et partage d'écran.",
@@ -3534,17 +3534,17 @@
         "https://apps.apple.com/app/facetime/id1110145091"
       ],
       "criteres": [
-        "controle"
+        "controle",
+        "dependance"
       ],
       "confiance": "moyenne",
       "voir_aussi": [
         "Jitsi Meet"
       ],
-      "description_longue": "**Conférence FACiLe** est un service de visioconférence proposé par FACiL, un organisme québécois consacré à la promotion de l’informatique libre. Il repose sur **Jitsi Meet**, un logiciel libre de réunions audio et vidéo. Le service constitue une solution de remplacement aux plateformes de visioconférence propriétaires pour les rencontres d’équipe, les comités ou les échanges entre partenaires d’un organisme culturel.\n\nLa description du service mentionne la messagerie texte, le partage d’écran et l’édition collaborative. Ces fonctions permettent de discuter pendant une séance, de présenter un document ou de travailler ensemble sur du contenu. L’extrait fourni ne précise toutefois pas les modalités de l’édition collaborative ni les éventuelles limites de participation.\n\nJitsi Meet peut être déployé sur une infrastructure indépendante. Le dépôt présenté fournit les outils nécessaires pour installer ses composants avec Docker Compose et publie son code sous licence Apache-2.0. L’utilisation de Conférence FACiLe évite à l’organisme utilisateur d’administrer lui-même cette infrastructure.\n\nLa documentation générale de Jitsi présente des communications chiffrées et un usage possible sans compte. Les règles d’accès propres à Conférence FACiLe, l’emplacement de ses serveurs et ses pratiques de conservation des données ne sont pas précisés dans l’extrait fourni.",
       "tags": [
         "messagerie-visioconference",
         "collaboration-temps-reel",
-        "chiffrement"
+        "stockage-partage-fichiers"
       ],
       "source": "libre",
       "licence": "Apache-2.0",
@@ -3552,13 +3552,13 @@
       "custom_license_url": null,
       "repo": "https://github.com/jitsi/docker-jitsi-meet",
       "evaluation_enrichie": {
-        "score": 1,
+        "score": 2,
         "criteres": [
-          "controle"
+          "controle",
+          "dependance"
         ],
         "confiance": "moyenne"
       },
-      "enrichi_le": "2026-11-13T07:25:06-05:00",
       "criteres_confirmes": {
         "criteres": [
           "donnees",
@@ -3587,7 +3587,9 @@
         "premier_mois": "2013-12-01",
         "dernier_mois": "2026-11-01",
         "consulte_le": "2026-11-13T07:30:26-05:00"
-      }
+      },
+      "description_longue": "**Conférence FACiLe** est un service de visioconférence proposé par FACIL, un organisme québécois de promotion de l’informatique libre. Il repose sur **Jitsi Meet**, un logiciel libre de réunions audio et vidéo accessible dans un navigateur. Il constitue une solution de remplacement aux plateformes de visioconférence propriétaires pour les échanges d’équipe, les comités et les rencontres à distance d’un organisme culturel.\n\nLe service est présenté comme permettant la visioconférence, la messagerie texte, le partage d’écran et l’édition collaborative. Ces fonctions peuvent servir à discuter d’un projet, à présenter un document ou à travailler ensemble pendant une rencontre. La disponibilité précise des fonctions dépend toutefois de la configuration retenue par l’hébergeur.\n\nJitsi Meet peut être déployé sur une infrastructure indépendante. Le dépôt fourni, **Jitsi Meet on Docker**, contient les outils nécessaires pour installer ses composants avec Docker Compose. Ce mode de déploiement permet à un hébergeur d’exploiter sa propre installation plutôt que de dépendre d’une plateforme centralisée unique.\n\nLa documentation consultée décrit le logiciel et son installation, mais ne précise pas les conditions d’utilisation de Conférence FACiLe, ses limites de capacité ni le lieu d’hébergement de ses données. Le logiciel figure également au répertoire sous le nom **Jitsi Meet**.",
+      "enrichi_le": "2026-11-13T07:50:22-05:00"
     },
     {
       "categorie": "messagerie-electronique",
@@ -3742,13 +3744,11 @@
       "voir_aussi": [
         "CryptPad"
       ],
-      "description_longue": "Ébauche FACiLe est un service de bureautique collaborative proposé par **FACiLe**, un organisme québécois de promotion de l’informatique libre. Il repose sur **CryptPad**, une suite bureautique libre développée par l’équipe de CryptPad chez XWiki SAS, en France. Il constitue une solution de remplacement aux suites collaboratives propriétaires pour travailler à plusieurs sur des documents dans un navigateur.\n\nCryptPad synchronise les modifications en temps réel et chiffre le contenu dans le navigateur avant son envoi au serveur. Pour un OSBL culturel, ce fonctionnement peut servir à rédiger collectivement des documents de travail, préparer des réunions ou élaborer des projets avec des partenaires, tout en limitant l’accès de l’hébergeur au contenu.\n\nLe **chiffrement de bout en bout** n’élimine toutefois pas la nécessité de faire confiance à l’exploitant du service. Le code exécuté dans le navigateur est fourni par le serveur : sa sécurité et sa maintenance restent donc importantes. La documentation précise aussi que ce chiffrement ne garantit pas l’absence de journalisation des adresses IP ou de l’activité.\n\nLe logiciel CryptPad peut être installé sur une infrastructure indépendante. Cette possibilité est distincte de l’utilisation du service Ébauche FACiLe : l’extrait fourni ne précise ni l’emplacement de ses serveurs, ni ses quotas, ni ses modalités de conservation des documents.",
       "tags": [
         "redaction-documents",
         "collaboration-temps-reel",
         "chiffrement",
-        "vie-privee",
-        "auto-hebergeable"
+        "vie-privee"
       ],
       "source": "libre",
       "licence": "AGPL-3.0-only",
@@ -3762,7 +3762,6 @@
         ],
         "confiance": "moyenne"
       },
-      "enrichi_le": "2026-11-13T07:25:50-05:00",
       "criteres_confirmes": {
         "criteres": [
           "donnees",
@@ -3789,7 +3788,9 @@
         "premier_mois": "2014-10-01",
         "dernier_mois": "2026-11-01",
         "consulte_le": "2026-11-13T07:30:28-05:00"
-      }
+      },
+      "description_longue": "Ébauche FACiLe est un service de bureautique collaborative proposé par **FACIL**, un organisme québécois consacré à la promotion de l’informatique libre. Il repose sur **CryptPad**, une suite libre qui permet de travailler à plusieurs sur des documents et de synchroniser les modifications en temps réel. Il constitue une solution de remplacement aux suites bureautiques collaboratives propriétaires pour les équipes qui souhaitent privilégier le chiffrement de leurs contenus.\n\nCryptPad chiffre les données dans le navigateur avant leur transmission au serveur et aux autres personnes participantes. Dans le fonctionnement prévu du logiciel, les responsables du service ne peuvent donc pas lire le contenu des documents. Pour un OSBL culturel, ce type de service peut servir à rédiger collectivement des documents de travail, des propositions de projets ou des comptes rendus.\n\n**Le chiffrement ne supprime toutefois pas toute nécessité de confiance envers l’hébergeur.** Celui-ci fournit le code exécuté dans le navigateur et doit maintenir son installation à jour. La protection du contenu ne garantit pas non plus l’absence de journalisation des adresses IP ou des activités de connexion.\n\nCryptPad est développé par une équipe de XWiki SAS et peut être installé sur une infrastructure indépendante. Il figure également au répertoire sous le nom CryptPad.",
+      "enrichi_le": "2026-11-13T07:50:33-05:00"
     },
     {
       "categorie": "communication-et-collaboration-d-equipe",
@@ -3817,16 +3818,14 @@
       "voir_aussi": [
         "Mattermost"
       ],
-      "description_longue": "Équipe FACiLe est un service de communication en temps réel pour le travail d’équipe, proposé par FACiL, un organisme québécois de promotion de l’informatique libre. Il repose sur **Mattermost**, une plateforme de collaboration qui peut remplacer un outil de messagerie d’équipe comme Slack.\n\nPour un OSBL culturel, ce type de service permet de regrouper les échanges liés aux activités, aux projets et au fonctionnement interne dans un espace commun. Mattermost organise les conversations en canaux et permet les messages directs ainsi que le partage de fichiers. Il est accessible dans un navigateur et dispose également d’applications pour Android, iOS, Windows, macOS et Linux.\n\nLe logiciel propose aussi des appels vocaux, le partage d’écran, des automatisations et des intégrations avec d’autres outils, notamment par API et webhooks. **La disponibilité de ces fonctions dans Équipe FACiLe dépend toutefois de la configuration et de l’édition utilisées**; l’extrait fourni ne précise pas lesquelles sont activées.\n\nMattermost suit un modèle à noyau ouvert, avec des composantes libres et des fonctionnalités commerciales. Son installation sur une infrastructure indépendante est possible. Pour le service Équipe FACiLe lui-même, les conditions d’accès, les limites d’utilisation et le lieu d’hébergement des données ne sont pas précisés dans les renseignements fournis.",
       "tags": [
         "messagerie-visioconference",
         "stockage-partage-fichiers",
         "application-mobile",
-        "application-bureau",
-        "api-integrations"
+        "application-bureau"
       ],
       "source": "partiel",
-      "licence": null,
+      "licence": "MIT",
       "custom_license": null,
       "custom_license_url": null,
       "repo": "https://github.com/mattermost/mattermost",
@@ -3837,7 +3836,6 @@
         ],
         "confiance": "moyenne"
       },
-      "enrichi_le": "2026-11-13T07:26:05-05:00",
       "criteres_confirmes": {
         "criteres": [
           "donnees",
@@ -3864,7 +3862,9 @@
         "premier_mois": "2015-06-01",
         "dernier_mois": "2026-11-01",
         "consulte_le": "2026-11-13T07:30:29-05:00"
-      }
+      },
+      "description_longue": "Équipe FACiLe est un service de **communication d’équipe en temps réel** proposé par FACIL, un organisme québécois voué à la promotion de l’informatique libre. Il repose sur **Mattermost** et constitue une solution de remplacement aux plateformes de messagerie d’équipe comme Slack. Pour un OSBL culturel, ce type d’espace peut servir à regrouper les échanges liés aux activités, aux productions ou à la coordination interne, plutôt que de multiplier les courriels.\n\nMattermost organise les conversations en canaux et permet les échanges directs ainsi que le partage de fichiers. Le logiciel dispose d’une interface Web et d’applications pour Android, iOS, Windows, macOS et Linux. Il propose également des possibilités d’intégration avec d’autres outils au moyen d’API, de webhooks et de modules complémentaires.\n\nLe logiciel sous-jacent est auto-hébergeable et suit un modèle **open core**, avec des composantes libres et des fonctionnalités commerciales. Les capacités générales de Mattermost, notamment les appels vocaux, le partage d’écran et l’automatisation, ne doivent toutefois pas être considérées comme toutes activées dans Équipe FACiLe : leur disponibilité dépend de la configuration du service.\n\nMattermost figure également dans le répertoire.",
+      "enrichi_le": "2026-11-13T07:50:46-05:00"
     },
     {
       "categorie": "gestion-d-evenements-et-billetterie",
@@ -3892,14 +3892,13 @@
       "voir_aussi": [
         "Mobilizon"
       ],
-      "description_longue": "Événement FACiLe est un service de création et de diffusion d’événements proposé par **FACiL**, un organisme québécois de promotion de l’informatique libre. Il s’appuie sur **Mobilizon**, un logiciel libre permettant de rassembler des personnes, d’organiser des activités et de gérer des groupes. Il constitue une solution de remplacement aux fonctions d’organisation d’événements de plateformes comme Facebook ou Meetup.\n\nPour un OSBL des arts et de la culture, ce type de service peut servir à annoncer une rencontre, un atelier ou une activité publique et à recueillir des inscriptions. Mobilizon permet notamment de publier des pages d’événements et de coordonner des activités au sein de groupes. Il ne faut toutefois pas l’assimiler à une solution de billetterie payante : le contenu fourni ne documente pas la vente de billets ni le traitement des paiements.\n\nMobilizon repose sur une architecture **fédérée**, utilisant le protocole ActivityPub pour permettre les échanges entre instances compatibles. Événement FACiLe donne accès à ce logiciel sans que l’organisme utilisateur ait à exploiter sa propre installation. L’extrait fourni décrit le logiciel plutôt que les modalités du service : il ne précise ni les limites d’utilisation, ni les engagements de soutien, ni le lieu d’hébergement des données.",
       "tags": [
         "evenements-billetterie",
         "communaute-reseau-social",
         "federe-decentralise"
       ],
       "source": "libre",
-      "licence": "AGPL-3.0-or-later",
+      "licence": "AGPL-3.0-only",
       "custom_license": null,
       "custom_license_url": null,
       "repo": "https://framagit.org/kaihuri/mobilizon",
@@ -3910,7 +3909,6 @@
         ],
         "confiance": "moyenne"
       },
-      "enrichi_le": "2026-11-13T07:26:17-05:00",
       "criteres_confirmes": {
         "criteres": [],
         "preuves": {},
@@ -3918,7 +3916,9 @@
         "modele": "gpt-6.1-sol",
         "date": "2026-11-13T07:29:28-05:00"
       },
-      "echecs_openhub": 1
+      "echecs_openhub": 2,
+      "description_longue": "Événement FACiLe est un service de création et de partage d’événements proposé par **FACiL**, organisme québécois de promotion de l’informatique libre. Il repose sur **Mobilizon**, un logiciel libre conçu pour rassembler des personnes, organiser des activités et animer des groupes. Il constitue une solution de remplacement aux événements Facebook ou à Meetup, sans obliger l’organisme à installer lui-même le logiciel.\n\nPour un OSBL culturel, le service peut servir à annoncer une rencontre, un atelier ou une activité publique et à recueillir des inscriptions. Mobilizon permet de publier des pages d’événements et de gérer des participations. Ses fonctions de groupe permettent aussi de préparer des activités collectivement. Il ne faut toutefois pas le confondre avec une plateforme de billetterie payante : le contenu fourni ne documente ni la vente de billets ni le traitement des paiements.\n\nMobilizon utilise le protocole **ActivityPub**, qui permet à des instances indépendantes de communiquer entre elles. Le logiciel peut également être installé sur une infrastructure choisie par une organisation. Cette possibilité concerne le logiciel, et non le choix du lieu d’hébergement du service Événement FACiLe, qui n’est pas précisé dans l’extrait fourni.\n\nLe répertoire présente aussi Mobilizon dans une fiche distincte.",
+      "enrichi_le": "2026-11-13T07:51:00-05:00"
     },
     {
       "categorie": "securite-et-gestion-des-acces",
@@ -4042,7 +4042,7 @@
         "modele": "gpt-6.1-sol",
         "date": "2026-11-13T07:29:40-05:00"
       },
-      "echecs_openhub": 1
+      "echecs_openhub": 2
     },
     {
       "categorie": "communautes-reseaux-et-partage-des-connaissances",
@@ -4067,7 +4067,6 @@
       "voir_aussi": [
         "Discourse"
       ],
-      "description_longue": "Les **Forums du libre du Québec** sont un espace de discussion en ligne consacré au libre, dont l’objectif annoncé est de permettre des échanges civilisés. Le service utilise **Discourse**, un logiciel libre de forums communautaires. Il propose ainsi un lieu de conversation organisé par sujets, plutôt qu’un échange limité à une chaîne de courriels ou à un fil de messagerie.\n\nDiscourse permet de créer des sujets de discussion et d’y regrouper les réponses. Le logiciel comprend également une fonction de clavardage et peut être personnalisé avec des thèmes et des extensions. Ces possibilités appartiennent à la plateforme, mais les informations fournies ne permettent pas de confirmer lesquelles sont activées sur les Forums du libre du Québec.\n\nPour un OSBL des arts et de la culture, ce type d’espace peut servir à poser des questions sur les logiciels libres, à partager des connaissances et à consulter des échanges antérieurs. Il ne constitue pas, à lui seul, un service de soutien technique garanti.\n\nLe code de Discourse est public et le logiciel peut être installé sur une infrastructure indépendante. Toutefois, l’identité de l’organisme qui exploite cette instance, son fournisseur d’hébergement et le lieu de conservation des données ne sont pas précisés dans le contenu fourni. Le caractère libre du logiciel ne suffit donc pas à établir les conditions d’hébergement de ce service particulier.",
       "tags": [
         "communaute-reseau-social"
       ],
@@ -4081,7 +4080,6 @@
         "criteres": [],
         "confiance": "faible"
       },
-      "enrichi_le": "2026-11-13T07:26:55-05:00",
       "criteres_confirmes": {
         "criteres": [
           "donnees",
@@ -4110,12 +4108,14 @@
         "premier_mois": "2011-10-01",
         "dernier_mois": "2026-11-01",
         "consulte_le": "2026-11-13T07:30:31-05:00"
-      }
+      },
+      "description_longue": "Les **Forums du libre du Québec** sont un espace de discussion consacré au libre, dont l’objectif annoncé est de permettre des échanges civilisés. Le service repose sur **Discourse**, un logiciel libre de forums communautaires. Il constitue une solution de rechange aux groupes de discussion sur les réseaux sociaux et aux échanges dispersés par courriel, en réunissant les conversations dans un même espace Web.\n\nDiscourse permet de créer des sujets de discussion et d’y rassembler les réponses des membres. Pour un OSBL des arts et de la culture qui s’intéresse aux logiciels libres, ce type d’espace peut servir à poser des questions, partager des expériences et consulter des échanges antérieurs. Le logiciel propose également une messagerie instantanée, des thèmes et des extensions, mais les renseignements fournis ne permettent pas de confirmer lesquels sont activés sur ce forum.\n\nLe dépôt consulté décrit le logiciel Discourse, et non les modalités d’exploitation des Forums du libre du Québec. **L’identité de l’organisme qui exploite le service et le pays d’hébergement ne sont pas précisés.** Même si Discourse peut être installé sur une infrastructure indépendante, cette possibilité ne garantit pas que les données de ce forum sont conservées au Canada.\n\nLe logiciel figure aussi au répertoire sous le nom Discourse.",
+      "enrichi_le": "2026-11-13T07:51:14-05:00"
     },
     {
       "categorie": "communautes-reseaux-et-partage-des-connaissances",
       "nom": "Jasette FACiLe",
-      "score": 2,
+      "score": 1,
       "score_estime": true,
       "lien": "https://jasette.facil.services/",
       "description": "Échanger sur un réseau social dont vous n'êtes pas le produit.",
@@ -4130,14 +4130,12 @@
         "https://x.com/"
       ],
       "criteres": [
-        "controle",
-        "dependance"
+        "controle"
       ],
       "confiance": "moyenne",
       "voir_aussi": [
         "Mastodon"
       ],
-      "description_longue": "**Jasette FACiLe** est un service de réseau social proposé par FACIL, un organisme québécois de promotion de l’informatique libre. Il repose sur **Mastodon**, un logiciel libre de microblogage. Il constitue une solution de remplacement aux plateformes sociales centralisées pour publier des nouvelles, partager des contenus et entretenir des échanges avec une communauté.\n\nMastodon permet de diffuser du texte, des liens, des images et des vidéos. Les publications des comptes suivis apparaissent dans un fil chronologique, actualisé en temps réel. Pour un organisme artistique ou culturel, ce type de service peut servir à faire connaître ses activités, à suivre des partenaires ou à participer à des discussions professionnelles et communautaires.\n\nJasette FACiLe s’inscrit dans le **Fédivers** : grâce au protocole ActivityPub, les membres peuvent suivre des comptes et interagir avec des personnes inscrites sur d’autres serveurs compatibles, y compris ceux qui utilisent un autre logiciel que Mastodon. L’audience n’est donc pas limitée aux membres du même service.\n\nLe logiciel comprend des fonctions de signalement, de blocage, de masquage et de filtrage, ainsi que des options pour restreindre la visibilité des publications. Les conditions d’inscription, les règles de modération et le lieu précis d’hébergement de Jasette FACiLe ne sont toutefois pas documentés dans l’extrait fourni, qui décrit surtout le logiciel Mastodon.",
       "tags": [
         "communaute-reseau-social",
         "federe-decentralise"
@@ -4148,14 +4146,12 @@
       "custom_license_url": null,
       "repo": "https://github.com/mastodon/mastodon",
       "evaluation_enrichie": {
-        "score": 2,
+        "score": 1,
         "criteres": [
-          "controle",
-          "dependance"
+          "controle"
         ],
         "confiance": "moyenne"
       },
-      "enrichi_le": "2026-11-13T07:27:09-05:00",
       "criteres_confirmes": {
         "criteres": [
           "donnees",
@@ -4169,7 +4165,9 @@
         "modele": "gpt-6.1-sol",
         "date": "2026-11-13T07:29:48-05:00"
       },
-      "echecs_openhub": 1
+      "echecs_openhub": 2,
+      "description_longue": "**Jasette FACiLe** est un service de réseau social proposé par FACiL, un organisme québécois de promotion de l’informatique libre. Il repose sur **Mastodon**, un logiciel libre de micropublication. Il constitue une solution de rechange aux réseaux sociaux centralisés pour publier des nouvelles, partager des contenus et échanger avec d’autres personnes.\n\nMastodon permet de publier du texte, des liens, des images et des vidéos, ainsi que de suivre des comptes dont les publications apparaissent dans un fil chronologique. Pour un OSBL culturel, ces fonctions peuvent servir à diffuser des nouvelles de ses activités et à entretenir des échanges avec ses publics et ses partenaires.\n\nLe service s’inscrit dans le **Fédivers** : grâce au protocole ActivityPub, les personnes inscrites peuvent interagir avec des comptes hébergés sur d’autres serveurs Mastodon, mais aussi sur d’autres logiciels compatibles. Les échanges ne sont donc pas limités aux membres de Jasette FACiLe.\n\nLe logiciel comprend des outils de signalement, de filtrage, de mise en sourdine et de blocage, ainsi que des réglages de visibilité des publications. Les règles et les modalités propres au service relèvent toutefois de son administration. L’extrait fourni décrit le logiciel, sans préciser le lieu d’hébergement des données de Jasette FACiLe. Le répertoire présente également Mastodon.",
+      "enrichi_le": "2026-11-13T07:51:27-05:00"
     },
     {
       "categorie": "veille-et-gestion-de-l-information",
@@ -4229,7 +4227,7 @@
         "modele": "gpt-6.1-sol",
         "date": "2026-11-13T07:29:52-05:00"
       },
-      "echecs_openhub": 1
+      "echecs_openhub": 2
     },
     {
       "categorie": "navigation-web",
@@ -4273,7 +4271,7 @@
         "modele": "gpt-6.1-sol",
         "date": "2026-11-13T07:29:55-05:00"
       },
-      "echecs_openhub": 1
+      "echecs_openhub": 2
     },
     {
       "categorie": "stockage-infonuagique-et-sauvegarde",
@@ -4301,7 +4299,6 @@
       "voir_aussi": [
         "Nextcloud"
       ],
-      "description_longue": "Nuage FACiLe est un service de stockage et de synchronisation proposé par FACiL, organisme québécois de promotion de l’informatique libre. Réservé à ses membres, il repose sur **Nextcloud**, un logiciel libre de partage de fichiers et de services collaboratifs. Il constitue une solution de remplacement aux espaces infonuagiques propriétaires comme Google Drive ou Dropbox.\n\nLe service permet de **partager et synchroniser des fichiers, des contacts et des calendriers**. Pour un organisme artistique ou culturel membre de FACiL, ces fonctions peuvent servir à échanger des documents de production, à retrouver des fichiers sur plusieurs appareils ou à tenir des calendriers communs. Les possibilités supplémentaires dépendent toutefois des applications activées par l’équipe qui administre le service.\n\nNextcloud peut être installé sur une infrastructure indépendante, mais Nuage FACiLe est ici un service déjà hébergé : les membres n’ont pas à administrer leur propre serveur. La page fournie décrit les mises à jour du logiciel Nextcloud, et non les conditions particulières de Nuage FACiLe. Elle ne précise donc ni le quota de stockage, ni les modalités de sauvegarde, ni l’emplacement des données de cette instance. Ces éléments sont à vérifier auprès de FACiL avant d’y déposer des documents sensibles.",
       "tags": [
         "stockage-partage-fichiers"
       ],
@@ -4317,7 +4314,6 @@
         ],
         "confiance": "moyenne"
       },
-      "enrichi_le": "2026-11-13T07:27:45-05:00",
       "criteres_confirmes": {
         "criteres": [],
         "preuves": {},
@@ -4340,7 +4336,9 @@
         "premier_mois": "2010-03-01",
         "dernier_mois": "2026-04-01",
         "consulte_le": "2026-11-13T07:30:35-05:00"
-      }
+      },
+      "description_longue": "**Nuage FACiLe** est un service de stockage et de partage de fichiers proposé par FACiL, un organisme québécois de promotion de l’informatique libre. Réservé aux membres de FACiL, il permet de partager et de synchroniser des fichiers, des contacts et des calendriers. Il constitue une solution de remplacement aux services infonuagiques propriétaires pour ces usages.\n\nLe service repose sur **Nextcloud**, un logiciel libre qui fournit les fonctions de stockage, de synchronisation et de partage. Pour un OSBL culturel, ces fonctions peuvent servir à rendre des documents accessibles à une équipe et à retrouver des fichiers sur plusieurs appareils. Le recours à une instance hébergée permet d’utiliser le logiciel sans administrer soi-même son serveur. Nextcloud figure également dans le répertoire sous son propre nom.\n\nLa page technique fournie présente les mises à jour de Nextcloud, et non la configuration de Nuage FACiLe. Elle souligne l’importance des correctifs de sécurité et du maintien d’une version prise en charge. Elle ne permet toutefois pas de connaître la version installée par FACiL, les quotas de stockage, les modalités de sauvegarde ou le lieu d’hébergement des données. Ces éléments sont à vérifier auprès de l’organisme avant d’y déposer des documents sensibles.",
+      "enrichi_le": "2026-11-13T07:51:39-05:00"
     },
     {
       "categorie": "communautes-reseaux-et-partage-des-connaissances",
@@ -4594,7 +4592,7 @@
         "modele": "gpt-6.1-sol",
         "date": "2026-11-13T07:30:19-05:00"
       },
-      "echecs_openhub": 1
+      "echecs_openhub": 2
     },
     {
       "categorie": "communautes-reseaux-et-partage-des-connaissances",
