@@ -48,7 +48,13 @@ function fichiersDe(dossier: string): string[] {
   return readdirSync(dossier, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? fichiersDe(join(dossier, e.name)) : [join(dossier, e.name)]));
 }
 
-test("le code du site ne fait aucun appel réseau", () => {
-  const fautifs = fichiersDe("src").filter((f) => /\bfetch\s*\(|node:https?|node:net|XMLHttpRequest|WebSocket/.test(readFileSync(f, "utf8")));
+test("le code du site ne fait aucun appel réseau, sauf la lecture de son propre fichier de données par l'explorateur", () => {
+  // Seul src/lib/chargement.ts appelle fetch, vers l'adresse qu'on lui passe: explorateur.json, fichier statique du site.
+  const fautifs = fichiersDe("src")
+    .filter((f) => f !== join("src", "lib", "chargement.ts"))
+    .filter((f) => /\bfetch\s*\(|node:https?|node:net|XMLHttpRequest|WebSocket/.test(readFileSync(f, "utf8")));
   assert.deepEqual(fautifs, []);
+  // Hors commentaires (l'en-tête de licence porte une adresse), le chargeur ne nomme aucun hôte.
+  const code = readFileSync(join("src", "lib", "chargement.ts"), "utf8").replace(/^\s*\/\/.*$/gm, "");
+  assert.doesNotMatch(code, /https?:\/\//);
 });

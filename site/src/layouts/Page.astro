@@ -4,6 +4,7 @@
 // Gabarit de toutes les pages (contracts/pages.md): langue, titre, lien d'évitement, régions nommées, pied d'attribution.
 import "../styles/global.css";
 import Attribution from "../components/Attribution.astro";
+import Navigation, { type PageCourante } from "../components/Navigation.astro";
 import InterrupteurTheme from "../components/Theme.tsx";
 import { adresseAccueil } from "../lib/adresses.ts";
 import { NOM_SITE, site } from "../lib/site.ts";
@@ -12,8 +13,10 @@ interface Props {
   /** Titre de la page; absent pour l'accueil, dont le titre est le nom du site. */
   titre?: string;
   description?: string;
+  /** Page de la navigation principale à indiquer comme page en cours; une fiche indique « Outils ». */
+  courante?: PageCourante;
 }
-const { titre, description } = Astro.props;
+const { titre, description, courante } = Astro.props;
 const { base } = site();
 ---
 <!doctype html>
@@ -29,6 +32,7 @@ const { base } = site();
     <header class="entete">
       <div class="page entete-barre">
         <a class="entete-nom" href={adresseAccueil(base)}>{NOM_SITE}</a>
+        <Navigation courante={courante} base={base} />
         <InterrupteurTheme client:load />
       </div>
     </header>

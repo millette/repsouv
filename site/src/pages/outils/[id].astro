@@ -8,7 +8,7 @@ import Etoiles from "../../components/Etoiles.astro";
 import OpenHub from "../../components/OpenHub.astro";
 import Provenance from "../../components/Provenance.astro";
 import Page from "../../layouts/Page.astro";
-import { adresseAccueil, adresseFiche, identifiant } from "../../lib/adresses.ts";
+import { adresseExplorer, adresseFiche, adresseOutils, identifiant } from "../../lib/adresses.ts";
 import type { OutilClasse } from "../../lib/donnees.ts";
 import { LIBELLES_STATUT, nomHote, nomPays } from "../../lib/libelles.ts";
 import { rendreDescription } from "../../lib/markdown.ts";
@@ -31,11 +31,11 @@ const voirAussi = apparentes(outil, actifs);
 const remplace = outil.alternative_a ?? [];
 const aCode = Boolean(outil.licence || outil.custom_license || outil.repo);
 ---
-<Page titre={outil.nom} description={outil.description}>
+<Page titre={outil.nom} description={outil.description} courante="outils">
   <div data-section-entete>
     <h1>{outil.nom}</h1>
     <p class="fiche-meta">
-      <a class="link" href={adresseAccueil(base, `categorie=${categorie.id}`)}><span aria-hidden="true">{categorie.icone}</span> {categorie.nom}</a>
+      <a class="link" href={adresseExplorer(base, `categorie=${categorie.id}`)}><span aria-hidden="true">{categorie.icone}</span> {categorie.nom}</a>
       <Etoiles score={outil.score} estime={outil.score_estime === true} />
       {outil.source && <span class="statut"><span class="badge badge-outline">{LIBELLES_STATUT[outil.source]}</span> <Provenance type="ia" /></span>}
     </p>
@@ -76,7 +76,7 @@ const aCode = Boolean(outil.licence || outil.custom_license || outil.repo);
       <h2 id="titre-tags">Tags</h2>
       <p><Provenance type="ia" /></p>
       <dl class="definitions">
-        {tagsOutil.map((t) => <><dt><a class="link" href={adresseAccueil(base, `tag=${t.id}`)}>{t.id}</a></dt><dd>{t.description}</dd></>)}
+        {tagsOutil.map((t) => <><dt><a class="link" href={adresseExplorer(base, `tag=${t.id}`)}>{t.id}</a></dt><dd>{t.description}</dd></>)}
       </dl>
     </section>
   )}
@@ -122,5 +122,5 @@ const aCode = Boolean(outil.licence || outil.custom_license || outil.repo);
     <p>Cet outil provient de : <a class="link" href={source.url}>{source.nom}</a>.</p>
   </section>
 
-  <p class="retour"><a class="link" href={adresseAccueil(base)}>Retour à la liste des outils</a></p>
+  <p class="retour"><a class="link" href={adresseOutils(base)}>Retour à la liste des outils</a></p>
 </Page>

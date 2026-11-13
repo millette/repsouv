@@ -2,12 +2,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Carte d'un outil dans la liste: nom lié à sa fiche, score, statut du code source s'il est connu, description courte.
-// Les attributs data-* servent aux filtres (contracts/filtres.md). Un champ absent ne laisse aucun emplacement vide.
+// Un champ absent ne laisse aucun emplacement vide.
 import { adresseFiche, identifiant } from "../lib/adresses.ts";
 import type { OutilClasse } from "../lib/donnees.ts";
-import { normaliser } from "../lib/filtres.ts";
 import { LIBELLES_STATUT } from "../lib/libelles.ts";
-import { statutDe } from "../lib/repertoire.ts";
 import Etoiles from "./Etoiles.astro";
 import Provenance from "./Provenance.astro";
 
@@ -18,7 +16,7 @@ interface Props {
 const { outil, base } = Astro.props;
 const id = identifiant(outil.nom);
 ---
-<li class="carte-outil card card-border" data-outil={id} data-categorie={outil.categorie} data-tags={(outil.tags ?? []).join(" ")} data-statut={statutDe(outil)} data-nom={normaliser(outil.nom)}>
+<li class="carte-outil card card-border" data-outil={id}>
   <div class="card-body">
     <h3 class="card-title"><a class="link link-hover" href={adresseFiche(id, base)}>{outil.nom}</a></h3>
     <p class="carte-meta">

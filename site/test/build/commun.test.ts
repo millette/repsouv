@@ -14,7 +14,9 @@ test("le site bâti contient l'accueil, la page 404 et une page par outil actif"
   const actifs = donneesReelles().outils.filter((o) => !o.removed).length;
   assert.ok(toutes.includes("index.html"));
   assert.ok(toutes.includes("404.html"));
-  assert.equal(toutes.filter((p) => p.startsWith("outils/")).length, actifs);
+  assert.ok(toutes.includes("outils/index.html"));
+  assert.ok(toutes.includes("explorer/index.html"));
+  assert.equal(toutes.filter((p) => p.startsWith("outils/") && p !== "outils/index.html").length, actifs);
 });
 
 test("chaque page déclare le français, a un titre, un seul h1, un contenu principal et un lien d'évitement", () => {
@@ -38,6 +40,17 @@ test("chaque page a dans son en-tête l'interrupteur de thème, masqué tant que
     assert.equal(caseTheme?.getAttribute("value"), "dark", chemin);
     assert.equal(caseTheme?.getAttribute("aria-label"), "Thème sombre", chemin);
     assert.equal(etiquette.querySelectorAll("svg[aria-hidden=true]").length, 2, chemin);
+  }
+});
+
+test("chaque page a la navigation principale, avec la page en cours indiquée", () => {
+  for (const chemin of toutes) {
+    const nav = lirePage(chemin).querySelector('header nav[aria-label="Navigation principale"]');
+    assert.ok(nav, chemin);
+    const liens = [...nav.querySelectorAll("a")];
+    assert.deepEqual(liens.map((a) => [texte(a), a.getAttribute("href")]), [["Accueil", "/"], ["Outils", "/outils/"], ["Explorer", "/explorer/"]], chemin);
+    const attendue = chemin === "index.html" ? "Accueil" : chemin.startsWith("outils/") ? "Outils" : chemin.startsWith("explorer/") ? "Explorer" : null;
+    assert.deepEqual(liens.filter((a) => a.getAttribute("aria-current") === "page").map((a) => texte(a)), attendue ? [attendue] : [], chemin);
   }
 });
 

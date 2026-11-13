@@ -103,6 +103,15 @@ test("chaque citation des critères vérifiés est reproduite telle quelle dans 
   }
 });
 
+test("la catégorie et les tags d'une fiche mènent à l'explorateur filtré", () => {
+  for (const o of actifs) {
+    const page = fiche(o);
+    assert.equal(page.querySelector("main [data-section-entete] .fiche-meta a")?.getAttribute("href"), `/explorer/?categorie=${o.categorie}`, o.nom);
+    const liens = [...page.querySelectorAll('main [data-section="tags"] dt a')].map((a) => a.getAttribute("href"));
+    assert.deepEqual(liens, (o.tags ?? []).map((t) => `/explorer/?tag=${t}`), o.nom);
+  }
+});
+
 test("la source de l'outil est nommée et liée", () => {
   for (const o of actifs) {
     const source = d.sources.find((s) => s.id === o.source_repertoire_id)!;

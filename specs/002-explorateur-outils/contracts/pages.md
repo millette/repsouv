@@ -37,8 +37,8 @@ indique le nombre total d'outils et renvoie à l'explorateur pour trier, filtrer
 | Élément | Exigence |
 |---|---|
 | `<h1>` | « Explorer les outils » |
-| Sans JavaScript | Un bloc `<noscript>`: l'explorateur demande JavaScript, avec un lien vers « Outils ». La page n'est jamais vide |
-| Chargement | Un message « Chargement des outils… » dans une région `role="status"` |
+| Attente et absence de JavaScript | Un contenu d'attente dans une région `role="status"`, présent dans le HTML servi: « Chargement des outils… », et la mention que l'explorateur demande JavaScript, avec un lien vers « Outils ». L'île le remplace une fois montée; sans JavaScript, il reste affiché. La page n'est jamais vide |
+| Chargement des données | Une fois l'île montée, « Chargement des outils… » dans une région `role="status"` tant que le fichier de données n'est pas lu |
 | Erreur | Un message `role="alert"`: les outils n'ont pas pu être chargés; un bouton « Réessayer »; un lien vers « Outils » |
 | Commandes | Un formulaire nommé: recherche par nom; tri (liste « Trier par ») et sens; vue (« Cartes », « Tableau »); filtres en groupes repliables avec légende: statut du code source, catégorie, tag, score minimal, verdict de chaque critère, pays de l'éditeur, source du répertoire, enrichissement; bouton « Effacer les choix » dès qu'un choix est actif |
 | Provenance des filtres | Les groupes « Statut du code source », « Tag » et « Verdict » portent « Produit par IA, à vérifier » |

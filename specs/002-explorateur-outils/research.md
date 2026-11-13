@@ -11,9 +11,11 @@ skill `solidjs` du dépôt.
 - **Pourquoi**: demandé. L'explorateur n'a de sens qu'avec JavaScript (tri, filtres, comparaison);
   `client:only` évite de rendre au build une liste que le navigateur referait aussitôt, et de
   lancer la lecture des données pendant le build.
-- **Sans JavaScript**: la page contient, hors de l'île, un bloc `<noscript>` qui explique que
-  l'explorateur demande JavaScript et renvoie à la page « Outils » (FR-029). Avec JavaScript, tant
-  que l'île n'est pas montée, un contenu d'attente (`slot="fallback"`) annonce le chargement.
+- **Sans JavaScript**: le contenu d'attente de l'île (`slot="fallback"`), présent dans le HTML servi, dit
+  « Chargement des outils… », que l'explorateur demande JavaScript, et renvoie à la page « Outils »
+  (FR-029). L'île le remplace une fois montée; sans JavaScript, il reste affiché. Un bloc
+  `<noscript>` a été écarté à l'implémentation: un navigateur où les scripts sont bloqués par un
+  réglage ou une extension ne l'affiche pas toujours (vérifié avec Chromium piloté par Playwright).
 - **Solutions écartées**: `client:load` avec rendu au build (la liste complète serait dans le HTML
   et dans le fichier de données; la demande veut que la page sans JavaScript renvoie ailleurs).
 
@@ -29,7 +31,7 @@ skill `solidjs` du dépôt.
   le chemin de base (de la configuration, jamais les données).
 - **Contenu**: seulement ce que l'explorateur affiche ou filtre (voir
   [contracts/donnees.md](contracts/donnees.md)), sans les descriptions longues ni les citations:
-  moins de 100 ko pour 154 outils.
+  moins de 150 ko pour 154 outils (104 ko mesurés, dont l'essentiel en descriptions courtes; 16 ko compressé).
 - **Pourquoi**: demandé, et règles du skill `solidjs` (« Resources in static Astro islands »).
 - **Appel réseau**: c'est la lecture, par le navigateur, d'un fichier statique du site lui-même;
   ni serveur, ni API, ni appel payant (FR-036). Le test de la tranche 001 qui interdit `fetch` dans

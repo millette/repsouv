@@ -1,0 +1,25 @@
+---
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
+// Navigation principale, dans l'en-tête de chaque page. La page en cours porte aria-current et un soulignement:
+// elle ne se distingue pas par la couleur seule.
+import { adresseAccueil, adresseExplorer, adresseOutils } from "../lib/adresses.ts";
+
+export type PageCourante = "accueil" | "outils" | "explorer";
+
+interface Props {
+  courante?: PageCourante | undefined;
+  base: string;
+}
+const { courante, base } = Astro.props;
+const liens: { id: PageCourante; libelle: string; adresse: string }[] = [
+  { id: "accueil", libelle: "Accueil", adresse: adresseAccueil(base) },
+  { id: "outils", libelle: "Outils", adresse: adresseOutils(base) },
+  { id: "explorer", libelle: "Explorer", adresse: adresseExplorer(base) },
+];
+---
+<nav class="navigation" aria-label="Navigation principale">
+  <ul>
+    {liens.map((l) => <li><a href={l.adresse} aria-current={l.id === courante ? "page" : undefined}>{l.libelle}</a></li>)}
+  </ul>
+</nav>

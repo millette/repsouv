@@ -1,94 +1,50 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
-// Page d'accueil du site bâti (contracts/pages.md, « Accueil »): tous les outils actifs, par catégorie, lisibles sans script.
+// Accueil du site bâti (specs/002-explorateur-outils/contracts/pages.md): une présentation du projet, sans liste
+// d'outils ni filtre, dont les nombres viennent des données.
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { identifiant } from "../../src/lib/adresses.ts";
-import { LIBELLES_PROVENANCE } from "../../src/lib/provenance.ts";
-import { LIBELLES_STATUT, texteEtoiles } from "../../src/lib/libelles.ts";
+import { LOGICIELS } from "../../src/lib/presentation.ts";
 import { batirAuBesoin, donneesReelles, lirePage, texte } from "./outils.ts";
 
 batirAuBesoin();
 const d = donneesReelles();
 const actifs = d.outils.filter((o) => !o.removed);
 const page = lirePage("index.html");
-const sections = [...page.querySelectorAll("section[data-categorie]")];
-const cartes = [...page.querySelectorAll("[data-outil]")];
-const carteDe = (nom: string) => cartes.find((c) => c.getAttribute("data-outil") === identifiant(nom))!;
+const principal = page.querySelector("main")!;
+const t = texte(principal);
 
-test("une section par catégorie ayant un outil actif, dans l'ordre des données, avec son titre", () => {
-  const attendues = d.categories.filter((c) => actifs.some((o) => o.categorie === c.id));
-  assert.deepEqual(sections.map((s) => s.getAttribute("data-categorie")), attendues.map((c) => c.id));
-  sections.forEach((s, i) => assert.ok(texte(s.querySelector("h2")).includes(attendues[i]!.nom), attendues[i]!.id));
+test("l'accueil a ses quatre sections", () => {
+  assert.deepEqual([...principal.querySelectorAll("h2")].map((h) => texte(h)), ["Le répertoire", "Genèse", "Crédits", "Logiciels utilisés"]);
 });
 
-test("la description d'une catégorie est signalée comme produite par IA", () => {
-  for (const s of sections) {
-    const categorie = d.categories.find((c) => c.id === s.getAttribute("data-categorie"))!;
-    if (!categorie.description) continue;
-    assert.ok(texte(s).includes(categorie.description), categorie.id);
-    assert.ok(texte(s.querySelector(".categorie-description")).includes(LIBELLES_PROVENANCE.ia), categorie.id);
+test("les nombres d'outils, de catégories et de sources viennent des données", () => {
+  const categories = new Set(actifs.map((o) => o.categorie)).size;
+  assert.ok(t.includes(`${actifs.length} outils et services numériques, en ${categories} catégories, tirés de ${d.sources.length} sources`));
+  for (const s of d.sources) assert.ok(t.includes(`(${actifs.filter((o) => o.source_repertoire_id === s.id).length} outils)`), s.id);
+});
+
+test("les trois critères, les auteur·trices du répertoire d'origine et chaque source sont nommés", () => {
+  for (const c of d.criteres) assert.ok(t.includes(c.titre), c.id);
+  for (const nom of ["Sven Buridans", "François Delnooz", "Marie-Renee Duguay", "Robin Millette", "La bande numérique"]) assert.ok(t.includes(nom), nom);
+  const liens = [...principal.querySelectorAll("a")].map((a) => a.getAttribute("href"));
+  for (const s of d.sources) {
+    assert.ok(t.includes(s.nom), s.id);
+    assert.ok(liens.includes(s.url), s.id);
   }
 });
 
-test("une carte par outil actif, une seule fois, dans la section de sa catégorie", () => {
-  assert.deepEqual(cartes.map((c) => c.getAttribute("data-outil")).sort(), actifs.map((o) => identifiant(o.nom)).sort());
-  for (const o of actifs) assert.equal(carteDe(o.nom).closest("section")?.getAttribute("data-categorie"), o.categorie, o.nom);
-});
-
-test("chaque carte lie la fiche et montre le nom, le score en texte et la description", () => {
-  for (const o of actifs) {
-    const carte = carteDe(o.nom);
-    const lien = carte.querySelector("a");
-    assert.equal(lien?.getAttribute("href"), `/outils/${identifiant(o.nom)}/`, o.nom);
-    assert.equal(texte(lien), o.nom);
-    assert.ok(texte(carte).includes(texteEtoiles(o.score)), o.nom);
-    assert.ok(texte(carte).includes(o.description.replace(/\s+/g, " ").trim()), o.nom);
+test("chaque logiciel utilisé est nommé, lié et décrit", () => {
+  for (const l of LOGICIELS.flatMap((g) => g.logiciels)) {
+    const lien = [...principal.querySelectorAll("dt a")].find((a) => texte(a) === l.nom);
+    assert.equal(lien?.getAttribute("href"), l.url, l.nom);
+    assert.ok(t.includes(l.role), l.nom);
   }
 });
 
-test("« score estimé » apparaît si et seulement si le score ne vient pas de la source", () => {
-  for (const o of actifs) assert.equal(texte(carteDe(o.nom)).includes("score estimé"), o.score_estime === true, o.nom);
-});
-
-test("le statut du code source et son signalement d'IA apparaissent si et seulement si l'outil est enrichi", () => {
-  for (const o of actifs) {
-    const t = texte(carteDe(o.nom));
-    if (o.source) {
-      assert.ok(t.includes(LIBELLES_STATUT[o.source]), o.nom);
-      assert.ok(t.includes(LIBELLES_PROVENANCE.ia), o.nom);
-    } else {
-      assert.equal(carteDe(o.nom).querySelector(".statut"), null, o.nom);
-      assert.ok(!t.includes(LIBELLES_PROVENANCE.ia), o.nom);
-    }
-  }
-});
-
-test("chaque carte porte les attributs de filtre", () => {
-  for (const o of actifs) {
-    const carte = carteDe(o.nom);
-    assert.equal(carte.getAttribute("data-categorie"), o.categorie, o.nom);
-    assert.equal(carte.getAttribute("data-tags"), (o.tags ?? []).join(" "), o.nom);
-    assert.equal(carte.getAttribute("data-statut"), o.source ?? "non-enrichi", o.nom);
-    assert.ok((carte.getAttribute("data-nom") ?? "").length > 0, o.nom);
-  }
-});
-
-test("aucun élément vide dans une carte", () => {
-  for (const carte of cartes) {
-    for (const e of carte.querySelectorAll("p, span, li, h3, a, div")) assert.ok(texte(e).length > 0, `${carte.getAttribute("data-outil")}: <${e.tagName.toLowerCase()} class="${e.getAttribute("class")}"> vide`);
-  }
-});
-
-test("le formulaire de filtres signale que statuts et tags sont produits par IA, et il est masqué sans script", () => {
-  const formulaire = page.querySelector("form[data-filtres]");
-  assert.ok(formulaire);
-  assert.ok(formulaire.hasAttribute("hidden"));
-  assert.ok(texte(formulaire).includes(LIBELLES_PROVENANCE.ia));
-});
-
-test("le compteur annonce le nombre total d'outils", () => {
-  const compteur = page.querySelector("[aria-live=polite]");
-  assert.ok(compteur);
-  assert.ok(texte(compteur).includes(String(actifs.length)));
+test("l'accueil mène à la page « Outils » et à l'explorateur, et ne porte ni carte d'outil, ni formulaire, ni île", () => {
+  const liens = [...principal.querySelectorAll("a")].map((a) => a.getAttribute("href"));
+  assert.ok(liens.includes("/outils/"));
+  assert.ok(liens.includes("/explorer/"));
+  assert.equal(principal.querySelectorAll("[data-outil], form, astro-island").length, 0);
 });

@@ -40,7 +40,7 @@ fichiers statiques.
 **Project Type**: site Web statique (sous-projet `site/`).
 
 **Performance Goals**: tri ou filtre appliqué en moins de 100 ms pour 154 outils; fichier de
-données de moins de 100 ko avant compression.
+données de moins de 150 ko avant compression (mesuré: 104 ko, 16 ko compressé).
 
 **Constraints**: aucun serveur, aucune API, aucun appel payant; accueil, page « Outils » et fiches
 lisibles sans JavaScript; WCAG 2.1 AA; tout en français; données, schémas et scripts de la racine

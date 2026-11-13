@@ -34,7 +34,7 @@ function modifier(dossier: string, fichier: string, f: (contenu: any) => void): 
 test("chargerDonnees rend les cinq tableaux et les métadonnées de outils.json", () => {
   const d = chargerDonnees(VALIDE);
   assert.equal(d.outils.length, 6);
-  assert.equal(d.categories.length, 2);
+  assert.equal(d.categories.length, 3);
   assert.equal(d.criteres.length, 3);
   assert.equal(d.tags.length, 2);
   assert.equal(d.sources.length, 3);

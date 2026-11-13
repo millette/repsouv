@@ -1,39 +1,86 @@
 ---
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
-// Accueil: tous les outils actifs, par catégorie, lisibles sans JavaScript (contracts/pages.md, « Accueil »).
-import CarteOutil from "../components/CarteOutil.astro";
-import Filtres from "../components/Filtres.tsx";
-import Provenance from "../components/Provenance.astro";
+// Accueil: présentation du projet (ce qu'est le répertoire, sa genèse, les crédits, les logiciels utilisés). La liste
+// des outils est sur la page « Outils », le tri et les filtres dans l'explorateur. Les nombres viennent des données;
+// le reste, de la documentation du dépôt (src/lib/presentation.ts).
 import Page from "../layouts/Page.astro";
-import { LIBELLES_STATUT } from "../lib/libelles.ts";
-import { groupesParCategorie, STATUTS } from "../lib/repertoire.ts";
-import { NOM_SITE, site } from "../lib/site.ts";
+import { adresseExplorer, adresseOutils } from "../lib/adresses.ts";
+import { formaterDate } from "../lib/libelles.ts";
+import { ETAPES, LOGICIELS } from "../lib/presentation.ts";
+import { LIBELLES_PROVENANCE } from "../lib/provenance.ts";
+import { groupesParCategorie } from "../lib/repertoire.ts";
+import { AUTEURS_PRAXIS, ID_PRAXIS, LICENCE_DONNEES, NOM_SITE, site } from "../lib/site.ts";
 
-const { categories, tags, actifs, base } = site();
-const groupes = groupesParCategorie(categories, actifs);
-// Configuration de l'île des filtres: seulement les valeurs qui retiennent au moins un outil, dans l'ordre des données.
-const tagsUtilises = new Set(actifs.flatMap((o) => o.tags ?? []));
-const valeurs = {
-  categories: groupes.map(({ categorie }) => ({ id: categorie.id, libelle: categorie.nom })),
-  tags: tags.filter((t) => tagsUtilises.has(t.id)).map((t) => ({ id: t.id, libelle: t.id })),
-  statuts: STATUTS.map((s) => ({ id: s, libelle: LIBELLES_STATUT[s] })),
-};
+const { categories, criteres, sources, actifs, base } = site();
+const nbCategories = groupesParCategorie(categories, actifs).length;
+const praxis = sources.find((s) => s.id === ID_PRAXIS)!;
+const autres = sources.filter((s) => s.id !== ID_PRAXIS);
+const parSource = (id: string) => actifs.filter((o) => o.source_repertoire_id === id).length;
 ---
-<Page description="Outils et services numériques évalués selon trois critères de souveraineté, pour les organismes et les petites équipes du Canada français.">
+<Page description="Un répertoire d'outils numériques évalués selon trois critères de souveraineté, pour les organismes et les petites équipes du Canada français." courante="accueil">
   <h1>{NOM_SITE}</h1>
-  <p class="introduction">
-    Des outils et des services numériques pour les organismes et les petites équipes du Canada français. Les étoiles, sur 3, comptent les critères de
-    souveraineté que l'outil satisfait : où restent les données, qui contrôle l'outil, de qui il dépend.
-  </p>
-  <Filtres client:load categories={valeurs.categories} tags={valeurs.tags} statuts={valeurs.statuts} total={actifs.length} />
-  {groupes.map(({ categorie, outils }) => (
-    <section class="categorie" data-categorie={categorie.id} aria-labelledby={`categorie-${categorie.id}`}>
-      <h2 id={`categorie-${categorie.id}`}><span aria-hidden="true">{categorie.icone}</span> {categorie.nom}</h2>
-      {categorie.description && <p class="categorie-description">{categorie.description} <Provenance type="ia" /></p>}
-      <ul class="cartes">
-        {outils.map((outil) => <CarteOutil outil={outil} base={base} />)}
-      </ul>
-    </section>
-  ))}
+
+  <section class="section-accueil" aria-labelledby="titre-repertoire">
+    <h2 id="titre-repertoire">Le répertoire</h2>
+    <p>
+      Ce site présente {actifs.length} outils et services numériques, en {nbCategories} catégories, tirés de {sources.length} sources. Il s'adresse aux organismes et
+      aux petites équipes du Canada français qui veulent savoir où vont leurs données et de qui dépendent leurs outils.
+    </p>
+    <p>Chaque outil reçoit de 0 à 3 étoiles, une par critère de souveraineté qu'il satisfait :</p>
+    <ul class="criteres-accueil">
+      {criteres.map((c) => <li><span aria-hidden="true">{c.icon}</span> {c.titre}</li>)}
+    </ul>
+    <p class="actions">
+      <a class="btn btn-primary" href={adresseOutils(base)}>Voir tous les outils</a>
+      <a class="btn" href={adresseExplorer(base)}>Explorer et comparer</a>
+    </p>
+  </section>
+
+  <section class="section-accueil" aria-labelledby="titre-genese">
+    <h2 id="titre-genese">Genèse</h2>
+    <p>
+      Le répertoire d'origine est une note publiée sur Praxis par La bande numérique, une initiative de la Fédération culturelle canadienne-française (FCCF), pour
+      les OSBL des arts et de la culture du Canada français : <a class="link" href={praxis.url}><cite>Répertoire d'outils favorisant la souveraineté numérique</cite></a>.
+      Ce projet en publie les données sous une forme structurée, les tient à jour, et y ajoute d'autres sources et ce que la note ne dit pas : à quel critère chaque
+      étoile correspond, le statut du code source, la licence, et des critères vérifiés d'après la page de chaque outil.
+    </p>
+    <ol class="etapes">
+      {ETAPES.map((e) => <li><strong>{formaterDate(e.date)}.</strong> {e.texte}</li>)}
+    </ol>
+  </section>
+
+  <section class="section-accueil" aria-labelledby="titre-credits">
+    <h2 id="titre-credits">Crédits</h2>
+    <ul>
+      <li>
+        <strong>Répertoire d'origine</strong> ({parSource(ID_PRAXIS)} outils) : {AUTEURS_PRAXIS.slice(0, -1).join(", ")} et {AUTEURS_PRAXIS.at(-1)},
+        <a class="link" href={praxis.url}>{praxis.nom}</a>.
+      </li>
+      {autres.map((s) => <li><strong>Autre source</strong> ({parSource(s.id)} outils) : <a class="link" href={s.url}>{s.nom}</a>.</li>)}
+      <li>
+        <strong>Extraction, classification, enrichissement et site</strong> : <a class="link" href="https://robin.millette.info/">Robin Millette</a>.
+      </li>
+      <li>
+        <strong>Licences</strong> : les données sont partagées sous <a class="link" rel="license" href={LICENCE_DONNEES.url}>{LICENCE_DONNEES.nom}</a>, comme le
+        répertoire d'origine ; le code est sous AGPL-3.0-or-later.
+      </li>
+    </ul>
+    <p>
+      Les champs marqués « {LIBELLES_PROVENANCE.ia} » sont rédigés par un modèle d'IA à partir des pages des outils : ils résument des pages tierces et sont à
+      contrôler avant de s'y fier.
+    </p>
+  </section>
+
+  <section class="section-accueil" aria-labelledby="titre-logiciels">
+    <h2 id="titre-logiciels">Logiciels utilisés</h2>
+    {LOGICIELS.map((groupe) => (
+      <>
+        <h3>{groupe.titre}</h3>
+        <dl class="definitions">
+          {groupe.logiciels.map((l) => <><dt><a class="link" href={l.url}>{l.nom}</a></dt><dd>{l.role}</dd></>)}
+        </dl>
+      </>
+    ))}
+  </section>
 </Page>

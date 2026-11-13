@@ -6,21 +6,28 @@ import { actifs, identifiant } from "./donnees.ts";
 
 test.use({ javaScriptEnabled: false });
 
-test("l'accueil montre toutes les cartes et le total, sans formulaire de filtres", async ({ page }) => {
-  await page.goto("/");
+test("la page « Outils » montre toutes les cartes et le total", async ({ page }) => {
+  await page.goto("/outils/");
   await expect(page.locator("[data-outil]:visible")).toHaveCount(actifs.length);
-  await expect(page.locator("form[data-filtres]")).toBeHidden();
-  await expect(page.locator("[data-compteur]")).toContainText(String(actifs.length));
+  await expect(page.locator(".compteur")).toContainText(String(actifs.length));
 });
 
-test("une adresse qui porte des filtres affiche la liste complète", async ({ page }) => {
+test("l'accueil présente le projet, et une ancienne adresse filtrée l'affiche sans erreur", async ({ page }) => {
   await page.goto("/?statut=libre");
+  await expect(page.getByRole("heading", { name: "Genèse" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Voir tous les outils" })).toBeVisible();
+});
+
+test("la page « Explorer » dit qu'elle demande JavaScript et renvoie à la page « Outils »", async ({ page }) => {
+  await page.goto("/explorer/");
+  await expect(page.locator("main")).toContainText("L'explorateur demande JavaScript");
+  await page.locator("main").getByRole("link", { name: "Outils" }).click();
   await expect(page.locator("[data-outil]:visible")).toHaveCount(actifs.length);
 });
 
 test("le lien d'une carte ouvre la fiche, qui montre tout son contenu", async ({ page }) => {
   const outil = actifs.find((o) => o.enrichi_le)!;
-  await page.goto("/");
+  await page.goto("/outils/");
   await page.locator(`[data-outil="${identifiant(outil.nom)}"] a`).click();
   await expect(page.locator("h1")).toHaveText(outil.nom);
   await expect(page.locator('[data-section="description-longue"]')).toBeVisible();

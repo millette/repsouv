@@ -12,6 +12,11 @@
       "description": "Outils pour écrire et collaborer."
     },
     {
+      "id": "automatisation",
+      "nom": "Automatisation",
+      "icone": "⚙️"
+    },
+    {
       "id": "vide",
       "nom": "Catégorie vide",
       "icone": "🫙"

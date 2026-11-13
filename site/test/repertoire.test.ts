@@ -16,8 +16,8 @@ test("outilsActifs écarte les outils retirés", () => {
 
 test("groupesParCategorie suit l'ordre des catégories et omet celles sans outil actif", () => {
   const groupes = groupesParCategorie(d.categories, actifs);
-  assert.deepEqual(groupes.map((g) => g.categorie.id), ["bureautique"]);
-  assert.equal(groupes[0]!.outils.length, 5);
+  assert.deepEqual(groupes.map((g) => g.categorie.id), ["bureautique", "automatisation"]);
+  assert.deepEqual(groupes.map((g) => g.outils.length), [3, 2]);
 });
 
 test("estEnrichi et statutDe: le statut du code source, ou non-enrichi", () => {
