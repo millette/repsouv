@@ -29,7 +29,7 @@ test("l'explorateur charge ses données, filtre, et sa boîte « Détails » mon
   await expect(page.locator("[data-compteur]")).toContainText(/^\d+ outils affichés sur \d+/);
   await page.locator('input[name="statut"][value="libre"]').check();
   await expect(page).toHaveURL(/\/repsouv\/explorer\/\?statut=libre$/);
-  const details = page.locator(".resultats button[data-details-de]").first();
+  const details = page.locator(".resultats a[data-details-de]").first();
   const id = await details.getAttribute("data-details-de");
   await details.click();
   await expect(page.locator("dialog [data-details-contenu]")).toBeVisible();
@@ -56,6 +56,7 @@ test("une fiche s'ouvre depuis la liste de la page « Explorer », et son retour
   const lien = page.locator(".resultats [data-outil] a").first();
   const nom = await lien.textContent();
   await lien.click();
+  await page.getByRole("dialog", { name: nom! }).getByRole("link", { name: /Ouvrir la fiche/ }).click();
   await expect(page.locator("h1")).toHaveText(nom!);
   await page.getByRole("link", { name: "Retour à la liste des outils" }).click();
   expect(new URL(page.url()).pathname).toBe(`${BASE}explorer/`);

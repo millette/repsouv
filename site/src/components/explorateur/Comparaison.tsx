@@ -3,12 +3,11 @@
 // Comparaison côte à côte de deux à quatre outils, au-dessus des résultats: un outil par colonne, une information
 // par ligne, chaque ligne avec sa provenance. Un outil comparé y reste même si les filtres ne le retiennent plus.
 import { For, Show } from "solid-js";
-import { adresseFiche } from "../../lib/adresses.ts";
 import { comparable, lignesComparaison, MIN_COMPARES } from "../../lib/comparaison.ts";
 import type { OutilExplorateur } from "../../lib/explorateur.ts";
 import { LIBELLES_PROVENANCE } from "../../lib/provenance.ts";
 import type { Tableau } from "../Explorateur.tsx";
-import { Etoiles } from "./Resultats.tsx";
+import { Etoiles, NomOutil } from "./Resultats.tsx";
 
 interface Props {
   tableau: Tableau;
@@ -41,14 +40,9 @@ export default function Comparaison(props: Props) {
                 <For each={choisis()}>
                   {(o) => (
                     <th scope="col" data-compare={o.id}>
-                      <a class="link" href={adresseFiche(o.id, t().base)}>
-                        {o.nom}
-                      </a>
+                      <NomOutil tableau={t()} outil={o} classe="link" />
                       <button class="btn btn-xs" type="button" onClick={() => t().comparer(o.id)}>
                         Retirer<span class="sr-seul"> {o.nom}</span>
-                      </button>
-                      <button class="btn btn-xs" type="button" data-details-de={o.id} onClick={() => t().modifier((e) => ({ ...e, fiche: o.id }))}>
-                        Détails<span class="sr-seul"> de {o.nom}</span>
                       </button>
                     </th>
                   )}

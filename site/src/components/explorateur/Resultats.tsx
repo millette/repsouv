@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Résultats de l'explorateur: le nombre d'outils et le tri en cours, annoncés à chaque changement, puis les mêmes
-// outils en cartes ou en tableau. Chaque carte et chaque ligne mènent à la fiche et permettent de choisir l'outil à comparer.
+// outils en cartes ou en tableau. Le nom de chaque outil, lien vers sa fiche, ouvre ses détails dans une boîte; chaque
+// carte et chaque ligne permettent de choisir l'outil à comparer.
 import { For, Show } from "solid-js";
 import { adresseFiche } from "../../lib/adresses.ts";
+import { clicSimple } from "../../lib/clic.ts";
 import type { OutilExplorateur } from "../../lib/explorateur.ts";
 import { LIBELLES_STATUT, texteEtoiles } from "../../lib/libelles.ts";
 import { LIBELLES_PROVENANCE } from "../../lib/provenance.ts";
@@ -33,6 +35,24 @@ export function Etoiles(props: { score: number; estime: boolean }) {
   );
 }
 
+/**
+ * Nom d'un outil: un lien vers sa fiche. Un clic simple (ou la touche Entrée) ouvre plutôt ses détails dans la boîte
+ * de l'explorateur, sans quitter la page; un clic modifié suit le lien, et sans JavaScript ce lien est celui de la
+ * liste statique.
+ */
+export function NomOutil(props: { tableau: Tableau; outil: OutilExplorateur; classe: string }) {
+  const surClic = (e: MouseEvent) => {
+    if (!clicSimple(e)) return;
+    e.preventDefault();
+    props.tableau.modifier((etat) => ({ ...etat, fiche: props.outil.id }));
+  };
+  return (
+    <a class={props.classe} href={adresseFiche(props.outil.id, props.tableau.base)} data-details-de={props.outil.id} aria-haspopup="dialog" onClick={surClic}>
+      {props.outil.nom}
+    </a>
+  );
+}
+
 export default function Resultats(props: Props) {
   const t = () => props.tableau;
   const total = () => t().donnees.outils.length;
@@ -56,13 +76,6 @@ export default function Resultats(props: Props) {
         Comparer<span class="sr-seul"> {c.outil.nom}</span>
       </span>
     </label>
-  );
-
-  /** Ouvre la boîte « Détails » de l'outil, sans quitter la page. */
-  const Details = (c: { outil: OutilExplorateur }) => (
-    <button class="btn btn-xs" type="button" data-details-de={c.outil.id} onClick={() => t().modifier((e) => ({ ...e, fiche: c.outil.id }))}>
-      Détails<span class="sr-seul"> de {c.outil.nom}</span>
-    </button>
   );
 
   return (
@@ -96,9 +109,7 @@ export default function Resultats(props: Props) {
                   <li class="carte-outil card card-border" data-outil={o.id}>
                     <div class="card-body">
                       <h2 class="card-title">
-                        <a class="link link-hover" href={adresseFiche(o.id, t().base)}>
-                          {o.nom}
-                        </a>
+                        <NomOutil tableau={t()} outil={o} classe="link link-hover" />
                       </h2>
                       <p class="carte-meta">
                         <Etoiles score={o.score} estime={o.scoreEstime === true} />
@@ -111,7 +122,6 @@ export default function Resultats(props: Props) {
                       <p class="carte-description">{o.description}</p>
                       <p class="carte-actions">
                         <Comparer outil={o} />
-                        <Details outil={o} />
                       </p>
                     </div>
                   </li>
@@ -150,12 +160,9 @@ export default function Resultats(props: Props) {
                     <tr data-outil={o.id}>
                       <td>
                         <Comparer outil={o} />
-                        <Details outil={o} />
                       </td>
                       <th scope="row">
-                        <a class="link" href={adresseFiche(o.id, t().base)}>
-                          {o.nom}
-                        </a>
+                        <NomOutil tableau={t()} outil={o} classe="link" />
                       </th>
                       <td>{categories().get(o.categorie) ?? o.categorie}</td>
                       <td>

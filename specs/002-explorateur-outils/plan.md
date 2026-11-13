@@ -196,3 +196,23 @@ tranche 001); tests adaptés avant le code.
 
 Décisions détaillées: [research.md](research.md), section 11. Contrat: [contracts/pages.md](contracts/pages.md).
 
+## Troisième amendement du 2026-11-13: le nom de l'outil ouvre ses détails
+
+Ajout après la livraison (FR-056). Le bouton « Détails » des cartes, des lignes du tableau et des
+colonnes de la comparaison est retiré: le nom de l'outil, déjà lié à la fiche, ouvre la boîte.
+
+**Approche**: amélioration progressive d'un lien. Le nom reste un `<a href>` vers la fiche; l'île
+intercepte le clic simple (et la touche Entrée, qui en produit un), annule la navigation et inscrit
+l'outil dans l'état (`fiche`), ce qui ouvre la boîte. Un clic modifié n'est pas intercepté. Sans
+JavaScript, l'île n'affiche rien: les noms sont ceux de la liste statique, de simples liens. La
+règle « clic simple » est une fonction pure de `site/src/lib/clic.ts`, testée par `node:test`; le
+lien est un seul composant, `NomOutil`, partagé par les résultats et la comparaison.
+
+**Constitution**: conforme. Aucune dépendance; tests adaptés avant le code; une commande de moins.
+
+**Fichiers touchés**: `site/src/lib/clic.ts` (nouveau), `site/src/components/explorateur/Resultats.tsx`,
+`site/src/components/explorateur/Comparaison.tsx`, `site/test/clic.test.ts` (nouveau),
+`site/test/e2e/details.spec.ts`, `explorateur.spec.ts`, `accessibilite.spec.ts`, `base.spec.ts`.
+
+Décisions détaillées: [research.md](research.md), section 12. Contrat: [contracts/pages.md](contracts/pages.md)
+(« Commande des détails »).

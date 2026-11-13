@@ -289,3 +289,25 @@ passent. Totaux du site: 140 tests unitaires, 61 tests du site bâti, 114 tests 
 
 Défaut corrigé au passage (T041, amendement précédent): la boîte « Détails » fermée lançait une lecture vers
 `/outils//`. Test ajouté: `site/test/e2e/explorateur.spec.ts`, « la page ne lance aucune requête qui échoue ».
+
+---
+
+## Phase 12: Le nom de l'outil ouvre ses détails (troisième amendement du 2026-11-13)
+
+**Goal**: le bouton « Détails » est retiré; le nom de l'outil, lien vers sa fiche, ouvre la boîte
+avec JavaScript et suit son lien sans JavaScript (FR-056).
+
+### Tests ⚠️ (à adapter d'abord, ils doivent échouer)
+
+- [x] T049 [P] Écrire `site/test/clic.test.ts`: un clic du bouton principal sans touche est un clic simple; avec Ctrl, Cmd, Maj ou Alt, ou d'un autre bouton, il ne l'est pas
+- [x] T050 [P] Adapter `site/test/e2e/details.spec.ts` (la boîte s'ouvre par le nom, lien `a[data-details-de]` dont le `href` est la fiche; plus aucun bouton « Détails »; Ctrl+clic ouvre la fiche dans un nouvel onglet sans ouvrir la boîte; Entrée sur le nom ouvre la boîte; le focus revient sur le nom), `site/test/e2e/explorateur.spec.ts`, `accessibilite.spec.ts` et `base.spec.ts` (la fiche s'atteint par « Ouvrir la fiche »)
+
+### Implementation
+
+- [x] T051 Créer `site/src/lib/clic.ts` (`clicSimple`) et le composant `NomOutil` dans `site/src/components/explorateur/Resultats.tsx`, l'employer dans les cartes, le tableau et `Comparaison.tsx`, et retirer les boutons « Détails »; jusqu'à ce que T049 et T050 passent
+- [x] T052 Reporter dans `implementation.md`, `site/README.md` et `historique.md`; vérifier que tous les contrôles passent
+
+### Résultats de la phase 12
+
+Validation du 2026-11-13: totaux du site, 146 tests unitaires, 61 tests du site bâti, 117 tests dans Chromium, tous
+réussis, dont axe sans violation A ni AA avec la boîte ouverte.

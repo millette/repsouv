@@ -19,6 +19,7 @@
 - Q: Où va alors la liste des outils par catégorie, lisible sans JavaScript ? → A: Sur une page statique « Outils », sans filtres; tout filtrage passe par l'explorateur, et les filtres de la tranche 001 sont retirés.
 - Q: (amendement, après la livraison) Comment consulter tous les détails d'un outil depuis l'explorateur ? → A: Chaque outil garde sa propre page avec tous les détails disponibles (sa fiche); en plus, l'explorateur permet de consulter tous les détails d'un outil dans une boîte modale, sans quitter la page.
 - Q: (second amendement, après la livraison) Que montre la page « Explorer » sans JavaScript, et que devient la page « Outils » ? → A: La page « Explorer » montre la liste complète des outils même sans JavaScript; l'explorateur y est monté dès le chargement de la page, son formulaire de tri et de filtres replié par défaut; la page « Outils », devenue redondante, est retirée. Cette réponse remplace celles du 2026-11-13 sur la page « Outils » et sur le renvoi sans JavaScript.
+- Q: (troisième amendement, après la livraison) Quelle commande ouvre la boîte des détails ? → A: Le nom de l'outil. Le bouton « Détails » est retiré: avec JavaScript, un clic sur le nom ouvre la boîte; sans JavaScript, le nom suit son lien vers la fiche.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -228,8 +229,8 @@ enrichi: la boîte montre ce que montre la fiche; la fermer rend l'explorateur d
 
 **Acceptance Scenarios**:
 
-1. **Given** des résultats en cartes ou en tableau, **When** la personne active « Détails » d'un
-   outil, **Then** une boîte modale s'ouvre avec le nom de l'outil en titre et tous les détails
+1. **Given** des résultats en cartes ou en tableau, **When** la personne active le nom d'un
+   outil (troisième amendement: le bouton « Détails » d'origine est retiré), **Then** une boîte modale s'ouvre avec le nom de l'outil en titre et tous les détails
    que montre sa fiche, avec la même provenance (IA « à vérifier », déduction du dépôt, score
    estimé, citations).
 2. **Given** la boîte ouverte, **When** la personne la ferme par son bouton, par la touche Échap ou
@@ -400,7 +401,7 @@ enrichi: la boîte montre ce que montre la fiche; la fermer rend l'explorateur d
 - **FR-046**: Chaque outil DOIT garder sa propre page (sa fiche) avec tous les détails disponibles;
   la boîte modale ne la remplace pas et y renvoie par un lien « Ouvrir la fiche ».
 - **FR-047**: Chaque carte, chaque ligne du tableau et chaque colonne de la comparaison DOIT offrir
-  une commande « Détails » qui ouvre, sans quitter la page, une boîte modale montrant tous les
+  une commande (d'abord un bouton « Détails »; depuis le troisième amendement, le nom de l'outil, voir FR-056) qui ouvre, sans quitter la page, une boîte modale montrant tous les
   détails de l'outil que montre sa fiche, avec la même provenance.
 - **FR-048**: La boîte DOIT se fermer par son bouton, par la touche Échap et par un clic hors
   d'elle; l'explorateur retrouve alors son état, et le focus la commande qui l'a ouverte.
@@ -427,6 +428,15 @@ enrichi: la boîte montre ce que montre la fiche; la fermer rend l'explorateur d
 - **FR-055**: La page « Outils » est retirée: la navigation porte « Accueil », « Explorer » et
   « Statistiques »; les liens qui y menaient (accueil, fiches, page introuvable) mènent à la page
   « Explorer ». Cette exigence remplace FR-042 et modifie FR-044.
+
+**Le nom de l'outil ouvre ses détails (troisième amendement du 2026-11-13)**
+
+- **FR-056**: Le bouton « Détails » est retiré. Dans l'explorateur, le nom de l'outil (carte, ligne
+  du tableau, colonne de la comparaison) DOIT rester un lien vers sa fiche et, avec JavaScript,
+  ouvrir la boîte des détails par un clic simple ou par la touche Entrée. Un clic modifié (Ctrl,
+  Cmd, Maj, Alt, bouton du milieu) DOIT suivre le lien comme tout lien; sans JavaScript, le nom de
+  la liste statique mène à la fiche. La fiche reste atteignable depuis la boîte par « Ouvrir la
+  fiche » (FR-046).
 
 **Langue et accessibilité**
 

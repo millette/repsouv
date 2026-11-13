@@ -48,11 +48,11 @@ indique le nombre total d'outils et renvoie à l'explorateur pour trier, filtrer
 | Provenance des filtres | Les groupes « Statut du code source », « Tag » et « Verdict » portent « Produit par IA, à vérifier » |
 | Compteur | « N outils affichés sur M », dans une région `aria-live="polite"` |
 | Aucun résultat | « Aucun outil ne correspond à ces choix. » et le bouton « Effacer les choix » |
-| Vue en cartes | Une carte par outil: nom lié à la fiche, score (texte, « score estimé »), statut avec son libellé d'IA, description, case « Comparer <nom> » |
+| Vue en cartes | Une carte par outil: nom lié à la fiche (il ouvre la boîte des détails, voir « Commande des détails »), score (texte, « score estimé »), statut avec son libellé d'IA, description, case « Comparer <nom> » |
 | Vue en tableau | `<table>` avec légende; colonnes: Comparer, Nom (lié à la fiche), Catégorie, Score, Statut du code source (libellé d'IA dans l'en-tête), Pays, Source; `<th scope="col">`; `aria-sort` sur la colonne triée |
 | Comparaison | Au-dessus des résultats, dès que deux outils sont choisis: `<table>` avec légende, un outil par colonne (nom lié à la fiche, bouton « Retirer <nom> »), une information par ligne avec `<th scope="row">`, dans l'ordre de data-model.md; un bouton « Vider la comparaison » |
 | Un seul outil choisi | « Choisir au moins deux outils pour les comparer. » |
 | Cinquième outil | Refusé, avec « La comparaison est limitée à quatre outils. » dans une région annoncée |
-| Commande « Détails » | Sur chaque carte, chaque ligne du tableau et chaque colonne de la comparaison: un bouton « Détails » nommé par l'outil (« Détails de <nom> ») |
+| Commande des détails | Troisième amendement du 2026-11-13: plus de bouton « Détails ». Sur chaque carte, chaque ligne du tableau et chaque colonne de la comparaison, le nom de l'outil est un lien `<a href="<base>/outils/<id>/" data-details-de="<id>" aria-haspopup="dialog">`. Un clic simple ou la touche Entrée ouvre la boîte sans quitter la page; un clic modifié (Ctrl, Cmd, Maj, Alt, autre bouton) suit le lien; sans JavaScript, le nom de la liste statique mène à la fiche |
 | Boîte « Détails d'un outil » | Un `<dialog>` modal nommé par le nom de l'outil (`aria-labelledby` vers son titre): titre, bouton « Fermer », lien « Ouvrir la fiche » vers `<base>/outils/<id>/`, puis le contenu principal de la fiche, avec ses libellés de provenance. Pendant le chargement: « Chargement des détails… » (`role="status"`); en cas d'échec: un message `role="alert"` et le lien vers la fiche. Se ferme par « Fermer », Échap ou un clic hors de la boîte; le focus revient à la commande qui l'a ouverte |
 | Pied | Attribution, licence et date des données, comme les autres pages |

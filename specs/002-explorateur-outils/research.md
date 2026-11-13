@@ -181,3 +181,17 @@ skill `solidjs` du dépôt.
   relative n'a pas d'origine dans Node, et le résultat devrait être sérialisé dans la page pour
   l'hydratation).
 
+
+## 12. Le nom de l'outil ouvre ses détails (troisième amendement du 2026-11-13)
+
+- **Décision**: retirer le bouton « Détails »; le nom de l'outil, qui reste un lien vers la fiche,
+  ouvre la boîte par un clic simple ou par la touche Entrée.
+- **Pourquoi**: une commande de moins par carte, et un seul geste attendu (le nom). C'est une
+  amélioration progressive: le même lien mène à la fiche sans JavaScript.
+- **Clic modifié**: Ctrl, Cmd, Maj, Alt ou un autre bouton laissent le navigateur suivre le lien
+  (nouvel onglet, nouvelle fenêtre). Détourner ces gestes casserait une habitude de tout lien.
+- **Accessibilité**: l'élément reste un lien, nommé par l'outil, avec `aria-haspopup="dialog"` pour
+  annoncer qu'il ouvre une boîte. La fiche reste à un geste, par « Ouvrir la fiche » dans la boîte.
+  À la fermeture, le focus revient sur le nom.
+- **Solutions écartées**: changer le nom en `<button>` (plus de lien vers la fiche, ni de clic
+  modifié, et rien sans JavaScript); garder les deux commandes (c'est ce que la demande retire).

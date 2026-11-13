@@ -8,7 +8,7 @@ import { affiches, attendus, cocher, donnees, ouvrir } from "./explorateur.ts";
 const enrichi = donnees.outils.find((o) => o.verdicts && o.licence && o.tags.length > 0)!;
 const nonEnrichi = donnees.outils.find((o) => o.statut === "non-enrichi")!;
 const boite = (page: Page) => page.locator("dialog[data-details]");
-const details = (page: Page, id: string, dans = ".resultats") => page.locator(`${dans} button[data-details-de="${id}"]`);
+const details = (page: Page, id: string, dans = ".resultats") => page.locator(`${dans} a[data-details-de="${id}"]`);
 
 /** Sections de la fiche d'un outil, lues sur sa page. */
 async function sectionsDeLaFiche(page: Page, id: string): Promise<string[]> {
@@ -23,8 +23,11 @@ test.beforeEach(async ({ page }) => {
   await ouvrir(page);
 });
 
-test("« Détails » d'une carte ouvre une boîte modale nommée par l'outil, avec les sections de sa fiche et leur provenance", async ({ page }) => {
+test("le nom d'un outil, sur une carte, ouvre une boîte modale nommée par l'outil, avec les sections de sa fiche et leur provenance", async ({ page }) => {
   await expect(boite(page)).toBeHidden();
+  // Le nom reste un lien vers la fiche: sans JavaScript, ou par un clic modifié, il y mène.
+  await expect(details(page, enrichi.id)).toHaveAttribute("href", `/outils/${enrichi.id}/`);
+  await expect(details(page, enrichi.id)).toHaveText(enrichi.nom);
   await details(page, enrichi.id).click();
   await expect(boite(page)).toBeVisible();
   await expect(page.getByRole("dialog", { name: enrichi.nom })).toBeVisible();
@@ -69,6 +72,30 @@ test("si la fiche ne se charge pas, la boîte le dit et renvoie à la fiche; ell
   await details(page, donnees.outils.find((o) => o.id !== enrichi.id && o.enrichi)!.id).click();
   await expect(boite(page).locator("[data-details-contenu]")).toBeVisible();
   await expect(boite(page).getByRole("alert")).toHaveCount(0);
+});
+
+test("il n'y a plus de bouton « Détails »: le nom de l'outil est la seule commande qui ouvre la boîte", async ({ page }) => {
+  const [a, b] = attendus().slice(0, 2);
+  for (const id of [a, b]) await page.locator(`.resultats [data-outil="${id}"] input[name="comparer"]`).check();
+  await expect(page.locator(".explorateur").getByRole("button", { name: /Détails/ })).toHaveCount(0);
+  await page.getByRole("radio", { name: "Tableau" }).check();
+  await expect(page.locator(".explorateur").getByRole("button", { name: /Détails/ })).toHaveCount(0);
+});
+
+test("un clic modifié sur le nom (Ctrl) suit le lien dans un nouvel onglet, sans ouvrir la boîte", async ({ page, context }) => {
+  const onglet = context.waitForEvent("page");
+  await details(page, enrichi.id).click({ modifiers: ["Control"] });
+  const fiche = await onglet;
+  await expect(fiche.locator("h1")).toHaveText(enrichi.nom);
+  await expect(boite(page)).toBeHidden();
+  await expect(page).not.toHaveURL(/fiche=/);
+});
+
+test("au clavier, Entrée sur le nom ouvre la boîte", async ({ page }) => {
+  await details(page, enrichi.id).focus();
+  await page.keyboard.press("Enter");
+  await expect(page.getByRole("dialog", { name: enrichi.nom })).toBeVisible();
+  await expect(page).toHaveURL(new RegExp(`fiche=${enrichi.id}$`));
 });
 
 test("« Ouvrir la fiche » mène à la page de l'outil", async ({ page }) => {

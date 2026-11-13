@@ -125,10 +125,12 @@ test("parcours au clavier seul: lien d'évitement, navigation, liste, fiche et r
   await page.keyboard.press("Enter");
   await expect(page.locator("form[data-commandes]")).toBeVisible();
 
-  // La première carte s'ouvre à la touche Entrée, et le lien de retour ramène à la liste.
+  // Le nom de la première carte ouvre ses détails à la touche Entrée; de là, la fiche s'ouvre, et son lien de retour ramène à la liste.
   const lien = page.locator(".resultats [data-outil] a").first();
   const nom = await lien.textContent();
   await lien.focus();
+  await page.keyboard.press("Enter");
+  await page.getByRole("dialog", { name: nom! }).getByRole("link", { name: /Ouvrir la fiche/ }).focus();
   await page.keyboard.press("Enter");
   await expect(page.locator("h1")).toHaveText(nom!);
   const retour = page.getByRole("link", { name: "Retour à la liste des outils" });
@@ -174,10 +176,12 @@ test("explorateur au clavier seul: chercher, filtrer, trier, choisir deux outils
   await page.getByRole("region", { name: "Tableau de comparaison" }).focus();
   await expect(page.getByRole("region", { name: "Tableau de comparaison" })).toBeFocused();
 
-  // Ouvrir la fiche du premier outil comparé, à la touche Entrée.
+  // Ouvrir les détails du premier outil comparé, puis sa fiche, à la touche Entrée.
   const lien = page.locator("table.tableau-comparaison thead th a").first();
   const nom = await lien.textContent();
   await lien.focus();
+  await page.keyboard.press("Enter");
+  await page.getByRole("dialog", { name: nom! }).getByRole("link", { name: /Ouvrir la fiche/ }).focus();
   await page.keyboard.press("Enter");
   await expect(page.locator("h1")).toHaveText(nom!);
 });

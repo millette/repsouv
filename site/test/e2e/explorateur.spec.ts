@@ -83,9 +83,12 @@ test("aucun résultat: un message, et « Effacer les choix » rétablit la liste
   await expect(page.getByLabel("Chercher un outil par son nom")).toHaveValue("");
 });
 
-test("le nom d'un résultat mène à sa fiche", async ({ page }) => {
+test("le nom d'un résultat est un lien vers sa fiche, qui ouvre ses détails dans une boîte d'où la fiche s'ouvre", async ({ page }) => {
   const premier = donnees.outils.find((o) => o.id === attendus()[0])!;
-  await page.locator(`.resultats [data-outil="${premier.id}"] a`).click();
+  const nom = page.locator(`.resultats [data-outil="${premier.id}"] a`);
+  await expect(nom).toHaveAttribute("href", `/outils/${premier.id}/`);
+  await nom.click();
+  await page.getByRole("dialog", { name: premier.nom }).getByRole("link", { name: /Ouvrir la fiche/ }).click();
   await expect(page.locator("h1")).toHaveText(premier.nom);
 });
 
