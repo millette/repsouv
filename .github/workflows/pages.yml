@@ -1,0 +1,107 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
+#
+# Publie le site de consultation (site/) sur GitHub Pages, à chaque changement de la branche principale ou à la main.
+# Tous les contrôles du dépôt et du site passent d'abord: si l'un échoue, rien n'est mis en ligne et le site publié
+# reste celui d'avant. La publication lit les données du dépôt telles quelles: elle ne lance aucun script payant,
+# n'emploie aucun secret et n'écrit rien dans le dépôt.
+# Réglage à faire une fois sur GitHub: Settings, Pages, Source: « GitHub Actions ».
+name: Publier le site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Deux changements rapprochés donnent deux publications en file: celle en cours n'est pas annulée.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  construire:
+    name: Contrôler et bâtir
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le dépôt
+        uses: actions/checkout@v7
+
+      - name: Installer Node.js (version de .node-version)
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+
+      - name: Installer uv (pour le contrôle des licences)
+        uses: astral-sh/setup-uv@v10
+
+      - name: Installer nub
+        run: |
+          curl -fsSL https://nubjs.com/install.sh | bash
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Installer les dépendances de la racine
+        run: nub install
+
+      - name: Tests de la racine (unitaires, données, schémas)
+        run: nub run test
+
+      - name: Types de la racine
+        run: nub run typecheck
+
+      - name: Licences (REUSE)
+        run: nub run licences
+
+      - name: Installer les dépendances du site
+        working-directory: site
+        run: nub install
+
+      - name: Types du site
+        working-directory: site
+        run: nub run check
+
+      - name: Tests du site (unitaires, puis site bâti)
+        working-directory: site
+        run: nub run test
+
+      - name: Installer Chromium pour les tests dans un navigateur
+        working-directory: site
+        run: nub exec playwright install --with-deps chromium
+
+      - name: Tests du site dans un navigateur
+        working-directory: site
+        run: nub run test:e2e
+
+      # L'adresse et le chemin du site viennent du dépôt qui publie: une copie se publie à sa propre adresse.
+      - name: Lire l'adresse du site sur GitHub Pages
+        id: pages
+        uses: actions/configure-pages@v6
+
+      # Après les tests, qui bâtissent le site à la racine d'un domaine: ce build-ci est celui qui est publié.
+      - name: Bâtir le site pour son adresse de publication
+        working-directory: site
+        env:
+          SITE_URL: ${{ steps.pages.outputs.origin }}
+          SITE_BASE: ${{ steps.pages.outputs.base_path }}
+        run: nub run build
+
+      - name: Déposer le site bâti
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: site/dist
+
+  publier:
+    name: Mettre en ligne
+    needs: construire
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.mise-en-ligne.outputs.page_url }}
+    steps:
+      - name: Publier sur GitHub Pages
+        id: mise-en-ligne
+        uses: actions/deploy-pages@v5

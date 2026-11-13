@@ -20,12 +20,25 @@ nub run test:e2e     # tests dans Chromium : filtres, adresse, clavier, sans Jav
 
 Les tests dans un navigateur demandent Chromium (`nub x playwright install chromium`, une fois). Le build ne fait aucun appel réseau et ne demande aucune clé d'API.
 
+## Publication
+
+Le site est publié sur GitHub Pages par le flux [`.github/workflows/pages.yml`](../.github/workflows/pages.yml).
+
+- **Réglage à faire une fois** : sur GitHub, dans le dépôt, Settings, Pages, Build and deployment, Source : « GitHub Actions ».
+- **Quand** : à chaque changement poussé sur la branche principale, ou à la main (onglet Actions, flux « Publier le site », « Run workflow »).
+- **Où** : sous le chemin du dépôt, `https://millette.github.io/repsouv/` pour ce dépôt. L'adresse et le chemin viennent de GitHub : une copie du dépôt se publie à sa propre adresse sans modifier le code.
+- **Contrôles** : avant la mise en ligne, la publication lance les contrôles de la racine (`nub run test`, `nub run typecheck`, `nub run licences`) et ceux du site (`nub run check`, `nub run test`, `nub run test:e2e`). Si l'un échoue, rien n'est publié et le site en ligne reste celui d'avant.
+- **Coût** : aucun. La publication lit les données du dépôt telles quelles ; elle ne lance ni mise à jour ni enrichissement, et n'emploie aucun secret.
+- **Ailleurs** : `nub run build` écrit `site/dist/`, à déposer chez n'importe quel hébergeur de fichiers statiques, avec les variables ci-dessous.
+
+Pour essayer sur le poste le site tel qu'il sera publié : `SITE_BASE=/repsouv/ nub exec astro build --outDir dist-base`, puis `SITE_BASE=/repsouv/ nub exec astro preview --outDir dist-base` ; les tests le font d'eux-mêmes (`test/build/base.test.ts`, `test/e2e/base.spec.ts`).
+
 ## Variables d'environnement
 
 | Variable | Rôle | Défaut |
 |---|---|---|
-| `SITE_URL` | Adresse publique du site, une fois l'hébergeur choisi | Aucune |
-| `SITE_BASE` | Chemin de base, si le site n'est pas à la racine du domaine (`/repertoire/`) | `/` |
+| `SITE_URL` | Origine publique du site (`https://millette.github.io`) ; donnée par GitHub à la publication | Aucune |
+| `SITE_BASE` | Chemin de base, si le site n'est pas à la racine du domaine (`/repsouv/`) ; donné par GitHub à la publication | `/` |
 | `DONNEES` | Dossier des cinq fichiers JSON, pour bâtir avec d'autres données (les tests s'en servent) | La racine du dépôt |
 
 ## Règles

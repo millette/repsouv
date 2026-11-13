@@ -12,7 +12,7 @@ Le [sommaire statistique](sommaire.md) qui en résulte distingue 56 logiciels li
 
 *Statut du code source des outils du répertoire, d'après [`sommaire.md`](sommaire.md) (image produite par `node sommaire.ts`).*
 
-Le dépôt contient aussi un **site statique de consultation** ([`site/`](site/README.md)) : un accueil qui présente le projet, la liste des outils par catégorie, une page par outil, un explorateur pour trier, filtrer et comparer côte à côte de deux à quatre outils, et une page de statistiques qui reprend les graphiques du sommaire, avec la provenance de chaque champ et l'attribution sur chaque page. Il se bâtit à partir des fichiers JSON, sans les modifier ; son hébergement reste à décider.
+Le dépôt contient aussi un **site statique de consultation** ([`site/`](site/README.md)) : un accueil qui présente le projet, la liste des outils par catégorie, une page par outil, un explorateur pour trier, filtrer et comparer côte à côte de deux à quatre outils, et une page de statistiques qui reprend les graphiques du sommaire, avec la provenance de chaque champ et l'attribution sur chaque page. Il se bâtit à partir des fichiers JSON, sans les modifier, et se publie sur GitHub Pages à chaque changement de la branche principale (<https://millette.github.io/repsouv/>, une fois GitHub Pages activé dans les réglages du dépôt ; voir [`site/README.md`](site/README.md#publication)).
 
 **Sommaire :** [Démarrage rapide](#démarrage-rapide) · [Source, crédits et licences](#source-crédits-et-licences) · [Autres commandes](#autres-commandes) · [Outils à installer](#outils-à-installer) · [Fichiers JSON](#fichiers-json) · [Sommaire statistique](#sommaire-statistique) · [Utiliser les données](#utiliser-les-données) · [Documentation](#documentation)
 
