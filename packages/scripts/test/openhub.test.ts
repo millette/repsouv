@@ -5,7 +5,7 @@ import { test } from "node:test";
 import type { OutilClasse } from "../classify.ts";
 import { aCompleterOpenHub, abandonneOpenHub, analyserDepots, analyserProjets, champOpenHub, clientOpenHub, completerOpenHub, concordance, requetesOpenHub, trouverConcordance, type ProjetOpenHub } from "../openhub.ts";
 import { USER_AGENT } from "../agent.ts";
-import { enrichi, outil } from "./donnees-fictives.ts";
+import { enrichi, outil } from "../../commun/test/donnees-fictives.ts";
 
 const projet = (extra = "") => `<project><id>42</id><name>Jami</name><vanity_name>jami</vanity_name><html_url>https://openhub.net/p/jami</html_url><homepage_url>https://jami.net/</homepage_url>
   <links><link><category>Code</category><title>Dépôt</title><url>https://git.jami.net/savoirfairelinux/jami-project</url></link><link><url>https://docs.jami.net/</url></link></links>

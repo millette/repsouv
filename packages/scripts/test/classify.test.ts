@@ -10,7 +10,7 @@ import { join, resolve } from "node:path";
 import { test } from "node:test";
 import { CONTROLE, DEPENDANCE, DONNEES, classer } from "../classify.ts";
 import { ecrireFichier } from "../fichiers.ts";
-import { META, OUTILS } from "./donnees-fictives.ts";
+import { META, OUTILS } from "../../commun/test/donnees-fictives.ts";
 
 /** Descriptions telles qu'affichées par le répertoire, avec leur nombre d'étoiles. */
 const DESCRIPTIONS: Record<string, { score: number; description: string }> = {

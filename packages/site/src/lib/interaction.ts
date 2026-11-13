@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
-// Prépare un graphique pour l'interaction de la page « Statistiques », sans toucher à graphiques.ts
+// Prépare un graphique pour l'interaction de la page « Statistiques », sans toucher à packages/commun/graphiques.ts
 // (specs/003-page-statistiques/contracts/graphiques.md): chaque valeur reçoit son rang (_i), et deux paramètres pilotés
 // par l'île, « courant » (valeur atteinte au clavier) et « serie » (série mise en évidence), règlent l'opacité et le
 // contour des marques. La mise en évidence ne repose donc pas sur la couleur seule: estompage et contour.

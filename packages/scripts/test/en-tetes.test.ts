@@ -11,8 +11,8 @@ import { depuisRacine } from "./racine.ts";
 const lire = (chemin: string) => readFileSync(depuisRacine(chemin), "utf8");
 
 const LICENCE_CODE = "AGPL-3.0-or-later";
-// Le code des scripts et de leurs tests, et le banc d'essai, depuis la racine du dépôt.
-const sources = ["packages/scripts", "packages/scripts/test", "packages/scripts/test/donnees", "analyse-effort"].flatMap((d) => readdirSync(depuisRacine(d)).filter((f) => f.endsWith(".ts")).map((f) => `${d}/${f}`));
+// Le code commun, celui des scripts, leurs tests, et le banc d'essai, depuis la racine du dépôt.
+const sources = ["packages/commun", "packages/commun/test", "packages/scripts", "packages/scripts/test", "packages/scripts/test/donnees", "analyse-effort"].flatMap((d) => readdirSync(depuisRacine(d)).filter((f) => f.endsWith(".ts")).map((f) => `${d}/${f}`));
 
 test("la licence du code est un identifiant SPDX valide, le même dans package.json", () => {
   assert.equal(problemeLicenceSpdx(LICENCE_CODE), null);
@@ -67,7 +67,7 @@ test("REUSE.toml déclare CC-BY-SA-4.0 pour les données et leurs dérivés, et 
     assert.ok(reuse.includes(`<${skill.meta?.url}>`), `REUSE.toml: même dépôt d'origine que skills-lock.json pour ${nom}`);
     assert.ok(skill.meta?.url?.endsWith(skill.source), `skills-lock.json: url et source cohérents pour ${nom}`);
   }
-  for (const chemin of ["README.md", "implementation.md", "historique.md", "package.json", "packages/scripts/package.json", "packages/scripts/tsconfig.json", "packages/scripts/tsconfig.schemas.json", "nub.lock", "skills-lock.json", ".gitignore", ".env.example"]) {
+  for (const chemin of ["README.md", "implementation.md", "historique.md", "package.json", "packages/commun/package.json", "packages/commun/tsconfig.json", "packages/scripts/package.json", "packages/scripts/tsconfig.json", "packages/scripts/tsconfig.schemas.json", "nub.lock", "skills-lock.json", ".gitignore", ".env.example"]) {
     assert.ok(reuse.includes(`"${chemin}"`), `annoté: ${chemin}`);
   }
 });

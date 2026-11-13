@@ -1,0 +1,43 @@
+{
+  "name": "@repsouv/commun",
+  "version": "0.1.0",
+  "private": true,
+  "license": "AGPL-3.0-or-later",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/millette/repsouv.git",
+    "directory": "packages/commun"
+  },
+  "homepage": "https://millette.github.io/repsouv/",
+  "author": {
+    "name": "Robin Millette",
+    "email": "robin@millette.info",
+    "url": "https://robin.millette.info/"
+  },
+  "type": "module",
+  "scripts": {
+    "test": "nub --test \"test/*.test.ts\"",
+    "typecheck": "tsrs -p ."
+  },
+  "engines": {
+    "node": ">=26 <27"
+  },
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": ">=26 <27",
+      "onFail": "warn"
+    },
+    "packageManager": {
+      "name": "nub",
+      "version": "^0.11.0",
+      "onFail": "ignore"
+    }
+  },
+  "devDependencies": {
+    "@nubjs/types": "^0.10.0",
+    "@types/node": "^26.6.6",
+    "tsrs": "^0.24.0-ts7.1.0-beta",
+    "vega-lite": "^6.5.0"
+  }
+}

@@ -1,14 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Statistiques du répertoire: calcul pur, sans entrée-sortie, à partir des outils, des tags et des
-// critères. Utilisé par le sommaire (sommaire.ts) et par les graphiques (graphiques.ts).
-import type { OutilClasse } from "./classify.ts";
-import { abandonne, type Tag } from "./enrichir.ts";
-import type { Categorie } from "./categories.ts";
-import type { Critere } from "./extract.ts";
-import type { Metadonnees } from "./fichiers.ts";
-import { abandonneOpenHub } from "./openhub.ts";
-import type { Source } from "./sources.ts";
+// critères. Utilisé par le sommaire (packages/scripts/sommaire.ts), par les graphiques (graphiques.ts) et par la page
+// « Statistiques » du site (packages/site/src/lib/statistiques.ts): les mêmes chiffres partout.
+import { abandonne, abandonneOpenHub } from "./abandon.ts";
+import type { Categorie, Critere, Metadonnees, OutilClasse, Source, Tag } from "./modele.ts";
 
 // ---------- vocabulaire ----------
 
@@ -91,7 +87,7 @@ export interface Statistiques {
   /** Nombre d'outils par catégorie et par statut du code source (pour les graphiques). */
   categoriesSources: { categorie: string; nom: string; source: string; n: number }[];
   scores: { deux: number; trois: number; moyen: number };
-  enrichissement: { enrichis: number; avecEcart: string[]; sansDate: number; /** Outils non enrichis abandonnés après des échecs consécutifs (voir enrichir.ts). */ abandonnes: string[] };
+  enrichissement: { enrichis: number; avecEcart: string[]; sansDate: number; /** Outils non enrichis abandonnés après des échecs consécutifs (voir abandon.ts). */ abandonnes: string[] };
   changements: Compte[];
   confianceClassification: Compte[];
   dates: { premieres: DateExtreme | null; dernieres: DateExtreme | null; parDate: Compte[] };

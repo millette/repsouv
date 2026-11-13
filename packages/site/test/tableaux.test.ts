@@ -13,7 +13,7 @@ import { baseDe, provenanceDe, tableauDe, valeursDe } from "../src/lib/tableaux.
 
 // Les vraies données: les neuf graphiques n'existent tous qu'avec elles.
 const donnees = chargerDonnees(depuisRacine("donnees"));
-const { stats, graphiques } = await statistiquesDuSite(donnees);
+const { stats, graphiques } = statistiquesDuSite(donnees);
 const explorateur = donneesExplorateur(donnees);
 const contexte = { base: "/", categories: explorateur.categories, tags: explorateur.tags };
 const tableau = (id: string) => tableauDe(graphiques.find((g) => g.id === id)!, contexte);

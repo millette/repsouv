@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
-// Statistiques du site: celles de la racine, et les chiffres clés de la page.
+// Statistiques du site: celles du dépôt (packages/commun), et les chiffres clés de la page.
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { IDS_GRAPHIQUES } from "../../scripts/graphiques.ts";
+import { IDS_GRAPHIQUES } from "../../commun/graphiques.ts";
 import { chargerDonnees } from "../src/lib/donnees.ts";
 import { chiffresCles, statistiquesDuSite } from "../src/lib/statistiques.ts";
 
 const donnees = chargerDonnees("test/fixtures/valide");
-const { stats, graphiques } = await statistiquesDuSite(donnees);
+const { stats, graphiques } = statistiquesDuSite(donnees);
 
-test("les statistiques et les graphiques sont ceux de la racine, pour les outils actifs", () => {
+test("les statistiques et les graphiques sont ceux du dépôt (packages/commun), pour les outils actifs", () => {
   assert.equal(stats.total, 5);
   assert.deepEqual(stats.retires, ["Disparu"]);
   assert.ok(graphiques.length > 0);

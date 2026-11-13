@@ -13,6 +13,7 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { horodatage } from "./temps.ts";
+import type { Metadonnees } from "../commun/modele.ts";
 
 export const LICENCE_DONNEES = "CC-BY-SA-4.0";
 
@@ -23,11 +24,7 @@ export const DOSSIER_DONNEES = join(RACINE_DEPOT, "donnees");
 /** Fichier des outils que les scripts lisent et écrivent quand aucun chemin n'est donné. */
 export const FICHIER_OUTILS = join(DOSSIER_DONNEES, "outils.json");
 
-export interface Metadonnees {
-  data_license: string;
-  created_at: string;
-  updated_at: string;
-}
+export type { Metadonnees } from "../commun/modele.ts";
 
 /** Un fichier lu: ses données et ses métadonnées telles qu'elles sont dans le fichier. */
 export interface Lu<T> {

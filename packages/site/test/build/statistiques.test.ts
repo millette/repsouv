@@ -18,7 +18,7 @@ import { batirAuBesoin, DIST, donneesReelles, lirePage, texte } from "./outils.t
 
 batirAuBesoin();
 const donnees = donneesReelles();
-const { stats, graphiques } = await statistiquesDuSite(donnees);
+const { stats, graphiques } = statistiquesDuSite(donnees);
 const page = lirePage("statistiques/index.html");
 const principal = page.querySelector("main")!;
 const figures = [...principal.querySelectorAll("figure[data-graphique]")];

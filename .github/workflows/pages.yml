@@ -45,7 +45,7 @@ jobs:
           curl -fsSL https://nubjs.com/install.sh | bash
           echo "$HOME/.nub/bin" >> "$GITHUB_PATH"
 
-      # Une seule installation, à la racine, pour tous les espaces de travail (packages/scripts et packages/site).
+      # Une seule installation, à la racine, pour tous les espaces de travail (packages/commun, packages/scripts et packages/site).
       - name: Installer les dépendances
         run: nub install
 

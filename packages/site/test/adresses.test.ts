@@ -4,7 +4,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
-import { slug } from "../../scripts/categories.ts";
+import { slug } from "../../commun/slug.ts";
 import { adresseAccueil, adresseExplorer, adresseFiche, identifiant, verifierUnicite } from "../src/lib/adresses.ts";
 import { depuisRacine } from "../src/lib/chemins.ts";
 

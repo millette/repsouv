@@ -11,7 +11,7 @@ import { ALTERNATIVES, CATEGORIE_PAR_LOGICIEL, extraireFacil, SOURCE_FACIL, sync
 import { USER_AGENT } from "../agent.ts";
 import { ecrireFichier, lireFichier } from "../fichiers.ts";
 import { problemesSource, type Source } from "../sources.ts";
-import { CATEGORIES, META, OUTILS, outil, SOURCES, TAGS } from "./donnees-fictives.ts";
+import { CATEGORIES, META, OUTILS, outil, SOURCES, TAGS } from "../../commun/test/donnees-fictives.ts";
 
 const service = (nom: string, url: string, description: string, logiciel: string, depot: string, remplace: string) => `
 <div class="un-service">

@@ -6,15 +6,16 @@
 // Utilisé par `update.ts --enrichir`. Les fonctions sont pures ou reçoivent leurs dépendances
 // (générateur, rappel de sauvegarde) pour pouvoir être testées sans réseau.
 import { parseHTML } from "linkedom";
-import type { ConfianceEvaluation, Critere, EvaluationEnrichie, Outil } from "./extract.ts";
+import type { ConfianceEvaluation, Critere, EvaluationEnrichie, Outil, Tag } from "../commun/modele.ts";
 import { ecrireFichier, lireFichier, lireSiExiste } from "./fichiers.ts";
-import { CONTROLE, DEPENDANCE, DONNEES } from "./ids.ts";
+import { CONTROLE, DEPENDANCE, DONNEES } from "../commun/ids.ts";
 import { additionner, coutPour, USAGE_VIDE, usageDepuisOpenAI, type Usage } from "./prix.ts";
 import { nomCategorie, type Categorie } from "./categories.ts";
 import { problemeLicenceSpdx } from "./spdx.ts";
 import { horodatage } from "./temps.ts";
 import { pageEnrichissement } from "./logiciel.ts";
 import { enTetes } from "./agent.ts";
+import { abandonne, MAX_ECHECS_PAR_DEFAUT } from "../commun/abandon.ts";
 
 export const MAX_TAGS = 5;
 export const SOURCES = ["libre", "partiel", "source-disponible", "proprietaire"] as const;
@@ -50,14 +51,7 @@ export function effortDepuisEnv(env: Record<string, string | undefined> = proces
 const IDS_CRITERES: readonly string[] = [DONNEES, CONTROLE, DEPENDANCE];
 const CONFIANCES: readonly ConfianceEvaluation[] = ["élevée", "moyenne", "faible"];
 
-export interface Tag {
-  id: string;
-  description: string;
-  /** Présent seulement sur les tags ajoutés après le vocabulaire initial. */
-  justification?: string;
-  /** Outil pour lequel le tag a été proposé (tags ajoutés seulement). */
-  propose_pour?: string;
-}
+export type { Tag } from "../commun/modele.ts";
 
 export interface NouveauTag {
   id: string;
@@ -474,10 +468,8 @@ export function expliqueurOpenAI(cle: string, modele: string, compteur?: Compteu
 
 export const aEnrichir = (o: Outil) => !o.removed && !o.description_longue;
 
-/** Au-delà de ce nombre d'échecs consécutifs, un outil n'est plus tenté (option --max-echecs=N de update.ts). */
-export const MAX_ECHECS_PAR_DEFAUT = 3;
-/** true si l'outil a atteint le nombre maximal d'échecs consécutifs et ne doit plus être tenté. */
-export const abandonne = (o: Outil, maxEchecs: number = MAX_ECHECS_PAR_DEFAUT) => (o.echecs_enrichissement ?? 0) >= maxEchecs;
+// Le nombre maximal d'échecs consécutifs et le prédicat « abandonné » vivent dans packages/commun (les statistiques s'en servent aussi).
+export { abandonne, MAX_ECHECS_PAR_DEFAUT } from "../commun/abandon.ts";
 
 /** Un outil, avec les critères déduits par classify.ts quand il en a. */
 type OutilARevoir = Outil & { criteres?: readonly string[]; confiance?: string };

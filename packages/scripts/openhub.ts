@@ -8,7 +8,7 @@
 // et `openhub` (voir OpenHub dans extract.ts); `echecs_openhub` compte les échecs consécutifs, comme l'enrichissement.
 import { DOMParser } from "linkedom";
 import type { OutilClasse } from "./classify.ts";
-import { MAX_ECHECS_PAR_DEFAUT } from "./enrichir.ts";
+import { aCompleterOpenHub, abandonneOpenHub, MAX_ECHECS_PAR_DEFAUT } from "../commun/abandon.ts";
 import type { OpenHub } from "./extract.ts";
 import { horodatage } from "./temps.ts";
 import { estDepot, nomLogiciel, pageEnrichissement } from "./logiciel.ts";
@@ -200,14 +200,8 @@ export function champOpenHub(p: ProjetOpenHub, consulteLe: string): OpenHub {
 
 // ---------- boucle ----------
 
-const SOURCES_LIBRES = new Set(["libre", "partiel", "source-disponible"]);
-
-/** Un outil enrichi dont le code est public, sans données Open Hub, et pas abandonné. */
-export const aCompleterOpenHub = (o: OutilClasse, maxEchecs: number = MAX_ECHECS_PAR_DEFAUT): boolean =>
-  !o.removed && o.source !== undefined && SOURCES_LIBRES.has(o.source) && o.openhub === undefined && (o.echecs_openhub ?? 0) < maxEchecs;
-
-export const abandonneOpenHub = (o: OutilClasse, maxEchecs: number = MAX_ECHECS_PAR_DEFAUT): boolean =>
-  !o.removed && o.source !== undefined && SOURCES_LIBRES.has(o.source) && o.openhub === undefined && (o.echecs_openhub ?? 0) >= maxEchecs;
+// Quels outils compléter, lesquels sont abandonnés: prédicats de packages/commun (les statistiques s'en servent aussi).
+export { aCompleterOpenHub, abandonneOpenHub } from "../commun/abandon.ts";
 
 export interface OptionsOpenHub {
   client: ClientOpenHub;

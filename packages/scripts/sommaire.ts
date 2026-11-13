@@ -28,12 +28,12 @@ import type { Source } from "./sources.ts";
 import { createProgress, type Progress } from "./progress.ts";
 import {
   arrondi, calculerStatistiques, forgeDe, NOMS_SOURCES, NON_ENRICHI, type LigneCriteres, type Statistiques,
-} from "./statistiques.ts";
+} from "../commun/statistiques.ts";
 import { horodatage } from "./temps.ts";
 
-// Les statistiques vivent dans statistiques.ts; elles sont réexportées ici pour les appelants du sommaire.
-export { calculerStatistiques, familleLicence, forgeDe, NON_ENRICHI, SOURCES } from "./statistiques.ts";
-export type { Compte, DateExtreme, Entree, LigneCriteres, Statistiques } from "./statistiques.ts";
+// Les statistiques vivent dans packages/commun/statistiques.ts; elles sont réexportées ici pour les appelants du sommaire.
+export { calculerStatistiques, familleLicence, forgeDe, NON_ENRICHI, SOURCES } from "../commun/statistiques.ts";
+export type { Compte, DateExtreme, Entree, LigneCriteres, Statistiques } from "../commun/statistiques.ts";
 
 // ---------- rendu Markdown ----------
 

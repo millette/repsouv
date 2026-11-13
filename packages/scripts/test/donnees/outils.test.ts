@@ -14,7 +14,7 @@ import { chargerTags } from "../../enrichir.ts";
 import type { Critere } from "../../extract.ts";
 import { DOSSIER_DONNEES, lireFichier } from "../../fichiers.ts";
 import { problemesSource, type Source } from "../../sources.ts";
-import { ID_PAR_ICONE } from "../../ids.ts";
+import { ID_PAR_ICONE } from "../../../commun/ids.ts";
 import { lierVoirAussi, nomLogiciel } from "../../logiciel.ts";
 import { exigerFichiers, FICHIERS_DONNEES } from "./garde.ts";
 

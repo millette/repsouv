@@ -10,7 +10,7 @@
 import type { OutilClasse } from "./classify.ts";
 import { appelerOpenAI, MAX_ECHECS_PAR_DEFAUT, nouvelEssai, obtenirPage, obtenirValide, type Compteur, type Contenu } from "./enrichir.ts";
 import type { Critere, CriteresConfirmes, Outil } from "./extract.ts";
-import { CONTROLE, DEPENDANCE, DONNEES, type CritereId } from "./ids.ts";
+import { CONTROLE, DEPENDANCE, DONNEES, type CritereId } from "../commun/ids.ts";
 import { additionner, coutPour, USAGE_VIDE, type Usage } from "./prix.ts";
 import { horodatage } from "./temps.ts";
 import { pageEnrichissement } from "./logiciel.ts";

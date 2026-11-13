@@ -6,24 +6,14 @@
 import { appelerOpenAI, nouvelEssai, obtenirValide, problemesMarkdown, type Compteur } from "./enrichir.ts";
 import { ecrireFichier, lireFichier, lireSiExiste } from "./fichiers.ts";
 import { additionner, coutPour, USAGE_VIDE, type Usage } from "./prix.ts";
+import type { Categorie } from "../commun/modele.ts";
+import { slug as slugCommun } from "../commun/slug.ts";
 
-export interface Categorie {
-  /** Slug du nom (voir slug); référencé par outils[].categorie. */
-  id: string;
-  nom: string;
-  icone: string;
-  /** Description en français, générée par IA; absente tant qu'elle n'a pas été produite. */
-  description?: string;
-  /**
-   * Identifiant de la source (sources[].id) dont l'extracteur déclare la catégorie, quand elle ne vient pas de la page
-   * Praxis: `update` la conserve telle quelle au lieu de la resynchroniser depuis la page. Absent pour les catégories de Praxis.
-   */
-  source_repertoire_id?: string;
-}
+export type { Categorie } from "../commun/modele.ts";
 
-/** « Gestion d’événements et billetterie » → « gestion-d-evenements-et-billetterie ». */
+/** Identifiant d'une catégorie: le slug de son nom (règle de packages/commun/slug.ts); un nom sans lettre ni chiffre est refusé. */
 export function slug(nom: string): string {
-  const s = nom.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  const s = slugCommun(nom);
   if (!s) throw new Error(`identifiant de catégorie vide pour « ${nom} »`);
   return s;
 }

@@ -10,7 +10,7 @@ import { compilerVega } from "../src/lib/rendu.ts";
 import { statistiquesDuSite } from "../src/lib/statistiques.ts";
 import { valeursDe } from "../src/lib/tableaux.ts";
 
-const { graphiques } = await statistiquesDuSite(chargerDonnees(depuisRacine("donnees")));
+const { graphiques } = statistiquesDuSite(chargerDonnees(depuisRacine("donnees")));
 const graphique = (id: string) => graphiques.find((g) => g.id === id)!;
 
 test("séries à isoler: seulement quand la couleur regroupe plusieurs marques", () => {

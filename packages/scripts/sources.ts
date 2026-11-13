@@ -4,32 +4,11 @@
 // Charles) avec leur propre extracteur; et les outils ajoutés à la main (ajouter.ts), dont la source dit qui les a
 // soumis. Chaque outil de outils.json renvoie à une source par `source_repertoire_id`.
 import { URL_REPERTOIRE } from "./extract.ts";
-import { ID_PRAXIS } from "./ids.ts";
+import { ID_PRAXIS } from "../commun/ids.ts";
 import { ecrireFichier, lireFichier, lireSiExiste, type Lu } from "./fichiers.ts";
+import type { Source } from "../commun/modele.ts";
 
-/** Qui a soumis une collection ajoutée à la main; seul le nom est obligatoire. */
-export interface SoumisPar {
-  nom: string;
-  url?: string;
-  email?: string;
-}
-
-export type Extracteur = "praxis" | "facil" | "charles" | "manuel";
-
-export interface Source {
-  /** Identifiant (slug), référencé par outils[].source_repertoire_id. */
-  id: string;
-  nom: string;
-  /** Page de la collection d'outils. */
-  url: string;
-  /** Qui sait lire cette source: un extracteur du dépôt, ou « manuel » pour les outils saisis par ajouter.ts. */
-  extracteur: Extracteur;
-  /** Politique de confidentialité de la collection, si elle en publie une. */
-  pdc?: string;
-  /** Page sur les données (collecte, hébergement), si elle en publie une. */
-  donnees?: string;
-  soumis_par?: SoumisPar;
-}
+export type { Extracteur, SoumisPar, Source } from "../commun/modele.ts";
 
 export { ID_PRAXIS };
 export const SOURCE_PRAXIS: Readonly<Source> = {

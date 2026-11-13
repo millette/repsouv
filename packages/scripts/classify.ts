@@ -12,12 +12,12 @@
 //  4. La confiance dépend de l'écart entre le dernier critère retenu et le premier écarté.
 import { lancer } from "./cli.ts";
 import { ecrireFichier, lireFichier, lireSiExiste } from "./fichiers.ts";
-import type { Outil } from "./extract.ts";
-import { CONTROLE, DEPENDANCE, DONNEES, type CritereId } from "./ids.ts";
+import { CONTROLE, DEPENDANCE, DONNEES, type CritereId } from "../commun/ids.ts";
+import type { Classement, Confiance, Outil, OutilClasse } from "../commun/modele.ts";
 
 export { CONTROLE, DEPENDANCE, DONNEES };
 export type Critere = CritereId;
-export type Confiance = "élevée" | "moyenne" | "faible" | "indéterminée";
+export type { Classement, Confiance, OutilClasse } from "../commun/modele.ts";
 export type Evidences = Record<Critere, number>;
 
 const ORDRE: readonly Critere[] = [DONNEES, CONTROLE, DEPENDANCE]; // départage des égalités
@@ -62,14 +62,6 @@ export function evidences(description: string): Evidences {
     ev[DONNEES] += 1.5; // a priori: un fournisseur canadien héberge au Canada
   }
   return ev;
-}
-
-export interface OutilClasse extends Outil, Classement {}
-
-export interface Classement {
-  /** Identifiants (voir criteres.json) des critères que les étoiles représentent. */
-  criteres: Critere[];
-  confiance: Confiance;
 }
 
 export function classer(description: string, score?: number): Classement {

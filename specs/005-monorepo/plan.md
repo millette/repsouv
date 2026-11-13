@@ -48,7 +48,14 @@ de publication suit les nouveaux chemins.
 **But** : y placer ce que le site importe aujourd'hui de la racine (types, statistiques, graphiques) et le
 code que les deux côtés dupliquent ; le site n'importe plus rien de `packages/scripts`.
 **Critères** : tests de `commun` ; tous les contrôles au vert.
-**État** : à faire
+**État** : fait
+
+`packages/commun` contient `modele.ts` (les types des données, source des schémas JSON), `ids.ts` (identifiants
+fixes), `abandon.ts` (outils abandonnés après des échecs), `slug.ts`, `statistiques.ts` et `graphiques.ts` (la
+construction des spécifications ; leur écriture en SVG par `vl-convert` reste dans `packages/scripts/graphiques.ts`).
+Les modules des scripts réexportent ce qui en vient. Le site importe ces modules par des imports ordinaires : il n'a
+plus besoin des dépendances des scripts pour se bâtir. La lecture des fichiers reste propre à chaque côté (les scripts
+valident les dates de « meta » et écrivent, le site refuse un tableau vide et nomme le fichier fautif).
 
 ### Étape 4 : documentation, constitution, licences
 **But** : README, `implementation.md`, `historique.md`, `site/README.md`, constitution (chemins et commandes),

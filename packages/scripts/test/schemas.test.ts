@@ -10,7 +10,7 @@ import { test } from "node:test";
 import { Ajv2020 } from "ajv/dist/2020.js";
 import formats from "ajv-formats";
 import { DOSSIER_DONNEES } from "../fichiers.ts";
-import { CATEGORIES, CRITERES, enrichi, META, OUTILS, SOURCES, TAGS } from "./donnees-fictives.ts";
+import { CATEGORIES, CRITERES, enrichi, META, OUTILS, SOURCES, TAGS } from "../../commun/test/donnees-fictives.ts";
 
 const addFormats = formats.default;
 const lire = (chemin: string) => JSON.parse(readFileSync(join(DOSSIER_DONNEES, chemin), "utf8"));

@@ -1,15 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
-// Statistiques de la page « Statistiques »: celles des scripts (packages/scripts), calculées par les mêmes fonctions que sommaire.md
-// (calculerStatistiques de statistiques.ts, construireGraphiques de graphiques.ts), pour que la page et le sommaire
-// ne se contredisent jamais. Le site n'ajoute que les chiffres clés que le sommaire écrit en phrases.
-// Conséquence: bâtir le site exécute ces modules des scripts, donc demande leurs dépendances installées.
-// Ils sont chargés à leur emplacement réel, par leur chemin, et non regroupés avec le code du site: certains
-// modules des scripts lisent des fichiers à côté d'eux (le package.json de la racine du dépôt), ce qu'un regroupement casserait.
-import { pathToFileURL } from "node:url";
-import type { Graphique } from "../../../scripts/graphiques.ts";
-import type { Statistiques } from "../../../scripts/statistiques.ts";
-import { depuisRacine } from "./chemins.ts";
+// Statistiques de la page « Statistiques »: celles du dépôt, calculées par les mêmes fonctions que donnees/sommaire.md
+// (calculerStatistiques et construireGraphiques de packages/commun), pour que la page et le sommaire ne se
+// contredisent jamais. Le site n'ajoute que les chiffres clés que le sommaire écrit en phrases.
+// Ces fonctions sont pures (ni disque, ni réseau, ni dépendance à installer): elles s'importent comme le reste du site.
+import { construireGraphiques, type Graphique } from "../../../commun/graphiques.ts";
+import { calculerStatistiques, type Statistiques } from "../../../commun/statistiques.ts";
 import type { Donnees } from "./donnees.ts";
 import { nomPays } from "./libelles.ts";
 import { outilsActifs } from "./repertoire.ts";
@@ -21,14 +17,7 @@ export interface StatistiquesSite {
   graphiques: Graphique[];
 }
 
-/** Module des scripts du dépôt, chargé par Node tel quel, à son emplacement. */
-async function moduleScripts<T>(fichier: string): Promise<T> {
-  return (await import(/* @vite-ignore */ pathToFileURL(depuisRacine("packages", "scripts", fichier)).href)) as T;
-}
-
-export async function statistiquesDuSite(donnees: Donnees): Promise<StatistiquesSite> {
-  const { calculerStatistiques } = await moduleScripts<typeof import("../../../scripts/statistiques.ts")>("statistiques.ts");
-  const { construireGraphiques } = await moduleScripts<typeof import("../../../scripts/graphiques.ts")>("graphiques.ts");
+export function statistiquesDuSite(donnees: Donnees): StatistiquesSite {
   const stats = calculerStatistiques({ outils: donnees.outils, categories: donnees.categories, tags: donnees.tags, criteres: donnees.criteres, meta: donnees.meta, sources: donnees.sources });
   return { stats, graphiques: construireGraphiques(stats) };
 }

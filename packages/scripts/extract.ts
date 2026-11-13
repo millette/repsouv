@@ -16,130 +16,13 @@ import { parseHTML } from "linkedom";
 import { enTetes } from "./agent.ts";
 import { lancer } from "./cli.ts";
 import { ecrireFichier, lireFichier, lireSiExiste, type Lu } from "./fichiers.ts";
-import { ID_PRAXIS } from "./ids.ts";
+import { ID_PRAXIS } from "../commun/ids.ts";
 import { localVersIso } from "./temps.ts";
 import { categoriesDepuis, slug, type Categorie } from "./categories.ts";
-import { ID_PAR_ICONE, type CritereId } from "./ids.ts";
+import { ID_PAR_ICONE } from "../commun/ids.ts";
+import type { Critere, Outil } from "../commun/modele.ts";
 
-export type ConfianceEvaluation = "élevée" | "moyenne" | "faible";
-
-/** Évaluation indépendante des critères de souveraineté, produite par l'enrichissement. */
-export interface EvaluationEnrichie {
-  /** Nombre de critères satisfaits, de 0 à 3 (égal à criteres.length). */
-  score: number;
-  criteres: CritereId[];
-  confiance: ConfianceEvaluation;
-  /** Explication de l'écart avec `score`/`criteres` du répertoire; présent seulement quand ils diffèrent. */
-  ecart?: string;
-}
-
-/**
- * Critères vérifiés par une IA à partir de la page de l'outil (confirmer.ts, appelé par update.ts après l'enrichissement,
- * règle A pour « controle »), avec la citation à l'appui. Indépendant de `criteres`, qui reste lié aux étoiles de la source: il peut en compter moins.
- */
-export interface CriteresConfirmes {
-  /** Critères confirmés, dans l'ordre de criteres.json. */
-  criteres: CritereId[];
-  /** Citation (copiée mot pour mot de la description ou de la page) pour chaque critère confirmé. */
-  preuves: Partial<Record<CritereId, string>>;
-  /** Citation pour chaque critère infirmé; un critère absent des deux est indéterminé (la page ne permet pas de conclure). */
-  infirmes: Partial<Record<CritereId, string>>;
-  modele: string;
-  /** Date de la confirmation (ISO 8601, heure de Toronto, avec décalage). */
-  date: string;
-}
-
-/** Données publiques d'Open Hub (openhub.net) sur un projet libre, lues par openhub.ts; null quand Open Hub ne les donne pas. */
-export interface OpenHub {
-  organisation: string | null;
-  /** Indice d'activité d'Open Hub: « Inactive », « Very Low », « Low », « Moderate », « High », « Very High », « New » ou « NA ». */
-  activite: string | null;
-  /** Licences déclarées sur Open Hub (noms Open Hub, pas SPDX), pour contrôler `licence`. */
-  licences: string[];
-  langage_principal: string | null;
-  lignes_de_code: number | null;
-  contributeurs_total: number | null;
-  contributeurs_12_mois: number | null;
-  commits_12_mois: number | null;
-  /** Premier et dernier mois de l'analyse (AAAA-MM-JJ). */
-  premier_mois: string | null;
-  dernier_mois: string | null;
-  /** Date de la lecture (ISO 8601, heure de Toronto). */
-  consulte_le: string;
-}
-
-export type Changement = "nouveau" | "modification" | "retrait" | "comeback";
-
-export interface Outil {
-  /** Identifiant de la catégorie: categories[].id de categories.json (slug du nom). */
-  categorie: string;
-  nom: string;
-  /** Nombre d'étoiles (0 à 3) donné par la source; estimé (voir score_estime) quand la source n'en donne pas. */
-  score: number;
-  /**
-   * Présent (true) quand la source ne donne pas d'étoiles: score, criteres et confiance viennent de l'évaluation enrichie
-   * (ou, avant l'enrichissement, de la classification par seuil de la description).
-   */
-  score_estime?: true;
-  /** Identifiant de la source de l'outil: sources[].id de sources.json (« praxis » pour le répertoire Praxis). */
-  source_repertoire_id: string;
-  /** Services, souvent propriétaires, auxquels l'outil se substitue (URL), quand la source le dit (FACiL). */
-  alternative_a?: string[];
-  /** Logiciel libre dont l'outil est une instance hébergée (nom et lien vers son dépôt ou sa version), quand la source le dit (FACiL). */
-  instance_de?: { nom: string; url: string };
-  /** Noms des autres outils (outils[].nom) qui reposent sur le même logiciel (nom, ou instance_de.nom): posé par logiciel.ts à chaque écriture; absent sinon. */
-  voir_aussi?: string[];
-  /** Pays de l'éditeur, tel que la source le donne (code ISO 3166-1 alpha-2, ou « EU », « UK »), quand la source le dit (Charles); absent sinon. */
-  pays?: string;
-  lien: string;
-  description: string;
-  /** Dernière date de modification connue: ISO 8601 en heure de Toronto, avec décalage (2026-11-05T09:53:00-05:00). */
-  derniere_modification: string;
-  /** Nature du dernier changement détecté par update.ts; null si jamais modifié depuis l'import. */
-  changement: Changement | null;
-  /** Présent (true) seulement si l'outil a disparu de la page; l'entrée est alors conservée. */
-  removed?: true;
-  /**
-   * Nombre d'échecs consécutifs d'enrichissement (page inaccessible, réponses invalides); absent tant qu'aucun échec,
-   * retiré dès que l'enrichissement réussit. À MAX_ECHECS_PAR_DEFAUT (enrichir.ts), l'outil n'est plus tenté sans --max-echecs.
-   */
-  echecs_enrichissement?: number;
-  /** Nombre d'échecs consécutifs de la vérification des critères (confirmer.ts); même mécanique que echecs_enrichissement. */
-  echecs_confirmation?: number;
-  // Champs ajoutés par `update.ts --enrichir` (voir enrichir.ts); absents tant que l'outil n'est pas enrichi.
-  /** Description longue en français (Markdown, sans image ni HTML), générée une seule fois. */
-  description_longue?: string;
-  /** 1 à 5 identifiants de tags (voir tags.json). */
-  tags?: string[];
-  /** Statut du code source. */
-  source?: "libre" | "partiel" | "source-disponible" | "proprietaire";
-  /** Expression de licence SPDX valide (voir spdx.ts); null si propriétaire, inconnue ou sans identifiant SPDX. */
-  licence?: string | null;
-  /** Nom ou identifiant d'une licence qui n'est pas dans la liste SPDX; exclusif avec `licence`. */
-  custom_license?: string | null;
-  /** URL du texte de la licence maison, quand elle est disponible; exige `custom_license`. */
-  custom_license_url?: string | null;
-  /** URL du dépôt de code source, sur n'importe quelle forge; null si aucun. */
-  repo?: string | null;
-  /** Second avis sur score et critères, à comparer à `score` et `criteres` du répertoire. */
-  evaluation_enrichie?: EvaluationEnrichie;
-  /** Date et heure de l'enrichissement de l'outil (ISO 8601, heure de Toronto, avec décalage). Absente pour les outils enrichis avant l'ajout de ce champ. */
-  enrichi_le?: string;
-  /** Critères vérifiés par une IA, citation à l'appui (voir CriteresConfirmes); absent tant que la vérification n'a pas réussi. */
-  criteres_confirmes?: CriteresConfirmes;
-  /** Projet Open Hub concordant (vanity_name, voir openhub.ts) et ses données; seulement pour les logiciels au code public. */
-  openhub_id?: string;
-  openhub?: OpenHub;
-  /** Échecs consécutifs de la recherche Open Hub (aucune concordance sûre, erreur); même mécanique que echecs_enrichissement. */
-  echecs_openhub?: number;
-}
-
-export interface Critere {
-  id: CritereId;
-  icon: string;
-  titre: string;
-  description: string;
-}
+export type { Changement, ConfianceEvaluation, Critere, CriteresConfirmes, EvaluationEnrichie, OpenHub, Outil } from "../commun/modele.ts";
 
 export interface Repertoire {
   outils: Outil[];

@@ -8,7 +8,7 @@ import { compilerVega, rendreSvg } from "../src/lib/rendu.ts";
 import { statistiquesDuSite } from "../src/lib/statistiques.ts";
 import { adapterAuTheme, SOMBRE } from "../src/lib/themes-graphiques.ts";
 
-const { graphiques } = await statistiquesDuSite(chargerDonnees("test/fixtures/valide"));
+const { graphiques } = statistiquesDuSite(chargerDonnees("test/fixtures/valide"));
 
 test("chaque graphique se compile en spécification Vega", () => {
   for (const g of graphiques) {

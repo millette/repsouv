@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Page « Statistiques » (specs/003-page-statistiques/contracts/page.md): le portrait chiffré du répertoire, calculé
-// au build par les fonctions de la racine qui produisent sommaire.md. Elle se lit sans JavaScript: images et tableaux.
+// au build par les fonctions de packages/commun qui produisent aussi sommaire.md. Elle se lit sans JavaScript: images et tableaux.
 import ChiffresCles from "../components/ChiffresCles.astro";
 import FigureGraphique from "../components/FigureGraphique.astro";
 import Page from "../layouts/Page.astro";
@@ -13,7 +13,7 @@ import { chiffresCles } from "../lib/statistiques.ts";
 import { baseDe, provenanceDe, tableauDe } from "../lib/tableaux.ts";
 
 const donnees = site();
-const { stats, graphiques } = await statistiques();
+const { stats, graphiques } = statistiques();
 const explorateur = donneesExplorateur(donnees);
 const contexte = { base: donnees.base, categories: explorateur.categories, tags: explorateur.tags };
 const images = await rendus();

@@ -10,7 +10,7 @@ import { ajouterOutil, outilDemande, parametresDepuisArgs, sourceDemandee, type 
 import type { OutilClasse } from "../classify.ts";
 import { ecrireFichier, lireFichier } from "../fichiers.ts";
 import type { Source } from "../sources.ts";
-import { CATEGORIES, META, OUTILS, SOURCES, TAGS } from "./donnees-fictives.ts";
+import { CATEGORIES, META, OUTILS, SOURCES, TAGS } from "../../commun/test/donnees-fictives.ts";
 
 const T = "2026-11-13T10:00:00-05:00";
 const p: ParametresAjout = {

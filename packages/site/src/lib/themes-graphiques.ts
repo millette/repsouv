@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Adapte une spécification de graphique au thème de la page. Seuls le fond et les couleurs du texte, des axes, des
 // grilles, des titres et des légendes changent: les données, les formes et les couleurs des séries restent celles
-// de graphiques.ts, donc celles de sommaire.md.
+// de packages/commun/graphiques.ts, donc celles de sommaire.md.
 import type { TopLevelSpec } from "vega-lite";
 
 export const THEMES_GRAPHIQUES = ["clair", "sombre"] as const;

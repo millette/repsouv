@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
+// Identifiants fixes des données, que les scripts écrivent et que le site relit: la source Praxis et les trois critères.
 
-/** Identifiant de la source Praxis dans sources.json (voir sources.ts); ici pour qu'extract.ts n'importe pas sources.ts. */
+/** Identifiant de la source Praxis (le répertoire d'origine) dans sources.json. */
 export const ID_PRAXIS = "praxis";
 // Identifiants courts des trois critères (champ `id` de criteres.json).
 export const DONNEES = "donnees";

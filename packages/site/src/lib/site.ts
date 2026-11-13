@@ -14,7 +14,7 @@ export const NOM_SITE = "Répertoire d'outils favorisant la souveraineté numér
 export const AUTEURS_PRAXIS = ["Sven Buridans", "François Delnooz", "Marie-Renee Duguay"] as const;
 export const LICENCE_DONNEES = { nom: "CC BY-SA 4.0", url: "https://creativecommons.org/licenses/by-sa/4.0/deed.fr" } as const;
 /** Identifiant, dans sources.json, du répertoire d'origine. */
-export const ID_PRAXIS = "praxis";
+export { ID_PRAXIS } from "../../../commun/ids.ts";
 
 export interface Site extends Donnees {
   /** Outils du répertoire courant (sans les outils retirés), aux adresses de fiche uniques. */
@@ -35,10 +35,10 @@ export function site(): Site {
   return cache;
 }
 
-let cacheStatistiques: Promise<StatistiquesSite> | undefined;
+let cacheStatistiques: StatistiquesSite | undefined;
 
-/** Statistiques et graphiques de la racine, calculés une fois par build. */
-export function statistiques(): Promise<StatistiquesSite> {
+/** Statistiques et graphiques du dépôt (packages/commun), calculés une fois par build. */
+export function statistiques(): StatistiquesSite {
   return (cacheStatistiques ??= statistiquesDuSite(site()));
 }
 
@@ -57,16 +57,14 @@ let cacheRendus: Promise<Rendu[]> | undefined;
 
 /** Chaque graphique, dans chaque thème: son image et sa spécification compilée; calculés une fois par build. */
 export function rendus(): Promise<Rendu[]> {
-  return (cacheRendus ??= statistiques().then(({ graphiques }) =>
-    Promise.all(
-    graphiques.flatMap((g) =>
+  return (cacheRendus ??= Promise.all(
+    statistiques().graphiques.flatMap((g) =>
       THEMES_GRAPHIQUES.map(async (theme): Promise<Rendu> => {
         const spec = adapterAuTheme(g.spec, theme);
         const svg = await rendreSvg(spec);
         const dimension = (nom: string) => Math.round(Number(svg.match(new RegExp(`<svg[^>]*\\s${nom}="([\\d.]+)"`))?.[1] ?? 0));
         return { id: g.id, theme, svg, largeur: dimension("width"), hauteur: dimension("height"), vega: compilerVega(preparer(spec, CONTOUR[theme])) };
       }),
-    ),
     ),
   ));
 }

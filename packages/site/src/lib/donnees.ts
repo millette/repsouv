@@ -5,12 +5,7 @@
 // les pages ont besoin pour ne pas publier un site partiel: un message clair qui nomme le fichier fautif.
 import { readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
-import type { Categorie } from "../../../scripts/categories.ts";
-import type { OutilClasse } from "../../../scripts/classify.ts";
-import type { Tag } from "../../../scripts/enrichir.ts";
-import type { Critere } from "../../../scripts/extract.ts";
-import type { Metadonnees } from "../../../scripts/fichiers.ts";
-import type { Source } from "../../../scripts/sources.ts";
+import type { Categorie, Critere, Metadonnees, OutilClasse, Source, Tag } from "../../../commun/modele.ts";
 import { depuisRacine } from "./chemins.ts";
 
 export type { Categorie, Critere, Metadonnees, OutilClasse, Source, Tag };

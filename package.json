@@ -20,10 +20,10 @@
   "scripts": {
     "update": "node packages/scripts/update.ts",
     "sommaire": "node packages/scripts/sommaire.ts",
-    "test": "nub run -F @repsouv/scripts test",
-    "test:unit": "nub run -F @repsouv/scripts test:unit",
+    "test": "nub run -F @repsouv/commun test && nub run -F @repsouv/scripts test",
+    "test:unit": "nub run -F @repsouv/commun test && nub run -F @repsouv/scripts test:unit",
     "test:data": "nub run -F @repsouv/scripts test:data",
-    "typecheck": "nub run -F @repsouv/scripts typecheck",
+    "typecheck": "nub run -F @repsouv/commun typecheck && nub run -F @repsouv/scripts typecheck",
     "schemas": "nub run -F @repsouv/scripts schemas",
     "schemas:verifier": "nub run -F @repsouv/scripts schemas:verifier",
     "licences": "uvx reuse lint",

@@ -7,7 +7,7 @@ import { chargerDonnees } from "../src/lib/donnees.ts";
 import { statistiquesDuSite } from "../src/lib/statistiques.ts";
 import { adapterAuTheme, CONTOUR, contraste, SOMBRE } from "../src/lib/themes-graphiques.ts";
 
-const { graphiques } = await statistiquesDuSite(chargerDonnees("test/fixtures/valide"));
+const { graphiques } = statistiquesDuSite(chargerDonnees("test/fixtures/valide"));
 const PALETTE_SERIES = ["#009E73", "#56B4E9", "#E69F00", "#CC79A7", "#BBBBBB", "#D55E00", "#0072B2"];
 
 test("le thème clair rend la spécification de la racine telle quelle", () => {

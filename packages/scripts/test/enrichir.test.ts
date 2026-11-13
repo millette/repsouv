@@ -14,7 +14,7 @@ import type { Usage } from "../prix.ts";
 import type { Outil } from "../extract.ts";
 import type { OutilClasse } from "../classify.ts";
 import { USER_AGENT } from "../agent.ts";
-import { CRITERES } from "./donnees-fictives.ts";
+import { CRITERES } from "../../commun/test/donnees-fictives.ts";
 
 const VOCAB: Tag[] = [
   { id: "chiffrement", description: "Chiffre." },

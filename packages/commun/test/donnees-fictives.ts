@@ -1,12 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
-// Données fictives partagées par les tests du sommaire et des graphiques (jamais outils.json).
-import type { OutilClasse } from "../classify.ts";
-import type { Tag } from "../enrichir.ts";
-import type { Categorie } from "../categories.ts";
-import type { Critere, CriteresConfirmes } from "../extract.ts";
+// Données fictives partagées par les tests des statistiques et des graphiques, et par ceux des scripts
+// (packages/scripts/test): jamais outils.json.
+import type { Categorie, Critere, CriteresConfirmes, OutilClasse, Source, Tag } from "../modele.ts";
 import type { Entree } from "../statistiques.ts";
-import type { Source } from "../sources.ts";
 
 export const META = { data_license: "CC-BY-SA-4.0", created_at: "2026-11-11T16:43:11-05:00", updated_at: "2026-11-12T10:00:00-05:00" };
 export const D0 = "2026-11-05T09:53:00-05:00";

@@ -1,16 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
-// Adresses du site. L'identifiant d'une fiche est le slug du nom de l'outil (même règle que slug() de categories.ts
-// à la racine, vérifiée par test/adresses.test.ts): lisible, stable tant que le nom ne change pas, sans caractère à encoder.
+// Adresses du site. L'identifiant d'une fiche est le slug du nom de l'outil (slug() de packages/commun, la règle des
+// identifiants de catégories): lisible, stable tant que le nom ne change pas, sans caractère à encoder.
+import { slug } from "../../../commun/slug.ts";
 
-/** Identifiant de fiche: minuscules sans accents, mots séparés par un tiret. */
+/** Identifiant de fiche: minuscules sans accents, mots séparés par un tiret; un nom sans lettre ni chiffre est refusé. */
 export function identifiant(nom: string): string {
-  const id = nom
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
+  const id = slug(nom);
   if (!id) throw new Error(`identifiant de fiche vide pour « ${nom} »`);
   return id;
 }

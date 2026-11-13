@@ -14,7 +14,7 @@ import {
 import { USER_AGENT } from "../agent.ts";
 import { ecrireFichier, lireFichier } from "../fichiers.ts";
 import { problemesSource, type Source } from "../sources.ts";
-import { CATEGORIES, META, OUTILS, outil, SOURCES, TAGS } from "./donnees-fictives.ts";
+import { CATEGORIES, META, OUTILS, outil, SOURCES, TAGS } from "../../commun/test/donnees-fictives.ts";
 
 const T0 = "2026-09-08T17:47:04-04:00";
 const T1 = "2026-11-13T10:00:00-05:00";

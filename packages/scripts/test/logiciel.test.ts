@@ -3,7 +3,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { depotDepuis, lierVoirAussi, nomLogiciel, pageEnrichissement } from "../logiciel.ts";
-import { enrichi, outil } from "./donnees-fictives.ts";
+import { enrichi, outil } from "../../commun/test/donnees-fictives.ts";
 
 const service = (nom: string, logiciel: string, url: string) => outil(nom, { source_repertoire_id: "facil", score_estime: true, instance_de: { nom: logiciel, url } });
 
