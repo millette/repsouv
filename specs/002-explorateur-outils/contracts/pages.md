@@ -51,4 +51,6 @@ indique le nombre total d'outils et renvoie à l'explorateur pour trier, filtrer
 | Comparaison | Au-dessus des résultats, dès que deux outils sont choisis: `<table>` avec légende, un outil par colonne (nom lié à la fiche, bouton « Retirer <nom> »), une information par ligne avec `<th scope="row">`, dans l'ordre de data-model.md; un bouton « Vider la comparaison » |
 | Un seul outil choisi | « Choisir au moins deux outils pour les comparer. » |
 | Cinquième outil | Refusé, avec « La comparaison est limitée à quatre outils. » dans une région annoncée |
+| Commande « Détails » | Sur chaque carte, chaque ligne du tableau et chaque colonne de la comparaison: un bouton « Détails » nommé par l'outil (« Détails de <nom> ») |
+| Boîte « Détails d'un outil » | Un `<dialog>` modal nommé par le nom de l'outil (`aria-labelledby` vers son titre): titre, bouton « Fermer », lien « Ouvrir la fiche » vers `<base>/outils/<id>/`, puis le contenu principal de la fiche, avec ses libellés de provenance. Pendant le chargement: « Chargement des détails… » (`role="status"`); en cas d'échec: un message `role="alert"` et le lien vers la fiche. Se ferme par « Fermer », Échap ou un clic hors de la boîte; le focus revient à la commande qui l'a ouverte |
 | Pied | Attribution, licence et date des données, comme les autres pages |

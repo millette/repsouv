@@ -128,3 +128,28 @@ skill `solidjs` du dépôt.
   quatre, cinquième refusé), adresse partagée et bouton précédent, chargement ralenti et échec de
   chargement (requête interceptée par Playwright), sans JavaScript, clavier seul, axe A et AA en
   thème clair et sombre, 360 px de large, moins de 100 ms par filtre.
+
+## 10. Détails d'un outil en boîte modale (amendement du 2026-11-13)
+
+- **Décision**: un `<dialog>` natif avec les classes « modal » de daisyUI, dans un composant Solid
+  `site/src/components/explorateur/Details.tsx`. Ouvert par `showModal()`: le navigateur retient
+  le focus dans la boîte, la ferme à la touche Échap et rend le focus à la commande d'origine. Un
+  formulaire `method="dialog"` en arrière-plan (motif de daisyUI) la ferme au clic hors d'elle.
+- **Contenu**: celui de la fiche. `chargerFiche()` (`site/src/lib/chargement.ts`) lit la page
+  statique `/outils/<id>/`; `contenuFiche()` en extrait le titre et le contenu principal, sans le
+  lien de retour. L'île l'insère dans la boîte: c'est du HTML produit par le site lui-même au
+  build, où les données sont déjà échappées et le HTML des descriptions neutralisé. Le `<h1>` de
+  la fiche devient le titre de la boîte.
+- **Pourquoi**: « tous les détails disponibles » sont exactement ce que la fiche montre, avec sa
+  provenance et ses citations. Relire la fiche évite de réécrire son gabarit en Solid et de grossir
+  `explorateur.json` de tout ce qu'il laisse volontairement de côté.
+- **Solutions écartées**: un fichier JSON par outil et un second gabarit en Solid (deux rendus à
+  tenir identiques); mettre tous les détails dans `explorateur.json` (plus de 1 Mo pour ouvrir une
+  page de liste); une `<iframe>` de la fiche (en-tête et pied répétés, focus et hauteur difficiles).
+- **Adresse**: paramètre `fiche=<id>`, écrit en dernier. Ouvrir et fermer poussent chacun une
+  entrée d'historique, pour que le bouton précédent ferme la boîte. Un identifiant inconnu est
+  ignoré.
+- **États**: « Chargement des détails… », puis le contenu, ou un message d'erreur avec le lien
+  « Ouvrir la fiche »; la boîte n'est jamais vide (FR-050).
+- **Liens dans la boîte**: ceux de la fiche. La catégorie et les tags mènent à l'explorateur
+  filtré, donc ferment la boîte en changeant de page; « Voir aussi » mène à d'autres fiches.

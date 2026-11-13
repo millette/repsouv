@@ -20,6 +20,7 @@ adresse partagée aujourd'hui doit restaurer le même état demain.
 | `sens` | Non | `asc`, `desc` | `asc` |
 | `vue` | Non | `cartes`, `tableau` | `cartes` |
 | `comparer` | Oui | `id` d'un outil actif, quatre au plus | |
+| `fiche` | Non | `id` de l'outil actif dont la boîte « Détails » est ouverte (amendement du 2026-11-13) | |
 
 Les quatre premiers paramètres de filtre (`categorie`, `tag`, `statut`, `q`) gardent les noms et
 les valeurs de la tranche 001.
@@ -41,9 +42,9 @@ Exemple: `<base>/explorer/?statut=libre&pays=FR&pays=CH&score=2&donnees=confirme
   `<base>/explorer/`.
 - Ordre fixe: `categorie`, `tag`, `statut`, `pays`, `source` (chacun dans l'ordre des données),
   `q`, `score`, `donnees`, `controle`, `dependance`, `enrichi`, `tri`, `sens`, `vue`, `comparer`
-  (dans l'ordre du choix).
-- Une case, le tri, le sens, la vue, un choix de comparaison ou « Effacer » poussent une entrée
-  d'historique; la frappe dans la recherche remplace l'entrée courante.
+  (dans l'ordre du choix), `fiche`.
+- Une case, le tri, le sens, la vue, un choix de comparaison, « Effacer », l'ouverture et la
+  fermeture de la boîte « Détails » poussent une entrée d'historique; la frappe dans la recherche remplace l'entrée courante.
 - Le bouton précédent ou suivant restaure l'état complet de l'entrée atteinte.
 
 ## Liens internes qui emploient ce contrat

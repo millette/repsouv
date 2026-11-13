@@ -133,3 +133,36 @@ sélection, noms des paramètres) ou supprimés (île `Filtres.tsx`, ses tests).
 ## Complexity Tracking
 
 Aucune violation à justifier.
+
+## Amendement du 2026-11-13: détails d'un outil en boîte modale
+
+Ajout après la livraison de la tranche, à la suite de la clarification « chaque outil garde sa
+page; l'explorateur montre tous les détails dans une boîte modale » (US7, FR-046 à FR-051). Le
+plan d'origine, ci-dessus, reste valable; cette section le complète sans le réécrire.
+
+**Approche**: la boîte modale est un `<dialog>` natif, stylé par le composant « modal » de daisyUI,
+ouvert par `showModal()` depuis l'île de l'explorateur. Son contenu est celui de la fiche de
+l'outil: l'île lit la page statique de la fiche (`/outils/<id>/`), en extrait le contenu principal
+et l'affiche dans la boîte. Rien n'est dupliqué: la boîte et la fiche ne peuvent pas se
+contredire, et le fichier `explorateur.json` reste léger. L'outil ouvert s'ajoute à l'état porté
+par l'adresse (paramètre `fiche`).
+
+**Constitution**: conforme. Aucune dépendance ajoutée; la lecture de la fiche est celle d'une page
+statique du site lui-même (le chargeur reste le seul module qui appelle `fetch`); la provenance
+affichée est celle de la fiche, puisque c'en est le contenu; tests écrits avant le code.
+
+**Fichiers touchés**:
+
+```text
+site/src/lib/etat.ts              # champ et paramètre `fiche`
+site/src/lib/chargement.ts        # chargerFiche(), contenuFiche()
+site/src/components/explorateur/Details.tsx     # NOUVEAU: la boîte modale
+site/src/components/explorateur/Resultats.tsx   # commande « Détails » sur les cartes et les lignes
+site/src/components/explorateur/Comparaison.tsx # commande « Détails » sur chaque colonne
+site/src/components/Explorateur.tsx             # ouverture et fermeture, état
+site/src/styles/global.css
+site/test/etat.test.ts, site/test/chargement.test.ts, site/test/e2e/details.spec.ts
+```
+
+Décisions détaillées: [research.md](research.md), section 10. Contrats: [contracts/pages.md](contracts/pages.md)
+(« Détails d'un outil ») et [contracts/adresse.md](contracts/adresse.md) (paramètre `fiche`).

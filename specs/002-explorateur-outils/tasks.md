@@ -228,3 +228,26 @@ Totaux: 97 tests unitaires, 45 tests du site bâti, 79 tests dans Chromium; `nub
 Relecture à la main: tout le texte des trois pages est en français (FR-037). SC-003 (comparer trois outils connus en
 moins d'une minute) n'a pas été chronométré avec une personne; le parcours au clavier de
 `accessibilite.spec.ts` (chercher, filtrer, choisir deux outils, lire la comparaison) s'exécute en moins de deux secondes.
+
+---
+
+## Phase 10: User Story 7 - Consulter tous les détails d'un outil sans quitter l'explorateur (amendement du 2026-11-13)
+
+**Goal**: une boîte modale de l'explorateur montre tous les détails d'un outil, ceux de sa fiche;
+la fiche reste la page de l'outil.
+
+**Independent Test**: dans l'explorateur, « Détails » d'un outil ouvre une boîte qui montre les
+sections de sa fiche; la fermer rend l'explorateur dans le même état.
+
+### Tests for User Story 7 ⚠️
+
+- [ ] T037 [P] [US7] Ajouter à `site/test/etat.test.ts`: l'état par défaut a `fiche: ""`; `lireEtat("fiche=automate")` rend l'identifiant d'un outil connu et ignore un outil inconnu; `ecrireEtat` écrit `fiche` en dernier, après `comparer`, et rien quand il est vide; l'aller-retour conserve `fiche`; `filtresActifs` ne compte pas `fiche`
+- [ ] T038 [P] [US7] Ajouter à `site/test/chargement.test.ts`: `chargerFiche(adresse, lire)` rend le texte d'une réponse valide et lève une erreur en français pour une réponse en erreur ou une panne; `contenuFiche(document)` (document lu avec linkedom) rend le titre (texte du `<h1>`) et le HTML du contenu principal sans le `<h1>` ni le lien de retour, et lève une erreur si la page n'a pas de contenu principal
+- [ ] T039 [P] [US7] Écrire `site/test/e2e/details.spec.ts`: « Détails de <nom> » sur une carte ouvre un `<dialog>` modal nommé par l'outil, avec « Chargement des détails… » puis les mêmes sections (`data-section`) que la fiche de l'outil et ses libellés de provenance; de même depuis une ligne du tableau et depuis une colonne de la comparaison; un outil non enrichi n'y montre aucun libellé d'IA; « Ouvrir la fiche » mène à la fiche; la boîte se ferme par « Fermer », par Échap et par un clic hors d'elle, le focus revient sur le bouton « Détails », et le tri, les filtres, la vue et la comparaison sont inchangés; l'adresse porte `fiche=<id>`, l'ouvrir ailleurs rouvre la boîte, le bouton précédent la ferme; `fiche=inconnu` n'ouvre rien; quand la fiche ne se charge pas (route en échec), la boîte montre un message `role="alert"` et le lien vers la fiche; le focus reste dans la boîte à la tabulation
+
+### Implementation for User Story 7
+
+- [ ] T040 [US7] Étendre `site/src/lib/etat.ts` (`fiche`) jusqu'à ce que T037 passe, et `site/src/lib/chargement.ts` (`chargerFiche`, `contenuFiche`) jusqu'à ce que T038 passe
+- [ ] T041 [US7] Créer `site/src/components/explorateur/Details.tsx` (dialog natif, classes « modal » de daisyUI, `showModal()` et `close()`, ressource de la fiche sous `<Suspense>` et `<ErrorBoundary>`, titre, « Fermer », « Ouvrir la fiche », arrière-plan `method="dialog"`), ajouter le bouton « Détails » aux cartes et aux lignes de `Resultats.tsx` et aux colonnes de `Comparaison.tsx`, brancher l'ouverture et la fermeture dans `Explorateur.tsx` (état `fiche`, adresse), styles dans `site/src/styles/global.css`, jusqu'à ce que T039 passe
+- [ ] T042 [P] [US7] Étendre `site/test/e2e/accessibilite.spec.ts` (aucune violation axe A ou AA avec la boîte ouverte, thèmes clair et sombre) et `site/test/e2e/telephone.spec.ts` (boîte ouverte à 360 px: pas de défilement horizontal de la page); corriger au besoin
+- [ ] T043 [US7] Reporter dans `implementation.md` (paragraphe « Explorateur »), `site/README.md` et `historique.md`; vérifier que tous les contrôles passent
