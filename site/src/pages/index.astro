@@ -3,13 +3,22 @@
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Accueil: tous les outils actifs, par catégorie, lisibles sans JavaScript (contracts/pages.md, « Accueil »).
 import CarteOutil from "../components/CarteOutil.astro";
+import Filtres from "../components/Filtres.tsx";
 import Provenance from "../components/Provenance.astro";
 import Page from "../layouts/Page.astro";
-import { groupesParCategorie } from "../lib/repertoire.ts";
+import { LIBELLES_STATUT } from "../lib/libelles.ts";
+import { groupesParCategorie, STATUTS } from "../lib/repertoire.ts";
 import { NOM_SITE, site } from "../lib/site.ts";
 
-const { categories, actifs, base } = site();
+const { categories, tags, actifs, base } = site();
 const groupes = groupesParCategorie(categories, actifs);
+// Configuration de l'île des filtres: seulement les valeurs qui retiennent au moins un outil, dans l'ordre des données.
+const tagsUtilises = new Set(actifs.flatMap((o) => o.tags ?? []));
+const valeurs = {
+  categories: groupes.map(({ categorie }) => ({ id: categorie.id, libelle: categorie.nom })),
+  tags: tags.filter((t) => tagsUtilises.has(t.id)).map((t) => ({ id: t.id, libelle: t.id })),
+  statuts: STATUTS.map((s) => ({ id: s, libelle: LIBELLES_STATUT[s] })),
+};
 ---
 <Page description="Outils et services numériques évalués selon trois critères de souveraineté, pour les organismes et les petites équipes du Canada français.">
   <h1>{NOM_SITE}</h1>
@@ -17,7 +26,7 @@ const groupes = groupesParCategorie(categories, actifs);
     Des outils et des services numériques pour les organismes et les petites équipes du Canada français. Les étoiles, sur 3, comptent les critères de
     souveraineté que l'outil satisfait : où restent les données, qui contrôle l'outil, de qui il dépend.
   </p>
-  <p class="compteur" aria-live="polite">{actifs.length} outils</p>
+  <Filtres client:load categories={valeurs.categories} tags={valeurs.tags} statuts={valeurs.statuts} total={actifs.length} />
   {groupes.map(({ categorie, outils }) => (
     <section class="categorie" data-categorie={categorie.id} aria-labelledby={`categorie-${categorie.id}`}>
       <h2 id={`categorie-${categorie.id}`}><span aria-hidden="true">{categorie.icone}</span> {categorie.nom}</h2>

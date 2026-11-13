@@ -236,3 +236,46 @@ blockquote {
 .retour {
   margin-top: 2rem;
 }
+
+/* Filtres de l'accueil (île Solid). */
+.filtres {
+  margin-block: 1.5rem;
+}
+.filtres form {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 1px solid var(--color-base-300);
+  border-radius: var(--radius-box, 0.5rem);
+}
+.filtre-recherche {
+  display: grid;
+  gap: 0.25rem;
+  max-width: 30rem;
+}
+.filtre-recherche label {
+  font-weight: 600;
+}
+.filtre-recherche .input {
+  width: 100%;
+}
+.filtre-groupe summary {
+  cursor: pointer;
+  font-weight: 600;
+  padding-block: 0.25rem;
+}
+.filtre-valeurs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
+  gap: 0.35rem 1rem;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  border: 0;
+}
+.filtre-valeur {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 1.75rem;
+  cursor: pointer;
+}

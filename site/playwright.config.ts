@@ -12,7 +12,9 @@ export default defineConfig({
   use: { baseURL: `http://localhost:${port}`, locale: "fr-CA" },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
   webServer: {
-    command: `nub run preview --port ${port}`,
+    // --ignore-lock: toujours au premier plan. Lancé par un agent, « astro preview » se détache sinon en arrière-plan
+    // et Playwright croit le serveur arrêté.
+    command: `nub exec astro preview --port ${port} --ignore-lock`,
     url: `http://localhost:${port}`,
     reuseExistingServer: true,
   },
