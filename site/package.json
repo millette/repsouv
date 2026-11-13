@@ -22,7 +22,9 @@
     "astro": "^7.4.11",
     "daisyui": "^5.7.50",
     "satteri": "^0.11.7",
-    "solid-js": "^1.9.19"
+    "solid-js": "^1.9.19",
+    "vega": "^6.4.0",
+    "vega-lite": "^6.5.0"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
