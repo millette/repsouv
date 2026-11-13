@@ -43,7 +43,7 @@ jobs:
       - name: Installer nub
         run: |
           curl -fsSL https://nubjs.com/install.sh | bash
-          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          echo "$HOME/.nub/bin" >> "$GITHUB_PATH"
 
       - name: Installer les dépendances de la racine
         run: nub install

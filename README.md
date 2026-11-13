@@ -155,7 +155,7 @@ Ou, avec Rust installé, `cargo install vl-convert` (compilation de quelques min
 **nub 0.11** (Linux, macOS, WSL ; aussi par Homebrew, npm ou mise, voir le site) :
 
 ```sh
-curl -fsSL https://nubjs.com/install.sh | bash   # installe nub dans ~/.local/bin
+curl -fsSL https://nubjs.com/install.sh | bash   # installe nub dans ~/.nub/bin et l'ajoute au PATH du profil
 nub install && nub run test                     # dans le dépôt : dépendances d'après nub.lock, puis les tests
 ```
 
