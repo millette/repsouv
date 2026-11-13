@@ -49,9 +49,11 @@ test("REUSE.toml déclare CC-BY-SA-4.0 pour les données et leurs dérivés, et 
     assert.ok(reuse.includes(`"${chemin}"`), `annoté: ${chemin}`);
   }
   assert.match(reuse, /SPDX-License-Identifier = "CC-BY-SA-4\.0"/);
-  assert.ok(reuse.includes("\".claude/**\""), "annoté: .claude/** (skill charting-vega-lite, MIT)");
+  for (const chemin of [".claude/skills/charting-vega-lite/**", ".agents/skills/astro/**", ".claude/skills/astro/**", ".agents/skills/daisyui/**", ".claude/skills/daisyui/**", ".claude/skills/speckit-*/**", ".specify/**"]) {
+    assert.ok(reuse.includes(`"${chemin}"`), `annoté: ${chemin} (skill ou outil installé, MIT)`);
+  }
   assert.match(reuse, /SPDX-License-Identifier = "MIT"/);
-  for (const chemin of ["README.md", "implementation.md", "historique.md", "package.json", "tsconfig.json", "tsconfig.schemas.json", "nub.lock", ".gitignore", ".env.example"]) {
+  for (const chemin of ["README.md", "implementation.md", "historique.md", "package.json", "tsconfig.json", "tsconfig.schemas.json", "nub.lock", "skills-lock.json", ".gitignore", ".env.example"]) {
     assert.ok(reuse.includes(`"${chemin}"`), `annoté: ${chemin}`);
   }
 });

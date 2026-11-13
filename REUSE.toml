@@ -5,7 +5,7 @@ version = 1
 
 # Code, schémas JSON, configuration et documentation du dépôt.
 [[annotations]]
-path = ["schemas/**", "README.md", "implementation.md", "historique.md", "package.json", "nub.lock", "tsconfig.json", "tsconfig.schemas.json", ".gitignore", ".env.example", ".node-version"]
+path = ["schemas/**", "README.md", "implementation.md", "historique.md", "package.json", "nub.lock", "skills-lock.json", "tsconfig.json", "tsconfig.schemas.json", ".gitignore", ".env.example", ".node-version"]
 SPDX-FileCopyrightText = "2026 Robin Millette <https://robin.millette.info/>"
 SPDX-License-Identifier = "AGPL-3.0-or-later"
 
@@ -34,8 +34,26 @@ SPDX-FileCopyrightText = [
 ]
 SPDX-License-Identifier = "CC-BY-SA-4.0"
 
-# Skill Claude Code « charting-vega-lite », copié tel quel depuis https://github.com/oaustegard/claude-skills (MIT).
+# Skills et outils d'agents installés dans le dépôt, copiés tels quels depuis leurs dépôts d'origine (tous sous MIT):
+# charting-vega-lite (Oskar Austegard), astro (Ian Callaghan, ianshk/astro-skills), daisyui (Pouya Saadeghi, saadeghi/daisyui),
+# les commandes speckit-* et le dossier .specify/ (GitHub Spec Kit, github/spec-kit). .claude/skills/astro et daisyui sont des
+# liens symboliques vers .agents/skills/.
 [[annotations]]
-path = [".claude/**"]
+path = [".claude/skills/charting-vega-lite/**"]
 SPDX-FileCopyrightText = "2025 Oskar Austegard <https://github.com/oaustegard/claude-skills>"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = [".agents/skills/astro/**", ".claude/skills/astro/**"]
+SPDX-FileCopyrightText = "2026 Ian Callaghan <https://github.com/ianshk/astro-skills>"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = [".agents/skills/daisyui/**", ".claude/skills/daisyui/**"]
+SPDX-FileCopyrightText = "2026 Pouya Saadeghi <https://github.com/saadeghi/daisyui>"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = [".claude/skills/speckit-*/**", ".specify/**"]
+SPDX-FileCopyrightText = "2026 GitHub, Inc. <https://github.com/github/spec-kit>"
 SPDX-License-Identifier = "MIT"
