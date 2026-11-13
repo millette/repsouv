@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Les sources d'outils (sources.json): le répertoire Praxis, extrait par extract.ts; d'autres collections (FACiL,
-// à venir) avec leur propre extracteur; et les outils ajoutés à la main (ajouter.ts), dont la source dit qui les a
+// Charles) avec leur propre extracteur; et les outils ajoutés à la main (ajouter.ts), dont la source dit qui les a
 // soumis. Chaque outil de outils.json renvoie à une source par `source_repertoire_id`.
 import { URL_REPERTOIRE } from "./extract.ts";
 import { ID_PRAXIS } from "./ids.ts";
@@ -14,7 +14,7 @@ export interface SoumisPar {
   email?: string;
 }
 
-export type Extracteur = "praxis" | "facil" | "manuel";
+export type Extracteur = "praxis" | "facil" | "charles" | "manuel";
 
 export interface Source {
   /** Identifiant (slug), référencé par outils[].source_repertoire_id. */
@@ -50,7 +50,7 @@ export function problemesSource(s: Source): string[] {
   if (!SLUG.test(s.id)) problemes.push(`id « ${s.id} »: minuscules, chiffres et tirets attendus`);
   if (!s.nom.trim()) problemes.push("nom vide");
   if (!URL_HTTP.test(s.url)) problemes.push(`url « ${s.url} »: URL http(s) attendue`);
-  if (!["praxis", "facil", "manuel"].includes(s.extracteur)) problemes.push(`extracteur « ${s.extracteur} » inconnu`);
+  if (!["praxis", "facil", "charles", "manuel"].includes(s.extracteur)) problemes.push(`extracteur « ${s.extracteur} » inconnu`);
   if (s.pdc !== undefined && !URL_HTTP.test(s.pdc)) problemes.push(`pdc « ${s.pdc} »: URL http(s) attendue`);
   if (s.donnees !== undefined && !URL_HTTP.test(s.donnees)) problemes.push(`donnees « ${s.donnees} »: URL http(s) attendue`);
   if (s.soumis_par) {

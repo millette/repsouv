@@ -44,6 +44,7 @@
           },
           "extracteur": {
             "enum": [
+              "charles",
               "facil",
               "manuel",
               "praxis"

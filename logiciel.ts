@@ -41,7 +41,8 @@ export const estDepot = (url: string): boolean => depotDepuis(url) !== null;
 export const pageEnrichissement = (o: Pick<Outil, "lien" | "instance_de">): string =>
   o.instance_de ? depotDepuis(o.instance_de.url) ?? o.instance_de.url : o.lien;
 
-const cle = (nom: string) => nom.toLowerCase().replace(/\s+/g, " ").trim();
+/** Clé de comparaison des noms (casse et espaces ignorés), pour les renvois et la détection des doublons entre sources. */
+export const cleNom = (nom: string) => nom.toLowerCase().replace(/\s+/g, " ").trim();
 
 /**
  * Pose `voir_aussi` sur chaque outil actif: les noms des autres outils actifs du même logiciel, dans l'ordre du
@@ -52,12 +53,12 @@ export function lierVoirAussi<T extends Outil>(outils: readonly T[]): { outils: 
   const groupes = new Map<string, string[]>();
   for (const o of outils) {
     if (o.removed) continue;
-    const k = cle(nomLogiciel(o));
+    const k = cleNom(nomLogiciel(o));
     groupes.set(k, [...(groupes.get(k) ?? []), o.nom]);
   }
   let relies = 0;
   const resultat = outils.map((o) => {
-    const voisins = o.removed ? [] : (groupes.get(cle(nomLogiciel(o))) ?? []).filter((n) => n !== o.nom);
+    const voisins = o.removed ? [] : (groupes.get(cleNom(nomLogiciel(o))) ?? []).filter((n) => n !== o.nom);
     const attendu = voisins.length ? voisins : undefined;
     if (JSON.stringify(o.voir_aussi) === JSON.stringify(attendu)) return o;
     relies++;

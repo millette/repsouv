@@ -23,6 +23,7 @@ test("problemesSource: id en slug, nom et URL obligatoires, pdc et donnees en UR
   assert.match(problemesSource({ ...facil, url: "facil.services" }).join(), /url/);
   assert.match(problemesSource({ ...facil, pdc: "ftp://x" }).join(), /pdc/);
   assert.match(problemesSource({ ...facil, extracteur: "autre" as never }).join(), /extracteur/);
+  assert.deepEqual(problemesSource({ ...facil, extracteur: "charles" }), [], "extracteur charles accepté");
   assert.match(problemesSource({ ...facil, soumis_par: { nom: "" } }).join(), /soumis_par\.nom/);
   assert.match(problemesSource({ ...facil, soumis_par: { nom: "R", email: "robin at example.com" } }).join(), /email/);
   assert.match(problemesSource({ ...facil, soumis_par: { nom: "R", url: "robin.millette.info" } }).join(), /soumis_par\.url/);
