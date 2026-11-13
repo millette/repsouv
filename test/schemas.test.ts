@@ -112,6 +112,11 @@ test("catégories: un id qui n'est pas un slug, une clé inconnue ou un nom manq
   const e = copie(donnees.categories) as unknown as { categories: Record<string, unknown>[] };
   delete e.categories[0]!.nom;
   assert.equal(categories(e), false);
+  const f = copie(donnees.categories) as unknown as { categories: Record<string, unknown>[] };
+  f.categories[0]!.source_repertoire_id = "charles";
+  assert.equal(categories(f), true, "une catégorie déclarée par un extracteur porte sa source");
+  f.categories[0]!.source_repertoire_id = "Charles!";
+  assert.equal(categories(f), false, "source_repertoire_id est un slug");
 });
 
 test("relation entre les deux fichiers: outils[].categorie est un slug annoté comme renvoi à categories[].id", () => {

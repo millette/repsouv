@@ -4,7 +4,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import {
-  aDecrire, categoriesDepuis, decrireCategories, estimerCoutDescriptions, nomCategorie, requeteCategorie, slug, validerDescriptionCategorie, type Categorie,
+  aDecrire, categoriesAvec, categoriesDepuis, decrireCategories, estimerCoutDescriptions, nomCategorie, requeteCategorie, slug, validerDescriptionCategorie, type Categorie,
 } from "../categories.ts";
 
 test("slug: minuscules, sans accents ni ponctuation, mots séparés par un tiret", () => {
@@ -20,6 +20,24 @@ test("categoriesDepuis: une catégorie par nom, dans l'ordre d'apparition, avec 
   const r = categoriesDepuis([{ nom: "A", icone: "1" }, { nom: "B", icone: "2" }, { nom: "A", icone: "1" }], existantes);
   assert.deepEqual(r, [{ id: "a", nom: "A", icone: "1" }, { id: "b", nom: "B", icone: "2", description: "Déjà décrite." }]);
   assert.throws(() => categoriesDepuis([{ nom: "A B", icone: "1" }, { nom: "A-B", icone: "2" }], []), /même identifiant/);
+});
+
+test("categoriesDepuis: les catégories déclarées par un extracteur (source_repertoire_id) sont conservées après celles de la page, dans leur ordre; un identifiant pris par la page est une erreur", () => {
+  const declaree: Categorie = { id: "paiement", nom: "Paiement", icone: "💳", source_repertoire_id: "charles", description: "Décrite." };
+  const autre: Categorie = { id: "ia", nom: "IA", icone: "🤖", source_repertoire_id: "charles" };
+  const existantes: Categorie[] = [autre, { id: "a", nom: "A", icone: "1" }, declaree];
+  const r = categoriesDepuis([{ nom: "A", icone: "1" }], existantes);
+  assert.deepEqual(r, [{ id: "a", nom: "A", icone: "1" }, autre, declaree]);
+  assert.throws(() => categoriesDepuis([{ nom: "Paiement", icone: "1" }], existantes), /« paiement » de la source charles/);
+});
+
+test("categoriesAvec: ajoute à la fin, met à jour sans perdre la description, exige source_repertoire_id et un slug", () => {
+  const existantes: Categorie[] = [{ id: "a", nom: "A", icone: "1" }, { id: "b", nom: "B", icone: "2", description: "Décrite.", source_repertoire_id: "charles" }];
+  const r = categoriesAvec(existantes, [{ id: "c", nom: "C", icone: "3", source_repertoire_id: "charles" }, { id: "b", nom: "B2", icone: "22", source_repertoire_id: "charles" }]);
+  assert.deepEqual(r, [{ id: "a", nom: "A", icone: "1" }, { id: "b", nom: "B2", icone: "22", source_repertoire_id: "charles", description: "Décrite." }, { id: "c", nom: "C", icone: "3", source_repertoire_id: "charles" }]);
+  assert.deepEqual(existantes.length, 2, "la liste d'origine n'est pas modifiée");
+  assert.throws(() => categoriesAvec([], [{ id: "c", nom: "C", icone: "3" }]), /sans source_repertoire_id/);
+  assert.throws(() => categoriesAvec([], [{ id: "C x", nom: "C", icone: "3", source_repertoire_id: "charles" }]), /minuscules/);
 });
 
 test("nomCategorie et aDecrire", () => {

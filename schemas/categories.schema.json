@@ -43,6 +43,11 @@
           },
           "description": {
             "type": "string"
+          },
+          "source_repertoire_id": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+            "$comment": "identifiant d'une source: sources[].id de sources.json"
           }
         },
         "required": [

@@ -269,7 +269,7 @@ export function chargeResume(statistiques: Statistiques, tous: OutilClasse[]): C
   return { statistiques, outils };
 }
 
-export const INSTRUCTIONS_RESUME = `Tu rédiges le résumé d'un répertoire d'outils numériques favorisant la souveraineté numérique, destiné aux OSBL des arts et de la culture du Canada français.
+export const INSTRUCTIONS_RESUME = `Tu rédiges le résumé d'un répertoire d'outils numériques favorisant la souveraineté numérique, destiné aux organismes et aux petites équipes du Canada français.
 Tu reçois en JSON toutes les statistiques agrégées du répertoire et la liste compacte de ses outils.
 
 Rédige 3 ou 4 paragraphes, en français, sur le répertoire et son utilité:

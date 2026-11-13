@@ -14,6 +14,11 @@ export interface Categorie {
   icone: string;
   /** Description en français, générée par IA; absente tant qu'elle n'a pas été produite. */
   description?: string;
+  /**
+   * Identifiant de la source (sources[].id) dont l'extracteur déclare la catégorie, quand elle ne vient pas de la page
+   * Praxis: `update` la conserve telle quelle au lieu de la resynchroniser depuis la page. Absent pour les catégories de Praxis.
+   */
+  source_repertoire_id?: string;
 }
 
 /** « Gestion d’événements et billetterie » → « gestion-d-evenements-et-billetterie ». */
@@ -34,7 +39,33 @@ export function categoriesDepuis(observees: { nom: string; icone: string }[], ex
     const description = existantes.find((c) => c.id === id)?.description;
     vues.set(id, { id, nom, icone, ...(description !== undefined && { description }) });
   }
+  // Les catégories déclarées par un autre extracteur (source_repertoire_id) ne sont pas sur la page: conservées après, dans leur ordre.
+  for (const c of existantes) {
+    if (c.source_repertoire_id === undefined) continue;
+    if (vues.has(c.id)) throw new Error(`la catégorie « ${c.id} » de la source ${c.source_repertoire_id} porte l'identifiant d'une catégorie de la page`);
+    vues.set(c.id, c);
+  }
   return [...vues.values()];
+}
+
+/**
+ * La liste avec les catégories `declarees` (d'un extracteur, chacune avec son source_repertoire_id) ajoutées à la fin ou,
+ * si leur identifiant existe déjà, mises à jour (nom, icône et source remplacés, la description conservée). L'ordre des
+ * catégories existantes est conservé. Une catégorie sans source_repertoire_id est refusée: seule la page Praxis en déclare.
+ */
+export function categoriesAvec(existantes: readonly Categorie[], declarees: readonly Categorie[]): Categorie[] {
+  const resultat = [...existantes];
+  for (const d of declarees) {
+    if (!d.source_repertoire_id) throw new Error(`catégorie « ${d.id} » sans source_repertoire_id`);
+    if (d.id !== slug(d.id)) throw new Error(`identifiant de catégorie « ${d.id} »: minuscules, chiffres et tirets attendus`);
+    const i = resultat.findIndex((c) => c.id === d.id);
+    if (i < 0) resultat.push({ ...d });
+    else {
+      const { description } = resultat[i]!;
+      resultat[i] = { ...d, ...(description !== undefined && d.description === undefined && { description }) };
+    }
+  }
+  return resultat;
 }
 
 export const chargerCategories = (fichier: string): Categorie[] => lireFichier<Categorie>(fichier, "categories").donnees;
@@ -60,7 +91,7 @@ export interface RequeteDescription {
 export const SCHEMA_DESCRIPTION = { type: "object", properties: { description: { type: "string" } }, required: ["description"], additionalProperties: false };
 
 export function instructionsCategorie(): string {
-  return `Tu rédiges, en français, la description d'une catégorie d'un répertoire d'outils numériques destiné aux OSBL des arts et de la culture du Canada français. Tu reçois le nom et l'icône de la catégorie et la liste de ses outils (nom et description courte).
+  return `Tu rédiges, en français, la description d'une catégorie d'un répertoire d'outils numériques destiné aux organismes et aux petites équipes du Canada français. Tu reçois le nom et l'icône de la catégorie et la liste de ses outils (nom et description courte).
 
 Écris une à trois phrases de texte continu (de ${LONGUEUR_MIN} à ${LONGUEUR_MAX} caractères) qui disent à quels besoins répondent les outils de cette catégorie, de façon factuelle et neutre, sans nommer les outils ni en vanter aucun. Pas de liste, pas de titre, pas de gras, pas de HTML, pas de tiret cadratin, pas d'émoji.`;
 }
