@@ -5,7 +5,8 @@
 // transformation faite par le plugin RunTypes: ce fichier est donc empaqueté par obuild (build.config.ts)
 // avant d'être exécuté, voir les scripts `schemas` et `schemas:verifier` de package.json.
 //
-// Usage: nub dist/generer-schemas.mjs [--verifier]
+// Usage: nub run schemas ou nub run schemas:verifier, à la racine du dépôt ou dans packages/scripts, ce qui lance ici
+//   obuild && nub dist/generer-schemas.mjs [--verifier]
 //   --verifier: n'écrit rien; échoue si un schéma commité diffère de celui que les types produisent.
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";

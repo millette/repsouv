@@ -6,12 +6,12 @@
 // La page n'a ni étoiles ni catégories: le score est estimé (score_estime, voir ajouter.ts) et la catégorie vient de
 // CATEGORIE_PAR_LOGICIEL (à réviser à la main); les services remplacés sont convertis en URL par ALTERNATIVES.
 //
-// Usage: node extract-facil.ts [--fichier=page.html] [outils.json] [url]
+// Usage: node packages/scripts/extract-facil.ts [--fichier=page.html] [--sans-couleur] [outils.json] [url]
 //   Sans chemin, le fichier est donnees/outils.json à la racine du dépôt (FICHIER_OUTILS).
 //   Lit la page (par défaut téléchargée; facil.services refuse les clients sans en-tête de navigateur, d'où
 //   --fichier pour une copie locale), synchronise les outils de la source « facil » dans outils.json (comme update
 //   le fait pour Praxis: nouveau, modification, retrait, comeback; les autres sources ne sont pas touchées) et met
-//   sources.json à jour. Les outils nouveaux sont ensuite enrichis par `node update.ts`.
+//   sources.json à jour. Les outils nouveaux sont ensuite enrichis par `node packages/scripts/update.ts`.
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { parseHTML } from "linkedom";

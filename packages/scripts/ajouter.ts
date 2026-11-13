@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Ajoute à la main un outil qui ne vient pas d'un répertoire extrait (voir sources.json), avec sa source.
 //
-// Usage: node ajouter.ts <lien> --nom=… --categorie=<id> --description=… --source=<id> [options] [outils.json]
+// Usage: node packages/scripts/ajouter.ts <lien> --nom=… --categorie=<id> --description=… --source=<id> [options] [outils.json]
 //   Sans chemin, le fichier est donnees/outils.json à la racine du dépôt (FICHIER_OUTILS).
 //   --score=N                    étoiles (0 à 3) si la source en donne; sinon score_estime: le score et les critères sont
 //                                déduits de la description par seuil, puis remplacés par l'évaluation enrichie de update
@@ -11,7 +11,7 @@
 //   --source-nom=… --source-url=… [--source-pdc=…] [--source-donnees=…]
 //   [--soumis-par-nom=… [--soumis-par-url=…] [--soumis-par-email=…]]   (qui a soumis la collection; le nom suffit)
 // categories.json, sources.json et tags.json sont lus dans le dossier de outils.json. L'outil est écrit avec
-// changement « nouveau » et la date du moment; `node update.ts` l'enrichit ensuite comme les autres.
+// changement « nouveau » et la date du moment; `node packages/scripts/update.ts` l'enrichit ensuite comme les autres.
 import { dirname, join } from "node:path";
 import { chargerCategories } from "./categories.ts";
 import { classer, type OutilClasse } from "./classify.ts";
@@ -106,7 +106,7 @@ export function parametresDepuisArgs(args: string[]): { parametres: ParametresAj
     valeurs[cle!] = reste.join("=");
   }
   const [lien, fichier = FICHIER_OUTILS] = positionnels;
-  if (!lien) throw new Error("Usage: node ajouter.ts <lien> --nom=… --categorie=<id> --description=… --source=<id> [options] [outils.json]");
+  if (!lien) throw new Error("Usage: node packages/scripts/ajouter.ts <lien> --nom=… --categorie=<id> --description=… --source=<id> [options] [outils.json]");
   for (const requis of ["nom", "categorie", "description", "source"]) if (!valeurs[requis]) throw new Error(`--${requis} requis`);
   const score = valeurs.score === undefined ? undefined : Number(valeurs.score);
   return {

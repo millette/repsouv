@@ -15,12 +15,12 @@
 // Une alternative qui porte le nom d'un outil actif d'une autre source (doublon, clé de logiciel.ts) n'est pas importée:
 // `nom` est la clé unique de outils.json; les doublons sont listés dans le résumé.
 //
-// Usage: node extract-charles.ts [--dossier=/chemin/du/clone] [--sans-couleur] [outils.json] [url]
+// Usage: node packages/scripts/extract-charles.ts [--dossier=/chemin/du/clone] [--sans-couleur] [outils.json] [url]
 //   Sans chemin, le fichier est donnees/outils.json à la racine du dépôt (FICHIER_OUTILS).
 //   Lit les fichiers bruts de la branche main du dépôt (ou un clone local par --dossier, daté de l'heure de lecture),
 //   synchronise les outils de la source « charles » dans outils.json (comme update le fait pour Praxis: nouveau,
 //   modification, retrait, comeback; les autres sources ne sont pas touchées), met sources.json et categories.json à
-//   jour. Les outils nouveaux sont ensuite enrichis par `node update.ts`.
+//   jour. Les outils nouveaux sont ensuite enrichis par `node packages/scripts/update.ts`.
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { enTetes } from "./agent.ts";

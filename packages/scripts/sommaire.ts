@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Sommaire statistique du répertoire, écrit dans sommaire.md.
-// Usage: nub sommaire.ts [--sans-resume] [--sans-graphiques] [--sans-couleur] [outils.json] [sommaire.md]
+// Usage: node packages/scripts/sommaire.ts [--sans-resume] [--sans-graphiques] [--sans-couleur] [outils.json] [sommaire.md]
 // Sans chemin, la source est donnees/outils.json à la racine du dépôt (FICHIER_OUTILS), quel que soit le dossier courant.
 //
 // Lit outils.json (et tags.json et criteres.json, dans le même dossier) et écrit un sommaire en

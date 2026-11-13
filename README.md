@@ -10,25 +10,25 @@ Le [sommaire statistique](donnees/sommaire.md) qui en résulte distingue 56 logi
 
 <img src="donnees/graphiques/statut-code-source.svg" alt="Répartition des outils du répertoire par statut du code source : libre, partiellement libre, code source disponible, propriétaire, pas encore enrichi" width="720">
 
-*Statut du code source des outils du répertoire, d'après [`sommaire.md`](donnees/sommaire.md) (image produite par `node sommaire.ts`).*
+*Statut du code source des outils du répertoire, d'après [`sommaire.md`](donnees/sommaire.md) (image produite par `node packages/scripts/sommaire.ts`).*
 
-Le dépôt contient aussi un **site statique de consultation** ([`site/`](packages/site/README.md)) : un accueil qui présente le projet, une page « Explorer » qui liste les outils par catégorie, même sans JavaScript, et permet de les trier, de les filtrer et d'en comparer de deux à quatre côte à côte, une fiche par outil, et une page de statistiques qui reprend les graphiques du sommaire, avec la provenance de chaque champ et l'attribution sur chaque page. Il se bâtit à partir des fichiers JSON, sans les modifier, et se publie sur GitHub Pages à chaque changement de la branche principale (<https://millette.github.io/repsouv/>, une fois GitHub Pages activé dans les réglages du dépôt ; voir [`site/README.md`](packages/site/README.md#publication)).
+Le dépôt contient aussi un **site statique de consultation** ([`packages/site/`](packages/site/README.md)), en ligne à <https://millette.github.io/repsouv/> : un accueil qui présente le projet, une page « Explorer » qui liste les outils par catégorie, même sans JavaScript, et permet de les trier, de les filtrer et d'en comparer de deux à quatre côte à côte, une fiche par outil, et une page de statistiques qui reprend les graphiques du sommaire, avec la provenance de chaque champ et l'attribution sur chaque page. Il se bâtit à partir des fichiers JSON de `donnees/`, sans les modifier, et il est publié sur GitHub Pages à chaque changement de la branche principale (voir [`packages/site/README.md`](packages/site/README.md#publication)).
 
 **Sommaire :** [Démarrage rapide](#démarrage-rapide) · [Source, crédits et licences](#source-crédits-et-licences) · [Autres commandes](#autres-commandes) · [Outils à installer](#outils-à-installer) · [Fichiers JSON](#fichiers-json) · [Sommaire statistique](#sommaire-statistique) · [Utiliser les données](#utiliser-les-données) · [Documentation](#documentation)
 
 ## Démarrage rapide
 
-Les mises à jour peuvent **coûter de l'argent** : l'enrichissement par IA et le résumé du sommaire passent par l'API OpenAI, facturée à l'usage. Le premier `node update.ts` est le plus coûteux (il enrichit tous les outils du répertoire : environ 3,60 $ en borne haute avec le modèle par défaut `gpt-6.1-sol`, moins de 1 $ en réalité d'après le [banc d'essai](analyse-effort/analyse.md), et jusqu'à 18 $ de plus dans le cas, jamais observé, où le repli `gpt-6-astra` devrait reprendre chaque appel ; 1,50 $ constaté pour 57 outils avec `gpt-6-astra`, cinq fois plus cher) ; les suivants ne paient que les outils nouveaux et, s'il y a eu des changements, un résumé. `node update.ts --dry-run` chiffre le travail et le coût estimés sans rien dépenser ni écrire, et le premier import demande une confirmation avant de dépenser.
+Les mises à jour peuvent **coûter de l'argent** : l'enrichissement par IA et le résumé du sommaire passent par l'API OpenAI, facturée à l'usage. Le premier `node packages/scripts/update.ts` est le plus coûteux (il enrichit tous les outils du répertoire : environ 3,60 $ en borne haute avec le modèle par défaut `gpt-6.1-sol`, moins de 1 $ en réalité d'après le [banc d'essai](analyse-effort/analyse.md), et jusqu'à 18 $ de plus dans le cas, jamais observé, où le repli `gpt-6-astra` devrait reprendre chaque appel ; 1,50 $ constaté pour 57 outils avec `gpt-6-astra`, cinq fois plus cher) ; les suivants ne paient que les outils nouveaux et, s'il y a eu des changements, un résumé. `node packages/scripts/update.ts --dry-run` chiffre le travail et le coût estimés sans rien dépenser ni écrire, et le premier import demande une confirmation avant de dépenser.
 
-**Utiliser** les scripts ne demande que Node.js ; **développer** (tests, types, schémas, licences) demande en plus [nub](https://nubjs.com/), voir [implementation.md](implementation.md).
+**Utiliser** les scripts ne demande que Node.js ; **développer** (tests, types, schémas, licences) demande en plus [nub](https://nubjs.com/), voir [implementation.md](implementation.md). Le dépôt est un monorepo : les données sont dans `donnees/`, les scripts dans `packages/scripts/`, le site dans `packages/site/` et le code que les deux partagent dans `packages/commun/`. Les commandes ci-dessous se lancent à la racine du dépôt ; les scripts trouvent `donnees/` et le fichier `.env` d'après leur propre emplacement, quel que soit le dossier courant.
 
 1. **Node.js 26** (toute version 26.x, `engines.node` : `>=26 <27`), avec npm : <https://nodejs.org/>. Les scripts sont en TypeScript, que Node exécute tel quel.
 2. **Cloner le dépôt** et s'y placer : `git clone https://github.com/millette/repsouv.git && cd repsouv`.
-3. **Configurer la clé OpenAI** : `cp .env.example .env`, puis mettre la clé dans `OPENAI_API_KEY=`. Avec un compte OpenAI, la clé se crée sur <https://platform.openai.com/api-keys> (« Create new secret key » ; elle commence par `sk-` et n'est affichée qu'une fois) et le crédit se vérifie sur <https://platform.openai.com/account/billing/overview>. Le fichier `.env` est ignoré par Git et la clé n'est transmise qu'à `api.openai.com`. Sans clé, `update` synchronise les données mais saute tout ce qui passe par l'API (enrichissement, vérification, descriptions, résumé). Facultatif aussi : `OPENHUB_API_KEY`, clé de l'API [Open Hub](https://www.openhub.net/accounts/me/api_keys/new) (gratuite, 1 000 requêtes par jour), pour compléter les logiciels libres avec leurs données publiques (champ `openhub`). Facultatif : `OPENAI_MODEL` (modèle principal, `gpt-6.1-sol` par défaut), `OPENAI_MODEL_FALLBACK` (modèle de repli, `gpt-6-astra` par défaut, qui reprend un appel dont la réponse a été rejetée ; vide pour s'en passer) et `OPENAI_REASONING_EFFORT` (effort de raisonnement, `low` par défaut) ; ces valeurs viennent d'un [banc d'essai](analyse-effort/analyse.md) sur 20 outils.
-4. **Installer les dépendances** : `npm install`. Pour les graphiques du sommaire, installer aussi [vl-convert](https://github.com/vega/vl-convert) (binaire ou `cargo install`, voir [Outils à installer](#outils-à-installer)) ; sans lui, le sommaire est sauté par `update` et `node sommaire.ts --sans-graphiques` reste possible.
-5. **Premier import** : `node update.ts --dry-run` pour voir ce qui serait fait et le coût estimé, puis `node update.ts`, qui crée `outils.json`, `categories.json`, `criteres.json` et `sources.json` depuis la page en ligne, enrichit les outils par IA, vérifie leurs critères, citation à l'appui, décrit les catégories (après confirmation des coûts : 1 pour poursuivre, 2 pour arrêter), et génère `sommaire.md` et `graphiques/`. Le dépôt contenant déjà ces fichiers, cette étape ne s'applique qu'à partir d'un dossier vide ; sur un clone, `node update.ts` se contente de mettre à jour.
-6. **Mises à jour** : `node update.ts`, aussi souvent que voulu. Il compare la page en ligne aux données, enrichit et vérifie les outils nouveaux et régénère le sommaire et les graphiques seulement si quelque chose a changé ; une page inchangée ne coûte rien.
-7. **Pour développer** : installer [nub](https://nubjs.com/) (`curl -fsSL https://nubjs.com/install.sh | bash` ; aussi par Homebrew, npm ou mise), qui télécharge le Node.js déclaré dans `devEngines.runtime` de `package.json` (la dernière 26.x), installe les dépendances d'après `nub.lock` (`nub install`) et lance les scripts de `package.json` (`nub run test`, `nub run typecheck`, `nub run schemas`, `nub run licences`). Les scripts `update` et `sommaire` s'exécutent indifféremment par `node` ou par `nub run`.
+3. **Configurer la clé OpenAI** : `cp .env.example .env` à la racine du dépôt, puis mettre la clé dans `OPENAI_API_KEY=`. Avec un compte OpenAI, la clé se crée sur <https://platform.openai.com/api-keys> (« Create new secret key » ; elle commence par `sk-` et n'est affichée qu'une fois) et le crédit se vérifie sur <https://platform.openai.com/account/billing/overview>. Le fichier `.env`, que les scripts lisent à la racine du dépôt, est ignoré par Git et la clé n'est transmise qu'à `api.openai.com`. Sans clé, `update` synchronise les données mais saute tout ce qui passe par l'API (enrichissement, vérification, descriptions, résumé). Facultatif aussi : `OPENHUB_API_KEY`, clé de l'API [Open Hub](https://www.openhub.net/accounts/me/api_keys/new) (gratuite, 1 000 requêtes par jour), pour compléter les logiciels libres avec leurs données publiques (champ `openhub`). Facultatif : `OPENAI_MODEL` (modèle principal, `gpt-6.1-sol` par défaut), `OPENAI_MODEL_FALLBACK` (modèle de repli, `gpt-6-astra` par défaut, qui reprend un appel dont la réponse a été rejetée ; vide pour s'en passer) et `OPENAI_REASONING_EFFORT` (effort de raisonnement, `low` par défaut) ; ces valeurs viennent d'un [banc d'essai](analyse-effort/analyse.md) sur 20 outils.
+4. **Installer les dépendances** : `npm install`, à la racine du dépôt ; cette seule installation sert les trois paquets de `packages/`, celui du site compris. Pour les graphiques du sommaire, installer aussi [vl-convert](https://github.com/vega/vl-convert) (binaire ou `cargo install`, voir [Outils à installer](#outils-à-installer)) ; sans lui, le sommaire est sauté par `update` et `node packages/scripts/sommaire.ts --sans-graphiques` reste possible.
+5. **Premier import** : `node packages/scripts/update.ts --dry-run` pour voir ce qui serait fait et le coût estimé, puis `node packages/scripts/update.ts`, qui crée dans `donnees/` les fichiers `outils.json`, `categories.json`, `criteres.json` et `sources.json` depuis la page en ligne, enrichit les outils par IA, vérifie leurs critères, citation à l'appui, décrit les catégories (après confirmation des coûts : 1 pour poursuivre, 2 pour arrêter), et génère `donnees/sommaire.md` et `donnees/graphiques/`. Le dépôt contenant déjà ces fichiers, cette étape ne s'applique que si `donnees/outils.json` manque ; sur un clone, `node packages/scripts/update.ts` se contente de mettre à jour.
+6. **Mises à jour** : `node packages/scripts/update.ts`, aussi souvent que voulu. Il compare la page en ligne aux données, enrichit et vérifie les outils nouveaux et régénère le sommaire et les graphiques seulement si quelque chose a changé ; une page inchangée ne coûte rien.
+7. **Pour développer** : installer [nub](https://nubjs.com/) (`curl -fsSL https://nubjs.com/install.sh | bash` ; aussi par Homebrew, npm ou mise), qui télécharge le Node.js déclaré dans `devEngines.runtime` de `package.json` (la dernière 26.x), installe les dépendances des trois paquets d'après `nub.lock` (`nub install`, une seule fois, à la racine) et lance les scripts du `package.json` de la racine (`nub run test`, `nub run typecheck`, `nub run schemas`, `nub run licences`, et `nub run site:dev`, `site:build`, `site:check`, `site:test` et `site:test:e2e` pour le site). Les scripts `update` et `sommaire` s'exécutent indifféremment par `node packages/scripts/update.ts` ou par `nub run update`.
 
 ## Source, crédits et licences
 
@@ -45,16 +45,16 @@ Le contenu du répertoire est l'œuvre des auteur·trices de la note, et non de 
 ### Crédits
 
 - **Code source de cet outil** (scripts, tests, configuration) : [Robin Millette](https://robin.millette.info/).
-- **Fichiers JSON générés** (`outils.json`, `categories.json`, `criteres.json`, `tags.json`, `sources.json`) : les auteur·trices du répertoire cité ci-dessus (Sven Buridans, François Delnooz et Marie-Renee Duguay), pour le contenu d'origine, et [Robin Millette](https://robin.millette.info/), pour l'extraction, la classification, l'enrichissement et le vocabulaire de tags.
+- **Fichiers JSON générés** (dans `donnees/` : `outils.json`, `categories.json`, `criteres.json`, `tags.json`, `sources.json`) : les auteur·trices du répertoire cité ci-dessus (Sven Buridans, François Delnooz et Marie-Renee Duguay), pour le contenu d'origine, et [Robin Millette](https://robin.millette.info/), pour l'extraction, la classification, l'enrichissement et le vocabulaire de tags.
 - **Autres sources** : les 22 services viennent de la page des [Services FACiLes](https://facil.services/) de FACiL ; les 72 alternatives viennent des données de l'extension [Charles](https://gitlab.com/yaniskerdjana/charles), de Yanis Kerdjana et des contributeurs de Charles (MIT).
 
 ### Licences
 
 | Ce qui | Licence |
 |---|---|
-| **Code source, configuration et documentation** (`*.ts`, `test/`, `package.json`, `nub.lock`, `tsconfig*.json`, `README.md`, `implementation.md`, `historique.md`, `tickets/`, `site/`, `specs/`, `.github/workflows/`) | [GNU Affero General Public License v3.0](https://www.gnu.org/licenses/agpl-3.0.html), identifiant SPDX `AGPL-3.0-or-later` (version 3 de la licence ou toute version ultérieure). Texte complet dans [`LICENSE`](LICENSE). Chaque fichier de code commence par les en-têtes `SPDX-License-Identifier` et `SPDX-FileCopyrightText` |
-| **Schémas JSON** (`schemas/*.schema.json`) | Même licence que le code, `AGPL-3.0-or-later`. Le JSON n'admet pas de commentaires : chaque schéma la déclare dans son mot-clé standard `$comment` (ajouté par `generer-schemas.ts`), et `REUSE.toml` la déclare pour `schemas/**` selon la spécification [REUSE](https://reuse.software/) |
-| **Données** (`outils.json`, `categories.json`, `criteres.json`, `tags.json`, `sources.json`) et ce qui en est dérivé : le **sommaire** (`sommaire.md`), ses **graphiques** (`graphiques/`) et les résultats du banc d'essai (`analyse-effort/*.json`) | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.fr), identifiant SPDX `CC-BY-SA-4.0`. Texte complet dans [`LICENSE-CC-BY-SA-4.0`](LICENSE-CC-BY-SA-4.0). Le JSON n'admet pas de commentaires : chaque fichier déclare sa licence dans `meta.data_license`, que les scripts maintiennent (voir [Fichiers JSON](#fichiers-json)) |
+| **Code source, configuration et documentation** (`packages/` : les scripts, le code commun, le site, leurs tests, leurs `package.json` et `tsconfig*.json` ; `analyse-effort/banc-effort.ts`, `package.json`, `nub.lock`, `README.md`, `implementation.md`, `historique.md`, `tickets/`, `specs/`, `.github/workflows/`) | [GNU Affero General Public License v3.0](https://www.gnu.org/licenses/agpl-3.0.html), identifiant SPDX `AGPL-3.0-or-later` (version 3 de la licence ou toute version ultérieure). Texte complet dans [`LICENSE`](LICENSE). Chaque fichier de code commence par les en-têtes `SPDX-License-Identifier` et `SPDX-FileCopyrightText` |
+| **Schémas JSON** (`donnees/schemas/*.schema.json`) | Même licence que le code, `AGPL-3.0-or-later`. Le JSON n'admet pas de commentaires : chaque schéma la déclare dans son mot-clé standard `$comment` (ajouté par `generer-schemas.ts`), et `REUSE.toml` la déclare pour `donnees/schemas/**` selon la spécification [REUSE](https://reuse.software/) |
+| **Données** (dans `donnees/` : `outils.json`, `categories.json`, `criteres.json`, `tags.json`, `sources.json`) et ce qui en est dérivé : le **sommaire** (`donnees/sommaire.md`), ses **graphiques** (`donnees/graphiques/`) et les résultats du banc d'essai (`analyse-effort/*.json`) | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.fr), identifiant SPDX `CC-BY-SA-4.0`. Texte complet dans [`LICENSE-CC-BY-SA-4.0`](LICENSE-CC-BY-SA-4.0). Le JSON n'admet pas de commentaires : chaque fichier déclare sa licence dans `meta.data_license`, que les scripts maintiennent (voir [Fichiers JSON](#fichiers-json)) |
 | **Skill Claude Code** `charting-vega-lite` (`.claude/skills/`), copié depuis [oaustegard/claude-skills](https://github.com/oaustegard/claude-skills) | [MIT](https://opensource.org/license/mit), © 2025 Oskar Austegard. Aide à la rédaction des graphiques Vega-Lite pendant le développement; rien du projet n'en dépend à l'exécution |
 | **Autres skills et outils d'agents installés** : `astro` ([ianshk/astro-skills](https://github.com/ianshk/astro-skills), Ian Callaghan) et `daisyui` ([saadeghi/daisyui](https://github.com/saadeghi/daisyui), Pouya Saadeghi) dans `.agents/skills/` (liens depuis `.claude/skills/`), les commandes `speckit-*` et `.specify/` ([github/spec-kit](https://github.com/github/spec-kit), GitHub) ; `skills-lock.json` est leur fichier de verrouillage (sa propre licence dans `meta.$comment`, comme les schémas, et celle de chaque skill dans `skills.<nom>.meta`) | MIT pour chacun, tel que déclaré par son dépôt d'origine ; annotés dans `REUSE.toml`. Outils de développement, rien du projet n'en dépend à l'exécution |
 | **Skill Claude Code** `solidjs` (`.claude/skills/solidjs/`), copie de projet du skill personnel de l'auteur, adaptée aux conventions du dépôt | `AGPL-3.0-or-later`, comme le code ; annoté dans `REUSE.toml`. Outil de développement, rien du projet n'en dépend à l'exécution |
@@ -71,11 +71,11 @@ Les champs d'enrichissement résument des pages tierces (voir [D'où viennent le
 
 ### D'où viennent les champs
 
-- **De la source :** la catégorie (nom et icône), le nom, le score, le lien et la description de chaque outil, ainsi que les trois critères. La source de chaque outil est nommée par `source_repertoire_id` (voir [`sources.json`](#sourcesjson)) : Praxis, ou les Services FACiLes (nom, lien, description, logiciel sous-jacent et services remplacés, lus sur <https://facil.services/> ; catégorie attribuée par logiciel dans `extract-facil.ts`) ; ou Charles (nom, lien, pays, tarif, caractéristiques et sites américains remplacés, lus dans le dossier `data/` du dépôt GitLab ; catégorie attribuée par tables dans `extract-charles.ts`, description composée en français de ces champs) ; un outil ajouté à la main avec `node ajouter.ts` a une description rédigée par la personne qui l'ajoute et, sans étoiles, un score estimé (`score_estime`).
+- **De la source :** la catégorie (nom et icône), le nom, le score, le lien et la description de chaque outil, ainsi que les trois critères. La source de chaque outil est nommée par `source_repertoire_id` (voir [`sources.json`](#sourcesjson)) : Praxis, ou les Services FACiLes (nom, lien, description, logiciel sous-jacent et services remplacés, lus sur <https://facil.services/> ; catégorie attribuée par logiciel dans `extract-facil.ts`) ; ou Charles (nom, lien, pays, tarif, caractéristiques et sites américains remplacés, lus dans le dossier `data/` du dépôt GitLab ; catégorie attribuée par tables dans `extract-charles.ts`, description composée en français de ces champs) ; un outil ajouté à la main avec `node packages/scripts/ajouter.ts` a une description rédigée par la personne qui l'ajoute et, sans étoiles, un score estimé (`score_estime`).
 - **D'Open Hub** (données publiques, [openhub.net](https://www.openhub.net/)) : `openhub_id` et `openhub` des logiciels au code public (activité, contributeurs, commits, licences déclarées, langage, taille), relevés par `update` avec `OPENHUB_API_KEY`.
 - **Rédigé pour ce dépôt :** le vocabulaire de `tags.json` (identifiants et descriptions des 37 tags de départ et des 15 ajoutés pour les alternatives de Charles), les cinq catégories déclarées par `extract-charles.ts` (nom et icône ; la description reste générée) et les tables de cet extracteur (catégories, pays, tarifs, caractéristiques en français).
-- **Calculé et généré par les scripts :** `sommaire.md` et `graphiques/` (statistiques calculées à partir des données, plus un résumé rédigé par un modèle d'IA).
-- **Calculé par les scripts :** `meta` (licence et dates des fichiers), `derniere_modification`, `changement`, `removed`, `enrichi_le` et `voir_aussi` (voir `update.ts`, `enrichir.ts`, `logiciel.ts` et `fichiers.ts`).
+- **Calculé et généré par les scripts :** `donnees/sommaire.md` et `donnees/graphiques/` (statistiques calculées à partir des données, plus un résumé rédigé par un modèle d'IA).
+- **Calculé par les scripts :** `meta` (licence et dates des fichiers), `derniere_modification`, `changement`, `removed`, `enrichi_le` et `voir_aussi` (voir `update.ts`, `enrichir.ts`, `logiciel.ts` et `fichiers.ts`, dans `packages/scripts/`).
 - **Déduit par heuristique dans ce dépôt :** `criteres` et `confiance` (voir [Classification](implementation.md#classification)).
 - **Vérifié par un modèle d'IA, citation à l'appui :** `criteres_confirmes` (voir [`confirmer.ts`](implementation.md#confirmerts)). La citation permet de contrôler chaque verdict ; le verdict lui-même reste celui d'un modèle.
 - **Généré par un modèle d'IA :** la description de chaque catégorie (`categories.json`), et les champs d'enrichissement (voir [Enrichissement](implementation.md#enrichissement-par-ia)). Ils résument des pages tierces et sont à vérifier avant de s'y fier ou de les diffuser, surtout la licence et le dépôt.
@@ -84,35 +84,37 @@ Les champs d'enrichissement résument des pages tierces (voir [D'où viennent le
 
 Tout ce que le [démarrage rapide](#démarrage-rapide) ne couvre pas (flux de travail, scripts, options, dépannage) est dans [implementation.md](implementation.md).
 
-Utilisation, avec Node.js seulement :
+Utilisation, avec Node.js seulement, depuis la racine du dépôt (les scripts trouvent `donnees/` et `.env` d'après leur propre emplacement : ils se lancent aussi d'un autre dossier, en donnant leur chemin) :
 
 ```sh
-node update.ts --dry-run         # montre ce que update ferait (changements, outils à enrichir, jetons et coût estimés), sans rien écrire
-node update.ts                   # synchronise les données avec la page, enrichit par IA les outils qui ne le sont pas encore, vérifie leurs critères, décrit les catégories (OPENAI_API_KEY), puis met le sommaire à jour si quelque chose a changé
-node update.ts --accepter-couts  # premier import hors terminal: accepte les coûts d'enrichissement sans la confirmation interactive
-node sommaire.ts                 # écrit sommaire.md et graphiques/ (--sans-resume, --sans-graphiques pour s'en passer, --sans-couleur)
-node extract-facil.ts [--fichier=page.html]   # synchronise les Services FACiLes (source facil) dans outils.json; node update.ts enrichit ensuite les nouveaux
-node extract-charles.ts [--dossier=clone]     # synchronise les alternatives de Charles (source charles, dépôt GitLab ou clone local) dans outils.json, sources.json et categories.json; node update.ts enrichit ensuite les nouveaux
-node ajouter.ts <lien> --nom=… --categorie=<id> --description=… --source=<id> [--score=N] [--alternative-a=url,…] [--source-nom=… --source-url=… --soumis-par-nom=…]
-                                 # ajoute à la main un outil (et sa source dans sources.json); node update.ts l'enrichit ensuite
+node packages/scripts/update.ts --dry-run         # montre ce que update ferait (changements, outils à enrichir, jetons et coût estimés), sans rien écrire
+node packages/scripts/update.ts                   # synchronise les données de donnees/ avec la page, enrichit par IA les outils qui ne le sont pas encore, vérifie leurs critères, décrit les catégories (OPENAI_API_KEY), puis met le sommaire à jour si quelque chose a changé
+node packages/scripts/update.ts --accepter-couts  # premier import hors terminal: accepte les coûts d'enrichissement sans la confirmation interactive
+node packages/scripts/sommaire.ts                 # écrit donnees/sommaire.md et donnees/graphiques/ (--sans-resume, --sans-graphiques pour s'en passer, --sans-couleur)
+node packages/scripts/extract-facil.ts [--fichier=page.html]   # synchronise les Services FACiLes (source facil) dans donnees/outils.json; update enrichit ensuite les nouveaux
+node packages/scripts/extract-charles.ts [--dossier=clone]     # synchronise les alternatives de Charles (source charles, dépôt GitLab ou clone local) dans outils.json, sources.json et categories.json; update enrichit ensuite les nouveaux
+node packages/scripts/ajouter.ts <lien> --nom=… --categorie=<id> --description=… --source=<id> [--score=N] [--alternative-a=url,…] [--source-nom=… --source-url=… --soumis-par-nom=…]
+                                                  # ajoute à la main un outil (et sa source dans sources.json); update l'enrichit ensuite
 ```
 
-Site de consultation, avec nub, dans `site/` (voir [`site/README.md`](packages/site/README.md)) :
+Site de consultation, avec nub, depuis la racine du dépôt (voir [`packages/site/README.md`](packages/site/README.md)) :
 
 ```sh
-nub install && nub run build     # bâtit site/dist/ à partir des JSON de la racine (158 pages), sans appel réseau ni vl-convert; demande `nub install` à la racine
-nub run dev                      # serveur de développement
-nub run test && nub run test:e2e # tests unitaires, tests du site bâti, puis tests dans Chromium
+nub install                                  # une seule installation, pour les trois paquets de packages/
+nub run site:build                           # bâtit packages/site/dist/ à partir des JSON de donnees/ (158 pages), sans appel réseau ni vl-convert
+nub run site:dev                             # serveur de développement
+nub run site:check                           # vérifie les types du site (astro check)
+nub run site:test && nub run site:test:e2e   # tests unitaires, tests du site bâti, puis tests dans Chromium
 ```
 
-Développement, avec nub (commandes définies dans `package.json`) :
+Développement, avec nub (commandes définies dans le `package.json` de la racine) :
 
 ```sh
-nub run test                     # lance les tests unitaires, puis ceux des données réelles, puis vérifie que les schémas JSON sont à jour
-nub run test:unit                # tests unitaires seulement (sans données: fonctionne avant le premier update)
-nub run test:data                # tests des fichiers de données réels (outils.json, categories.json, criteres.json, tags.json, sources.json, sommaire.md)
-nub run typecheck                # vérifie les types
-nub run schemas                  # régénère schemas/*.schema.json à partir des types
+nub run test                     # lance les tests du code commun, puis les tests unitaires des scripts, ceux des données réelles, et vérifie que les schémas JSON sont à jour
+nub run test:unit                # tests unitaires seulement, code commun et scripts (sans données: fonctionne avant le premier update)
+nub run test:data                # tests des fichiers de données réels (donnees/ : outils.json, categories.json, criteres.json, tags.json, sources.json, sommaire.md)
+nub run typecheck                # vérifie les types du code commun et des scripts (ceux du site: nub run site:check)
+nub run schemas                  # régénère donnees/schemas/*.schema.json à partir des types
 nub run licences                 # vérifie la conformité REUSE des licences (uvx reuse lint; demande uv)
 ```
 
@@ -156,7 +158,7 @@ Ou, avec Rust installé, `cargo install vl-convert` (compilation de quelques min
 
 ```sh
 curl -fsSL https://nubjs.com/install.sh | bash   # installe nub dans ~/.nub/bin et l'ajoute au PATH du profil
-nub install && nub run test                     # dans le dépôt : dépendances d'après nub.lock, puis les tests
+nub install && nub run test                     # à la racine du dépôt : dépendances des trois paquets d'après nub.lock, puis les tests
 ```
 
 **uv** (Linux, macOS, WSL ; `brew install uv` sur macOS) :
@@ -175,7 +177,7 @@ Sur Linux et WSL, vérifier que `~/.local/bin` est dans le `PATH` (`echo "$PATH"
 
 ## Fichiers JSON
 
-Les cinq fichiers de données sont validés par des [schémas JSON](implementation.md#schémas-json) (`schemas/`, draft 2020-12). Ils ont la même structure : un objet dont le champ `meta` porte les métadonnées du fichier, suivi du tableau de données.
+Les cinq fichiers de données, dans `donnees/`, sont validés par des [schémas JSON](implementation.md#schémas-json) (`donnees/schemas/`, draft 2020-12). Ils ont la même structure : un objet dont le champ `meta` porte les métadonnées du fichier, suivi du tableau de données.
 
 ```json
 {
@@ -267,15 +269,15 @@ Les `id` sont la forme courte utilisée dans les champs `criteres` de `outils.js
 
 Le vocabulaire restreint de tags : le tableau `tags` contient des `{ id, description }`, avec une description en français pour chaque tag (37 au départ, puis 15 ajoutés à la main le 2026-11-13 pour ce que les alternatives de Charles apportent : hébergement en Europe, porté par un OSBL, certification de sécurité, sans publicité, écoresponsable, agenda et rendez-vous, VPN, développement logiciel, traduction, sans code, moteur de recherche, formation en ligne, téléphonie, gestion des correctifs, cartographie). Chaque outil reçoit de 1 à 5 de ces tags, jamais plus.
 
-De nouveaux tags peuvent s'ajouter après cette première phase, avec `node update.ts --nouveaux-tags`. Chaque tag ajouté doit être **justifié** : il porte alors en plus un champ `justification` (pourquoi aucun tag existant ne convient) et `propose_pour` (l'outil pour lequel il a été proposé). Un nouveau tag peut ne concerner qu'un seul outil.
+De nouveaux tags peuvent s'ajouter après cette première phase, avec `node packages/scripts/update.ts --nouveaux-tags`. Chaque tag ajouté doit être **justifié** : il porte alors en plus un champ `justification` (pourquoi aucun tag existant ne convient) et `propose_pour` (l'outil pour lequel il a été proposé). Un nouveau tag peut ne concerner qu'un seul outil.
 
 ### `sources.json`
 
-Les sources des outils, dans le tableau `sources` : `{ id, nom, url, extracteur, pdc?, donnees?, soumis_par? }`. `id` est un slug référencé par `outils[].source_repertoire_id` ; `extracteur` dit qui sait lire la source : `praxis` (le répertoire, extrait par `extract.ts`), `facil` (les [Services FACiLes](https://facil.services/), extraits par `extract-facil.ts`), `charles` (les alternatives de [Charles](https://gitlab.com/yaniskerdjana/charles), extraites par `extract-charles.ts`) ou `manuel` (outils saisis avec `node ajouter.ts`) ; `pdc` et `donnees` sont les pages de politique de confidentialité et de données de la collection, quand elle en publie ; `soumis_par` dit qui a soumis une collection ajoutée à la main (`nom` obligatoire, `url` et `email` facultatifs ; le courriel, s'il est donné, est publié avec les données). `update` crée le fichier avec la source `praxis` s'il manque ; `ajouter.ts` y ajoute les sources manuelles.
+Les sources des outils, dans le tableau `sources` : `{ id, nom, url, extracteur, pdc?, donnees?, soumis_par? }`. `id` est un slug référencé par `outils[].source_repertoire_id` ; `extracteur` dit qui sait lire la source : `praxis` (le répertoire, extrait par `extract.ts`), `facil` (les [Services FACiLes](https://facil.services/), extraits par `extract-facil.ts`), `charles` (les alternatives de [Charles](https://gitlab.com/yaniskerdjana/charles), extraites par `extract-charles.ts`) ou `manuel` (outils saisis avec `node packages/scripts/ajouter.ts`) ; `pdc` et `donnees` sont les pages de politique de confidentialité et de données de la collection, quand elle en publie ; `soumis_par` dit qui a soumis une collection ajoutée à la main (`nom` obligatoire, `url` et `email` facultatifs ; le courriel, s'il est donné, est publié avec les données). `update` crée le fichier avec la source `praxis` s'il manque ; `ajouter.ts` y ajoute les sources manuelles.
 
 ## Sommaire statistique
 
-[`sommaire.md`](donnees/sommaire.md) est généré par `node sommaire.ts` à partir des données (voir [Génération du sommaire statistique](implementation.md#génération-du-sommaire-statistique)) ; sa première ligne donne la date de génération, et son résumé est rédigé par un modèle d'IA, à relire. Au 2026-11-13 :
+[`sommaire.md`](donnees/sommaire.md) est généré par `node packages/scripts/sommaire.ts` à partir des données (voir [Génération du sommaire statistique](implementation.md#génération-du-sommaire-statistique)) ; sa première ligne donne la date de génération, et son résumé est rédigé par un modèle d'IA, à relire. Au 2026-11-13 :
 
 - **154 outils** répartis en **25 catégories** : 60 du répertoire Praxis (**8 à 3 étoiles** et **52 à 2 étoiles**), 22 des Services FACiLes et 72 alternatives de Charles, ces 94 au score estimé d'après leur évaluation enrichie (13 à 2 étoiles, 24 à 1, 57 à 0).
 - **142 outils enrichis** sur 154 (les 3 outils de Praxis et les 9 alternatives de Charles dont la page est illisible restent à enrichir), dont **69 logiciels libres ou partiellement libres** (48,6 %) : 56 libres (les 21 services FACiL libres et le logiciel de Praxis qu'ils font tourner comptent chacun), 13 partiellement libres, 3 à code source disponible, 70 propriétaires.
@@ -287,32 +289,32 @@ Le sommaire détaille chaque point par catégorie et par statut du code source, 
 
 ## Utiliser les données
 
-Pour un aperçu chiffré, voir [`sommaire.md`](donnees/sommaire.md). Pour obtenir le répertoire courant, ignorer les outils portant `removed`. Pour les logiciels libres, filtrer sur `source` (`libre` ou `partiel`) et utiliser `licence` (ou `custom_license`) et `repo`. Par exemple, avec [jaq](https://github.com/01mf02/jaq) :
+Pour un aperçu chiffré, voir [`sommaire.md`](donnees/sommaire.md). Pour obtenir le répertoire courant, ignorer les outils portant `removed`. Pour les logiciels libres, filtrer sur `source` (`libre` ou `partiel`) et utiliser `licence` (ou `custom_license`) et `repo`. Par exemple, avec [jaq](https://github.com/01mf02/jaq), depuis la racine du dépôt :
 
 ```sh
 # licence et dates du fichier
-jaq '.meta' outils.json
+jaq '.meta' donnees/outils.json
 
 # nom et icône de la catégorie de chaque outil (jointure sur categories.json)
-jaq --slurpfile cats categories.json '($cats[0].categories | map({(.id): .}) | add) as $c | .outils[] | {nom, categorie: $c[.categorie].nom, icone: $c[.categorie].icone}' outils.json
+jaq --slurpfile cats donnees/categories.json '($cats[0].categories | map({(.id): .}) | add) as $c | .outils[] | {nom, categorie: $c[.categorie].nom, icone: $c[.categorie].icone}' donnees/outils.json
 
 # outils actuellement au répertoire
-jaq '[.outils[] | select(.removed | not)]' outils.json
+jaq '[.outils[] | select(.removed | not)]' donnees/outils.json
 
 # logiciels libres enrichis, avec leur licence et leur dépôt
-jaq '.outils[] | select(.source == "libre" or .source == "partiel") | {nom, licence, custom_license, repo}' outils.json
+jaq '.outils[] | select(.source == "libre" or .source == "partiel") | {nom, licence, custom_license, repo}' donnees/outils.json
 
 # outils enrichis depuis une date donnée
-jaq '.outils[] | select(.enrichi_le != null and .enrichi_le >= "2026-11-12") | .nom' outils.json
+jaq '.outils[] | select(.enrichi_le != null and .enrichi_le >= "2026-11-12") | .nom' donnees/outils.json
 
 # outils portant un tag
-jaq '.outils[] | select((.tags // []) | index("chiffrement")) | .nom' outils.json
+jaq '.outils[] | select((.tags // []) | index("chiffrement")) | .nom' donnees/outils.json
 
 # services FACiL : le logiciel qu'ils font tourner, et les outils du répertoire qui reposent sur le même logiciel
-jaq '.outils[] | select(.instance_de) | {nom, logiciel: .instance_de.nom, voir_aussi}' outils.json
+jaq '.outils[] | select(.instance_de) | {nom, logiciel: .instance_de.nom, voir_aussi}' donnees/outils.json
 
 # critères vérifiés par IA, avec la citation, quand ils diffèrent des étoiles
-jaq '.outils[] | select(.criteres_confirmes and (.criteres_confirmes.criteres | length) < .score) | {nom, score, criteres, confirmes: .criteres_confirmes.criteres, preuves: .criteres_confirmes.preuves}' outils.json
+jaq '.outils[] | select(.criteres_confirmes and (.criteres_confirmes.criteres | length) < .score) | {nom, score, criteres, confirmes: .criteres_confirmes.criteres, preuves: .criteres_confirmes.preuves}' donnees/outils.json
 ```
 
 ## Documentation
@@ -320,11 +322,11 @@ jaq '.outils[] | select(.criteres_confirmes and (.criteres_confirmes.criteres | 
 | Fichier | Contenu |
 |---|---|
 | [README.md](README.md) | Ce fichier : le démarrage rapide, la source, les crédits et licences, les commandes, les outils à installer, les fichiers de données et comment les utiliser |
-| [implementation.md](implementation.md) | Le flux de travail, le contenu du dépôt, les schémas, chaque script et ses options, la classification et ses analyses, l'enrichissement, la génération du sommaire, les scripts npm, les tests, le dépannage et les conventions de documentation |
+| [implementation.md](implementation.md) | Le flux de travail, la structure du monorepo et le contenu du dépôt, les schémas, le code commun, chaque script et ses options, la classification et ses analyses, l'enrichissement, la génération du sommaire, les scripts npm, les tests, le dépannage et les conventions de documentation |
 | [historique.md](historique.md) | Les étapes du projet et les décisions prises, par date |
 | [sommaire.md](donnees/sommaire.md) | Le sommaire statistique généré (données, dates, catégories, statuts, licences, critères, forges, tags, fiabilité) |
-| [site/README.md](packages/site/README.md) | Le site de consultation : commandes, publication sur GitHub Pages, variables d'environnement, règles (données, provenance, lecture sans JavaScript, explorateur, statistiques, styles) et licences |
-| `specs/` | Les artefacts Spec Kit de chaque fonctionnalité du site (spécification, plan, recherche, contrats, tâches) : `001-site-consultation-repertoire`, `002-explorateur-outils`, `003-page-statistiques`, `004-deploiement-github-pages` |
+| [packages/site/README.md](packages/site/README.md) | Le site de consultation : commandes, publication sur GitHub Pages, variables d'environnement, règles (données, provenance, lecture sans JavaScript, explorateur, statistiques, styles) et licences |
+| `specs/` | Les artefacts Spec Kit de chaque fonctionnalité du site (spécification, plan, recherche, contrats, tâches) : `001-site-consultation-repertoire`, `002-explorateur-outils`, `003-page-statistiques`, `004-deploiement-github-pages` ; et le plan de la restructuration en monorepo, `005-monorepo` |
 | [analyse-effort/analyse.md](analyse-effort/analyse.md) | Le banc d'essai des modèles et des efforts de raisonnement sur 20 outils, d'où viennent les valeurs par défaut |
 | [tickets/charles-amont.md](tickets/charles-amont.md) | Brouillon du ticket à ouvrir au dépôt de Charles (fichier de licence manquant, alternatives sans site, alternative américaine, deux liens morts) ; pas encore ouvert |
 | [.specify/memory/constitution.md](.specify/memory/constitution.md) | La constitution du projet : les six principes, les contraintes techniques, le flux de travail et la gouvernance que suivent les fonctionnalités menées avec [Spec Kit](https://github.com/github/spec-kit) |

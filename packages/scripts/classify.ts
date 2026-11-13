@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 // Classe les étoiles de chaque outil selon les trois critères du répertoire.
 // Source: https://praxis.encommun.io/n/voRYZbuBYZKLejs8JyNkc5C4o7s/
-// Usage: nub classify.ts <outils.json> [sortie.json]   (sans sortie, réécrit outils.json en place)
+// Usage: node packages/scripts/classify.ts <outils.json> [sortie.json]   (sans sortie, réécrit outils.json en place)
 //
 // Principe: les descriptions n'énoncent pas les étoiles, elles les laissent deviner.
 //  1. On mesure, par critère, la force des indices textuels (voir REGLES).
@@ -90,7 +90,7 @@ if (import.meta.main) {
     const inconnue = args.find((a) => a.startsWith("--"));
     if (inconnue) throw new Error(`Option inconnue: ${inconnue}`);
     const [src, dst = src] = args.filter((a) => !a.startsWith("--"));
-    if (!src || !dst) throw new Error("Usage: nub classify.ts <outils.json> [sortie.json]");
+    if (!src || !dst) throw new Error("Usage: node packages/scripts/classify.ts <outils.json> [sortie.json]");
     const lu = lireFichier<Outil>(src, "outils");
     const res: OutilClasse[] = lu.donnees.map((o) => ({ ...o, ...classer(o.description, o.score) }));
     // En place, le fichier lu sert d'état précédent; vers un autre fichier, c'est celui-là s'il existe déjà.

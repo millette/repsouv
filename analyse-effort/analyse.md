@@ -2,7 +2,7 @@
 
 *Documentation : [README](../README.md) · [Implémentation](../implementation.md) · [Historique](../historique.md) · [Sommaire statistique](../donnees/sommaire.md)*
 
-Banc d'essai du 2026-11-12 pour choisir le modèle OpenAI par défaut, son repli et l'effort de raisonnement (`reasoning.effort`) des appels d'enrichissement et de vérification des critères. Résultat : `gpt-6.1-sol` à effort `low` reproduit `gpt-6-astra` sur l'échantillon pour un cinquième du prix ; ce sont les valeurs par défaut depuis (`MODELE_PAR_DEFAUT`, `EFFORT_PAR_DEFAUT` dans `enrichir.ts`, repli `gpt-6-astra`).
+Banc d'essai du 2026-11-12 pour choisir le modèle OpenAI par défaut, son repli et l'effort de raisonnement (`reasoning.effort`) des appels d'enrichissement et de vérification des critères. Résultat : `gpt-6.1-sol` à effort `low` reproduit `gpt-6-astra` sur l'échantillon pour un cinquième du prix ; ce sont les valeurs par défaut depuis (`MODELE_PAR_DEFAUT`, `EFFORT_PAR_DEFAUT` dans `packages/scripts/enrichir.ts`, repli `gpt-6-astra`).
 
 ## Méthode
 
@@ -39,10 +39,10 @@ Réserves : une seule exécution par variante sur 20 outils ; le 20/20 de Sol `l
 
 ## Refaire le banc d'essai
 
-Depuis la racine du dépôt, avec la clé dans `.env` :
+Depuis la racine du dépôt, avec la clé dans le fichier `.env` de cette racine :
 
 ```sh
 node analyse-effort/banc-effort.ts gpt-6.1-sol low 20      # une variante: modèle, effort (- pour le défaut du modèle), taille
 ```
 
-L'échantillon est lu dans `analyse-effort/echantillon.json` (créé au premier passage s'il manque) ; chaque passage écrit `analyse-effort/<modèle>-<effort>.json` (`<modèle>-defaut.json` quand l'effort est `-`) et affiche le résumé. La comparaison se fait avec l'`outils.json` courant : depuis le banc d'essai, trois outils de l'échantillon (CiviCRM, Firefox, Thunderbird) ont été ré-enrichis par `gpt-6.1-sol` et le vocabulaire est passé de 37 à 52 tags, si bien qu'un nouveau passage ne reproduirait pas exactement le tableau ci-dessus.
+L'échantillon est lu dans `analyse-effort/echantillon.json` (créé au premier passage s'il manque) ; chaque passage écrit `analyse-effort/<modèle>-<effort>.json` (`<modèle>-defaut.json` quand l'effort est `-`) et affiche le résumé. La comparaison se fait avec le `donnees/outils.json` courant : depuis le banc d'essai, trois outils de l'échantillon (CiviCRM, Firefox, Thunderbird) ont été ré-enrichis par `gpt-6.1-sol` et le vocabulaire est passé de 37 à 52 tags, si bien qu'un nouveau passage ne reproduirait pas exactement le tableau ci-dessus.

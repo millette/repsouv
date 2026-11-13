@@ -4,7 +4,7 @@
 // porte d'entrée pour suivre le répertoire: si outils.json n'existe pas, c'est l'import initial, et tous les outils
 // sont écrits avec changement "nouveau" (voir synchroniser). Reconstruction forcée: extract.ts --force; reclassement
 // de tous les outils après un changement des règles: classify.ts.
-// Usage: nub update.ts [--dry-run] [--sans-couleur] [--nouveaux-tags] [--max-echecs=N] [--accepter-couts] [outils.json] [url]
+// Usage: node packages/scripts/update.ts [--dry-run] [--sans-couleur] [--nouveaux-tags] [--max-echecs=N] [--accepter-couts] [outils.json] [url]
 // Sans chemin, le fichier est donnees/outils.json à la racine du dépôt (FICHIER_OUTILS), quel que soit le dossier courant.
 //
 // Après l'enrichissement, les critères des outils enrichis sans verdict sont vérifiés (criteres_confirmes, voir confirmer.ts)

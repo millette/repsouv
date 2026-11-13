@@ -3,7 +3,7 @@
 // Extrait les outils et les critères du répertoire de souveraineté numérique vers du JSON,
 // à partir de la page en ligne (téléchargée à chaque exécution).
 // Source: https://praxis.encommun.io/n/voRYZbuBYZKLejs8JyNkc5C4o7s/
-// Usage: nub extract.ts [--force] <outils.json> [criteres.json] [url]
+// Usage: node packages/scripts/extract.ts [--force] <outils.json> [criteres.json] [url]
 // categories.json est écrit à côté de outils.json (identifiant, nom et icône de chaque catégorie; les descriptions existantes sont conservées).
 // Les outils sont écrits sans classification; lancer ensuite classify.ts. Les fichiers écrits portent
 // leurs métadonnées (data_license, created_at, updated_at): voir fichiers.ts.
@@ -165,7 +165,7 @@ if (import.meta.main) {
     const positionnels = args.filter((a) => !a.startsWith("--"));
     const url = positionnels.find(estUrl) ?? URL_REPERTOIRE;
     const [dstOutils, dstCriteres] = positionnels.filter((a) => !estUrl(a));
-    if (!dstOutils) throw new Error("Usage: nub extract.ts [--force] <outils.json> [criteres.json] [url]");
+    if (!dstOutils) throw new Error("Usage: node packages/scripts/extract.ts [--force] <outils.json> [criteres.json] [url]");
 
     // Le fichier de SORTIE (outils.json), s'il existe déjà: il sert au garde-fou et à conserver meta.created_at.
     // La page, elle, n'est jamais lue sur disque: elle est téléchargée en mémoire (telechargerRepertoire)

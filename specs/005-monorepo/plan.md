@@ -20,8 +20,9 @@ ni les données elles-mêmes ni ce que le site montre.
 donnees/              outils.json, categories.json, criteres.json, tags.json, sources.json,
                       schemas/, sommaire.md, graphiques/
 packages/
-├── commun/           ce que les scripts et le site partagent : types des données, lecture des fichiers,
-│                     statistiques, graphiques
+├── commun/           ce que les scripts et le site partagent, en modules purs : types des données,
+│                     identifiants, abandon, slug, statistiques, graphiques (la lecture des fichiers
+│                     reste propre à chaque côté, voir l'étape 3)
 ├── scripts/          update, sommaire, extracteurs, enrichissement, vérification, schémas ; leurs tests
 └── site/             le site de consultation (l'ancien site/)
 package.json          racine des espaces de travail (workspaces: packages/*), commandes d'ensemble
@@ -58,7 +59,14 @@ plus besoin des dépendances des scripts pour se bâtir. La lecture des fichiers
 valident les dates de « meta » et écrivent, le site refuse un tableau vide et nomme le fichier fautif).
 
 ### Étape 4 : documentation, constitution, licences
-**But** : README, `implementation.md`, `historique.md`, `site/README.md`, constitution (chemins et commandes),
-`REUSE.toml`.
+**But** : README, `implementation.md`, `historique.md`, `packages/site/README.md`, constitution (chemins et
+commandes), `REUSE.toml`.
 **Critères** : tests de documentation au vert ; `nub run licences` conforme.
-**État** : à faire
+**État** : fait
+
+La documentation décrit la structure du monorepo, `packages/commun` module par module, les chemins que les scripts
+et le site calculent (`FICHIER_OUTILS`, `DOSSIER_DONNEES`, le `.env` de la racine, `src/lib/chemins.ts`),
+l'installation unique et les commandes `site:*` ; `analyse-effort/analyse.md`, `.env.example` et les commentaires
+« Usage » des scripts suivent les nouveaux chemins. `historique.md` garde les chemins d'époque de ses entrées passées
+et reçoit la publication du site et le monorepo. La constitution passe à la version 1.2.1, amendement de forme : seuls
+ses chemins et ses commandes changent. `REUSE.toml` disait déjà vrai depuis les étapes 1 à 3.

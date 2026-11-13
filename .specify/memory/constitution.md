@@ -3,17 +3,36 @@ SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
+<!--
+Rapport d'impact
+- Version: 1.2.0 → 1.2.1 (CORRECTIF: chemins et commandes mis à jour, sans changement de sens).
+- Raison: le dépôt est devenu un monorepo (branche 005-monorepo): les données sont dans `donnees/`, les scripts
+  dans `packages/scripts/`, le code commun dans `packages/commun/`, le site dans `packages/site/`.
+- Principes modifiés (forme seulement):
+  - I. Les données d'abord: les cinq fichiers sont situés dans `donnees/`; `schemas/*.schema.json` devient
+    `donnees/schemas/*.schema.json`.
+  - V. Tests d'abord, simplicité: `test/*.test.ts` et `test/donnees/` sont situés dans `packages/commun` et
+    `packages/scripts`.
+- Sections modifiées (forme seulement): Contraintes techniques (`node update.ts` et `node sommaire.ts` deviennent
+  `node packages/scripts/update.ts` et `node packages/scripts/sommaire.ts`).
+- Sections ajoutées: aucune. Sections retirées: aucune.
+- Gabarits (`.specify/templates/`): aucun ne cite ces chemins ni ces commandes; rien à aligner.
+- Documentation alignée: `README.md`, `implementation.md` (version citée), `historique.md` (amendement noté),
+  `packages/site/README.md`.
+- À faire plus tard: rien.
+-->
+
 # outils-souverainete-numerique Constitution
 
 ## Core Principles
 
 ### I. Les données d'abord
 
-`outils.json`, `categories.json`, `criteres.json`, `tags.json` et `sources.json` sont le produit;
-les scripts existent pour les produire et les maintenir.
+Les fichiers de `donnees/` (`outils.json`, `categories.json`, `criteres.json`, `tags.json` et
+`sources.json`) sont le produit; les scripts existent pour les produire et les maintenir.
 
 - Tout changement de forme des données DOIT passer par les types TypeScript, puis par
-  `nub run schemas`, qui régénère `schemas/*.schema.json`.
+  `nub run schemas`, qui régénère `donnees/schemas/*.schema.json`.
 - `nub run schemas:verifier` DOIT rester vert: un schéma commité ne diverge jamais des types.
 - Les champs et les identifiants existants DOIVENT rester compatibles; sinon, la rupture DOIT être
   documentée dans `historique.md`.
@@ -58,8 +77,9 @@ relancer aussi souvent que voulu sans payer deux fois.
 ### V. Tests d'abord, simplicité
 
 - Le cycle est: test rouge, code minimal pour le faire passer, puis nettoyage.
-- Les tests unitaires sans données (`test/*.test.ts`) DOIVENT rester séparés des tests des données
-  réelles (`test/donnees/`); les premiers passent avant le premier import.
+- Les tests unitaires sans données (`test/*.test.ts` de `packages/commun` et de `packages/scripts`)
+  DOIVENT rester séparés des tests des données réelles (`packages/scripts/test/donnees/`); les
+  premiers passent avant le premier import.
 - Aucun test ne DOIT être désactivé: un test qui échoue se corrige.
 - Pas d'abstraction prématurée.
 - Pas de dépendance d'exécution sans justification écrite.
@@ -80,8 +100,8 @@ données, le code et la documentation cohérents.
 
 - **Exécution**: Node.js 26 (`engines.node`: `>=26 <27`), qui exécute le TypeScript tel quel.
 - **Développement**: nub (`nub`, `nub run`, `nub x`); jamais npm, npx, tsc ni ts-node.
-- **Utilisation**: les scripts d'utilisation (`node update.ts`, `node sommaire.ts`) DOIVENT
-  fonctionner avec Node.js seul, sans nub.
+- **Utilisation**: les scripts d'utilisation (`node packages/scripts/update.ts`,
+  `node packages/scripts/sommaire.ts`) DOIVENT fonctionner avec Node.js seul, sans nub.
 - **Ligne de commande**: rg, fd, jaq et wget2 plutôt que grep, find, jq et wget.
 
 ## Flux de travail
@@ -114,4 +134,4 @@ données, le code et la documentation cohérents.
   - MINEUR: ajout d'un principe ou d'une section, ou extension notable d'une règle;
   - CORRECTIF: clarification, reformulation ou correction sans changement de sens.
 
-**Version**: 1.2.0 | **Ratified**: 2026-11-13 | **Last Amended**: 2026-11-13
+**Version**: 1.2.1 | **Ratified**: 2026-11-13 | **Last Amended**: 2026-11-13
