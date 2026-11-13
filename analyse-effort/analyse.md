@@ -22,13 +22,13 @@ Banc d'essai du 2026-11-12 pour choisir le modèle OpenAI par défaut, son repli
 | Sol `medium` | 0,32 $ | 16 | 3 546 | 19 | 19 | 19 | 19 | 10 (0,84) | 20 / 20 / 19 |
 | **Sol `low`** | **0,29 $** | 12 | 1 232 | **20** | **20** | **20** | **20** | 12 (0,88) | 20 / 20 / 18 |
 
-Aucune réponse rejetée ni échec, dans aucune variante. Jetons en entrée : 119 k à 127 k par variante (dont 43 k en cache pour Terra) ; en sortie : 11,7 k (`none`) à 18,4 k (Terra `medium`). Les fichiers `gpt-*.json` contiennent, pour chaque variante, le résumé, le journal et les 20 outils produits (descriptions longues comprises), pour une lecture manuelle.
+Aucune réponse rejetée ni échec, dans aucune variante. Jetons en entrée : 119 k à 127 k par variante (dont 43 k en cache dans chaque variante) ; en sortie : 11,7 k (`none`) à 18,4 k (Terra `medium`). Les fichiers `gpt-*.json` contiennent, pour chaque variante, le résumé, le journal et les 20 outils produits (descriptions longues comprises), pour une lecture manuelle.
 
 ## Lecture
 
 - **L'effort compte peu.** Pour les deux modèles, `low` donne le même accord que `medium` pour 10 à 20 % moins cher et 25 % plus vite ; `none` dégrade les tags sans économie notable. Les jetons de raisonnement ne représentent que 10 à 35 % de la sortie.
-- **Le modèle compte beaucoup.** Terra, quel que soit l'effort, est plus prudent qu'Astra : `licence` ou `repo` à `null` quand la page ne les dit pas (CiviCRM, Discourse, OpenProject, Leantime ; 2FAS Auth, Jami, Thunderbird), alors qu'Astra et Sol complètent, exactement, de mémoire ; et Terra retient moins de critères que les étoiles pour 7 outils sur 20 (il retirerait « contrôle » ou « dépendance » à un tiers du répertoire, ce qui changerait les statistiques du sommaire). Sol reproduit Astra presque exactement ; Sol `low` est indiscernable d'Astra sur les 20 outils.
-- **La vérification des critères** (citation obligatoire) est robuste partout : 20/20 sur « données » et « contrôle » dans toutes les variantes, 17 à 19 sur « dépendance » (plancher 95 %).
+- **Le modèle compte beaucoup.** Terra, quel que soit l'effort, est plus prudent qu'Astra : `licence` ou `repo` à `null` quand la page ne les dit pas (CiviCRM, Discourse, OpenProject, Leantime ; 2FAS Auth, Jami, Thunderbird), alors qu'Astra et Sol complètent, exactement, de mémoire ; et Terra retient moins de critères que les étoiles pour 10 à 12 outils sur 20, contre 7 pour Sol (il retirerait « contrôle » ou « dépendance » à un tiers du répertoire, ce qui changerait les statistiques du sommaire). Sol reproduit Astra presque exactement ; Sol `low` est indiscernable d'Astra sur les 20 outils pour les champs factuels (`source`, `licence`, `repo`, `evaluation_enrichie`) ; les tags ne sont identiques que pour 12 outils (60 %, pour un plancher de bruit de 67 %).
+- **La vérification des critères** (citation obligatoire) est robuste partout : 20/20 sur « contrôle » dans toutes les variantes, 20/20 sur « données » sauf Terra `low` (19), 17 à 19 sur « dépendance » (plancher 95 %).
 - **Le repli ne corrige pas Terra** : sans réponse rejetée, le modèle de repli n'intervient jamais ; la prudence de Terra est une réponse valide, pas un échec. Le choix entre Terra et Sol est donc une politique éditoriale (n'affirmer que ce que la page dit, ou compléter de mémoire comme la référence), pas une question d'effort.
 
 ## Décision
@@ -45,4 +45,4 @@ Depuis la racine du dépôt, avec la clé dans `.env` :
 node analyse-effort/banc-effort.ts gpt-6.1-sol low 20      # une variante: modèle, effort (- pour le défaut du modèle), taille
 ```
 
-L'échantillon est lu dans `analyse-effort/echantillon.json` (créé au premier passage s'il manque) ; chaque passage écrit `analyse-effort/<modèle>-<effort>.json` et affiche le résumé.
+L'échantillon est lu dans `analyse-effort/echantillon.json` (créé au premier passage s'il manque) ; chaque passage écrit `analyse-effort/<modèle>-<effort>.json` (`<modèle>-defaut.json` quand l'effort est `-`) et affiche le résumé. La comparaison se fait avec l'`outils.json` courant : depuis le banc d'essai, trois outils de l'échantillon (CiviCRM, Firefox, Thunderbird) ont été ré-enrichis par `gpt-6.1-sol` et le vocabulaire est passé de 37 à 52 tags, si bien qu'un nouveau passage ne reproduirait pas exactement le tableau ci-dessus.
