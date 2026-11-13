@@ -1,0 +1,13 @@
+---
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
+// Page introuvable.
+import Page from "../layouts/Page.astro";
+import { adresseAccueil } from "../lib/adresses.ts";
+import { site } from "../lib/site.ts";
+---
+<Page titre="Page introuvable">
+  <h1>Page introuvable</h1>
+  <p>Cette adresse ne correspond à aucune page du répertoire.</p>
+  <p><a class="link" href={adresseAccueil(site().base)}>Revenir à la liste des outils</a></p>
+</Page>

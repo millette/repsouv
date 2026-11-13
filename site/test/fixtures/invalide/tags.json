@@ -1,0 +1,17 @@
+{
+  "meta": {
+    "data_license": "CC-BY-SA-4.0",
+    "created_at": "2026-11-12T12:35:52-05:00",
+    "updated_at": "2026-11-13T10:28:10-05:00"
+  },
+  "tags": [
+    {
+      "id": "chiffrement",
+      "description": "Chiffre les données."
+    },
+    {
+      "id": "auto-hebergement",
+      "description": "Peut être hébergé soi-même."
+    }
+  ]
+}

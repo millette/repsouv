@@ -26,3 +26,134 @@ body {
   margin-inline: auto;
   padding: var(--espace);
 }
+
+/* Texte réservé aux lecteurs d'écran. */
+.sr-seul {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Lien d'évitement: visible seulement quand il reçoit le focus. */
+.lien-evitement {
+  position: absolute;
+  left: var(--espace);
+  top: -10rem;
+  z-index: 10;
+  padding: 0.5rem 1rem;
+  background: var(--color-base-100);
+  color: var(--color-base-content);
+  border: 2px solid var(--color-primary);
+  border-radius: var(--radius-field, 0.25rem);
+}
+.lien-evitement:focus {
+  top: var(--espace);
+}
+
+.entete {
+  background: var(--color-base-200);
+  border-bottom: 1px solid var(--color-base-300);
+}
+.entete-nom {
+  font-weight: 700;
+  color: inherit;
+  text-decoration: none;
+}
+.entete-nom:hover {
+  text-decoration: underline;
+}
+
+.pied {
+  margin-top: calc(var(--espace) * 3);
+  background: var(--color-base-200);
+  border-top: 1px solid var(--color-base-300);
+  font-size: 0.9rem;
+}
+.attribution p {
+  margin-block: 0.5rem;
+}
+
+h1 {
+  font-size: 1.9rem;
+  line-height: 1.2;
+  margin-block: 1rem;
+}
+h2 {
+  font-size: 1.4rem;
+  margin-block: 2rem 0.5rem;
+}
+h3 {
+  font-size: 1.1rem;
+}
+main:focus {
+  outline: none;
+}
+.introduction {
+  max-width: 48rem;
+}
+
+/* Signalement de provenance: du texte encadré, lisible sans la couleur. */
+.provenance {
+  display: inline-block;
+  padding: 0 0.4rem;
+  font-size: 0.8rem;
+  font-style: italic;
+  border: 1px dashed currentColor;
+  border-radius: var(--radius-selector, 0.25rem);
+  white-space: nowrap;
+}
+
+.compteur {
+  font-weight: 600;
+}
+.categorie-description {
+  max-width: 48rem;
+}
+
+/* Liste des cartes: autant de colonnes que la largeur le permet, une seule sur téléphone. */
+.cartes {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
+  gap: var(--espace);
+}
+.carte-outil .card-body {
+  padding: 1rem;
+  gap: 0.4rem;
+}
+.carte-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  flex-grow: 0;
+}
+.statut {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem;
+}
+.score {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.etoiles {
+  letter-spacing: 0.1em;
+}
+.score-estime {
+  font-size: 0.8rem;
+  font-style: italic;
+}
+[hidden] {
+  display: none !important;
+}

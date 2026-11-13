@@ -1,0 +1,27 @@
+{
+  "meta": {
+    "data_license": "CC-BY-SA-4.0",
+    "created_at": "2026-11-12T12:35:52-05:00",
+    "updated_at": "2026-11-13T10:28:10-05:00"
+  },
+  "criteres": [
+    {
+      "id": "donnees",
+      "icon": "📍",
+      "titre": "Où peuvent rester les données ?",
+      "description": "Lieu d'hébergement."
+    },
+    {
+      "id": "controle",
+      "icon": "🏢",
+      "titre": "Qui contrôle l'outil ?",
+      "description": "Propriété de l'éditeur."
+    },
+    {
+      "id": "dependance",
+      "icon": "🔗",
+      "titre": "De qui dépend-il pour fonctionner ?",
+      "description": "Dépendances."
+    }
+  ]
+}

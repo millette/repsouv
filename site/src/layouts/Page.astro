@@ -1,0 +1,42 @@
+---
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
+// Gabarit de toutes les pages (contracts/pages.md): langue, titre, lien d'évitement, régions nommées, pied d'attribution.
+import "../styles/global.css";
+import Attribution from "../components/Attribution.astro";
+import { adresseAccueil } from "../lib/adresses.ts";
+import { NOM_SITE, site } from "../lib/site.ts";
+
+interface Props {
+  /** Titre de la page; absent pour l'accueil, dont le titre est le nom du site. */
+  titre?: string;
+  description?: string;
+}
+const { titre, description } = Astro.props;
+const { base } = site();
+---
+<!doctype html>
+<html lang="fr-CA">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titre ? `${titre} · ${NOM_SITE}` : NOM_SITE}</title>
+    {description && <meta name="description" content={description} />}
+  </head>
+  <body>
+    <a class="lien-evitement" href="#contenu">Aller au contenu</a>
+    <header class="entete">
+      <div class="page">
+        <a class="entete-nom" href={adresseAccueil(base)}>{NOM_SITE}</a>
+      </div>
+    </header>
+    <main id="contenu" class="page" tabindex="-1">
+      <slot />
+    </main>
+    <footer class="pied">
+      <div class="page">
+        <Attribution />
+      </div>
+    </footer>
+  </body>
+</html>

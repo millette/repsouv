@@ -1,0 +1,29 @@
+---
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
+// Pied de chaque page: attribution et licence des données (CC BY-SA 4.0, principe III), autres sources, mise en garde
+// sur les champs produits par IA (principe II) et date des données.
+import { formaterDate } from "../lib/libelles.ts";
+import { LIBELLES_PROVENANCE } from "../lib/provenance.ts";
+import { AUTEURS_PRAXIS, ID_PRAXIS, LICENCE_DONNEES, site } from "../lib/site.ts";
+
+const { sources, meta } = site();
+const praxis = sources.find((s) => s.id === ID_PRAXIS);
+if (!praxis) throw new Error(`sources.json: source « ${ID_PRAXIS} » manquante, nécessaire à l'attribution`);
+const autres = sources.filter((s) => s.id !== ID_PRAXIS);
+---
+<div class="attribution">
+  <p>
+    Données : {AUTEURS_PRAXIS.slice(0, -1).join(", ")} et {AUTEURS_PRAXIS.at(-1)},
+    <a class="link" href={praxis.url}><cite>Répertoire d'outils favorisant la souveraineté numérique</cite></a> (Praxis, 2026), adaptées par
+    <a class="link" href="https://robin.millette.info/">Robin Millette</a>. Licence <a class="link" rel="license" href={LICENCE_DONNEES.url}>{LICENCE_DONNEES.nom}</a>.
+  </p>
+  {autres.length > 0 && (
+    <p>
+      Autres sources :
+      {autres.map((s, i) => <>{i > 0 && " ; "}<a class="link" href={s.url}>{s.nom}</a></>)}.
+    </p>
+  )}
+  <p>Les champs marqués « {LIBELLES_PROVENANCE.ia} » résument des pages tierces : ils sont à contrôler avant de s'y fier.</p>
+  <p>Données du {formaterDate(meta.updated_at)}.</p>
+</div>

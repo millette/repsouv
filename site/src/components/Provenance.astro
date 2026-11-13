@@ -1,0 +1,14 @@
+---
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
+// Signalement de la provenance d'un champ, en texte visible: jamais par la couleur seule ni au survol (FR-017).
+import { LIBELLES_PROVENANCE, type Provenance } from "../lib/provenance.ts";
+
+interface Props {
+  type: Provenance;
+  /** Précision ajoutée au libellé (date de lecture, par exemple). */
+  complement?: string;
+}
+const { type, complement } = Astro.props;
+---
+<span class={`provenance provenance-${type}`}>{LIBELLES_PROVENANCE[type]}{complement ? `, ${complement}` : ""}</span>

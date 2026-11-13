@@ -1,0 +1,94 @@
+{
+  "meta": {
+    "data_license": "CC-BY-SA-4.0",
+    "created_at": "2026-11-12T12:35:52-05:00",
+    "updated_at": "2026-11-13T10:28:10-05:00"
+  },
+  "outils": [
+    {
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "categorie": "bureautique",
+      "nom": "Nuage Complet",
+      "source_repertoire_id": "praxis",
+      "score": 3,
+      "lien": "https://nuage.example/",
+      "description": "Suite collaborative libre.",
+      "criteres": [
+        "donnees",
+        "controle",
+        "dependance"
+      ],
+      "confiance": "élevée",
+      "voir_aussi": [
+        "Nuage FACiLe",
+        "Logiciel Absent"
+      ],
+      "description_longue": "# Présentation\n\nUn **nuage** libre.\n\n- fichiers\n- agenda\n\n<script>alert(1)</script>",
+      "tags": [
+        "chiffrement",
+        "auto-hebergement"
+      ],
+      "source": "libre",
+      "licence": "AGPL-3.0-or-later",
+      "custom_license": null,
+      "custom_license_url": null,
+      "repo": "https://forge.example/nuage",
+      "enrichi_le": "2026-11-12T12:40:00-05:00",
+      "evaluation_enrichie": {
+        "score": 2,
+        "criteres": [
+          "donnees",
+          "dependance"
+        ],
+        "confiance": "moyenne",
+        "ecart": "La page ne dit pas qui contrôle l'éditeur."
+      },
+      "criteres_confirmes": {
+        "criteres": [
+          "donnees"
+        ],
+        "preuves": {
+          "donnees": "Vos données restent sur votre serveur."
+        },
+        "infirmes": {
+          "controle": "Société établie aux États-Unis."
+        },
+        "modele": "gpt-6.1-sol",
+        "date": "2026-11-12T12:45:00-05:00"
+      },
+      "openhub_id": "nuage",
+      "openhub": {
+        "organisation": null,
+        "activite": "High",
+        "licences": [
+          "GNU Affero General Public License 3.0 or later"
+        ],
+        "langage_principal": "PHP",
+        "lignes_de_code": 3938168,
+        "contributeurs_total": 1079,
+        "contributeurs_12_mois": null,
+        "commits_12_mois": 5467,
+        "premier_mois": "2007-07-01",
+        "dernier_mois": "2024-06-01",
+        "consulte_le": "2026-11-12T17:20:28-05:00"
+      }
+    },
+    {
+      "derniere_modification": "2026-11-05T09:53:00-05:00",
+      "changement": null,
+      "categorie": "bureautique",
+      "nom": "nuage-complet",
+      "source_repertoire_id": "praxis",
+      "score": 2,
+      "lien": "https://elodia.example/",
+      "description": "Prise de notes.",
+      "criteres": [
+        "donnees",
+        "controle"
+      ],
+      "confiance": "moyenne",
+      "echecs_enrichissement": 3
+    }
+  ]
+}

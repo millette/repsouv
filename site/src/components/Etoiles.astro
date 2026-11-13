@@ -1,0 +1,14 @@
+---
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
+// Score sur 3: étoiles masquées aux lecteurs d'écran, équivalent textuel, et mention d'un score estimé (FR-004).
+import { texteEtoiles } from "../lib/libelles.ts";
+
+interface Props {
+  score: number;
+  estime?: boolean;
+}
+const { score, estime = false } = Astro.props;
+const pleines = Math.max(0, Math.min(3, score));
+---
+<span class="score"><span class="etoiles" aria-hidden="true">{"★".repeat(pleines)}{"☆".repeat(3 - pleines)}</span><span class="sr-seul">{texteEtoiles(score)}</span>{estime && <span class="score-estime">score estimé</span>}</span>
