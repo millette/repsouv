@@ -12,7 +12,7 @@ Le [sommaire statistique](sommaire.md) qui en résulte distingue 56 logiciels li
 
 *Statut du code source des outils du répertoire, d'après [`sommaire.md`](sommaire.md) (image produite par `node sommaire.ts`).*
 
-Le dépôt contient aussi un **site statique de consultation** ([`site/`](site/README.md)) : une page par outil, des filtres par catégorie, tag et statut du code source, la provenance de chaque champ et l'attribution sur chaque page. Il se bâtit à partir des fichiers JSON, sans les modifier ; son hébergement reste à décider.
+Le dépôt contient aussi un **site statique de consultation** ([`site/`](site/README.md)) : un accueil qui présente le projet, la liste des outils par catégorie, une page par outil, et un explorateur pour trier, filtrer et comparer côte à côte de deux à quatre outils, avec la provenance de chaque champ et l'attribution sur chaque page. Il se bâtit à partir des fichiers JSON, sans les modifier ; son hébergement reste à décider.
 
 **Sommaire :** [Démarrage rapide](#démarrage-rapide) · [Source, crédits et licences](#source-crédits-et-licences) · [Autres commandes](#autres-commandes) · [Outils à installer](#outils-à-installer) · [Fichiers JSON](#fichiers-json) · [Sommaire statistique](#sommaire-statistique) · [Utiliser les données](#utiliser-les-données) · [Documentation](#documentation)
 
@@ -99,7 +99,7 @@ node ajouter.ts <lien> --nom=… --categorie=<id> --description=… --source=<id
 Site de consultation, avec nub, dans `site/` (voir [`site/README.md`](site/README.md)) :
 
 ```sh
-nub install && nub run build     # bâtit site/dist/ à partir des JSON de la racine (156 pages), sans appel réseau
+nub install && nub run build     # bâtit site/dist/ à partir des JSON de la racine (158 pages et le fichier de l'explorateur), sans appel réseau
 nub run dev                      # serveur de développement
 nub run test && nub run test:e2e # tests unitaires, tests du site bâti, puis tests dans Chromium
 ```

@@ -1,5 +1,7 @@
 # Contrat: pages du site
 
+> **Remplacé en partie par la tranche 002** (2026-11-13). La section « Accueil » ci-dessous ne vaut plus : l'accueil est devenu une page de présentation, et la liste par catégorie est sur la page « Outils », sans filtres. Voir [specs/002-explorateur-outils/contracts/pages.md](../../002-explorateur-outils/contracts/pages.md). Les sections « Toutes les pages » et « Fiche » restent valables, sauf les liens de catégorie et de tag des fiches, qui mènent à l'explorateur.
+
 Ce que chaque page doit contenir, quelle que soit sa mise en forme. Les tests du site bâti
 (`site/test/build/`) vérifient ce contrat sur le HTML produit, sans exécuter de script.
 

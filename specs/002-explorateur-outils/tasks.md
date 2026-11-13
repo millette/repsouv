@@ -170,8 +170,8 @@ chaque cas affiche son message, jamais une zone vide.
 
 - [x] T033 [P] Étendre `site/test/e2e/accessibilite.spec.ts`: aucune violation axe A ou AA sur l'accueil, la page « Outils », l'explorateur en cartes, en tableau et avec une comparaison de quatre outils, en thème clair et sombre; parcours au clavier seul sur l'explorateur (chercher, filtrer, trier, choisir deux outils, lire la comparaison, ouvrir une fiche) avec un focus visible; corriger les violations dans `site/src/components/` et `site/src/styles/global.css`
 - [x] T034 [P] Étendre `site/test/e2e/telephone.spec.ts` (360 px): l'accueil, la page « Outils », l'explorateur en cartes, en tableau et avec une comparaison de quatre outils n'ont pas de défilement horizontal de la page; corriger les styles au besoin
-- [ ] T035 Relire à la main que tout le texte des trois pages est en français (FR-037) et qu'on compare trois outils connus en moins d'une minute (SC-003); dérouler les 21 scénarios de `specs/002-explorateur-outils/quickstart.md`, consigner les résultats dans ce fichier (section « Résultats »), et vérifier par `git status` à la racine qu'aucun fichier de données, schéma ou script n'a changé
-- [ ] T036 Reporter le contenu durable: `implementation.md` (section du site: pages, explorateur, fichier de données, état dans l'adresse, tests), `README.md`, `site/README.md` et `historique.md` (étape, décisions, changements apportés à la tranche 001, dont les anciennes adresses filtrées de l'accueil qui ne filtrent plus); ajouter en tête de `specs/001-site-consultation-repertoire/contracts/pages.md` et `contracts/filtres.md` une note disant ce que la tranche 002 remplace; vérifier que tous les contrôles passent
+- [x] T035 Relire à la main que tout le texte des trois pages est en français (FR-037) et qu'on compare trois outils connus en moins d'une minute (SC-003); dérouler les 21 scénarios de `specs/002-explorateur-outils/quickstart.md`, consigner les résultats dans ce fichier (section « Résultats »), et vérifier par `git status` à la racine qu'aucun fichier de données, schéma ou script n'a changé
+- [x] T036 Reporter le contenu durable: `implementation.md` (section du site: pages, explorateur, fichier de données, état dans l'adresse, tests), `README.md`, `site/README.md` et `historique.md` (étape, décisions, changements apportés à la tranche 001, dont les anciennes adresses filtrées de l'accueil qui ne filtrent plus); ajouter en tête de `specs/001-site-consultation-repertoire/contracts/pages.md` et `contracts/filtres.md` une note disant ce que la tranche 002 remplace; vérifier que tous les contrôles passent
 
 ---
 
@@ -204,3 +204,27 @@ Task: "Écrire site/test/e2e/explorateur.spec.ts"
 5. Polish: accessibilité, téléphone, validation, documentation.
 
 Un commit par parcours, tous les contrôles verts.
+
+---
+
+## Résultats
+
+Validation du 2026-11-13 (T035). Les 21 scénarios de [quickstart.md](quickstart.md) passent.
+
+| Scénarios | Vérifiés par | Résultat |
+|---|---|---|
+| 1 à 4 (tous les outils, tri, chaque filtre, aucun résultat) | `site/test/e2e/explorateur.spec.ts`, `site/test/selection.test.ts`, `site/test/tri.test.ts` | Réussi |
+| 5 (vues) | `site/test/e2e/vues.spec.ts` | Réussi |
+| 6, 7 (comparaison, cases sans valeur) | `site/test/e2e/comparaison.spec.ts`, `site/test/comparaison.test.ts` | Réussi |
+| 8, 9, 10 (adresse partagée, bouton précédent, adresse abîmée) | `site/test/e2e/adresse.spec.ts`, `site/test/etat.test.ts` | Réussi |
+| 11, 12, 13 (chargement lent, échec et « Réessayer », sans JavaScript) | `site/test/e2e/etats.spec.ts`, `site/test/e2e/sans-javascript.spec.ts` | Réussi |
+| 14 (provenance) | `site/test/e2e/explorateur.spec.ts`, `site/test/e2e/comparaison.spec.ts`, `site/test/e2e/vues.spec.ts` | Réussi |
+| 15, 16, 17, 18 (accueil, page « Outils », liens des fiches, navigation) | `site/test/build/accueil.test.ts`, `outils.test.ts`, `fiches.test.ts`, `commun.test.ts` | Réussi |
+| 19, 20 (clavier, accessibilité, téléphone) | `site/test/e2e/accessibilite.spec.ts`, `site/test/e2e/telephone.spec.ts` | Réussi |
+| 21 (données intactes) | `git status`: aucun fichier de données, schéma ou script de la racine modifié | Réussi |
+
+Totaux: 97 tests unitaires, 45 tests du site bâti, 79 tests dans Chromium; `nub run check` sans erreur.
+
+Relecture à la main: tout le texte des trois pages est en français (FR-037). SC-003 (comparer trois outils connus en
+moins d'une minute) n'a pas été chronométré avec une personne; le parcours au clavier de
+`accessibilite.spec.ts` (chercher, filtrer, choisir deux outils, lire la comparaison) s'exécute en moins de deux secondes.

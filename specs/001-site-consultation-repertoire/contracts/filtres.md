@@ -1,5 +1,7 @@
 # Contrat: filtres, recherche et adresse
 
+> **Remplacé par la tranche 002** (2026-11-13). L'accueil n'a plus de filtres : ils sont dans l'explorateur, dont l'adresse est décrite dans [specs/002-explorateur-outils/contracts/adresse.md](../../002-explorateur-outils/contracts/adresse.md). Les quatre paramètres ci-dessous (`categorie`, `tag`, `statut`, `q`) y gardent leur nom et leurs valeurs, mais une ancienne adresse filtrée de l'accueil (`/?tag=…`) affiche maintenant l'accueil de présentation.
+
 Ce contrat fixe l'interface publique des filtres: les paramètres de l'adresse de la page d'accueil
 et la règle de sélection. Une adresse partagée aujourd'hui doit donner la même liste demain.
 
