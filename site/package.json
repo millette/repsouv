@@ -11,7 +11,7 @@
     "check": "astro check",
     "test": "nub run test:unit && nub run test:build",
     "test:unit": "nub --test \"test/*.test.ts\"",
-    "test:build": "nub --test \"test/build/*.test.ts\"",
+    "test:build": "nub --test --test-concurrency=1 \"test/build/*.test.ts\"",
     "test:e2e": "playwright test"
   },
   "engines": {

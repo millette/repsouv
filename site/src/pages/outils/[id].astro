@@ -1,0 +1,126 @@
+---
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
+// Fiche d'un outil (contracts/pages.md, « Fiche »): une page par outil actif. Une section sans contenu n'est pas rendue,
+// et chaque champ dit d'où il vient.
+import Criteres from "../../components/Criteres.astro";
+import Etoiles from "../../components/Etoiles.astro";
+import OpenHub from "../../components/OpenHub.astro";
+import Provenance from "../../components/Provenance.astro";
+import Page from "../../layouts/Page.astro";
+import { adresseAccueil, adresseFiche, identifiant } from "../../lib/adresses.ts";
+import type { OutilClasse } from "../../lib/donnees.ts";
+import { LIBELLES_STATUT, nomHote, nomPays } from "../../lib/libelles.ts";
+import { rendreDescription } from "../../lib/markdown.ts";
+import { apparentes, sourceDe } from "../../lib/repertoire.ts";
+import { site } from "../../lib/site.ts";
+
+export function getStaticPaths() {
+  return site().actifs.map((outil) => ({ params: { id: identifiant(outil.nom) }, props: { outil } }));
+}
+
+interface Props {
+  outil: OutilClasse;
+}
+const { outil } = Astro.props;
+const { categories, criteres, tags, sources, actifs, base } = site();
+const categorie = categories.find((c) => c.id === outil.categorie)!;
+const source = sourceDe(outil, sources);
+const tagsOutil = (outil.tags ?? []).map((id) => tags.find((t) => t.id === id)!);
+const voirAussi = apparentes(outil, actifs);
+const remplace = outil.alternative_a ?? [];
+const aCode = Boolean(outil.licence || outil.custom_license || outil.repo);
+---
+<Page titre={outil.nom} description={outil.description}>
+  <div data-section-entete>
+    <h1>{outil.nom}</h1>
+    <p class="fiche-meta">
+      <a class="link" href={adresseAccueil(base, `categorie=${categorie.id}`)}><span aria-hidden="true">{categorie.icone}</span> {categorie.nom}</a>
+      <Etoiles score={outil.score} estime={outil.score_estime === true} />
+      {outil.source && <span class="statut"><span class="badge badge-outline">{LIBELLES_STATUT[outil.source]}</span> <Provenance type="ia" /></span>}
+    </p>
+    <p><a class="btn btn-primary" href={outil.lien}>Site de l'outil<span class="sr-seul"> {outil.nom}</span></a></p>
+  </div>
+
+  <section class="section-fiche" data-section="description" aria-labelledby="titre-description">
+    <h2 id="titre-description">Description</h2>
+    <p>{outil.description}</p>
+  </section>
+
+  {outil.description_longue && (
+    <section class="section-fiche" data-section="description-longue" aria-labelledby="titre-description-longue">
+      <h2 id="titre-description-longue">Description détaillée</h2>
+      <p><Provenance type="ia" /></p>
+      <div class="prose-fiche"><Fragment set:html={rendreDescription(outil.description_longue)} /></div>
+    </section>
+  )}
+
+  <Criteres outil={outil} criteres={criteres} />
+
+  {aCode && (
+    <section class="section-fiche" data-section="code" aria-labelledby="titre-code">
+      <h2 id="titre-code">Code source et licence</h2>
+      <p><Provenance type="ia" /></p>
+      <dl class="definitions">
+        {outil.licence && <><dt>Licence</dt><dd>{outil.licence}</dd></>}
+        {!outil.licence && outil.custom_license && (
+          <><dt>Licence</dt><dd>{outil.custom_license_url ? <a class="link" href={outil.custom_license_url}>{outil.custom_license}</a> : outil.custom_license}</dd></>
+        )}
+        {outil.repo && <><dt>Dépôt de code</dt><dd><a class="link" href={outil.repo}>{outil.repo}</a></dd></>}
+      </dl>
+    </section>
+  )}
+
+  {tagsOutil.length > 0 && (
+    <section class="section-fiche" data-section="tags" aria-labelledby="titre-tags">
+      <h2 id="titre-tags">Tags</h2>
+      <p><Provenance type="ia" /></p>
+      <dl class="definitions">
+        {tagsOutil.map((t) => <><dt><a class="link" href={adresseAccueil(base, `tag=${t.id}`)}>{t.id}</a></dt><dd>{t.description}</dd></>)}
+      </dl>
+    </section>
+  )}
+
+  {(outil.pays || outil.instance_de) && (
+    <section class="section-fiche" data-section="logiciel" aria-labelledby="titre-logiciel">
+      <h2 id="titre-logiciel">Éditeur et logiciel</h2>
+      <dl class="definitions">
+        {outil.pays && <><dt>Pays de l'éditeur, selon la source</dt><dd>{nomPays(outil.pays)}</dd></>}
+        {outil.instance_de && (
+          <>
+            <dt>Instance du logiciel</dt>
+            <dd><a class="link" href={outil.instance_de.url}>{outil.instance_de.nom}</a>. La description détaillée et les critères portent sur ce logiciel plutôt que sur la page du service.</dd>
+          </>
+        )}
+      </dl>
+    </section>
+  )}
+
+  {outil.openhub && <OpenHub outil={outil} />}
+
+  {remplace.length > 0 && (
+    <section class="section-fiche" data-section="remplace" aria-labelledby="titre-remplace">
+      <h2 id="titre-remplace">Services remplacés</h2>
+      <ul>
+        {remplace.map((url) => <li><a class="link" href={url}>{nomHote(url)}</a></li>)}
+      </ul>
+    </section>
+  )}
+
+  {voirAussi.length > 0 && (
+    <section class="section-fiche" data-section="voir-aussi" aria-labelledby="titre-voir-aussi">
+      <h2 id="titre-voir-aussi">Voir aussi</h2>
+      <p><Provenance type="heuristique" /> Outils du répertoire qui reposent sur le même logiciel.</p>
+      <ul>
+        {voirAussi.map((a) => <li>{a.id ? <a class="link" href={adresseFiche(a.id, base)}>{a.nom}</a> : a.nom}</li>)}
+      </ul>
+    </section>
+  )}
+
+  <section class="section-fiche" data-section="source" aria-labelledby="titre-source">
+    <h2 id="titre-source">Source</h2>
+    <p>Cet outil provient de : <a class="link" href={source.url}>{source.nom}</a>.</p>
+  </section>
+
+  <p class="retour"><a class="link" href={adresseAccueil(base)}>Retour à la liste des outils</a></p>
+</Page>

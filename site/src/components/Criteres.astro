@@ -1,0 +1,76 @@
+---
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
+// Les trois lectures des critères de souveraineté, séparées, nommées et expliquées (FR-032 à FR-034): vérifiés d'après
+// la page de l'outil (IA, citation à l'appui), déduits des étoiles (heuristique du dépôt), second avis du modèle (IA).
+import { lecturesCriteres, type StatutVerdict } from "../lib/criteres.ts";
+import type { Critere, OutilClasse } from "../lib/donnees.ts";
+import { formaterDate, texteEtoiles } from "../lib/libelles.ts";
+import Provenance from "./Provenance.astro";
+
+interface Props {
+  outil: OutilClasse;
+  criteres: Critere[];
+}
+const { outil, criteres } = Astro.props;
+const { verifies, deduits, secondAvis } = lecturesCriteres(outil, criteres);
+const VERDICTS: Record<StatutVerdict, string> = { confirme: "Confirmé", infirme: "Infirmé", indetermine: "Indéterminé" };
+const FIABILITE: Record<string, string> = {
+  élevée: "fiabilité élevée",
+  moyenne: "fiabilité moyenne",
+  faible: "fiabilité faible",
+  indéterminée: "fiabilité indéterminée : l'outil n'est pas encore enrichi",
+};
+---
+<section class="section-fiche" data-section="criteres" aria-labelledby="titre-criteres">
+  <h2 id="titre-criteres">Critères de souveraineté</h2>
+  {verifies && (
+    <div class="lecture" data-lecture="verifies">
+      <h3>Critères vérifiés d'après la page de l'outil</h3>
+      <p>
+        <Provenance type="ia" /> Le verdict est celui d'un modèle d'IA ; la citation, copiée de la page de l'outil, permet de le contrôler.
+      </p>
+      <ul class="verdicts">
+        {verifies.verdicts.map(({ critere, statut, citation }) => (
+          <li class={`verdict verdict-${statut}`}>
+            <p><span aria-hidden="true">{critere.icon}</span> {critere.titre} <strong class="verdict-statut">{VERDICTS[statut]}</strong></p>
+            {citation ? <blockquote>{citation}</blockquote> : <p class="verdict-note">La page de l'outil ne permet pas de conclure.</p>}
+          </li>
+        ))}
+      </ul>
+      <p class="lecture-note">Vérifié le {formaterDate(verifies.date)} par le modèle {verifies.modele}.</p>
+    </div>
+  )}
+  <div class="lecture" data-lecture="deduits">
+    <h3>Critères déduits des étoiles</h3>
+    <p>
+      <Provenance type="heuristique" /> Ce dépôt déduit de la description à quels critères les étoiles correspondent ; ce n'est ni une donnée de la source ni un
+      verdict vérifié.
+    </p>
+    {deduits.criteres.length > 0 ? (
+      <ul class="criteres-retenus">
+        {deduits.criteres.map((c) => <li><span aria-hidden="true">{c.icon}</span> {c.titre}</li>)}
+      </ul>
+    ) : (
+      <p>Aucun critère retenu.</p>
+    )}
+    <p class="lecture-note">Déduction de {FIABILITE[deduits.confiance] ?? `fiabilité ${deduits.confiance}`}.</p>
+  </div>
+  {secondAvis && (
+    <div class="lecture" data-lecture="second-avis">
+      <h3>Second avis du modèle</h3>
+      <p>
+        <Provenance type="ia" /> Évaluation indépendante de la souveraineté de l'outil par un modèle d'IA, d'après sa page.
+      </p>
+      <p>{texteEtoiles(secondAvis.score)}, {FIABILITE[secondAvis.confiance] ?? `fiabilité ${secondAvis.confiance}`}.</p>
+      {secondAvis.criteres.length > 0 ? (
+        <ul class="criteres-retenus">
+          {secondAvis.criteres.map((c) => <li><span aria-hidden="true">{c.icon}</span> {c.titre}</li>)}
+        </ul>
+      ) : (
+        <p>Aucun critère retenu.</p>
+      )}
+      {secondAvis.ecart && <p class="ecart"><strong>Écart avec le répertoire :</strong> {secondAvis.ecart}</p>}
+    </div>
+  )}
+</section>

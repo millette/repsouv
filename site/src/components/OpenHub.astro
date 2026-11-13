@@ -1,0 +1,36 @@
+---
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-FileCopyrightText: 2026 Robin Millette <https://robin.millette.info/>
+// Données publiques d'Open Hub sur le projet (openhub.net): chaque ligne n'apparaît que si Open Hub donne la valeur.
+import type { OutilClasse } from "../lib/donnees.ts";
+import { formaterDate, formaterNombre } from "../lib/libelles.ts";
+import Provenance from "./Provenance.astro";
+
+interface Props {
+  outil: OutilClasse;
+}
+const { outil } = Astro.props;
+const oh = outil.openhub!;
+const nombre = (n: number | null) => (n === null ? null : formaterNombre(n));
+const lignes: [string, string | null][] = [
+  ["Organisation", oh.organisation],
+  ["Activité (indice Open Hub)", oh.activite],
+  ["Licences déclarées", oh.licences.length > 0 ? oh.licences.join(", ") : null],
+  ["Langage principal", oh.langage_principal],
+  ["Lignes de code", nombre(oh.lignes_de_code)],
+  ["Contributeurs (total)", nombre(oh.contributeurs_total)],
+  ["Contributeurs (12 derniers mois)", nombre(oh.contributeurs_12_mois)],
+  ["Commits (12 derniers mois)", nombre(oh.commits_12_mois)],
+];
+const presentes = lignes.filter((l): l is [string, string] => l[1] !== null && l[1] !== "");
+---
+<section class="section-fiche" data-section="openhub" aria-labelledby="titre-openhub">
+  <h2 id="titre-openhub">Open Hub</h2>
+  <p><Provenance type="openhub" complement={`lues le ${formaterDate(oh.consulte_le)}`} /></p>
+  {presentes.length > 0 && (
+    <dl class="definitions">
+      {presentes.map(([terme, valeur]) => <><dt>{terme}</dt><dd>{valeur}</dd></>)}
+    </dl>
+  )}
+  {outil.openhub_id && <p><a class="link" href={`https://www.openhub.net/p/${outil.openhub_id}`}>Page du projet sur Open Hub</a></p>}
+</section>
