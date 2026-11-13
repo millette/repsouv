@@ -6,3 +6,5 @@ notes.md
 services-facil.html
 my-specs/
 
+.playwright-cli/
+.playwright-mcp/
