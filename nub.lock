@@ -4,6 +4,27 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+catalogs:
+  default:
+    '@nubjs/types':
+      specifier: ^0.10.0
+      version: 0.10.0
+    '@types/node':
+      specifier: ^26.6.6
+      version: 26.6.6
+    linkedom:
+      specifier: ^0.18.15
+      version: 0.18.15
+    tsrs:
+      specifier: ^0.24.0-ts7.1.0-beta
+      version: 0.24.0-ts7.1.0-beta
+    vega:
+      specifier: ^6.4.0
+      version: 6.4.0
+    vega-lite:
+      specifier: ^6.5.0
+      version: 6.5.0
+
 importers:
 
   .: {}
@@ -11,22 +32,22 @@ importers:
   packages/commun:
     devDependencies:
       '@nubjs/types':
-        specifier: ^0.10.0
+        specifier: 'catalog:'
         version: 0.10.0(@types/node@26.6.6)
       '@types/node':
-        specifier: ^26.6.6
+        specifier: 'catalog:'
         version: 26.6.6
       tsrs:
-        specifier: ^0.24.0-ts7.1.0-beta
+        specifier: 'catalog:'
         version: 0.24.0-ts7.1.0-beta
       vega-lite:
-        specifier: ^6.5.0
+        specifier: 'catalog:'
         version: 6.5.0(vega@6.4.0)
 
   packages/scripts:
     dependencies:
       linkedom:
-        specifier: ^0.18.15
+        specifier: 'catalog:'
         version: 0.18.15
       spdx-expression-parse:
         specifier: ^5.0.0
@@ -45,10 +66,10 @@ importers:
         specifier: 0.14.0
         version: 0.14.0
       '@nubjs/types':
-        specifier: ^0.10.0
+        specifier: 'catalog:'
         version: 0.10.0(@types/node@26.6.6)
       '@types/node':
-        specifier: ^26.6.6
+        specifier: 'catalog:'
         version: 26.6.6
       '@types/spdx-expression-parse':
         specifier: ^4.0.0
@@ -63,13 +84,13 @@ importers:
         specifier: 0.4.45
         version: 0.4.45(@volar/typescript@2.4.31(typescript@6.0.3))(magicast@0.5.5)(typescript@6.0.3)
       tsrs:
-        specifier: ^0.24.0-ts7.1.0-beta
+        specifier: 'catalog:'
         version: 0.24.0-ts7.1.0-beta
       vega:
-        specifier: ^6.4.0
+        specifier: 'catalog:'
         version: 6.4.0
       vega-lite:
-        specifier: ^6.5.0
+        specifier: 'catalog:'
         version: 6.5.0(vega@6.4.0)
 
   packages/site:
@@ -90,10 +111,10 @@ importers:
         specifier: ^1.9.19
         version: 1.9.19
       vega:
-        specifier: ^6.4.0
+        specifier: 'catalog:'
         version: 6.4.0
       vega-lite:
-        specifier: ^6.5.0
+        specifier: 'catalog:'
         version: 6.5.0(vega@6.4.0)
     devDependencies:
       '@astrojs/check':
@@ -109,10 +130,10 @@ importers:
         specifier: 1.64.1
         version: 1.64.1
       '@types/node':
-        specifier: ^26.6.6
+        specifier: 'catalog:'
         version: 26.6.6
       linkedom:
-        specifier: ^0.18.15
+        specifier: 'catalog:'
         version: 0.18.15
       postcss:
         specifier: ^8.5.32

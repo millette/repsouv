@@ -35,9 +35,9 @@
     }
   },
   "devDependencies": {
-    "@nubjs/types": "^0.10.0",
-    "@types/node": "^26.6.6",
-    "tsrs": "^0.24.0-ts7.1.0-beta",
-    "vega-lite": "^6.5.0"
+    "@nubjs/types": "catalog:",
+    "@types/node": "catalog:",
+    "tsrs": "catalog:",
+    "vega-lite": "catalog:"
   }
 }

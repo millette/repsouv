@@ -26,7 +26,7 @@
     "schemas:verifier": "obuild && nub dist/generer-schemas.mjs --verifier"
   },
   "dependencies": {
-    "linkedom": "^0.18.15",
+    "linkedom": "catalog:",
     "spdx-expression-parse": "^5.0.0",
     "spdx-license-ids": "^3.0.24"
   },
@@ -49,14 +49,14 @@
     "@mionjs/bin-compiler": "0.14.0",
     "@mionjs/devtools": "0.14.0",
     "@mionjs/run-types": "0.14.0",
-    "@nubjs/types": "^0.10.0",
-    "@types/node": "^26.6.6",
+    "@nubjs/types": "catalog:",
+    "@types/node": "catalog:",
     "@types/spdx-expression-parse": "^4.0.0",
     "ajv": "8.20.0",
     "ajv-formats": "3.0.1",
     "obuild": "0.4.45",
-    "tsrs": "^0.24.0-ts7.1.0-beta",
-    "vega": "^6.4.0",
-    "vega-lite": "^6.5.0"
+    "tsrs": "catalog:",
+    "vega": "catalog:",
+    "vega-lite": "catalog:"
   }
 }

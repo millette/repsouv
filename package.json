@@ -14,9 +14,19 @@
     "url": "https://robin.millette.info/"
   },
   "type": "module",
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ],
+    "catalog": {
+      "@nubjs/types": "^0.10.0",
+      "@types/node": "^26.6.6",
+      "linkedom": "^0.18.15",
+      "tsrs": "^0.24.0-ts7.1.0-beta",
+      "vega": "^6.4.0",
+      "vega-lite": "^6.5.0"
+    }
+  },
   "scripts": {
     "update": "node packages/scripts/update.ts",
     "sommaire": "node packages/scripts/sommaire.ts",
